@@ -34,7 +34,7 @@ This commit adds a new feature to the application: a list of items that users ca
 
 We also ask that you follow a specific naming convention when creating new branches for your contributions. Please use the following format:
 
-keyword/purpose-of-branch
+`keyword/purpose-of-branch`
 
 
 The keyword should be the same as the one used in your commit message (e.g. `feat`, `fix`, etc.), and the purpose-of-branch should be a short description of the branch's purpose (e.g. `add-list-of-items`, `fix-broken-link`, etc.).
@@ -42,7 +42,7 @@ The keyword should be the same as the one used in your commit message (e.g. `fea
 Here's an example of a branch name using this format:
 
 
-feat/add-list-of-items
+`feat/add-list-of-items`
 
 
 ## Conclusion
