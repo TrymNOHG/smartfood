@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RecipeTest {
 
     @Nested
-    class Picture_Gallery_can_properly_get {
+    class Recipe_can_properly_get {
         Recipe getRecipe() {
             return new Recipe(1L, 50);
         }
@@ -35,7 +35,7 @@ class RecipeTest {
     }
 
     @Nested
-    class Picture_Gallery_can_properly_set {
+    class Recipe_can_properly_set {
         Recipe getRecipe() {
             return new Recipe(1L, 50);
         }
