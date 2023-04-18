@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.exception;
 
-import edu.ntnu.idatt2105.g6.backend.exception.exists.ExistsException;
-import edu.ntnu.idatt2105.g6.backend.exception.not_found.NotFoundException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.exists.ExistsException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-//TODO: sitere kok
 public class JwtService {
     private static final String SECRET_KEY = "aGYU91Clj78WFxeVR6rRuiguWK6boLtXTPHKKOMN6J7KSoQJYd3BHHueiZTJG8BSqOjb/7cl";
 
