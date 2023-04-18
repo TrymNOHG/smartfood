@@ -2,77 +2,96 @@
   <div class="wrapper">
     <div class="form-box login">
       <h2>Login</h2>
-      <form action="#">
+      <form @submit.prevent="submit" :class="{ 'has-errors': hasErrors }">
         <div class="input-box">
           <span class="icon"><font-awesome-icon icon="fa-solid fa-envelope" /></span>
-          <input type="email" required>
+          <input type="email" required v-model.trim="username" name="username">
           <label>Email</label>
+          <div v-if="errors['username']" class="error">{{ errors['username'] }}</div>
         </div>
         <div class="input-box">
           <span class="icon"><font-awesome-icon icon="fa-solid fa-lock" /></span>
-          <input type="password" required>
+          <input type="password" required v-model.trim="password" name="password">
           <label>Password</label>
+          <div v-if="errors['password']" class="error">{{ errors['password'] }}</div>
         </div>
         <div class="remember-forgot">
           <a href="#">Forgot Password?</a>
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" @click="submit">Login</button>
         <div class="login-register">
           <p>Don't have an account? <a href="/register" class="register-link">Register</a></p>
         </div>
+        <div v-if="submitMessage" class="submit-message">{{ submitMessage }}</div>
       </form>
     </div>
   </div>
 </template>
 <script>
 import * as yup from 'yup'
-import {useField, useForm } from "vee-validate";
-import {useLoggedInStore} from "@/store/store";
-import {ref} from "vue";
+import { useField, useForm } from "vee-validate";
+import { useLoggedInStore } from "@/store/store";
+import { ref } from "vue";
 import router from "@/router/router";
-import {loginUser} from "@/services/UserService";
+import { loginUser } from "@/services/UserService";
 import { useStorage } from 'vue3-storage';
+
 export default {
   name: "LoginComponent",
-  setup () {
-    const submitMessage = ref('');
+  setup() {
+    const submitMessage = ref("");
     const storage = useStorage();
     const store = useLoggedInStore();
     const validationSchema = yup.object({
-      username: yup.string()
-          .required('Username is Required'),
-      password: yup.string()
-          .required('Password required')
-          .min(8)
-    })
-    const { handleSubmit, errors } = useForm({ validationSchema });
-    const { value: username } = useField('username');
-    const { value: password } = useField('password')
-    const submit = handleSubmit(async () => {
-      const userLoginDTO = {
-        "username": username.value,
-        "password": password.value
-      }
-      await loginUser(userLoginDTO).then(async response => {
-        if (response !== undefined) {
-          store.setSessionToken(response.data.token)
-          console.log(store.getSessionToken)
-          await store.fetchUser()
-          submitMessage.value = "Registration Successful";
-          setTimeout(() => {
-            submitMessage.value = "";
-          }, 3000);
-          await router.push("/");
-        } else {
-          submitMessage.value = "Something went wrong. Please try again later.";
-          setTimeout(() => {
-            submitMessage.value = "";
-          }, 3000);
-        }
-      }).catch(error => {
-        console.warn('error', error)
-      })
+      username: yup
+        .string()
+        .email("Please enter a valid email")
+        .required("Email is Required"),
+      password: yup.string().required("Password required").min(8),
     });
+    const { handleSubmit, errors, setFieldTouched, setFieldValue } = useForm({
+      validationSchema,
+      initialValues: {
+        username: "",
+        password: "",
+      },
+    });
+    const { value: username } = useField("username");
+    const { value: password } = useField("password");
+    const submit = handleSubmit(async () => {
+      console.log("Submit clicked") 
+      const userLoginDTO = {
+        username: username.value,
+        password: password.value,
+      };
+      await loginUser(userLoginDTO)
+        .then(async (response) => {
+          if (response !== undefined) {
+            store.setSessionToken(response.data.token);
+            console.log(store.getSessionToken);
+            await store.fetchUser();
+            submitMessage.value = "Login Successful";
+            setTimeout(() => {
+              submitMessage.value = "";
+            }, 3000);
+            await router.push("/");
+          } else {
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+            setTimeout(() => {
+              submitMessage.value = "";
+            }, 3000);
+          }
+        })
+        .catch((error) => {
+          console.warn("error", error);
+        });
+    });
+    const hasErrors = () => {
+      const keys = Object.keys(errors.value);
+      return keys.length > 0;
+    };
+
     return {
       password,
       username,
@@ -80,18 +99,14 @@ export default {
       submit,
       validationSchema,
       submitMessage,
-    }
+      hasErrors,
+      setFieldTouched,
+      setFieldValue,
+    };
   },
-  computed: {
-    hasErrors() {
-      return !this.validationSchema.isValidSync({
-        username: this.username,
-        password: this.password,
-      });
-    },
-  },
-}
+};
 </script>
+
 <style scoped>
 
 .wrapper {
@@ -128,7 +143,7 @@ h2{
   width: 100%;
   height: 50px;
   border-bottom: 2px solid black;
-  margin: 30px 0;
+  margin: 30px 50px 50px 0;
   transition: transform 0.5s ease-in-out;
 }
 
@@ -140,6 +155,7 @@ label {
   font-weight: 400;
   transition: border-radius 0.5s ease-in-out;
   pointer-events: none;
+  margin-top: 10px;
 }
 
 
@@ -153,6 +169,18 @@ input {
   padding: 0 40px 0 5px;
 }
 
+.has-errors input[type="email"],
+
+
+.error {
+  font-size: 12px;
+  
+  margin-top: 5px;
+  margin: 5px;
+  position: relative;
+}
+
+
 .icon {
   position: absolute;
   right: 8px;
@@ -161,7 +189,7 @@ input {
 
 .remember-forgot {
   font-weight: 400;
-  margin:  -15px 0 15px;
+  margin: 12px -15px 0 15px;
   display: flex;
   justify-content: center;
 }
