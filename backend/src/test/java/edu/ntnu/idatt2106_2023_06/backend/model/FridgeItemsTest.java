@@ -65,10 +65,11 @@ class FridgeItemsTest {
         @Test
         void fridge_getter_returns_correct_value(){
             Fridge fridge = new Fridge(1L, "Norman family");
-            User user = new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com");
-            FridgeMember fridgeMember = new FridgeMember(null, user, fridge);
-            assertEquals(fridge, fridgeMember.getFridge());
+            Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
+                    "grass matet kuer.", new FoodCategory(1L, "Dairy", new ArrayList<>()),
+                    200000, new Date(), new Date());
+            FridgeItems fridgeItem = new FridgeItems(null, item, fridge);
+            assertEquals(fridge, fridgeItem.getFridge());
         }
     }
 
