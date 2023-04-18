@@ -44,6 +44,7 @@ public class AuthenticationService implements IAuthenticationService {
                 .username(userCreateDTO.username())
                 .password(passwordEncoder.encode(userCreateDTO.password()))
                 .firstName(userCreateDTO.firstName())
+                .lastName(userCreateDTO.lastName())
                 .email(userCreateDTO.email())
                 .build();
         if (userRepository.findByUsername(userCreateDTO.username()).isPresent())
