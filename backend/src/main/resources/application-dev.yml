@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: #TODO: add URL, username, and password to database
+    username: tomaber
+    password: h97.OqxwW
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate.ddl-auto: update
+    #    Change ^ to create to clear the database and re-run schema. update to keep data
+    properties:
+      hibernate:
+        format_sql: true
