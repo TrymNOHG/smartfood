@@ -38,7 +38,7 @@ public class User implements UserDetails {
     /**
      * The username of the user, must be unique and not null
      */
-    @Column(name = "username", length = 64, nullable = false)
+    @Column(name = "username", length = 64, nullable = false, unique = true)
     @NonNull
     private String username;
 
@@ -66,7 +66,7 @@ public class User implements UserDetails {
     /**
      * The email address of the user, not null
      */
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     @NonNull
     private String email;
 
@@ -79,7 +79,7 @@ public class User implements UserDetails {
     /**
      * The phone number of the user, can be null
      */
-    @Column(name = "phone")
+    @Column(name = "phone", unique = true)
     private String phone;
 
     @Override

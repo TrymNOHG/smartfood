@@ -46,8 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
             if (jwtService.isTokenValid(jwt, userDetails)) {
-                logger.info("User " + userEmail + " authenticated with priveleges: "
-                        + userDetails.getAuthorities() + ".");
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
                 );
@@ -56,8 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
-        logger.info("User " + userEmail + " authenticated with priveleges: "
-                + SecurityContextHolder.getContext().getAuthentication().getAuthorities() + ".");
+        logger.info("User " + userEmail + " authenticated.");
         filterChain.doFilter(request, response);
 
     }
