@@ -5,7 +5,7 @@
     <nav>
       <ul>
         <li>
-          <RouterLink to="/">
+          <RouterLink to="/profile">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-house" />
             </span>
@@ -13,7 +13,7 @@
           </RouterLink>
         </li>
         <li>
-          <RouterLink to="/">
+          <RouterLink to="/dinner">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-utensils" />
             </span>
@@ -21,7 +21,7 @@
           </RouterLink>
         </li>
         <li>
-          <RouterLink to="/">
+          <RouterLink to="/cart">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-cart-shopping" />
             </span>
@@ -29,7 +29,7 @@
           </RouterLink>
         </li>
         <li>
-          <RouterLink to="/">
+          <RouterLink to="/fridge">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-kitchen-set" />
             </span>
