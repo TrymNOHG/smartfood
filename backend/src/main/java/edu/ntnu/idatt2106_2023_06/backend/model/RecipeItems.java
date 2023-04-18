@@ -19,10 +19,10 @@ import lombok.*;
 public class RecipeItems {
 
     /**
-     * The composite primary key of the fridge item, consisting of the item id and the fridge id.
+     * The composite primary key of the recipe, consisting of the item id and the recipe id.
      */
     @EmbeddedId
-    private FridgeItemsId id;
+    private RecipeItemId id;
 
     /**
      * The item of the recipe.

@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2106_2023_06.backend.model;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
