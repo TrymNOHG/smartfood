@@ -3,6 +3,8 @@ package edu.ntnu.idatt2106_2023_06.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 /**
  * This class represents a shopping list. It, therefore, contains a fridge ID (the shopping list's id) and the item
  * id.
@@ -44,6 +46,13 @@ public class ShoppingItems {
     @NonNull
     @ToString.Exclude
     private Fridge fridge;
+
+    /**
+     * Is the item a suggestion.
+     */
+    @Column(name = "suggestion")
+    @NonNull
+    private int suggestion;
 
 
 }

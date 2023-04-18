@@ -16,14 +16,14 @@ class UserTest {
         public void username_throws_NullPointer_Exception_if_null() {
             assertThrows(NullPointerException.class, () -> {
                 User user = new User(null, null, "Ole", "Norman",
-                        "password", "Ole@gmail.com", new Date(), "+47 12345678");
+                        "password", "Ole@gmail.com");
             });
         }
         @Test
         public void password_throws_NullPointer_Exception_if_null() {
             assertThrows(NullPointerException.class, () -> {
                 User user = new User(null, "Ole123", "Ole", "Norman",
-                        null, "Ole@gmail.com", new Date(), "+47 12345678");
+                        null, "Ole@gmail.com");
             });
         }
 
@@ -31,14 +31,14 @@ class UserTest {
         public void first_name_throws_NullPointer_Exception_if_null() {
             assertThrows(NullPointerException.class, () -> {
                 User user = new User(null, "Ole123", null, "Norman",
-                        "password","Ole@gmail.com", new Date(), "+47 12345678");
+                        "password","Ole@gmail.com");
             });
         }
         @Test
         public void last_name_throws_NullPointer_Exception_if_null() {
             assertThrows(NullPointerException.class, () -> {
                 User user = new User(null, "Ole123", "Ole", null,
-                        "password","Ole@gmail.com", new Date(), "+47 12345678");
+                        "password","Ole@gmail.com");
             });
         }
 
@@ -46,7 +46,7 @@ class UserTest {
         public void email_throws_NullPointer_Exception_if_null() {
             assertThrows(NullPointerException.class, () -> {
                 User user = new User(null, "Ole123", "Ole", "Norman",
-                        "password",null, new Date(), "+47 12345678");
+                        "password",null);
             });
         }
 
@@ -98,7 +98,7 @@ class UserTest {
     class User_can_properly_get {
         User getUser() {
             return new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com", new Date(), "+4712345678");
+                    "password","Ole@gmail.com");
         }
 
         @Test
@@ -145,27 +145,7 @@ class UserTest {
             assertEquals(expectedEmail, actualEmail);
         }
 
-        @Test
-        void birthDate() {
-            User user = getUser();
-            Date expectedDate = new Date();
-            user.setBirthDate(expectedDate);
 
-            Date actualDate = user.getBirthDate();
-
-            assertEquals(expectedDate, actualDate);
-        }
-
-        @Test
-        void phone() {
-            User user = getUser();
-            String expectedPhone = "+4712345678";
-            user.setPhone(expectedPhone);
-
-            String actualPhone = user.getPhone();
-
-            assertEquals(expectedPhone, actualPhone);
-        }
 
     }
 
