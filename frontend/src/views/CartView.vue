@@ -8,8 +8,10 @@
 
 <script>
 import CartComponent from "../components/CartComponent.vue";
+
 export default {
   name: "CartView",
-  components: {CartComponent}
+  components: {CartComponent},
+  
 }
 </script>

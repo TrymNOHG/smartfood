@@ -25,8 +25,71 @@
   </div>
 </template>
 <script>
+import * as yup from 'yup'
+import {useField, useForm } from "vee-validate";
+import {useLoggedInStore} from "@/store/store";
+import {ref} from "vue";
+import router from "@/router/router";
+import {loginUser} from "@/services/UserService";
+import { useStorage } from 'vue3-storage';
 export default {
-  name: "LoginComponent"
+  name: "LoginComponent",
+  setup () {
+    const submitMessage = ref('');
+    const storage = useStorage();
+    const store = useLoggedInStore();
+    const validationSchema = yup.object({
+      username: yup.string()
+          .required('Username is Required'),
+      password: yup.string()
+          .required('Password required')
+          .min(8)
+    })
+    const { handleSubmit, errors } = useForm({ validationSchema });
+    const { value: username } = useField('username');
+    const { value: password } = useField('password')
+    const submit = handleSubmit(async () => {
+      const userLoginDTO = {
+        "username": username.value,
+        "password": password.value
+      }
+      await loginUser(userLoginDTO).then(async response => {
+        if (response !== undefined) {
+          store.setSessionToken(response.data.token)
+          console.log(store.getSessionToken)
+          await store.fetchUser()
+          submitMessage.value = "Registration Successful";
+          setTimeout(() => {
+            submitMessage.value = "";
+          }, 3000);
+          await router.push("/");
+        } else {
+          submitMessage.value = "Something went wrong. Please try again later.";
+          setTimeout(() => {
+            submitMessage.value = "";
+          }, 3000);
+        }
+      }).catch(error => {
+        console.warn('error', error)
+      })
+    });
+    return {
+      password,
+      username,
+      errors,
+      submit,
+      validationSchema,
+      submitMessage,
+    }
+  },
+  computed: {
+    hasErrors() {
+      return !this.validationSchema.isValidSync({
+        username: this.username,
+        password: this.password,
+      });
+    },
+  },
 }
 </script>
 <style scoped>

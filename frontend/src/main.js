@@ -3,7 +3,7 @@ import { createPinia } from 'pinia'
 import piniaPersist from 'pinia-plugin-persist'
 import App from './App.vue'
 import './assets/main.css'
-import router from "@/router";
+import router from "../src/router/router";
 /* Icons imports */
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
