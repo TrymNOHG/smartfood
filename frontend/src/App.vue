@@ -85,6 +85,8 @@ h1 {
 nav {
   display: flex;
   align-items: center;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 nav ul {
@@ -140,7 +142,7 @@ nav ul li:hover a .text {
   transform: translateY(15px);
 }
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: 800px) {
   header {
     flex-direction: column;
     align-items: center;
