@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 /**
- * User class represents a user of the e-commerce application with their personal information,
- * authentication details, and activities on the platform.
+ * Fridge class represents a common storage of food items in the application. It can, therefore, include dry, frozen, or
+ * wet items. It resembles more as a common gathering of people and food than a literal fridge.
  *
  *  @author Trym Hamer Gudvangen
  */
