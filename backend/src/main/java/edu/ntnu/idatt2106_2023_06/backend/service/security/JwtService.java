@@ -8,6 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Service
 public class JwtService {
     private static final String SECRET_KEY = "aGYU91Clj78WFxeVR6rRuiguWK6boLtXTPHKKOMN6J7KSoQJYd3BHHueiZTJG8BSqOjb/7cl";
 
