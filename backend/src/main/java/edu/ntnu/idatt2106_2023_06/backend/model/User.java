@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106_2023_06.backend.model.users;
+package edu.ntnu.idatt2106_2023_06.backend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,10 +11,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.*;
 
 /**
- User class represents a user of the e-commerce application with their personal information,
- authentication details, and activities on the platform.
-
- @author Trym Hamer Gudvangen
+ * User class represents a user of the e-commerce application with their personal information,
+ * authentication details, and activities on the platform.
+ *
+ *  @author Trym Hamer Gudvangen
  */
 @Getter
 @Setter
