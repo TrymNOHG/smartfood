@@ -66,6 +66,12 @@ public class Item {
     @Column(name = "purchase_date")
     private Date purchaseDate;
 
+    /**
+     * The expiration date of the item, can be null
+     */
+    @Column(name = "expiration_date")
+    private Date expirationDate;
+
 
 
 
