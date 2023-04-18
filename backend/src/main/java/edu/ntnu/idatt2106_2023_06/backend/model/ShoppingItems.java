@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 /**
- * This class represents an item in the fridge. It, therefore, contains a fridge ID and the item ID.
+ * This class represents a shopping list. It, therefore, contains a fridge ID (the shopping list's id) and the item
+ * id.
  *
  * @author Trym Hamer Gudvangen
  */
@@ -15,17 +16,17 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "fridge_items")
-public class FridgeItems {
+@Table(name = "shopping_items")
+public class ShoppingItems {
 
     /**
-     * The composite primary key of the fridge item, consisting of the item id and the fridge id.
+     * The composite primary key of the shopping list item, consisting of the item id and the fridge id.
      */
     @EmbeddedId
     private FridgeItemsId id;
 
     /**
-     * The item of the fridge item.
+     * The item for the shopping list.
      */
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("item")
@@ -35,7 +36,7 @@ public class FridgeItems {
     private Item item;
 
     /**
-     * The fridge of the fridge item.
+     * The fridge of the shopping list.
      */
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("fridge")
