@@ -6,4 +6,8 @@ public class UnauthorizedException extends RuntimeException {
         super(String.format("User, %s, is not authorized", username));
     }
 
+    public UnauthorizedException(String username, String message) {
+        super(String.format("User, %s, is not authorized", username) + message);
+    }
+
 }

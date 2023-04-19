@@ -1,6 +1,8 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.fridge;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeUserDTO;
+import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.exists.UserExistsException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFound;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.FridgeMemberMapper;
@@ -45,7 +47,20 @@ public class FridgeService implements IFridgeService{
         fridgeMemberRepository.save(FridgeMemberMapper.toFridgeMember(user, savedFridge, true));
     }
 
-    public void addUserToFridge(FridgeUserDTO fridgeUserDTO) {
+    /**
+     * This method adds a user to a given fridge. However, this is only possible if the person trying to add
+     * the user is already a part of the fridge and is a superuser.
+     * @param fridgeUserDTO     The information surrounding the user and fridge, given as a FridgeUserDTO object.
+     * @param userTryingToAdd   The username of the user trying to add the other user, given as a String
+     */
+    @Transactional
+    public void addUserToFridge(FridgeUserDTO fridgeUserDTO, String userTryingToAdd) {
+
+        if(userExistsInFridge(fridgeUserDTO.fridgeId(), fridgeUserDTO.username()))
+            throw new UserExistsException(fridgeUserDTO.username());
+
+        authorizeFridgeMemberAction(fridgeUserDTO.fridgeId(), userTryingToAdd, "add");
+
         User userToBeAdded = userRepository.findByUsername(fridgeUserDTO.username())
                 .orElseThrow(() -> new UsernameNotFoundException(fridgeUserDTO.username()));
 
@@ -55,7 +70,92 @@ public class FridgeService implements IFridgeService{
         fridgeMemberRepository.save(FridgeMemberMapper.toFridgeMember(
                 userToBeAdded, fridgeToBeAddedTo, fridgeUserDTO.isSuperUser())
         );
+    }
 
+    /**
+     * This method removes a user from a given fridge. However, this is only possible if the person trying to remove
+     * the user is already a part of the fridge and is a superuser.
+     * @param fridgeUserDTO     The information surrounding the user and fridge, given as a FridgeUserDTO object.
+     * @param userTryingToRemove   The username of the user trying to remove the other user, given as a String
+     */
+    @Transactional
+    public void deleteUserFromFridge(FridgeUserDTO fridgeUserDTO, String userTryingToRemove) {
+
+        if(!userExistsInFridge(fridgeUserDTO.fridgeId(), fridgeUserDTO.username())) return;
+
+        authorizeFridgeMemberAction(fridgeUserDTO.fridgeId(), userTryingToRemove, "remove");
+
+        fridgeMemberRepository.deleteFridgeMemberByFridge_FridgeIdAndUser_Username(
+                fridgeUserDTO.fridgeId(), fridgeUserDTO.username()
+        );
+
+        logger.info(fridgeUserDTO.username() + " was removed from the fridge.");
+    }
+
+    /**
+     * This method updates a user from a given fridge. However, this is only possible if the person trying to update
+     * the user is already a part of the fridge and is a superuser.
+     * @param fridgeUserDTO      The information surrounding the user and fridge, given as a FridgeUserDTO object.
+     * @param userTryingToUpdate The username of the user trying to update the other user, given as a String
+     */
+    @Transactional
+    public void updateUserFromFridge(FridgeUserDTO fridgeUserDTO, String userTryingToUpdate) {
+
+        if(!userExistsInFridge(fridgeUserDTO.fridgeId(), fridgeUserDTO.username()))
+            throw new UserNotFoundException(fridgeUserDTO.username());
+
+        authorizeFridgeMemberAction(fridgeUserDTO.fridgeId(), userTryingToUpdate, "update");
+
+
+        FridgeMember fridgeMemberToBeUpdated = fridgeMemberRepository
+                .findFridgeMemberByFridge_FridgeIdAndUser_Username(fridgeUserDTO.fridgeId(),
+                        fridgeUserDTO.username())
+                        .orElseThrow(() -> new FridgeNotFound(fridgeUserDTO.fridgeId()));
+
+
+        fridgeMemberToBeUpdated.setSuperUser(fridgeUserDTO.isSuperUser());
+
+        fridgeMemberRepository.save(fridgeMemberToBeUpdated);
+
+        logger.info(String.format(fridgeUserDTO.username() + " was changed %s super user.",
+                fridgeUserDTO.isSuperUser() ? "to" : "from"));
+    }
+
+
+
+    /**
+     * This method checks whether the user trying to perform the action on the fridge member is authorized.
+     *
+     * @param fridgeId              The id of the fridge, given as a Long object.
+     * @param userPerformingAction  The username of the user performing the action, given as a String.
+     * @param action                A verb describing the action, given as a String.
+     */
+    private void authorizeFridgeMemberAction(Long fridgeId, String userPerformingAction, String action) {
+
+        logger.info(String.format("Checking that the user trying to %s is a super user and a member of the fridge", action));
+        if(!fridgeMemberRepository
+                .findFridgeMemberByFridge_FridgeIdAndUser_Username(fridgeId, userPerformingAction)
+                .orElseThrow(() -> new UnauthorizedException(userPerformingAction))
+                .isSuperUser()) {
+            logger.warn("User is not authorized since they are not a super user!");
+            throw new UnauthorizedException(userPerformingAction, "This user is part of the fridge but not a super user.");
+        }
+        logger.info("User is super user and part of the fridge!");
+    }
+
+    /**
+     * This method checks whether the effected user exists.
+     * @param fridgeId  The id of the fridge, given as a Long object.
+     * @param username  The username of the user the action is being performed on, given as a String.
+     * @return          Status of whether user exists in fridge, {@code true}, or not, {@code false}
+     */
+    private boolean userExistsInFridge(Long fridgeId, String username) {
+        logger.info("Checking whether the soon-to-be effected user is a part of the fridge");
+        if(!fridgeMemberRepository.existsFridgeMemberByFridge_FridgeIdAndUser_Username(fridgeId, username)) {
+            logger.warn("User exists!!!");
+            return true;
+        }
+        return false;
     }
 
 }
