@@ -6,10 +6,48 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class RecipeItemsTest {
+
+    @Nested
+    class RecipeItems_object_with {
+
+        @Test
+        void no_arg_constructor_can_be_made() {
+            try {
+                RecipeItems recipeItem = new RecipeItems();
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void all_arg_constructor_can_be_made() {
+            try {
+                RecipeItems recipeItem = new RecipeItems(null, new Item(), new Recipe());
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void builder_can_be_made() {
+            try {
+                RecipeItems recipeItems = RecipeItems
+                        .builder()
+                        .item(new Item())
+                        .recipe(new Recipe())
+                        .id(null)
+                        .build();
+
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+    }
 
     @Nested
     class Null_columns_constructors {
@@ -55,16 +93,20 @@ class RecipeItemsTest {
 
         @Test
         void item_getter_returns_correct_value(){
-            Recipe recipe = new Recipe(1L, 50);
-            Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(), "picture.png");
+            Recipe recipe = new Recipe(1L, 50, new ArrayList<>());
+            Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(1L, "Dairy", new ArrayList<>()), 200000,
+                    new Date(), new Date(), "picture.png", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             RecipeItems recipeItems = new RecipeItems(new RecipeItemId(recipe.getRecipeId(), item.getItemId()), item, recipe);
             assertEquals(item, recipeItems.getItem());
         }
 
         @Test
         void recipe_getter_returns_correct_value(){
-            Recipe recipe = new Recipe(1L, 50);
-            Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(), "picture.png");
+            Recipe recipe = new Recipe(1L, 50, new ArrayList<>());
+            Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(),
+                    "picture.png", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             RecipeItems recipeItems = new RecipeItems(new RecipeItemId(recipe.getRecipeId(), item.getItemId()), item, recipe);
             assertEquals(recipe, recipeItems.getRecipe());
         }

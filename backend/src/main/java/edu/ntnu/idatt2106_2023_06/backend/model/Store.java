@@ -37,11 +37,11 @@ public class Store {
     private String storeName;
 
     /**
-     * The items that use the given food category.
+     * The items from the given store.
      */
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<Item> itemsWithCategory = new ArrayList<>();
+    private List<Item> itemsInStore = new ArrayList<>();
 
 
 }

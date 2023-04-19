@@ -2,11 +2,15 @@ package edu.ntnu.idatt2106_2023_06.backend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
- * This class represents a food item. A food item has an id, name, brief description, price, purchase and expiration date,
+ * This class represents a food items. A food items has an id, name, brief description, price, purchase and expiration date,
  * and category.
  *
  * @author Trym Hamer Gudvangen
@@ -23,7 +27,7 @@ import java.util.Date;
 public class Item {
 
     /**
-     * The unique identifier for this item.
+     * The unique identifier for this items.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,14 +42,14 @@ public class Item {
     private String productName;
 
     /**
-     * A brief description of this item.
+     * A brief description of this items.
      */
     @Column(name = "brief_desc", nullable = false)
     @NonNull
     private String briefDesc;
 
     /**
-     * The category this item belongs to.
+     * The category this items belongs to.
      */
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "store_id")
@@ -54,29 +58,53 @@ public class Item {
     private Store store;
 
     /**
-     * The price of this item.
+     * The price of this items.
      */
     @Column(name = "price", nullable = false)
     @NonNull
     private double price;
 
     /**
-     * The purchase date of the item, can be null
+     * The purchase date of the items, can be null
      */
     @Column(name = "purchase_date")
     private Date purchaseDate;
 
     /**
-     * The expiration date of the item, can be null
+     * The expiration date of the items, can be null
      */
     @Column(name = "expiration_date")
     private Date expirationDate;
 
     /**
-     * The picture of the food item, can be null
+     * The picture of the food items, can be null
      */
     @Column(name = "picture_link")
     private String pictureLink;
+
+    /**
+     * The items in the recipe.
+     */
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    private List<RecipeItems> itemsInRecipe = new ArrayList<>();
+
+    /**
+     * The items in the shopping list.
+     */
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    private List<ShoppingItems> itemsInShoppingList = new ArrayList<>();
+
+    /**
+     * The items in the fridge.
+     */
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    private List<FridgeItems> itemsInFridge = new ArrayList<>();
 
 
 }

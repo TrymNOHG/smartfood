@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+
 @RequiredArgsConstructor
 @Service
 public class AuthenticationService implements IAuthenticationService {
@@ -47,6 +49,7 @@ public class AuthenticationService implements IAuthenticationService {
                 .firstName(userRegisterDTO.firstName())
                 .lastName(userRegisterDTO.lastName())
                 .email(userRegisterDTO.email())
+                .members(new HashSet<>())
                 .build();
         if(userRepository.findByEmail(userRegisterDTO.email()).isPresent())
             throw new UserExistsException("email", userRegisterDTO.email());

@@ -12,6 +12,43 @@ import static org.junit.jupiter.api.Assertions.*;
 class StoreTest {
 
     @Nested
+    class Store_object_with {
+
+        @Test
+        void no_arg_constructor_can_be_made() {
+            try {
+                Store store = new Store();
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void all_arg_constructor_can_be_made() {
+            try {
+                Store store = new Store(1L, "Store", new ArrayList<>());
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void builder_can_be_made() {
+            try {
+                Store store = Store
+                        .builder()
+                        .storeId(1L)
+                        .storeName("Store")
+                        .itemsInStore(new ArrayList<>())
+                        .build();
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+    }
+
+    @Nested
     class Store_can_properly_get {
         Store getFoodCategory() {
             return new Store(1L, "Dairy", new ArrayList<>());
@@ -58,10 +95,12 @@ class StoreTest {
         void item_list() {
             Store store = getFoodCategory();
             List<Item> items = new ArrayList<>();
-            items.add(new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.", new Store(3L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(), null));
+            items.add(new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(3L, "Dairy", new ArrayList<>()), 200000,
+                    new Date(), new Date(), null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
 
-            store.setItemsWithCategory(items);
-            List<Item> actualItems = store.getItemsWithCategory();
+            store.setItemsInStore(items);
+            List<Item> actualItems = store.getItemsInStore();
 
             assertEquals(items, actualItems);
         }

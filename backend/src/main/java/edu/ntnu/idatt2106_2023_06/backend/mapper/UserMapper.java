@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106_2023_06.backend.mapper.users;
+package edu.ntnu.idatt2106_2023_06.backend.mapper;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserRegisterDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoadDTO;
