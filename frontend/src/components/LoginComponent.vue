@@ -5,9 +5,9 @@
       <form @submit.prevent="submit" :class="{ 'has-errors': hasErrors }">
         <div class="input-box">
           <span class="icon"><font-awesome-icon icon="fa-solid fa-envelope" /></span>
-          <input type="text" required v-model.trim="username" name="username">
-          <label>{{ $t('username') }}</label>
-          <div v-if="errors['username']" class="error">{{ $t(errors['username']) }}</div>
+          <input type="text" required v-model.trim="email" name="email">
+          <label>{{ $t('email') }}</label>
+          <div v-if="errors['email']" class="error">{{ $t(errors['email']) }}</div>
         </div>
         <div class="input-box">
           <span class="icon"><font-awesome-icon icon="fa-solid fa-lock" /></span>
@@ -43,22 +43,22 @@ export default {
     const storage = useStorage();
     const store = useLoggedInStore();
     const validationSchema = yup.object({
-      username: yup.string().required("user_error"),
+      email: yup.string().required("email_error"),
       password: yup.string().required("error_password").min(8, "password_length"),
     });
     const { handleSubmit, errors, setFieldTouched, setFieldValue } = useForm({
       validationSchema,
       initialValues: {
-        username: "",
+        email: "",
         password: "",
       },
     });
-    const { value: username } = useField("username");
+    const { value: email } = useField("email");
     const { value: password } = useField("password");
     const submit = handleSubmit(async () => {
       console.log("Submit clicked") 
       const request = {
-        email: username.value,
+        email: email.value,
         password: password.value,
       };
       await loginUser(request)
@@ -91,7 +91,7 @@ export default {
 
     return {
       password,
-      username,
+      email,
       errors,
       submit,
       validationSchema,
