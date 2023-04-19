@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,7 +26,7 @@ class FridgeTest {
         @Test
         void all_arg_constructor_can_be_made() {
             try {
-                Fridge fridge = new Fridge(1L, "Fridge");
+                Fridge fridge = new Fridge(1L, "Fridge", new HashSet<>());
             } catch (Exception e) {
                 fail();
             }
@@ -58,7 +59,7 @@ class FridgeTest {
     @Nested
     class Fridge_can_properly_get {
         Fridge getFridge() {
-            return new Fridge(1L, "Norman family");
+            return new Fridge(1L, "Norman family", new HashSet<>());
         }
 
         @Test
@@ -85,7 +86,7 @@ class FridgeTest {
     @Nested
     class Fridge_can_properly_set {
         Fridge getFridge() {
-            return new Fridge(1L, "Norman family");
+            return new Fridge(1L, "Norman family", new HashSet<>());
         }
 
         @Test

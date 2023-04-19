@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,7 +30,7 @@ class ShoppingItemsTest {
                         "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()), 200000,
                         new Date(), new Date(), null);
                 ShoppingItems shoppingItems = new ShoppingItems(null, item,
-                        new Fridge(1L, "Fridge"), true, 1);
+                        new Fridge(1L, "Fridge", new HashSet<>()), true, 1);
             } catch (Exception e) {
                 fail();
             }
@@ -46,7 +47,7 @@ class ShoppingItemsTest {
                         .item(item)
                         .id(null)
                         .suggestion(true)
-                        .fridge(new Fridge(1L, "Fridge"))
+                        .fridge(new Fridge(1L, "Fridge", new HashSet<>()))
                         .build();
             } catch (Exception e) {
                 fail();
@@ -99,7 +100,7 @@ class ShoppingItemsTest {
 
         @Test
         void item_getter_returns_correct_value(){
-            Fridge fridge = new Fridge(1L, "Norman family");
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, new Date(), new Date(), null);
@@ -109,7 +110,7 @@ class ShoppingItemsTest {
 
         @Test
         void fridge_getter_returns_correct_value(){
-            Fridge fridge = new Fridge(1L, "Norman family");
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, new Date(), new Date(), null);
@@ -119,7 +120,7 @@ class ShoppingItemsTest {
 
         @Test
         void suggestion_getter_returns_correct_value(){
-            Fridge fridge = new Fridge(1L, "Norman family");
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, new Date(), new Date(), null);
@@ -132,7 +133,7 @@ class ShoppingItemsTest {
     class Setters{
         @Test
         void item_setter_can_be_applied(){
-            Fridge fridge = new Fridge(1L, "Norman family");
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, new Date(), new Date(), null);
@@ -144,7 +145,7 @@ class ShoppingItemsTest {
 
         @Test
         void fridge_setter_can_be_applied(){
-            Fridge fridge = new Fridge(1L, "Norman family");
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, new Date(), new Date(), null);
@@ -156,7 +157,7 @@ class ShoppingItemsTest {
 
         @Test
         void suggestion_setter_can_be_applied(){
-            Fridge fridge = new Fridge(1L, "Norman family");
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, new Date(), new Date(), null);
