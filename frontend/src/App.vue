@@ -21,7 +21,7 @@
           </RouterLink>
         </li>
         <li>
-          <RouterLink to="/profile">
+          <RouterLink to="/statistics">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-chart-pie" />
             </span>
