@@ -10,6 +10,8 @@
   "full_name": "Full name",
   "firstname": "First Name",
   "lastname": "Last Name",
+  "first_name": "First name",
+  "last_name": "Last name", 
   "name": "Firstname and Surname",
   "username": "Username",
   "email": "Email",
@@ -28,5 +30,6 @@
   "password_error": "Password is required",
   "error_password": "Password is required",
   "email_error": "Email is required",
+  "first_name_error": "First name is required",
   "password_length": "Password must be at least 8 characters"
 }
