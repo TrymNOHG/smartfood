@@ -1,7 +1,7 @@
 <template>
   <header>
     <img src="@/assets/smartmat.png" alt="Logo">
-    <h1>MatSmart</h1>
+    <h1>{{ $t('matsmart') }}</h1>
     <nav>
       <ul>
         <li>
@@ -9,7 +9,7 @@
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-utensils" />
             </span>
-            <span class="text">Dinner</span>
+            <span class="text">{{ $t('dinner') }}</span>
           </RouterLink>
         </li>
         <li>
@@ -17,7 +17,7 @@
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-kitchen-set" />
             </span>
-            <span class="text">Fridge</span>
+            <span class="text">{{ $t('fridge') }}</span>
           </RouterLink>
         </li>
         <li>
@@ -25,7 +25,7 @@
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-chart-pie" />
             </span>
-            <span class="text">Statistikk</span>
+            <span class="text">{{ $t('statistics') }}</span>
           </RouterLink>
         </li>
         <li>
@@ -33,7 +33,7 @@
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-cart-shopping" />
             </span>
-            <span class="text">Shopping Cart</span>
+            <span class="text">{{ $t('shopping_cart') }}</span>
           </RouterLink>
         </li>
         <li>
@@ -41,13 +41,43 @@
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-circle-user" />
             </span>
+            <span class="text">{{ $t('profile') }}</span>
           </RouterLink>
         </li>
+        <div class="language" @click="changeLanguage()">{{language}}</div>
       </ul>
     </nav>
   </header>
   <RouterView/>
 </template>
+
+
+<script>
+import {computed} from "vue";
+import i18n from "@/locales/i18n";
+
+export default {
+  data() {
+    return {
+      language: "NO",
+    }
+  },
+
+  methods: {
+    changeLanguage() {
+      if (this.language === "NO") {
+        this.language = "EN";
+        i18n.global.locale = "en"
+      } else {
+        i18n.global.locale = "no"
+        this.language = "NO"
+      }
+    }
+  }
+}
+</script>
+
+
 
 <style scoped>
 * {
@@ -72,7 +102,13 @@ header {
 header img {
   height: 100px;
   width: auto;
-  margin-right: 170px;
+  margin-right: 300px;
+}
+
+.language {
+  color: white;
+  margin-left: 20px;
+  cursor: pointer;
 }
 
 h1 {
@@ -96,7 +132,7 @@ nav ul {
 
 nav ul li {
   position: relative;
-  width: 60px;
+  width: 80px;
   height: 70px;
   z-index: 1;
 }
@@ -157,7 +193,7 @@ nav ul li:hover a .text {
   }
 
   h1 {
-    font-size: 1.25rem;
+    font-size: 1rem;
     letter-spacing: 2px;
   }
 
@@ -211,23 +247,23 @@ nav ul li:hover a .text {
   }
 }
 
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 980px) and (min-width: 800px) {
   header img {
-    height: 30px;
+    height: 50px;
   }
 
   h1 {
-    font-size: 0.8rem;
+    font-size: 2rem;
   }
 
   nav ul li {
-    width: 30px;
+    width: 50px;
     height: 50px;
   }
 
   nav ul li a .icon {
     line-height: 55px;
-    font-size: 3em;
+    font-size: 1.5em;
   }
 
   nav ul li a .text {

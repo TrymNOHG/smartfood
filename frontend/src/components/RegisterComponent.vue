@@ -1,35 +1,35 @@
 <template>
   <div class="wrapper">
     <div class="form-box login">
-      <h2>Login</h2>
+      <h2>{{ $t('register') }}</h2>
       <form @submit.prevent="submit" :class="{ 'has-errors': hasErrors }">
         <div class="input-box">
           <span class="icon"><font-awesome-icon icon="fa-solid fa-signature" /></span>
           <input type="text" required v-model.trim="fullName" name="fullName">
-          <label>Full name</label>
-          <div v-if="errors['fullName']" class="error">{{ errors['fullName'] }}</div>
+          <label>{{ $t('full_name') }}</label>
+          <div v-if="errors['fullName']" class="error">{{ $t(errors['fullName']) }}</div>
         </div>
         <div class="input-box">
           <span class="icon"><font-awesome-icon icon="fa-solid fa-person" /></span>
           <input type="text" required v-model.trim="username" name="username">
-          <label>Username</label>
-          <div v-if="errors['username']" class="error">{{ errors['username'] }}</div>
+          <label>{{ $t('username') }}</label>
+          <div v-if="errors['username']" class="error">{{ $t(errors['username']) }}</div>
         </div>
         <div class="input-box">
           <span class="icon"><font-awesome-icon icon="fa-solid fa-envelope" /></span>
           <input type="email" required v-model.trim="email" name="email">
-          <label>Email</label>
-          <div v-if="errors['email']" class="error">{{ errors['email'] }}</div>
+          <label>{{ $t('email') }}</label>
+          <div v-if="errors['email']" class="error">{{ $t(errors['email']) }}</div>
         </div>
         <div class="input-box">
           <span class="icon"><font-awesome-icon icon="fa-solid fa-lock" /></span>
           <input type="password" required v-model.trim="password" name="password">
-          <label>Password</label>
-          <div v-if="errors['password']" class="error">{{ errors['password'] }}</div>
+          <label>{{ $t('password') }}</label>
+          <div v-if="errors['password']" class="error">{{ $t(errors['password']) }}</div>
         </div>
-        <button type="submit" @click="submit">Register</button>
+        <button type="submit" @click="submit">{{ $t('register') }}</button>
         <div class="login-register">
-          <p>Already have an account?<a href="/login" class="register-link">Login</a></p>
+          <p>{{ $t('already_have_account') }}<a href="/login" class="register-link">{{ $t('login') }}</a></p>
         </div>
       </form>
     </div>
@@ -47,18 +47,18 @@ export default {
     const validationSchema = yup.object({
       fullName: yup
         .string()
-        .required("Full name is required"),
+        .required("full_name_error"),
       username: yup
         .string()
-        .required("Username is required"),
+        .required("user_error"),
       email: yup
         .string()
-        .email("Please enter a valid email address")
-        .required("Email address is required"),
+        .email("wrong_email_error")
+        .required("email_error"),
       password: yup
         .string()
-        .required("Password is required")
-        .min(8, "Password must be at least 8 characters long"),
+        .required("password_error")
+        .min(8, "password_length"),
     });
 
     const { handleSubmit, errors, setFieldTouched, setFieldValue } = useForm({
