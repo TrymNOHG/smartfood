@@ -72,7 +72,11 @@ public class Item {
     @Column(name = "expiration_date")
     private Date expirationDate;
 
-
+    /**
+     * The picture of the food item, can be null
+     */
+    @Column(name = "picture_link")
+    private String pictureLink;
 
 
 }

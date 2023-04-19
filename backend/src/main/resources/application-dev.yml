@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: #TODO: add URL, username, and password to database
+    url: jdbc:mysql://mysql.stud.idi.ntnu.no:3306/tomaber
     username: tomaber
     password: h97.OqxwW
     driverClassName: com.mysql.cj.jdbc.Driver
