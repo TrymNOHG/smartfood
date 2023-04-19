@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public class ItemController {
 
         logger.info("User wants to add a new items to fridge");
         Long itemId = itemService.addItem(itemDTO);
-        itemService.addToFridge(itemId, fridgeId);
+        itemService.addToFridge(itemId, fridgeId, itemDTO.quantity());
         logger.info("New items has been added!");
         return ResponseEntity.ok().build();
     }
@@ -51,7 +52,7 @@ public class ItemController {
 
         logger.info("User wants to add a new items to shopping list");
         Long itemId = itemService.addItem(itemDTO);
-        itemService.addToShoppingList(itemId, fridgeId);
+        itemService.addToShoppingList(itemId, fridgeId, itemDTO.quantity());
         logger.info("New items has been added!");
         return ResponseEntity.ok().build();
     }
@@ -71,6 +72,15 @@ public class ItemController {
         logger.info("User wants to delete item from shopping list");
         itemService.deleteItemFromShoppingList(itemRemoveDTO);
         logger.info("Items have been deleted!");
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value="/buy/shopping", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Buy items from shopping list")
+    public ResponseEntity<Object> buyItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList){
+        logger.info("User wants to buy item from shopping list");
+        itemService.buyItemsFromShoppingList(itemDTOList);
+        logger.info("Items have been bought!");
         return ResponseEntity.ok().build();
     }
 

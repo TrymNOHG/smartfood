@@ -9,11 +9,12 @@ public interface IItemService {
 
 
     Long addItem(ItemDTO itemDTO);
-    void addToFridge(Long itemId, Long fridgeId);
+    void addToFridge(Long itemId, Long fridgeId, int quantity);
     List<ItemDTO> getFridgeItems(Long fridgeId);
-    void addToShoppingList(Long itemId, Long fridgeId);
+    void addToShoppingList(Long itemId, Long fridgeId, int quantity);
     List<ItemDTO> getShoppingListItems(Long fridgeId);
     void deleteItemFromShoppingList(ItemRemoveDTO itemRemoveDTO);
+    void buyItemsFromShoppingList(List<ItemRemoveDTO> itemDTOList);
 
 
 }

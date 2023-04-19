@@ -31,6 +31,7 @@ public class FridgeService implements IFridgeService{
     }
 
     @Override
+    @Transactional
     public void initializeFridge(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));

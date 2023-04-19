@@ -18,10 +18,10 @@ public class ItemMapper {
                 .build();
     }
 
-    public static ItemDTO toItemDTO(Item item){
+    public static ItemDTO toItemDTO(Item item, int quantity){
         return new ItemDTO(item.getProductName(), item.getBriefDesc(),
                 item.getStore().getStoreName(), item.getPrice(),
                 item.getPurchaseDate(), item.getExpirationDate(),
-                item.getPictureLink());
+                item.getPictureLink(), quantity);
     }
 }
