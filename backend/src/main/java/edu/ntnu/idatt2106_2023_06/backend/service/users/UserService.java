@@ -11,6 +11,7 @@ import edu.ntnu.idatt2106_2023_06.backend.mapper.UserMapper;
 import edu.ntnu.idatt2106_2023_06.backend.model.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import edu.ntnu.idatt2106_2023_06.backend.service.files.FileStorageService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,13 @@ public class UserService implements IUserService {
 
 
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
+
+    @PostConstruct
+    public void init() {
+        userRepository.dropTrigger();
+        userRepository.createTrigger();
+    }
+
     /**
      * This method updates a user's information.
      * It first checks if the given user exists in the database. It then checks if the new username already exists,

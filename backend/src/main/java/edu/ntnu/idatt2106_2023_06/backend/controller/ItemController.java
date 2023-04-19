@@ -1,7 +1,8 @@
 package edu.ntnu.idatt2106_2023_06.backend.controller;
 
 
-import edu.ntnu.idatt2106_2023_06.backend.dto.ItemDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,8 @@ public class ItemController {
                                               @ParameterObject @RequestParam(name = "fridgeId") Long fridgeId){
 
         logger.info("User wants to add a new items to fridge");
-        itemService.addItem(itemDTO);
-        itemService.addToFridge(itemDTO.name(), fridgeId);
+        Long itemId = itemService.addItem(itemDTO);
+        itemService.addToFridge(itemId, fridgeId);
         logger.info("New items has been added!");
         return ResponseEntity.ok().build();
     }
@@ -37,10 +38,40 @@ public class ItemController {
     @GetMapping(value="/get/fridge")
     @Operation(summary = "Get items from fridge")
     public ResponseEntity<Object> getFridge(@ParameterObject @RequestParam(name = "fridgeId") Long fridgeId){
-        logger.info("User wants to add a new items to fridge");
+        logger.info("User wants to get items from fridge");
         List<ItemDTO> itemList = itemService.getFridgeItems(fridgeId);
-        logger.info("New items has been added!");
+        logger.info("Items have been retrieved!");
         return ResponseEntity.ok(itemList);
+    }
+
+    @PostMapping(value="/add/shopping")
+    @Operation(summary = "Add items to shopping list")
+    public ResponseEntity<Object> addToShoppingList(@ParameterObject @RequestBody ItemDTO itemDTO,
+                                                    @ParameterObject @RequestParam(name = "fridgeId") Long fridgeId){
+
+        logger.info("User wants to add a new items to shopping list");
+        Long itemId = itemService.addItem(itemDTO);
+        itemService.addToShoppingList(itemId, fridgeId);
+        logger.info("New items has been added!");
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value="/get/shopping")
+    @Operation(summary = "Get items from fridge")
+    public ResponseEntity<Object> getShoppingList(@ParameterObject @RequestParam(name = "fridgeId") Long fridgeId){
+        logger.info("User wants to get items from shopping list");
+        List<ItemDTO> itemList = itemService.getShoppingListItems(fridgeId);
+        logger.info("Items have been retrieved!");
+        return ResponseEntity.ok(itemList);
+    }
+
+    @DeleteMapping(value="/delete/shopping")
+    @Operation(summary = "Delete item from shopping list")
+    public ResponseEntity<Object> deleteItemFromShoppingList(@ParameterObject @RequestBody ItemRemoveDTO itemRemoveDTO){
+        logger.info("User wants to delete item from shopping list");
+        itemService.deleteItemFromShoppingList(itemRemoveDTO);
+        logger.info("Items have been deleted!");
+        return ResponseEntity.ok().build();
     }
 
 

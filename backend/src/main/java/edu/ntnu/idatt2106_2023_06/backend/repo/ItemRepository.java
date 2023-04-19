@@ -23,12 +23,21 @@ import java.util.Optional;
 public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificationExecutor<Item> {
 
     /**
-     * Finds an items by its items ID.
+     * Finds an item by its items ID.
      *
-     * @param itemId the ID of the items to find
-     * @return an Optional containing the items with the given ID, or an empty Optional if no such items exists
+     * @param itemId the ID of the item to find
+     * @return an Optional containing the item with the given ID, or an empty Optional if no such item exists
      */
     Optional<Item> findByItemId(Long itemId);
+
+    /**
+     * Finds an item by its item name and store.
+     *
+     * @param name the name of the item to find
+     * @param store the store to use
+     * @return an Optional containing the item with the given name and store, or an empty Optional if no such item exists
+     */
+    Optional<Item> findByProductNameAndStore(String name, Store store);
 
     /**
      * Finds a list of items by their store.
