@@ -12,6 +12,43 @@ import static org.junit.jupiter.api.Assertions.*;
 class StoreTest {
 
     @Nested
+    class Store_object_with {
+
+        @Test
+        void no_arg_constructor_can_be_made() {
+            try {
+                Store store = new Store();
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void all_arg_constructor_can_be_made() {
+            try {
+                Store store = new Store(1L, "Store", new ArrayList<>());
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void builder_can_be_made() {
+            try {
+                Store store = Store
+                        .builder()
+                        .storeId(1L)
+                        .storeName("Store")
+                        .itemsWithCategory(new ArrayList<>())
+                        .build();
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+    }
+
+    @Nested
     class Store_can_properly_get {
         Store getFoodCategory() {
             return new Store(1L, "Dairy", new ArrayList<>());

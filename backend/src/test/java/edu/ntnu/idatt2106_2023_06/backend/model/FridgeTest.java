@@ -3,9 +3,57 @@ package edu.ntnu.idatt2106_2023_06.backend.model;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class FridgeTest {
+
+    @Nested
+    class Fridge_object_with {
+
+        @Test
+        void no_arg_constructor_can_be_made() {
+            try {
+                Fridge fridge = new Fridge();
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void all_arg_constructor_can_be_made() {
+            try {
+                Fridge fridge = new Fridge(1L, "Fridge");
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void required_args_constructor_can_be_made() {
+            try {
+                Fridge fridge = new Fridge("Fridge");
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void builder_can_be_made() {
+            try {
+                Fridge fridge = Fridge
+                        .builder()
+                        .fridgeId(1L)
+                        .fridgeName("Fridge")
+                        .build();
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+    }
 
     @Nested
     class Fridge_can_properly_get {

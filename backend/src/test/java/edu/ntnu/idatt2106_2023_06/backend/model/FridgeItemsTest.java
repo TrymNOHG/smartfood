@@ -11,6 +11,45 @@ import static org.junit.jupiter.api.Assertions.*;
 class FridgeItemsTest {
 
     @Nested
+    class FridgeItems_object_with {
+
+        @Test
+        void no_arg_constructor_can_be_made() {
+            try {
+                FridgeItems items = new FridgeItems();
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void all_arg_constructor_can_be_made() {
+            try {
+                Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(), null);
+                FridgeItems items = new FridgeItems(null, item, new Fridge());
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+
+        @Test
+        void builder_can_be_made() {
+            try {
+                Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(), null);
+                FridgeItems items = FridgeItems
+                        .builder()
+                        .fridge(new Fridge())
+                        .item(item)
+                        .build();
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+    }
+
+    @Nested
     class Null_columns_constructors {
 
         @Test

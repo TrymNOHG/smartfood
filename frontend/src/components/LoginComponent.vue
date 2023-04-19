@@ -6,21 +6,21 @@
         <div class="input-box">
           <span class="icon"><font-awesome-icon icon="fa-solid fa-envelope" /></span>
           <input type="email" required v-model.trim="username" name="username">
-          <label>Email</label>
-          <div v-if="errors['username']" class="error">{{ errors['username'] }}</div>
+          <label>{{ $t('username') }}</label>
+          <div v-if="errors['username']" class="error">{{ $t(errors['username']) }}</div>
         </div>
         <div class="input-box">
           <span class="icon"><font-awesome-icon icon="fa-solid fa-lock" /></span>
           <input type="password" required v-model.trim="password" name="password">
-          <label>Password</label>
-          <div v-if="errors['password']" class="error">{{ errors['password'] }}</div>
+          <label>{{ $t('password') }}</label>
+          <div v-if="errors['password']" class="error">{{ $t(errors['password']) }}</div>
         </div>
         <div class="remember-forgot">
-          <a href="#">Forgot Password?</a>
+          <a href="#">{{ $t('forgot_password') }}</a>
         </div>
-        <button type="submit" @click="submit">Login</button>
+        <button type="submit" @click="submit">{{ $t('login') }}</button>
         <div class="login-register">
-          <p>Don't have an account? <a href="/register" class="register-link">Register</a></p>
+          <p>{{ $t('dont_have_account') }} <a href="/register" class="register-link">{{ $t('register') }}</a></p>
         </div>
         <div v-if="submitMessage" class="submit-message">{{ submitMessage }}</div>
       </form>
@@ -45,9 +45,9 @@ export default {
     const validationSchema = yup.object({
       username: yup
         .string()
-        .email("Please enter a valid email")
-        .required("Email is Required"),
-      password: yup.string().required("Password required").min(8),
+        .email("wrong_email_error")
+        .required("email_error"),
+      password: yup.string().required("error_password").min(8, "password_length"),
     });
     const { handleSubmit, errors, setFieldTouched, setFieldValue } = useForm({
       validationSchema,
@@ -174,8 +174,6 @@ input {
 
 .error {
   font-size: 12px;
-  
-  margin-top: 5px;
   margin: 5px;
   position: relative;
 }

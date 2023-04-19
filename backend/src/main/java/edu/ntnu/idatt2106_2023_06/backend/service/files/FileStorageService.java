@@ -1,8 +1,10 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.files;
 
+import edu.ntnu.idatt2106_2023_06.backend.service.users.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,18 +32,14 @@ import java.util.Objects;
 public class FileStorageService {
 
     private final Path fileStorageLocation;
-    Logger logger = org.slf4j.LoggerFactory.getLogger(FileStorageService.class);
+    private final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
 
     /**
      * Constructor for the FileStorageService. The file storage location is set to src/main/resources/images.
      */
-    public FileStorageService() {
+    public FileStorageService() throws IOException {
         this.fileStorageLocation = Paths.get("src/main/resources/images").toAbsolutePath().normalize();
-        try {
-            Files.createDirectories(this.fileStorageLocation);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not create the directory for file storage.", e);
-        }
+        Files.createDirectories(this.fileStorageLocation);
     }
 
     /**
