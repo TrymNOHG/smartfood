@@ -10,4 +10,8 @@ public class ExistsException extends RuntimeException{
         super(String.format("%s with id %d already exists", attribute, value));
     }
 
+    public ExistsException(String type, String attribute, String value) {
+        super(String.format("%s with %s: %s, already exists", type, attribute, value));
+    }
+
 }
