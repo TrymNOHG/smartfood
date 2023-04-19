@@ -5,14 +5,6 @@
     <nav>
       <ul>
         <li>
-          <RouterLink to="/profile">
-            <span class="icon">
-              <font-awesome-icon icon="fa-solid fa-house" />
-            </span>
-            <span class="text">Profile</span>
-          </RouterLink>
-        </li>
-        <li>
           <RouterLink to="/dinner">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-utensils" />
@@ -21,19 +13,27 @@
           </RouterLink>
         </li>
         <li>
-          <RouterLink to="/cart">
-            <span class="icon">
-              <font-awesome-icon icon="fa-solid fa-cart-shopping" />
-            </span>
-            <span class="text">Shopping Cart</span>
-          </RouterLink>
-        </li>
-        <li>
           <RouterLink to="/fridge">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-kitchen-set" />
             </span>
             <span class="text">Fridge</span>
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/profile">
+            <span class="icon">
+              <font-awesome-icon icon="fa-solid fa-chart-pie" />
+            </span>
+            <span class="text">Statistikk</span>
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/cart">
+            <span class="icon">
+              <font-awesome-icon icon="fa-solid fa-cart-shopping" />
+            </span>
+            <span class="text">Shopping Cart</span>
           </RouterLink>
         </li>
         <li>

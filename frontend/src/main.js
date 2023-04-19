@@ -16,7 +16,8 @@ import {
     faUtensils,
     faUserCircle,
     faPerson,
-    faSignature
+    faSignature,
+    faPieChart
 } from "@fortawesome/free-solid-svg-icons";
 
 /* Imports fr multiple languages */
@@ -33,6 +34,7 @@ library.add(
     faUserCircle,
     faPerson,
     faSignature,
+    faPieChart
 )
 
 const pinia = createPinia()
