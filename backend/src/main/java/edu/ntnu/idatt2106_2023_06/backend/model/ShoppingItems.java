@@ -3,8 +3,6 @@ package edu.ntnu.idatt2106_2023_06.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
-
 /**
  * This class represents a shopping list. It, therefore, contains a fridge ID (the shopping list's id) and the item
  * id.
@@ -53,6 +51,13 @@ public class ShoppingItems {
     @Column(name = "suggestion")
     @NonNull
     private boolean suggestion;
+
+
+    /**
+     * This is the quantity of the item
+     */
+    @Column(name = "quantity")
+    private int quantity;
 
 
 }

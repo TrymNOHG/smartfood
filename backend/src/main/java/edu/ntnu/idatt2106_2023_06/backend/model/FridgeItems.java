@@ -44,5 +44,11 @@ public class FridgeItems {
     @ToString.Exclude
     private Fridge fridge;
 
+    /**
+     * This is the quantity of the item
+     */
+    @Column(name = "quantity")
+    private int quantity;
+
 
 }
