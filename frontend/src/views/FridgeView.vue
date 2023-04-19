@@ -1,6 +1,6 @@
 <template>
 
-    <div>
+    <div class="wrapper">
       <fridge-component/>
     </div>
   
