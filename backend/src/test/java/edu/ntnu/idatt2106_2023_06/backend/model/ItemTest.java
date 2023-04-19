@@ -11,6 +11,54 @@ import static org.junit.jupiter.api.Assertions.*;
 class ItemTest {
 
     @Nested
+    class Item_object_with {
+
+        @Test
+        void no_arg_constructor_can_be_made() {
+            try {
+                Item item = new Item();
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void all_arg_constructor_can_be_made() {
+            try {
+                Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(), null);
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void required_args_constructor_can_be_made() {
+            try {
+                Item item = new Item("Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()), 200000);
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void builder_can_be_made() {
+            try {
+                Item item = Item
+                        .builder()
+                        .itemId(1L)
+                        .productName("Tine Melk")
+                        .briefDesc("Tine melk kommer fra fri gående, grass matet kuer.")
+                        .store(new Store(1L, "Dairy", new ArrayList<>()))
+                        .price(200000)
+                        .build();
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+    }
+
+    @Nested
     class Null_columns_constructors {
 
         @Test

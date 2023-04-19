@@ -6,10 +6,48 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class RecipeItemsTest {
+
+    @Nested
+    class RecipeItems_object_with {
+
+        @Test
+        void no_arg_constructor_can_be_made() {
+            try {
+                RecipeItems recipeItem = new RecipeItems();
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void all_arg_constructor_can_be_made() {
+            try {
+                RecipeItems recipeItem = new RecipeItems(null, new Item(), new Recipe());
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void builder_can_be_made() {
+            try {
+                RecipeItems recipeItems = RecipeItems
+                        .builder()
+                        .item(new Item())
+                        .recipe(new Recipe())
+                        .id(null)
+                        .build();
+
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+    }
 
     @Nested
     class Null_columns_constructors {
