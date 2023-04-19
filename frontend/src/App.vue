@@ -1,7 +1,7 @@
 <template>
   <header>
     <img src="@/assets/smartmat.png" alt="Logo">
-    <h1>MatSmart</h1>
+    <h1>{{ $t('matsmart') }}</h1>
     <nav>
       <ul>
         <li>
@@ -9,7 +9,7 @@
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-utensils" />
             </span>
-            <span class="text">Dinner</span>
+            <span class="text">{{ $t('dinner') }}</span>
           </RouterLink>
         </li>
         <li>
@@ -17,7 +17,7 @@
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-kitchen-set" />
             </span>
-            <span class="text">Fridge</span>
+            <span class="text">{{ $t('fridge') }}</span>
           </RouterLink>
         </li>
         <li>
@@ -25,7 +25,7 @@
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-chart-pie" />
             </span>
-            <span class="text">Statistikk</span>
+            <span class="text">{{ $t('statistics') }}</span>
           </RouterLink>
         </li>
         <li>
@@ -33,7 +33,7 @@
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-cart-shopping" />
             </span>
-            <span class="text">Shopping Cart</span>
+            <span class="text">{{ $t('shopping_cart') }}</span>
           </RouterLink>
         </li>
         <li>
@@ -41,7 +41,7 @@
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-circle-user" />
             </span>
-            <span class="text">Profile</span>
+            <span class="text">{{ $t('profile') }}</span>
           </RouterLink>
         </li>
         <div class="language" @click="changeLanguage()">{{language}}</div>
@@ -102,7 +102,7 @@ header {
 header img {
   height: 100px;
   width: auto;
-  margin-right: 225px;
+  margin-right: 300px;
 }
 
 .language {

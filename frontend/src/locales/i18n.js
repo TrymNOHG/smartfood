@@ -5,7 +5,7 @@ import no from "./no.json"
 
 
 const i18n = createI18n({
-    locale: "en",
+    locale: "no",
     messages: {
         en: en,
         no: no,
