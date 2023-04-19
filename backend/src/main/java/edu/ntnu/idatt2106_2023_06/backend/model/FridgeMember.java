@@ -38,7 +38,7 @@ public class FridgeMember {
     /**
      * The fridge that the user is a member of.
      */
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
     @MapsId("fridge")
     @JoinColumn(name = "fridge_id", nullable = false)
     @NonNull

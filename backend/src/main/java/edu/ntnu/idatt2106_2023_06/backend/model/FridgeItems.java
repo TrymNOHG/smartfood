@@ -37,7 +37,7 @@ public class FridgeItems {
     /**
      * The fridge of the fridge item.
      */
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
     @MapsId("fridge")
     @JoinColumn(name = "fridge_id", nullable = false)
     @NonNull

@@ -3,8 +3,12 @@ package edu.ntnu.idatt2106_2023_06.backend.model;
 import edu.ntnu.idatt2106_2023_06.backend.model.validator.SuperUserFridgeMemberConstraint;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -44,7 +48,24 @@ public class Fridge {
      * The members of the fridge.
      */
     @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Set<FridgeMember> members = new HashSet<>();
+
+    /**
+     * The members of the fridge.
+     */
+    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    private List<ShoppingItems> shoppingItems = new ArrayList<>();
+
+    /**
+     * The members of the fridge.
+     */
+    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    private List<FridgeItems> fridgeItems = new ArrayList<>();
 
 }
