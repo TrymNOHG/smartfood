@@ -38,13 +38,19 @@ public class FridgeMember {
     /**
      * The fridge that the user is a member of.
      */
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
     @MapsId("fridge")
     @JoinColumn(name = "fridge_id", nullable = false)
     @NonNull
     @ToString.Exclude
     private Fridge fridge;
 
+    /**
+     * Whether the member is an owner of the fridge.
+     */
+    @Column(name="super_user", nullable = false)
+    @NonNull
+    private boolean superUser;
 
 
 }

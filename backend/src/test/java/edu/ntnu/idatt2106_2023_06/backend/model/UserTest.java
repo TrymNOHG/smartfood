@@ -148,8 +148,17 @@ class UserTest {
     @Nested
     class User_can_properly_get {
         User getUser() {
-            return new User(null, "Ole123", "Ole", "Norman",
+            return new User(1L, "Ole123", "Ole", "Norman",
                     "password","Ole@gmail.com");
+        }
+
+        @Test
+        void user_id() {
+            User user = getUser();
+            Long expectedId = 1L;
+            Long actualId = user.getUserId();
+
+            assertEquals(expectedId, actualId);
         }
 
         @Test

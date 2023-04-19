@@ -37,7 +37,7 @@ public class RecipeItems {
     /**
      * The recipe of the recipe items.
      */
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
     @MapsId("recipe")
     @JoinColumn(name = "recipe_id", nullable = false)
     @NonNull
