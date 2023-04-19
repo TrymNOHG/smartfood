@@ -26,7 +26,7 @@ import java.util.Objects;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/auth")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
     Logger logger = org.slf4j.LoggerFactory.getLogger(UserController.class);
