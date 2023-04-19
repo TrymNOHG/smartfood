@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -113,7 +114,7 @@ public class JwtService {
      * @return A {@link Claims} object containing all the claims from the token.
      * @throws Exception If there is an error parsing the token.
      */
-    private Claims extractAllClaims(String token) {
+    private Claims extractAllClaims(String token) throws JwtException{
         logger.info("Token being checked: " + token);
         logger.info("Token length: " + token.length());
         try {
@@ -125,7 +126,7 @@ public class JwtService {
                     .getBody();
         } catch (Exception e) {
             logger.error("Error parsing JWT token: " + e.getMessage());
-            throw e;
+            throw new JwtException("Error parsing JWT token: " + e.getMessage());
         }
     }
 

@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
-            logger.info("Request without Authorization header.");
+            logger.info("Valid request without JWT token.");
             return;
         }
 

@@ -1,8 +1,8 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.security;
 
-import edu.ntnu.idatt2106_2023_06.backend.dto.security.AuthenticationRequestDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.security.AuthenticationResponseDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserCreateDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoginDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserRegisterDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.exists.UserExistsException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.model.User;
@@ -35,23 +35,23 @@ public class AuthenticationService implements IAuthenticationService {
     /**
      * Registers a user to the system.
      *
-     * @param userCreateDTO the information of the user to be registered.
+     * @param userRegisterDTO the information of the user to be registered.
      * @return an AuthenticationResponse containing the JWT token of the user.
      */
     @Transactional
-    public AuthenticationResponseDTO register(UserCreateDTO userCreateDTO) {
+    public AuthenticationResponseDTO register(UserRegisterDTO userRegisterDTO) {
         User user = User
                 .builder()
-                .username(userCreateDTO.username())
-                .password(passwordEncoder.encode(userCreateDTO.password()))
-                .firstName(userCreateDTO.firstName())
-                .lastName(userCreateDTO.lastName())
-                .email(userCreateDTO.email())
+                .username(userRegisterDTO.username())
+                .password(passwordEncoder.encode(userRegisterDTO.password()))
+                .firstName(userRegisterDTO.firstName())
+                .lastName(userRegisterDTO.lastName())
+                .email(userRegisterDTO.email())
                 .build();
-        if(userRepository.findByEmail(userCreateDTO.email()).isPresent())
-            throw new UserExistsException("email", userCreateDTO.email());
-        if (userRepository.findByUsername(userCreateDTO.username()).isPresent())
-            throw new UserExistsException("username", userCreateDTO.username());
+        if(userRepository.findByEmail(userRegisterDTO.email()).isPresent())
+            throw new UserExistsException("email", userRegisterDTO.email());
+        if (userRepository.findByUsername(userRegisterDTO.username()).isPresent())
+            throw new UserExistsException("username", userRegisterDTO.username());
         userRepository.save(user);
 
         logger.info(String.format("User %s has been saved in the DB!", user.getUsername()));
@@ -72,7 +72,7 @@ public class AuthenticationService implements IAuthenticationService {
      * @return an AuthenticationResponse containing the JWT token of the authenticated user.
      * @throws UsernameNotFoundException if the username of the user is not found in the database.
      */
-    public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) {
+    public AuthenticationResponseDTO authenticate(UserLoginDTO request) {
         User user = userRepository.findByEmail(request.email()).orElseThrow(
                 () -> new UserNotFoundException(request.email())
         );
