@@ -54,11 +54,13 @@ public class UserController {
     @PostMapping("/auth/authenticate")
     @Operation(summary = "Authenticate a user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Authentication token",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = AuthenticationResponseDTO.class)) })}
-    )
-    public ResponseEntity<AuthenticationResponseDTO> register(@ParameterObject @RequestBody AuthenticationRequestDTO request) throws Exception {
+            @ApiResponse(responseCode = "200", description = "Authentication token", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(
+                            implementation = AuthenticationResponseDTO.class
+                    ))
+            })
+    })
+    public ResponseEntity<AuthenticationResponseDTO> register(@ParameterObject @RequestBody AuthenticationRequestDTO request) {
         logger.info("New Authentication request: " + request.toString());
         return ResponseEntity.ok(authenticationService.authenticate(request));
 
