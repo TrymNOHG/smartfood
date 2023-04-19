@@ -3,11 +3,62 @@ package edu.ntnu.idatt2106_2023_06.backend.model;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
+
+    @Nested
+    class User_object_with {
+
+        @Test
+        void no_arg_constructor_can_be_made() {
+            try {
+                User user = new User();
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void all_arg_constructor_can_be_made() {
+            try {
+                User user = new User(null, "Ole123", "Ole", "Norman",
+                        "password", "Ole@gmail.com");
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void required_args_constructor_can_be_made() {
+            try {
+                User user = new User( "Ole123", "Ole", "Norman",
+                        "password", "Ole@gmail.com");
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+        @Test
+        void builder_can_be_made() {
+            try {
+                User user = User
+                        .builder()
+                        .username("Ole123")
+                        .firstName("Ole")
+                        .lastName("Norman")
+                        .password("123123123")
+                        .email("Ole@gmail.com")
+                        .build();
+            } catch (Exception e) {
+                fail();
+            }
+        }
+
+    }
 
     @Nested
     class When_User_constructor_has_non_null_variable {
