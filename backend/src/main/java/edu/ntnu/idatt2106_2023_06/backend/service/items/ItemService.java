@@ -44,8 +44,8 @@ public class ItemService implements IItemService {
     }
 
     @Override
-    public void addToFridge(Long itemName, Long fridgeId) {
-        Item item = itemRepository.findByItemId(itemName).orElseThrow();
+    public void addToFridge(Long itemId, Long fridgeId, int quantity) {
+        Item item = itemRepository.findByItemId(itemId).orElseThrow();
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow();
         FridgeItems fridgeItem = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElse(null);
         if(fridgeItem == null){
@@ -53,11 +53,11 @@ public class ItemService implements IItemService {
                      .id(new FridgeItemsId(item.getItemId(), fridge.getFridgeId()))
                     .item(item)
                     .fridge(fridge)
-                    .quantity(1)
+                    .quantity(quantity)
                     .build();
         }
         else {
-            fridgeItem.setQuantity(fridgeItem.getQuantity() + 1);
+            fridgeItem.setQuantity(fridgeItem.getQuantity() + quantity);
         }
         fridgeItemsRepository.save(fridgeItem);
     }
@@ -66,15 +66,15 @@ public class ItemService implements IItemService {
     public List<ItemDTO> getFridgeItems(Long fridgeId) {
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow();
         List<FridgeItems> fridgeItems = fridgeItemsRepository.findByFridge(fridge).orElseThrow();
-        List<Item> itemList = new ArrayList<>();
+        List<ItemDTO> itemDTOList = new ArrayList<>();
         for (FridgeItems item : fridgeItems){
-            itemList.add(item.getItem());
+            itemDTOList.add(ItemMapper.toItemDTO(item.getItem(), item.getQuantity()));
         }
-        return itemList.stream().map(ItemMapper::toItemDTO).toList();
+        return itemDTOList;
     }
 
     @Override
-    public void addToShoppingList(Long itemName, Long fridgeId) {
+    public void addToShoppingList(Long itemName, Long fridgeId, int quantity) {
         Item item = itemRepository.findByItemId(itemName).orElseThrow();
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow();
         ShoppingItems shoppingItem = shoppingItemsRepository.findByItemAndFridge(item, fridge).orElse(null);
@@ -83,12 +83,12 @@ public class ItemService implements IItemService {
                     .id(new FridgeItemsId(item.getItemId(), fridge.getFridgeId()))
                     .item(item)
                     .fridge(fridge)
-                    .quantity(1)
+                    .quantity(quantity)
                     .suggestion(false)
                     .build();
         }
         else {
-            shoppingItem.setQuantity(shoppingItem.getQuantity() + 1);
+            shoppingItem.setQuantity(shoppingItem.getQuantity() + quantity);
         }
         shoppingItemsRepository.save(shoppingItem);
     }
@@ -97,11 +97,11 @@ public class ItemService implements IItemService {
     public List<ItemDTO> getShoppingListItems(Long fridgeId) {
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow();
         List<ShoppingItems> shoppingItems = shoppingItemsRepository.findByFridge(fridge).orElseThrow();
-        List<Item> itemList = new ArrayList<>();
+        List<ItemDTO> itemDTOList = new ArrayList<>();
         for (ShoppingItems item : shoppingItems){
-            itemList.add(item.getItem());
+            itemDTOList.add(ItemMapper.toItemDTO(item.getItem(), item.getQuantity()));
         }
-        return itemList.stream().map(ItemMapper::toItemDTO).toList();
+        return itemDTOList;
     }
 
     @Override
@@ -116,6 +116,16 @@ public class ItemService implements IItemService {
         else {
             shoppingItem.setQuantity(shoppingItem.getQuantity() - itemRemoveDTO.quantity());
             shoppingItemsRepository.save(shoppingItem);
+        }
+    }
+
+    @Override
+    public void buyItemsFromShoppingList(List<ItemRemoveDTO> itemDTOList) {
+        for(ItemRemoveDTO i: itemDTOList){
+            Store store = storeRepository.findByStoreName(i.store()).orElseThrow();
+            Long itemId = itemRepository.findByProductNameAndStore(i.itemName(), store).orElseThrow().getItemId();
+            addToFridge(itemId, i.fridgeId(), i.quantity());
+            deleteItemFromShoppingList(i);
         }
     }
 
