@@ -1,5 +1,5 @@
 <template>
-  <h2>{{ $t('fridges') }}</h2>
+  <h2 class="h2_fridge">{{ $t('fridges') }}</h2>
   <div class="wrapper">
       <div class="fridgeList">
         <fridge-component/>
@@ -24,7 +24,7 @@ template {
   align-items: center;
 }
 
-h2 {
+.h2_fridge {
   background-color: #6C6C6C;
   color: white;
   text-align: center;
