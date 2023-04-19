@@ -61,6 +61,7 @@ export default {
     async addNewFridge() {
       console.log(this.newFridgeName);
       this.fridgeList.push(`${this.newFridgeName}`);
+      this.showModal = false;
 
       /*
       await this.userStore.fetchUser();
