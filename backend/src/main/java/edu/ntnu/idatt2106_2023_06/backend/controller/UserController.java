@@ -1,8 +1,8 @@
 package edu.ntnu.idatt2106_2023_06.backend.controller;
 
-import edu.ntnu.idatt2106_2023_06.backend.dto.security.AuthenticationRequestDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.security.AuthenticationResponseDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserCreateDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoginDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserRegisterDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserPasswordUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.AuthenticationService;
@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
 
 @RestController
 @CrossOrigin("*")
@@ -42,11 +40,12 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Authentication token", content = {
                     @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = AuthenticationResponseDTO.class)
+                            schema = @Schema(implementation = AuthenticationResponseDTO.class
+                            )
                     )
             })
     })
-    public ResponseEntity<Object> register(@ParameterObject @RequestBody UserCreateDTO user) {
+    public ResponseEntity<Object> register(@ParameterObject @RequestBody UserRegisterDTO user) {
         logger.info("User " + user.username() + " is being registered!");
         return ResponseEntity.ok(authenticationService.register(user));
     }
@@ -60,9 +59,9 @@ public class UserController {
                     ))
             })
     })
-    public ResponseEntity<AuthenticationResponseDTO> register(@ParameterObject @RequestBody AuthenticationRequestDTO request) {
-        logger.info("New Authentication request: " + request.toString());
-        return ResponseEntity.ok(authenticationService.authenticate(request));
+    public ResponseEntity<AuthenticationResponseDTO> register(@ParameterObject @RequestBody UserLoginDTO userLoginDTO) {
+        logger.info("New Authentication request: " + userLoginDTO.toString());
+        return ResponseEntity.ok(authenticationService.authenticate(userLoginDTO));
     }
 
     @PutMapping(

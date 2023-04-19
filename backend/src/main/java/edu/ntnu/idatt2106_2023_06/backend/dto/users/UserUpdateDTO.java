@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2106_2023_06.backend.dto.users;
 
-import lombok.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
