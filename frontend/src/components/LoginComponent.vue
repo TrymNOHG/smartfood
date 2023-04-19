@@ -5,7 +5,7 @@
       <form @submit.prevent="submit" :class="{ 'has-errors': hasErrors }">
         <div class="input-box">
           <span class="icon"><font-awesome-icon icon="fa-solid fa-envelope" /></span>
-          <input type="email" required v-model.trim="username" name="username">
+          <input type="text" required v-model.trim="username" name="username">
           <label>{{ $t('username') }}</label>
           <div v-if="errors['username']" class="error">{{ $t(errors['username']) }}</div>
         </div>
@@ -43,10 +43,7 @@ export default {
     const storage = useStorage();
     const store = useLoggedInStore();
     const validationSchema = yup.object({
-      username: yup
-        .string()
-        .email("wrong_email_error")
-        .required("email_error"),
+      username: yup.string().required("user_error"),
       password: yup.string().required("error_password").min(8, "password_length"),
     });
     const { handleSubmit, errors, setFieldTouched, setFieldValue } = useForm({
@@ -60,11 +57,11 @@ export default {
     const { value: password } = useField("password");
     const submit = handleSubmit(async () => {
       console.log("Submit clicked") 
-      const userLoginDTO = {
-        username: username.value,
+      const request = {
+        email: username.value,
         password: password.value,
       };
-      await loginUser(userLoginDTO)
+      await loginUser(request)
         .then(async (response) => {
           if (response !== undefined) {
             store.setSessionToken(response.data.token);
