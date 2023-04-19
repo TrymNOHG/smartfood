@@ -4,6 +4,7 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.security.AuthenticationRequestDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.security.AuthenticationResponseDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserCreateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.exists.UserExistsException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.model.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import org.slf4j.Logger;
@@ -47,8 +48,10 @@ public class AuthenticationService implements IAuthenticationService {
                 .lastName(userCreateDTO.lastName())
                 .email(userCreateDTO.email())
                 .build();
+        if(userRepository.findByEmail(userCreateDTO.email()).isPresent())
+            throw new UserExistsException("email", userCreateDTO.email());
         if (userRepository.findByUsername(userCreateDTO.username()).isPresent())
-            throw new UserExistsException("Username already exists");
+            throw new UserExistsException("username", userCreateDTO.username());
         userRepository.save(user);
 
         logger.info(String.format("User %s has been saved in the DB!", user.getUsername()));
@@ -70,14 +73,15 @@ public class AuthenticationService implements IAuthenticationService {
      * @throws UsernameNotFoundException if the username of the user is not found in the database.
      */
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO request) {
+        User user = userRepository.findByEmail(request.email()).orElseThrow(
+                () -> new UserNotFoundException(request.email())
+        );
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.email(),
+                        user.getUsername(),
                         request.password()
                 )
         );
-        User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 
         String jwtToken = jwtService.generateToken(user);
 

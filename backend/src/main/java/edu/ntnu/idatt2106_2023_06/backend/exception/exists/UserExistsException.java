@@ -6,4 +6,8 @@ public class UserExistsException extends ExistsException{
         super("User", username);
     }
 
+    public UserExistsException(String attribute, String value) {
+        super("User", attribute, value);
+    }
+
 }

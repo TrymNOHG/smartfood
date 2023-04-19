@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 /**
  * A class that serves as the id for the RecipeItems entity in the app.
- * It is an Embeddable class that contains two fields, item and recipe.
+ * It is an Embeddable class that contains two fields, items and recipe.
  *
  * @author Trym Hamer Gudvangen
  */
@@ -21,7 +21,7 @@ import java.io.Serializable;
 public class RecipeItemId implements Serializable {
 
     /**
-     * The id of the item.
+     * The id of the items.
      */
     @Column(name = "item_id")
     private Long item;

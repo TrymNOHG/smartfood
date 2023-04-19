@@ -24,7 +24,7 @@ import java.util.List;
 public class Recipe {
 
     /**
-     * The unique identifier for this item.
+     * The unique identifier for this items.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
