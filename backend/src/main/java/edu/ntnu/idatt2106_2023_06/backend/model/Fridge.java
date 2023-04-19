@@ -1,7 +1,11 @@
 package edu.ntnu.idatt2106_2023_06.backend.model;
 
+import edu.ntnu.idatt2106_2023_06.backend.model.validator.SuperUserFridgeMemberConstraint;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Fridge class represents a common storage of food items in the application. It can, therefore, include dry, frozen, or
@@ -18,6 +22,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "fridge")
+@SuperUserFridgeMemberConstraint
 public class Fridge {
 
     /**
@@ -34,5 +39,12 @@ public class Fridge {
     @Column(name = "fridge_name", length = 64, nullable = false)
     @NonNull
     private String fridgeName;
+
+    /**
+     * The members of the fridge.
+     */
+    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<FridgeMember> members = new HashSet<>();
 
 }
