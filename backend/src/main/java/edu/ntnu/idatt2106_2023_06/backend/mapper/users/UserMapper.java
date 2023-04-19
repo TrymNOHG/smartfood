@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.mapper.users;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserCreateDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 
 /**
@@ -35,12 +36,10 @@ public class UserMapper {
                 .builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
-                .birthDate(user.getBirthDate())
                 .email(user.getEmail())
-                .fullName(user.getFullName())
-                .phone(user.getPhone())
-                .picture(user.getPicture())
-                .role(user.getRole())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                //.picture(user.getPicture())
                 .build();
 
         return userLoadDTO;
