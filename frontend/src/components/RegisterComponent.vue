@@ -64,6 +64,7 @@
             {{ $t(errors["password"]) }}
           </div>
         </div>
+        <h5 v-if="submitMessage" id="submit-message" aria-describedby="login-form">{{ submitMessage }}</h5>
         <button type="submit" @click="submit">{{ $t("register") }}</button>
         <div class="login-register">
           <p>
@@ -72,7 +73,7 @@
           </p>
         </div>
       </form>
-      <h2 v-if="submitMessage" id="submit-message" aria-describedby="login-form">{{ submitMessage }}</h2>
+      
     </div>
   </div>
 </template>
@@ -195,6 +196,10 @@ export default {
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
 }
 
+h5{
+  margin-top: -20px;
+  margin-bottom: 5px;
+}
 .wrapper .form-box {
   width: 90%;
   padding: 40px;
