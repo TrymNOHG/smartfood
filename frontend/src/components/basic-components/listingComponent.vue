@@ -1,7 +1,7 @@
 <template>
   <div class="list">
     <div v-for="(item, index) in items" :key="index" class="item">
-      <span v-if="!isEditing[index]" class="item-text">{{ item }}</span>
+      <span v-if="!isEditing[index]" class="item-text">{{ item.fridgeName }}</span>
       <input v-else type="text" v-model="editedItems[index]" @keyup.enter="confirmEdit(index)" class="edit-input" />
       <div class="icons">
         <font-awesome-icon v-if="!isEditing[index]" icon="fa-solid fa-pen-to-square" @click="onEditClick(index)" class="icon edit-conf-icon" />

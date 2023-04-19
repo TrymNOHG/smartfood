@@ -38,7 +38,16 @@ export default {
 
   data() {
     return {
-      fridgeList: ['Fridge 1', 'Fridge 2', 'Fridge 3'],
+      fridgeList: [
+        {
+          fridgeName: 'Fridge 1'
+        },
+        {
+          fridgeName: 'Fridge 2'
+        },
+        {
+          fridgeName: 'Fridge 3'
+        }],
       showModal: false,
       newFridgeName: "",
     }
@@ -46,7 +55,7 @@ export default {
 
   methods: {
     onUpdateItem(index, name) {
-      this.fridgeList[index] = name;
+      this.fridgeList[index].fridgeName = name;
     },
 
     onDeleteItem(index) {
@@ -60,7 +69,8 @@ export default {
 
     async addNewFridge() {
       console.log(this.newFridgeName);
-      this.fridgeList.push(`${this.newFridgeName}`);
+      const newFridge = {"fridgeName": this.newFridgeName};
+      this.fridgeList.push(newFridge);
       this.showModal = false;
 
       /*
