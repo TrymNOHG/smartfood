@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:mysql://mysql.stud.idi.ntnu.no:3306/bragehk
+    username: bragehk
+    password: 0VQAp3uMs
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate.ddl-auto: update
+    #    Change ^ to create to clear the database and re-run schema. update to keep data
+    properties:
+      hibernate:
+        format_sql: true

@@ -5,11 +5,6 @@ import org.springframework.lang.Nullable;
 
 import java.util.Date;
 
-public record UserUpdateDTO(@NonNull String username,
-                            @Nullable String newUsername,
-                            @Nullable String fullName,
-                            @Nullable String email,
-                            @Nullable Date birthDate,
-                            @Nullable String phone,
-                            @Nullable byte[] picture) {
+public record UserUpdateDTO(@NonNull String username, @Nullable String newUsername, @Nullable String firstName,
+                            @Nullable String lastName, @Nullable String email, @Nullable byte[] picture) {
 }

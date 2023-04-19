@@ -7,8 +7,6 @@ import org.springframework.lang.Nullable;
 import java.util.Date;
 
 @Builder
-public record UserLoadDTO(@NonNull Long userId, @NonNull String username,
-                          @NonNull String fullName, @NonNull String email,
-                          @Nullable Date birthDate, @Nullable String phone,
-                          @Nullable byte[] picture) {
+public record UserLoadDTO(@NonNull Long userId, @NonNull String username, @NonNull String firstName,
+                          @NonNull String lastName, @NonNull String email, @Nullable byte[] picture) {
 }
