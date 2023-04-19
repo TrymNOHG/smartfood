@@ -82,13 +82,23 @@ public class UserController {
             produces = { MediaType.APPLICATION_JSON_VALUE}
     )
     @Operation(summary = "Update user")
-    public ResponseEntity<Object> update(@RequestPart("userUpdateDTO") UserUpdateDTO userUpdateDTO,
-                                         @RequestPart(value = "picture", required = false) MultipartFile picture,
+    public ResponseEntity<Object> update(@RequestPart UserUpdateDTO userUpdateDTO,
+                                         @RequestParam(value = "picture", required = false) MultipartFile picture,
                                          Authentication authentication) {
         logger.info(String.format("User %s wants to be updated!", userUpdateDTO.username()));
-        userService.updateUser(userUpdateDTO, userUpdateDTO.picture(), authentication.getName());
+        userService.updateUser(userUpdateDTO, picture, authentication.getName());
         logger.info(String.format("User %s has been updated!", userUpdateDTO.username()));
 
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/update/picture")
+    @Operation(summary = "Update user")
+    public ResponseEntity<Object> updatePicture(@RequestParam(value = "picture") MultipartFile picture,
+                                                Authentication authentication) {
+
+        logger.info(String.format("User %s wants to been updated!", authentication.getName()));
+        //userService.updateUserPicture(picture, authentication.getName());
         return ResponseEntity.ok().build();
     }
 

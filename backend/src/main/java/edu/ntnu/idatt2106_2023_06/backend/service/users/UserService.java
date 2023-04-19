@@ -74,7 +74,7 @@ public class UserService implements IUserService {
         user.setFirstName(userUpdateDTO.firstName() != null ? userUpdateDTO.firstName() : user.getFirstName());
         user.setLastName(userUpdateDTO.lastName() != null ? userUpdateDTO.lastName() : user.getLastName());
         user.setEmail(userUpdateDTO.email() != null ? userUpdateDTO.email() : user.getEmail());
-        if(userUpdateDTO.picture() != null) {
+        if(profilePicture != null) {
             //fileStorageService.
             //TODO: create picture file system
         }
