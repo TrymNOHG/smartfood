@@ -137,10 +137,10 @@ $.widget("custom.catcomplete", $.ui.autocomplete, {
             li = rMenu._renderItemData(ul, item);
             if (item.category) {
                 li.attr("aria-label", item.category + " : " + item.l);
-                li.attr("class", "result-item");
+                li.attr("class", "result-items");
             } else {
                 li.attr("aria-label", item.l);
-                li.attr("class", "result-item");
+                li.attr("class", "result-items");
             }
         });
     },

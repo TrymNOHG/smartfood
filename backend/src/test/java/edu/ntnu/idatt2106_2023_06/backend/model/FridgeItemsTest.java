@@ -26,7 +26,7 @@ class FridgeItemsTest {
         void all_arg_constructor_can_be_made() {
             try {
                 Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(), null);
-                FridgeItems items = new FridgeItems(null, item, new Fridge());
+                FridgeItems items = new FridgeItems(null, item, new Fridge(), 1);
             } catch (Exception e) {
                 fail();
             }
@@ -55,14 +55,14 @@ class FridgeItemsTest {
         @Test
         void item_cannot_be_null(){
             assertThrows(NullPointerException.class, () -> {
-                FridgeItems fridgeItem = new FridgeItems(null, null, new Fridge());
+                FridgeItems fridgeItem = new FridgeItems(null, null, new Fridge(), 1);
             });
         }
 
         @Test
         void fridge_cannot_be_null(){
             assertThrows(NullPointerException.class, () -> {
-                FridgeItems fridgeItem = new FridgeItems(null, new Item(), null);
+                FridgeItems fridgeItem = new FridgeItems(null, new Item(), null, 1);
             });
         }
 
@@ -73,7 +73,7 @@ class FridgeItemsTest {
 
         @Test
         void item_cannot_be_set_to_null(){
-            FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge());
+            FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge(), 1);
             assertThrows(NullPointerException.class, () -> {
                 fridgeItem.setItem(null);
             });
@@ -81,7 +81,7 @@ class FridgeItemsTest {
 
         @Test
         void fridge_cannot_be_set_to_null(){
-            FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge());
+            FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge(), 1);
             assertThrows(NullPointerException.class, () -> {
                 fridgeItem.setFridge(null);
             });
@@ -97,7 +97,7 @@ class FridgeItemsTest {
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, new Date(), new Date(), "picture.png");
-            FridgeItems fridgeItem = new FridgeItems(null, item, fridge);
+            FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1);
             assertEquals(item, fridgeItem.getItem());
         }
 
@@ -107,7 +107,7 @@ class FridgeItemsTest {
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, new Date(), new Date(), "picture.png");
-            FridgeItems fridgeItem = new FridgeItems(null, item, fridge);
+            FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1);
             assertEquals(fridge, fridgeItem.getFridge());
         }
     }
