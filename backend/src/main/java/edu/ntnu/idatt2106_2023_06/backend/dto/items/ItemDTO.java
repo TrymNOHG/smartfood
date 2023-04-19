@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106_2023_06.backend.dto;
+package edu.ntnu.idatt2106_2023_06.backend.dto.items;
 
 import lombok.NonNull;
 
