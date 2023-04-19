@@ -1,10 +1,12 @@
 package edu.ntnu.idatt2106_2023_06.backend.security;
 
 import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
+import edu.ntnu.idatt2106_2023_06.backend.service.users.UserService;
 import jakarta.servlet.ServletException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +24,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    Logger logger = org.slf4j.LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+    private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserDetailsService userDetailsService;
     private final JwtService jwtService;

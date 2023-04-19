@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -47,6 +48,15 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> exceptionAction(Exception e, WebRequest webRequest) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("Time of error: ", LocalDateTime.now());
+        body.put("Message:", e.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IOException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<Object> ioExceptionAction(IOException e, WebRequest webRequest) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("Time of error: ", LocalDateTime.now());
         body.put("Message:", e.getMessage());
