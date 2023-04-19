@@ -83,8 +83,10 @@ export default {
         username: username.value,
         password: password.value,
         fullName: fullName.value,
+        firstname: 'first name',
+        lastname: 'last name',
         email:  email.value,
-        role: "USER"
+        picture: null,
       }
       console.log(userData)
       await registerUser(userData).then(async response => {

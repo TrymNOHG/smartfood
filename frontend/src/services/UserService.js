@@ -20,6 +20,15 @@ export const getUser = async () => {
     })
 }
 
+//get all members for a fridge
+export const getMembers = async () => {
+    return axios.get(`${BASE_USER_URL}/members`, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    })
+}
+
 export const loadUserByUsername = async (username) => {
     return axios.get(`${BASE_USER_URL}/load/${username}`)
 }
