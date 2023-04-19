@@ -82,9 +82,8 @@ export default {
       const userData = {
         username: username.value,
         password: password.value,
-        fullName: fullName.value,
-        firstname: 'first name',
-        lastname: 'last name',
+        firstName: 'first name',
+        lastName: 'last name',
         email:  email.value,
         picture: null,
       }
