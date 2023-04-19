@@ -12,7 +12,7 @@ export const getAllFridges = async (username) => {
 }
 
 export const getFridgeById = async(fridgeID) => {
-    return await axios.get(`${BASE_LISTING_URL}/user/load?fridgeID=${fridgeID}}`);
+    return await axios.get(`${BASE_LISTING_URL}/user/load?fridgeID=${fridgeID}`);
 }
 
 export const addNewFridge = async (username, fridgeName) => {
@@ -24,3 +24,18 @@ export const addNewFridge = async (username, fridgeName) => {
         }
     });
 }
+
+export const changeFridge = async (username, newName) => {
+    await axios.post(`${BASE_LISTING_URL}/user/add?username=${username}`, {
+        fridgeName: newName
+    }, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        }
+    });
+}
+
+export const deleteFridge = async (fridgeName) => {
+    await axios.post(`${BASE_LISTING_URL}/user/delete`, fridgeName);
+}
+

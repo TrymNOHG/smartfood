@@ -22,7 +22,6 @@ import List from "@/components/basic-components/listingComponent.vue";
 import BasicInput from "@/components/basic-components/BasicInput.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
 import {useFridgeStore, useLoggedInStore} from "@/store/store";
-import fridgeView from "@/views/FridgeView.vue";
 
 export default {
   components: {BasicButton, BasicInput, List, useFridgeStore},
