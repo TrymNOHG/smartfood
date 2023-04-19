@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.mapper;
 
-import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserCreateDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserRegisterDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.model.User;
 
@@ -12,16 +12,16 @@ public class UserMapper {
     /**
      * Convert a UserCreateDTO object to a User object.
      *
-     * @param userCreateDTO the UserCreateDTO object to be converted
+     * @param userRegisterDTO the UserCreateDTO object to be converted
      * @return a User object
      */
-    public static User toUser(UserCreateDTO userCreateDTO) { //TODO: check with AuthenticationService
+    public static User toUser(UserRegisterDTO userRegisterDTO) { //TODO: check with AuthenticationService
         return User.builder()
-                .username(userCreateDTO.username())
-                .password(userCreateDTO.password())
-                .firstName(userCreateDTO.firstName())
-                .lastName(userCreateDTO.lastName())
-                .email(userCreateDTO.email())
+                .username(userRegisterDTO.username())
+                .password(userRegisterDTO.password())
+                .firstName(userRegisterDTO.firstName())
+                .lastName(userRegisterDTO.lastName())
+                .email(userRegisterDTO.email())
                 .build();
     }
 
