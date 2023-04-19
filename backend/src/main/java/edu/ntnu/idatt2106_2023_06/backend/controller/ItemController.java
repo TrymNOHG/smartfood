@@ -2,6 +2,7 @@ package edu.ntnu.idatt2106_2023_06.backend.controller;
 
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemListRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,11 +76,11 @@ public class ItemController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value="/buy/shopping")
+    @PostMapping(value="/buy/shopping", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Buy items from shopping list")
-    public ResponseEntity<Object> buyItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList){
+    public ResponseEntity<Object> buyItemsFromShoppingList(@ParameterObject @RequestBody ItemListRemoveDTO itemDTOList){
         logger.info("User wants to buy item from shopping list");
-        itemService.buyItemsFromShoppingList(itemDTOList);
+        itemService.buyItemsFromShoppingList(itemDTOList.itemRemoveDTOList());
         logger.info("Items have been bought!");
         return ResponseEntity.ok().build();
     }
