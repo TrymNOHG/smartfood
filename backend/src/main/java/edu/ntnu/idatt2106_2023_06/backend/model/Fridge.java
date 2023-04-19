@@ -26,7 +26,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "fridge")
-@SuperUserFridgeMemberConstraint
 public class Fridge {
 
     /**
