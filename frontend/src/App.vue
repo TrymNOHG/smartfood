@@ -178,7 +178,7 @@ nav ul li:hover a .text {
   transform: translateY(15px);
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 860px) {
   header {
     flex-direction: column;
     align-items: center;
@@ -247,9 +247,9 @@ nav ul li:hover a .text {
   }
 }
 
-@media only screen and (max-width: 980px) and (min-width: 800px) {
+@media only screen and (max-width: 1055px) and (min-width: 860px) {
   header img {
-    height: 50px;
+    height: 40px;
   }
 
   h1 {

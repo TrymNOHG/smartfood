@@ -1,16 +1,16 @@
 <template>
   <div class="container">
-    <list :items="fridgeList"  class="listing"/>
+    <list :items="fridgeList"  class="listing" @update-item="onUpdateItem" @delete-item="onDeleteItem"/>
     <div @click="changeModal()" class="container_button">+</div>
   </div>
 
   <div v-if="showModal" class="modal">
     <div class="modal-content">
-      <h3>Add New Fridge</h3>
-      <form submit="submit">
-        <label>What is the name of your new Fridge?</label>
+      <h3>{{ $t('addNewFridgeTitle') }}</h3>
+      <form @submit.prevent="addNewFridge()">
+        <label>{{ $t('fridgeNameLabel') }}</label>
         <basic-input type="text" v-model="newFridgeName"/><br>
-        <basic-button :button-text="'Add Fridge'" type="submit"/>
+        <basic-button :button-text="$t('addFridgeButtonText')" type="submit"/>
         <span class="close" @click="changeModal()">X</span>
       </form>
     </div>
@@ -21,9 +21,21 @@
 import List from "@/components/basic-components/listingComponent.vue";
 import BasicInput from "@/components/basic-components/BasicInput.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
+import {useFridgeStore, useLoggedInStore} from "@/store/store";
+import fridgeView from "@/views/FridgeView.vue";
 
 export default {
-  components: {BasicButton, BasicInput, List},
+  components: {BasicButton, BasicInput, List, useFridgeStore},
+
+  setup() {
+    const userStore = useLoggedInStore();
+    const fridgeStore = useFridgeStore();
+
+    return {
+      fridgeStore,
+      userStore,
+    }
+  },
 
   data() {
     return {
@@ -34,11 +46,32 @@ export default {
   },
 
   methods: {
+    onUpdateItem(index, name) {
+      this.fridgeList[index] = name;
+    },
+
+    onDeleteItem(index) {
+      this.fridgeList.splice(index, 1);
+      console.log(this.fridgeList)
+    },
+
     changeModal() {
       this.showModal = this.showModal === false;
     },
-  }
 
+    async addNewFridge() {
+      console.log(this.newFridgeName);
+      this.fridgeList.push(`${this.newFridgeName}`);
+
+      /*
+      await this.userStore.fetchUser();
+      const user = this.userStore.user;
+      await this.fridgeStore.addNewFridgeByFridgeNameAndUsername(user.username, this.newFridgeName);
+      this.fridgeList = await this.fridgeStore.fetchFridgesByUsername(user.username);
+
+       */
+    }
+  }
 };
 </script>
 

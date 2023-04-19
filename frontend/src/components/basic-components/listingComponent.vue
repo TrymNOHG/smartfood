@@ -1,10 +1,12 @@
 <template>
   <div class="list">
-    <div v-for="(item, index) in items" :key="index" class="item" @click="onItemClick">
-      <span class="item-text">{{ item }}</span>
+    <div v-for="(item, index) in items" :key="index" class="item">
+      <span v-if="!isEditing[index]" class="item-text">{{ item }}</span>
+      <input v-else type="text" v-model="editedItems[index]" @keyup.enter="confirmEdit(index)" class="edit-input" />
       <div class="icons">
-        <font-awesome-icon icon="fa-solid fa-pen-to-square" @click="onEditClick" class="icon edit-icon" />
-        <font-awesome-icon icon="fa-solid fa-trash" @click="onDeleteClick" class="icon delete-icon" />
+        <font-awesome-icon v-if="!isEditing[index]" icon="fa-solid fa-pen-to-square" @click="onEditClick(index)" class="icon edit-conf-icon" />
+        <font-awesome-icon v-else icon="fa-solid fa-circle-check" @click="confirmEdit(index)" class="icon edit-conf-icon conf"/>
+        <font-awesome-icon icon="fa-solid fa-trash" @click="onDeleteClick(index)" class="icon delete-icon" />
       </div>
     </div>
   </div>
@@ -12,6 +14,9 @@
 
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import 'sweetalert2/dist/sweetalert2.min.css';
+import swal from 'sweetalert2';
+
 
 export default {
   name: "List",
@@ -22,18 +27,51 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      isEditing: new Array(this.items.length).fill(false),
+      editedItems: [...this.items],
+    };
+  },
   methods: {
     onItemClick() {
       console.log("Item clicked");
       // Add your code to handle the click event here
     },
-    onEditClick() {
+    onEditClick(index) {
       console.log("Edit clicked");
-      // Add your code to handle the edit click event here
+      this.isEditing[index] = true;
     },
-    onDeleteClick() {
-      console.log("Delete clicked");
-      // Add your code to handle the delete click event here
+    confirmEdit(index){
+      console.log("Edit confirm");
+      this.isEditing[index] = false;
+      if (this.items[index] !== this.editedItems[index]) {
+        this.$emit("update-item", index, this.editedItems[index]);
+      }
+    },
+    onDeleteClick(index) {
+      swal.fire({
+        title: this.$t('confirm_title'),
+        text: this.$t('confirm_text'),
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4dce38',
+        cancelButtonColor: '#d33',
+        confirmButtonText: this.$t('confirm_button'),
+        cancelButtonText: this.$t('cancel_button'),
+        customClass: {
+          container: 'my-swal-dialog-container'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$emit('delete-item', index);
+          swal.fire(
+              this.$t('success_message'),
+              '',
+              'success'
+          )
+        }
+      })
     },
   },
 };
@@ -74,7 +112,7 @@ export default {
   align-items: center;
 }
 
-.edit-icon {
+.edit-conf-icon {
   font-size: 1.2rem;
   cursor: pointer;
   margin-right: 10px;
@@ -82,8 +120,12 @@ export default {
   transition: color 0.2s ease-in-out;
 }
 
-.edit-icon:hover {
+.edit-conf-icon:hover {
   color: #000;
+}
+
+.conf:hover {
+  color: #4dce38;
 }
 
 .delete-icon {
@@ -96,11 +138,33 @@ export default {
 .delete-icon:hover {
   color: #f00;
 }
+.swal2-modal {
+  background-color: white;
+  flex-direction: column;
+  position: fixed;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 5px;
+  z-index: 100;
+  display: flex;
+  width: 60%;
+  max-width: 500px;
+}
 
-@media only screen and (max-width: 600px) {
+.swal2-title {
+  background-color: white;
+  margin-top: 5%;
+}
+
+@media only screen and (max-width: 860px) {
+  .list {
+    margin: 0;
+  }
+
   .item {
-    height: 80px;
-    padding: 20px;
+    height: auto;
+    padding: 10px;
+    margin: 5px 0;
   }
 
   .item:hover {
@@ -109,11 +173,28 @@ export default {
   }
 
   .item-text {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+  }
+
+  .edit-input {
+    font-size: 1.2rem;
   }
 
   .icons {
-    margin-top: 10px;
+    margin-top: 5px;
+    justify-content: flex-end;
+  }
+
+  .delete-icon {
+    font-size: 1.5rem;
+    margin-left: 10px;
+  }
+
+  .swal2-modal {
+    width: 80%;
+    height: 50%;
+    max-width: none;
   }
 }
 

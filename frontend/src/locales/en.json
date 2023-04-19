@@ -28,5 +28,14 @@
   "password_error": "Password is required",
   "error_password": "Password is required",
   "email_error": "Email is required",
-  "password_length": "Password must be at least 8 characters"
+  "password_length": "Password must be at least 8 characters",
+  "confirm_title": "Are you sure?",
+  "confirm_text": "You won't be able to revert this!",
+  "confirm_button": "Yes, delete it!",
+  "success_message": "Your item has been deleted.",
+  "cancel_button": "Cancel",
+  "addNewFridgeTitle": "Add New Fridge",
+  "fridgeNameLabel": "What is the name of your new Fridge?",
+  "addFridgeButtonText": "Add Fridge",
+  "fridges": "List of your refrigerators"
 }

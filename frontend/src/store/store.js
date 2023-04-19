@@ -3,7 +3,7 @@ import { getUser } from "@/services/UserService"
 import {loadAllCategories, loadMainCategories} from "@/services/CategoryService";
 import {filterByFullDesc, loadListingsByCategoryId} from "@/services/ItemService";
 import { ref, computed, watch } from "vue";
-import {getAllFridges} from "@/services/FridgeServices";
+import {addNewFridge, getAllFridges} from "@/services/FridgeServices";
 
 export const useLoggedInStore = defineStore('user', {
 
@@ -53,11 +53,9 @@ export const useLoggedInStore = defineStore('user', {
     }
 });
 
-export const useFridge = defineStore('fridgeStore', {
+export const useFridgeStore = defineStore('fridgeStore', {
     state: () => ({
-        county: {
-            allFridges: [],
-        },
+        allFridges: []
     }),
 
     getters: {
@@ -69,8 +67,15 @@ export const useFridge = defineStore('fridgeStore', {
                     this.allFridges.push({fridgeId, fridgeName})
                 }
             })
+            return this.allFridges;
         }
     },
+
+    actions: {
+        async addNewFridgeByFridgeNameAndUsername(username, fridgename) {
+            await addNewFridge(fridgename, username);
+        }
+    }
 });
 
 export const useImageStore = defineStore('imageStore', {

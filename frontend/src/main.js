@@ -20,6 +20,7 @@ import {
     faPieChart,
     faPenToSquare,
     faTrash,
+    faCircleCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
 /* Imports fr multiple languages */
@@ -40,6 +41,7 @@ library.add(
     faPieChart,
     faPenToSquare,
     faTrash,
+    faCircleCheck,
 )
 
 const pinia = createPinia()

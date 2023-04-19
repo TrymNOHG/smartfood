@@ -43,7 +43,7 @@ h2 {
   flex-wrap: nowrap;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 860px) {
   .wrapper{
     grid-template-columns: 10% 80% 10%;
   }

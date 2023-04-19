@@ -14,3 +14,13 @@ export const getAllFridges = async (username) => {
 export const getFridgeById = async(fridgeID) => {
     return await axios.get(`${BASE_LISTING_URL}/user/load?fridgeID=${fridgeID}}`);
 }
+
+export const addNewFridge = async (username, fridgeName) => {
+    await axios.post(`${BASE_LISTING_URL}/user/add?username=${username}`, {
+        fridgeName: fridgeName
+    }, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        }
+    });
+}
