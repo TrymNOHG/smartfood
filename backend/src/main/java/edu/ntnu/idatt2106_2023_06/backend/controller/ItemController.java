@@ -2,7 +2,6 @@ package edu.ntnu.idatt2106_2023_06.backend.controller;
 
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemListRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -78,9 +77,9 @@ public class ItemController {
 
     @PostMapping(value="/buy/shopping", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Buy items from shopping list")
-    public ResponseEntity<Object> buyItemsFromShoppingList(@ParameterObject @RequestBody ItemListRemoveDTO itemDTOList){
+    public ResponseEntity<Object> buyItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList){
         logger.info("User wants to buy item from shopping list");
-        itemService.buyItemsFromShoppingList(itemDTOList.itemRemoveDTOList());
+        itemService.buyItemsFromShoppingList(itemDTOList);
         logger.info("Items have been bought!");
         return ResponseEntity.ok().build();
     }
