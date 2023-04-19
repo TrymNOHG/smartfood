@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"edu.ntnu.idatt2106_2023_06.backend"}];updateSearchResults();
