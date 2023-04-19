@@ -6,6 +6,7 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserCreateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserPasswordUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
+import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.AuthenticationService;
 import edu.ntnu.idatt2106_2023_06.backend.service.users.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +20,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -32,11 +34,13 @@ public class UserController {
     Logger logger = org.slf4j.LoggerFactory.getLogger(UserController.class);
 
     private final AuthenticationService authenticationService;
+    private final FridgeService fridgeService;
 
     private final UserService userService;
 
     @PostMapping("/register")
     @Operation(summary = "Register a new user")
+    @Transactional
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Authentication token", content = {
                     @Content(
@@ -48,7 +52,13 @@ public class UserController {
     )
     public ResponseEntity<Object> register(@ParameterObject @RequestBody UserCreateDTO user) {
         logger.info("User " + user.username() + " is being registered!");
-        return ResponseEntity.ok(authenticationService.register(user));
+        AuthenticationResponseDTO authenticationResponseDTO =  authenticationService.register(user);
+
+        logger.info("A fridge is being initialized for " + user.username());
+        fridgeService.initializeFridge(user.username());
+
+        logger.info("Transaction completed successfully!");
+        return ResponseEntity.ok(authenticationResponseDTO);
     }
 
     @PostMapping("/auth/authenticate")

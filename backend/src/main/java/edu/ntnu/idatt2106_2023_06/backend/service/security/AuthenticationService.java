@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+
 @RequiredArgsConstructor
 @Service
 public class AuthenticationService implements IAuthenticationService {
@@ -47,11 +49,13 @@ public class AuthenticationService implements IAuthenticationService {
                 .firstName(userCreateDTO.firstName())
                 .lastName(userCreateDTO.lastName())
                 .email(userCreateDTO.email())
+                .members(new HashSet<>())
                 .build();
         if(userRepository.findByEmail(userCreateDTO.email()).isPresent())
             throw new UserExistsException("email", userCreateDTO.email());
         if (userRepository.findByUsername(userCreateDTO.username()).isPresent())
             throw new UserExistsException("username", userCreateDTO.username());
+
         userRepository.save(user);
 
         logger.info(String.format("User %s has been saved in the DB!", user.getUsername()));
