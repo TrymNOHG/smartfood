@@ -20,13 +20,14 @@ import java.util.Optional;
 @Repository
 public interface ShoppingItemsRepository extends JpaRepository<ShoppingItems, FridgeItemsId>, JpaSpecificationExecutor<ShoppingItems> {
     /**
-     * Find a ShoppingItem by items and fridge
+     * Find a ShoppingItem by items, fridge and suggestion
      *
      * @param item The items of product
      * @param fridge the fridge to search in
+     * @param suggestion is it a suggestion
      * @return An Optional containing the ShoppingItem, or an empty Optional if not found
      */
-    Optional<ShoppingItems> findByItemAndFridge(Item item, Fridge fridge);
+    Optional<ShoppingItems> findByItemAndFridgeAndSuggestion(Item item, Fridge fridge, boolean suggestion);
 
     /**
      * Find ShoppingItems by fridge

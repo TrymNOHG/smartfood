@@ -74,17 +74,17 @@ public class ItemService implements IItemService {
     }
 
     @Override
-    public void addToShoppingList(Long itemName, Long fridgeId, int quantity) {
+    public void addToShoppingList(Long itemName, Long fridgeId, int quantity, boolean suggestion) {
         Item item = itemRepository.findByItemId(itemName).orElseThrow();
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow();
-        ShoppingItems shoppingItem = shoppingItemsRepository.findByItemAndFridge(item, fridge).orElse(null);
+        ShoppingItems shoppingItem = shoppingItemsRepository.findByItemAndFridgeAndSuggestion(item, fridge, suggestion).orElse(null);
         if(shoppingItem == null){
             shoppingItem = ShoppingItems.builder()
                     .id(new FridgeItemsId(item.getItemId(), fridge.getFridgeId()))
                     .item(item)
                     .fridge(fridge)
                     .quantity(quantity)
-                    .suggestion(false)
+                    .suggestion(suggestion)
                     .build();
         }
         else {
@@ -105,11 +105,11 @@ public class ItemService implements IItemService {
     }
 
     @Override
-    public void deleteItemFromShoppingList(ItemRemoveDTO itemRemoveDTO) {
+    public void deleteItemFromShoppingList(ItemRemoveDTO itemRemoveDTO, boolean suggestion) {
         Store store = storeRepository.findByStoreName(itemRemoveDTO.store()).orElseThrow();
         Item item = itemRepository.findByProductNameAndStore(itemRemoveDTO.itemName(), store).orElseThrow();
         Fridge fridge = fridgeRepository.findByFridgeId(itemRemoveDTO.fridgeId()).orElseThrow();
-        ShoppingItems shoppingItem = shoppingItemsRepository.findByItemAndFridge(item, fridge).orElseThrow();
+        ShoppingItems shoppingItem = shoppingItemsRepository.findByItemAndFridgeAndSuggestion(item, fridge, suggestion).orElseThrow();
         if (shoppingItem.getQuantity() <= itemRemoveDTO.quantity()){
             shoppingItemsRepository.delete(shoppingItem);
         }
@@ -125,8 +125,18 @@ public class ItemService implements IItemService {
             Store store = storeRepository.findByStoreName(i.store()).orElseThrow();
             Long itemId = itemRepository.findByProductNameAndStore(i.itemName(), store).orElseThrow().getItemId();
             addToFridge(itemId, i.fridgeId(), i.quantity());
-            deleteItemFromShoppingList(i);
+            deleteItemFromShoppingList(i, false);
         }
+    }
+
+    @Override
+    public void acceptSuggestion(ItemRemoveDTO itemDTO) {
+        Store store = storeRepository.findByStoreName(itemDTO.store()).orElseThrow();
+        Item item = itemRepository.findByProductNameAndStore(itemDTO.itemName(), store).orElseThrow();
+        Fridge fridge = fridgeRepository.findByFridgeId(itemDTO.fridgeId()).orElseThrow();
+        ShoppingItems shoppingItem = shoppingItemsRepository.findByItemAndFridgeAndSuggestion(item, fridge, true).orElseThrow();
+        shoppingItem.setSuggestion(false);
+        shoppingItemsRepository.save(shoppingItem);
     }
 
 }
