@@ -23,10 +23,10 @@ import java.util.Optional;
 public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificationExecutor<Item> {
 
     /**
-     * Finds an item by its item ID.
+     * Finds an items by its items ID.
      *
-     * @param itemId the ID of the item to find
-     * @return an Optional containing the item with the given ID, or an empty Optional if no such item exists
+     * @param itemId the ID of the items to find
+     * @return an Optional containing the items with the given ID, or an empty Optional if no such items exists
      */
     Optional<Item> findByItemId(Long itemId);
 
@@ -47,10 +47,10 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
     Optional<List<Item>> findItemsByBriefDescContainingIgnoreCase(String phrase);
 
     /**
-     * Finds an item by their product name.
+     * Finds an items by their product name.
      *
      * @param productName the product name to search for
-     * @return an Optional containing the item with the given product name, or an empty Optional if no such item exist
+     * @return an Optional containing the items with the given product name, or an empty Optional if no such items exist
      */
     Optional<Item> findItemByProductName(String productName);
 
@@ -100,7 +100,7 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
      * Finds items with purchase dates before a given date.
      *
      * @param purchaseDate Date of purchase.
-     * @return An optional list of items with purchase dates before a given item.
+     * @return An optional list of items with purchase dates before a given items.
      */
     Optional<List<Item>> findItemsByPurchaseDateBefore(Date purchaseDate);
 
