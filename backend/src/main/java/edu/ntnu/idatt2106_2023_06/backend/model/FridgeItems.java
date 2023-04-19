@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 /**
- * This class represents an item in the fridge. It, therefore, contains a fridge ID and the item ID.
+ * This class represents an items in the fridge. It, therefore, contains a fridge ID and the items ID.
  *
  * @author Trym Hamer Gudvangen
  */
@@ -19,23 +19,23 @@ import lombok.*;
 public class FridgeItems {
 
     /**
-     * The composite primary key of the fridge item, consisting of the item id and the fridge id.
+     * The composite primary key of the fridge items, consisting of the items id and the fridge id.
      */
     @EmbeddedId
     private FridgeItemsId id;
 
     /**
-     * The item of the fridge item.
+     * The items of the fridge items.
      */
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @MapsId("item")
+    @MapsId("items")
     @JoinColumn(name = "item_id", nullable = false)
     @NonNull
     @ToString.Exclude
     private Item item;
 
     /**
-     * The fridge of the fridge item.
+     * The fridge of the fridge items.
      */
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("fridge")
@@ -45,10 +45,11 @@ public class FridgeItems {
     private Fridge fridge;
 
     /**
-     * This is the quantity of the item
+     * This is the quantity of the items
      */
     @Column(name = "quantity")
     private int quantity;
+
 
 
 }

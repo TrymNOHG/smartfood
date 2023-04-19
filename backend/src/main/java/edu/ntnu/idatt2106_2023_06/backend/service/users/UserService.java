@@ -7,7 +7,7 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.exists.UserExistsException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
-import edu.ntnu.idatt2106_2023_06.backend.mapper.users.UserMapper;
+import edu.ntnu.idatt2106_2023_06.backend.mapper.UserMapper;
 import edu.ntnu.idatt2106_2023_06.backend.model.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import lombok.RequiredArgsConstructor;

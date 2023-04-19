@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 /**
  * A class that serves as the id for the FridgeItems entity in the app.
- * It is an Embeddable class that contains two fields, item and fridge.
+ * It is an Embeddable class that contains two fields, items and fridge.
  *
  * @author Trym Hamer Gudvangen
  */
@@ -21,7 +21,7 @@ import java.io.Serializable;
 public class FridgeItemsId implements Serializable {
 
     /**
-     * The id of the item.
+     * The id of the items.
      */
     @Column(name = "item_id")
     private Long item;
