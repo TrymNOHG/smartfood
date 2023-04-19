@@ -10,6 +10,7 @@ import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundExcept
 import edu.ntnu.idatt2106_2023_06.backend.mapper.UserMapper;
 import edu.ntnu.idatt2106_2023_06.backend.model.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +39,14 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationProvider authenticationProvider;
-
-
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
+
+    @PostConstruct
+    public void init() {
+        userRepository.dropTrigger();
+        userRepository.createTrigger();
+    }
+
     /**
      * This method updates a user's information.
      * It first checks if the given user exists in the database. It then checks if the new username already exists,
