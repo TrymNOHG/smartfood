@@ -6,6 +6,5 @@ import org.springframework.lang.Nullable;
 import java.util.Date;
 
 public record UserCreateDTO(@NonNull String username, @NonNull String password, @NonNull String firstName,
-                            @NonNull String lastName, @NonNull String email, @Nullable Date birthDate,
-                            @Nullable String phone, @Nullable byte[] picture) {
+                            @NonNull String lastName, @NonNull String email, @Nullable byte[] picture) {
 }
