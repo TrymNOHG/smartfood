@@ -92,7 +92,7 @@ class FridgeMemberTest {
 
         @Test
         void user_getter_returns_correct_value(){
-            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>());
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
                     "password","Ole@gmail.com");
             FridgeMember fridgeMember = new FridgeMember(null, user, fridge, true);
@@ -101,7 +101,7 @@ class FridgeMemberTest {
 
         @Test
         void fridge_getter_returns_correct_value(){
-            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>());
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
                     "password","Ole@gmail.com");
             FridgeMember fridgeMember = new FridgeMember(null, user, fridge, true);
@@ -110,7 +110,7 @@ class FridgeMemberTest {
 
         @Test
         void super_user_getter_returns_correct_value(){
-            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>());
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
                     "password","Ole@gmail.com");
             FridgeMember fridgeMember = new FridgeMember(null, user, fridge, true);

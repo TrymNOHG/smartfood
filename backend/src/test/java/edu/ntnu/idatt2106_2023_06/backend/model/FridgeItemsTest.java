@@ -94,7 +94,7 @@ class FridgeItemsTest {
 
         @Test
         void item_getter_returns_correct_value(){
-            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>());
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, new Date(), new Date(), "picture.png");
@@ -103,14 +103,15 @@ class FridgeItemsTest {
         }
 
         @Test
-        void fridge_getter_returns_correct_value(){
-            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>());
+        void fridge_items_getter_returns_correct_value(){
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, new Date(), new Date(), "picture.png");
             FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1);
             assertEquals(fridge, fridgeItem.getFridge());
         }
+
     }
 
 }

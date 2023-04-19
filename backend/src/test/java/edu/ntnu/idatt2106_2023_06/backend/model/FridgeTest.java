@@ -3,9 +3,7 @@ package edu.ntnu.idatt2106_2023_06.backend.model;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +24,7 @@ class FridgeTest {
         @Test
         void all_arg_constructor_can_be_made() {
             try {
-                Fridge fridge = new Fridge(1L, "Fridge", new HashSet<>());
+                Fridge fridge = new Fridge(1L, "Fridge", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
             } catch (Exception e) {
                 fail();
             }
@@ -59,7 +57,7 @@ class FridgeTest {
     @Nested
     class Fridge_can_properly_get {
         Fridge getFridge() {
-            return new Fridge(1L, "Norman family", new HashSet<>());
+            return new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
         }
 
         @Test
@@ -81,12 +79,43 @@ class FridgeTest {
             assertEquals(expectedName, actualName);
         }
 
+        @Test
+        void members() {
+            Fridge fridge = getFridge();
+            Set<FridgeMember> expectedFridgeMembers = new HashSet<>();
+
+            Set<FridgeMember> actualFridgeMembers = fridge.getMembers();
+
+            assertEquals(expectedFridgeMembers, actualFridgeMembers);
+        }
+
+        @Test
+        void shopping_items() {
+            Fridge fridge = getFridge();
+            List<ShoppingItems> expectedItems = new ArrayList<>();
+
+            List<ShoppingItems> actualItems = fridge.getShoppingItems();
+
+            assertEquals(expectedItems, actualItems);
+        }
+
+        @Test
+        void fridge_items() {
+            Fridge fridge = getFridge();
+            List<FridgeItems> expectedItems = new ArrayList<>();
+
+            List<FridgeItems> actualItems = fridge.getFridgeItems();
+
+            assertEquals(expectedItems, actualItems);
+        }
+
+
     }
 
     @Nested
     class Fridge_can_properly_set {
         Fridge getFridge() {
-            return new Fridge(1L, "Norman family", new HashSet<>());
+            return new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
         }
 
         @Test
@@ -98,6 +127,40 @@ class FridgeTest {
             String actualFridgeName = fridge.getFridgeName();
 
             assertEquals(expectedName, actualFridgeName);
+        }
+
+        @Test
+        void members() {
+            Fridge fridge = getFridge();
+            Set<FridgeMember> expectedFridgeMembers = new HashSet<>();
+
+
+            fridge.setMembers(expectedFridgeMembers);
+            Set<FridgeMember> actualFridgeMembers = fridge.getMembers();
+
+            assertEquals(expectedFridgeMembers, actualFridgeMembers);
+        }
+
+        @Test
+        void shopping_items_name() {
+            Fridge fridge = getFridge();
+            List<ShoppingItems> expectedItems = new ArrayList<>();
+
+            fridge.setShoppingItems(expectedItems);
+            List<ShoppingItems> actualShoppingItems = fridge.getShoppingItems();
+
+            assertEquals(expectedItems, actualShoppingItems);
+        }
+
+        @Test
+        void fridge_items_name() {
+            Fridge fridge = getFridge();
+            List<FridgeItems> expectedItems = new ArrayList<>();
+
+            fridge.setFridgeItems(expectedItems);
+            List<FridgeItems> actualFridgeItems = fridge.getFridgeItems();
+
+            assertEquals(expectedItems, actualFridgeItems);
         }
 
     }
