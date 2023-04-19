@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.repo;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.FoodCategory;
+import edu.ntnu.idatt2106_2023_06.backend.model.Store;
 import edu.ntnu.idatt2106_2023_06.backend.model.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -31,12 +31,12 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
     Optional<Item> findByItemId(Long itemId);
 
     /**
-     * Finds a list of items by their category.
+     * Finds a list of items by their store.
      *
-     * @param category the category of the items to find
+     * @param store the store of the items to find
      * @return an Optional containing the list of items with the given main category, or an empty Optional if no such items exist
      */
-    Optional<List<Item>> findItemsByFoodCategory(FoodCategory category);
+    Optional<List<Item>> findItemsByStore(Store store);
 
     /**
      * Finds a list of items whose brief description contains the given phrase, ignoring case.

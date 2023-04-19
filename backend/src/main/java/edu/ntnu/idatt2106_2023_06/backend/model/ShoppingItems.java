@@ -52,7 +52,7 @@ public class ShoppingItems {
      */
     @Column(name = "suggestion")
     @NonNull
-    private int suggestion;
+    private boolean suggestion;
 
 
 }
