@@ -16,14 +16,14 @@ class ShoppingItemsTest {
         @Test
         void item_cannot_be_null(){
             assertThrows(NullPointerException.class, () -> {
-                ShoppingItems shoppingItems = new ShoppingItems(null, null, new Fridge(), 1);
+                ShoppingItems shoppingItems = new ShoppingItems(null, null, new Fridge(), true);
             });
         }
 
         @Test
         void fridge_cannot_be_null(){
             assertThrows(NullPointerException.class, () -> {
-                ShoppingItems shoppingItems = new ShoppingItems(null, new Item(), null, 1);
+                ShoppingItems shoppingItems = new ShoppingItems(null, new Item(), null, true);
             });
         }
 
@@ -34,7 +34,7 @@ class ShoppingItemsTest {
 
         @Test
         void item_cannot_be_set_to_null(){
-            ShoppingItems shoppingItems = new ShoppingItems(null, new Item(), new Fridge(), 1);
+            ShoppingItems shoppingItems = new ShoppingItems(null, new Item(), new Fridge(), true);
             assertThrows(NullPointerException.class, () -> {
                 shoppingItems.setItem(null);
             });
@@ -42,7 +42,7 @@ class ShoppingItemsTest {
 
         @Test
         void fridge_cannot_be_set_to_null(){
-            ShoppingItems shoppingItems = new ShoppingItems(null, new Item(), new Fridge(), 1);
+            ShoppingItems shoppingItems = new ShoppingItems(null, new Item(), new Fridge(), true);
             assertThrows(NullPointerException.class, () -> {
                 shoppingItems.setFridge(null);
             });
@@ -56,9 +56,9 @@ class ShoppingItemsTest {
         void item_getter_returns_correct_value(){
             Fridge fridge = new Fridge(1L, "Norman family");
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
-                    "grass matet kuer.", new FoodCategory(1L, "Dairy", new ArrayList<>()),
-                    200000, new Date(), new Date());
-            ShoppingItems shoppingItems = new ShoppingItems(null, item, fridge, 1);
+                    "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
+                    200000, new Date(), new Date(), null);
+            ShoppingItems shoppingItems = new ShoppingItems(null, item, fridge, true);
             assertEquals(item, shoppingItems.getItem());
         }
 
@@ -66,9 +66,9 @@ class ShoppingItemsTest {
         void fridge_getter_returns_correct_value(){
             Fridge fridge = new Fridge(1L, "Norman family");
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
-                    "grass matet kuer.", new FoodCategory(1L, "Dairy", new ArrayList<>()),
-                    200000, new Date(), new Date());
-            ShoppingItems shoppingItems = new ShoppingItems(null, item, fridge, 1);
+                    "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
+                    200000, new Date(), new Date(), null);
+            ShoppingItems shoppingItems = new ShoppingItems(null, item, fridge, true);
             assertEquals(fridge, shoppingItems.getFridge());
         }
 
@@ -76,10 +76,10 @@ class ShoppingItemsTest {
         void suggestion_getter_returns_correct_value(){
             Fridge fridge = new Fridge(1L, "Norman family");
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
-                    "grass matet kuer.", new FoodCategory(1L, "Dairy", new ArrayList<>()),
-                    200000, new Date(), new Date());
-            ShoppingItems shoppingItems = new ShoppingItems(null, item, fridge, 1);
-            assertEquals(1, shoppingItems.getSuggestion());
+                    "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
+                    200000, new Date(), new Date(), null);
+            ShoppingItems shoppingItems = new ShoppingItems(null, item, fridge, true);
+            assertEquals(true, shoppingItems.isSuggestion());
         }
     }
 
@@ -89,9 +89,9 @@ class ShoppingItemsTest {
         void item_setter_can_be_applied(){
             Fridge fridge = new Fridge(1L, "Norman family");
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
-                    "grass matet kuer.", new FoodCategory(1L, "Dairy", new ArrayList<>()),
-                    200000, new Date(), new Date());
-            ShoppingItems shoppingItems = new ShoppingItems(null, new Item(), fridge, 1);
+                    "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
+                    200000, new Date(), new Date(), null);
+            ShoppingItems shoppingItems = new ShoppingItems(null, new Item(), fridge, true);
 
             shoppingItems.setItem(item);
             assertEquals(item, shoppingItems.getItem());
@@ -101,9 +101,9 @@ class ShoppingItemsTest {
         void fridge_setter_can_be_applied(){
             Fridge fridge = new Fridge(1L, "Norman family");
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
-                    "grass matet kuer.", new FoodCategory(1L, "Dairy", new ArrayList<>()),
-                    200000, new Date(), new Date());
-            ShoppingItems shoppingItems = new ShoppingItems(null, item, new Fridge(), 1);
+                    "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
+                    200000, new Date(), new Date(), null);
+            ShoppingItems shoppingItems = new ShoppingItems(null, item, new Fridge(), true);
 
             shoppingItems.setFridge(fridge);
             assertEquals(fridge, shoppingItems.getFridge());
@@ -113,13 +113,13 @@ class ShoppingItemsTest {
         void suggestion_setter_can_be_applied(){
             Fridge fridge = new Fridge(1L, "Norman family");
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
-                    "grass matet kuer.", new FoodCategory(1L, "Dairy", new ArrayList<>()),
-                    200000, new Date(), new Date());
-            ShoppingItems shoppingItems = new ShoppingItems(null, item, fridge, 1);
+                    "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
+                    200000, new Date(), new Date(), null);
+            ShoppingItems shoppingItems = new ShoppingItems(null, item, fridge, true);
 
-            shoppingItems.setSuggestion(2);
+            shoppingItems.setSuggestion(true);
 
-            assertEquals(2, shoppingItems.getSuggestion());
+            assertEquals(true, shoppingItems.isSuggestion());
         }
     }
 

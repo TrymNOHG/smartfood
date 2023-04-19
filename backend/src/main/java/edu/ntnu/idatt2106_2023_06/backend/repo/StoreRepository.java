@@ -1,15 +1,14 @@
 package edu.ntnu.idatt2106_2023_06.backend.repo;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.FoodCategory;
+import edu.ntnu.idatt2106_2023_06.backend.model.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
 
- This repository provides CRUD operations for the FoodCategory entity.
+ This repository provides CRUD operations for the Store entity.
 
  It extends JpaRepository and JpaSpecificationExecutor interfaces.
 
@@ -17,7 +16,7 @@ import java.util.Optional;
  search functionality using specifications.
  */
 @Repository
-public interface FoodCategoryRepository extends JpaRepository<FoodCategory, Long> {
+public interface StoreRepository extends JpaRepository<Store, Long> {
 
     /**
      * Find a Category by its name
@@ -25,7 +24,7 @@ public interface FoodCategoryRepository extends JpaRepository<FoodCategory, Long
      * @param name The Category name of the Category to find
      * @return An Optional containing the Category found, or an empty Optional if not found
      */
-    Optional<FoodCategory> findByCategoryName(String name);
+    Optional<Store> findByStoreName(String name);
 
     /**
      * Find a Category by its ID
@@ -33,7 +32,7 @@ public interface FoodCategoryRepository extends JpaRepository<FoodCategory, Long
      * @param categoryId The ID of the Category to find
      * @return An Optional containing the Category found, or an empty Optional if not found
      */
-    Optional<FoodCategory> findCategoryByCategoryId(Long categoryId);
+    Optional<Store> findStoreByStoreId(Long categoryId);
 
 }
 

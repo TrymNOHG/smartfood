@@ -48,10 +48,10 @@ public class Item {
      * The category this item belongs to.
      */
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "store_id")
     @NonNull
     @ToString.Exclude
-    private FoodCategory foodCategory;
+    private Store store;
 
     /**
      * The price of this item.
