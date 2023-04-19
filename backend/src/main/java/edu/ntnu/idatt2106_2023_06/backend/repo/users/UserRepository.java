@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.repo.users;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
+import edu.ntnu.idatt2106_2023_06.backend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

@@ -8,7 +8,7 @@ import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.exists.UserExistsException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.users.UserMapper;
-import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
+import edu.ntnu.idatt2106_2023_06.backend.model.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

@@ -2,7 +2,7 @@ package edu.ntnu.idatt2106_2023_06.backend.mapper.users;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserCreateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoadDTO;
-import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
+import edu.ntnu.idatt2106_2023_06.backend.model.User;
 
 /**
  This mapper class is responsible for converting User objects to UserLoadDTO objects and vice versa.
