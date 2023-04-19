@@ -41,6 +41,7 @@
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-circle-user" />
             </span>
+            <span class="text">Profile</span>
           </RouterLink>
         </li>
       </ul>
@@ -72,7 +73,7 @@ header {
 header img {
   height: 100px;
   width: auto;
-  margin-right: 170px;
+  margin-right: 225px;
 }
 
 h1 {
@@ -96,7 +97,7 @@ nav ul {
 
 nav ul li {
   position: relative;
-  width: 60px;
+  width: 70px;
   height: 70px;
   z-index: 1;
 }

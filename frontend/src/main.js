@@ -22,6 +22,7 @@ import {
 
 /* Imports fr multiple languages */
 
+
 /* add icons to the library */
 library.add(
     faUserCircle,
@@ -43,6 +44,7 @@ pinia.use(piniaPersist)
 
 createApp(App)
     .use(pinia)
+    .use(i18n)
     .use(router)
     .component('font-awesome-icon', FontAwesomeIcon)
     .mount('#app');
