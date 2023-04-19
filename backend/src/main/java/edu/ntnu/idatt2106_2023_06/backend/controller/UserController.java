@@ -6,8 +6,10 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserRegisterDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserPasswordUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
+import edu.ntnu.idatt2106_2023_06.backend.service.files.FileStorageService;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.AuthenticationService;
+import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
 import edu.ntnu.idatt2106_2023_06.backend.service.users.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -38,6 +40,8 @@ public class UserController {
     private final FridgeService fridgeService;
 
     private final UserService userService;
+    private final FileStorageService fileStorageService;
+    private final JwtService jwtService;
 
     @PostMapping("/register")
     @Operation(summary = "Register a new user")
@@ -84,21 +88,22 @@ public class UserController {
     @Operation(summary = "Update user")
     public ResponseEntity<Object> update(@RequestPart UserUpdateDTO userUpdateDTO,
                                          @RequestParam(value = "picture", required = false) MultipartFile picture,
-                                         Authentication authentication) {
+                                         Authentication authentication) throws IOException {
         logger.info(String.format("User %s wants to be updated!", userUpdateDTO.username()));
-        userService.updateUser(userUpdateDTO, picture, authentication.getName());
+        //TODO: logic
         logger.info(String.format("User %s has been updated!", userUpdateDTO.username()));
 
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/update/picture")
-    @Operation(summary = "Update user")
+    @Operation(summary = "Update user profile picture")
     public ResponseEntity<Object> updatePicture(@RequestParam(value = "picture") MultipartFile picture,
-                                                Authentication authentication) {
+                                                Authentication authentication) throws IOException {
 
-        logger.info(String.format("User %s wants to been updated!", authentication.getName()));
-        //userService.updateUserPicture(picture, authentication.getName());
+        logger.info(String.format("User %s wants to be updated!", authentication.getName()));
+        fileStorageService.storeProfilePicture(jwtService.getAuthenticatedUserId().toString(), picture);
+        logger.info(String.format("User %s has been updated!", authentication.getName()));
         return ResponseEntity.ok().build();
     }
 

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -60,7 +61,7 @@ public class UserService implements IUserService {
      */
     @Transactional
     @Override
-    public void updateUser(UserUpdateDTO userUpdateDTO, MultipartFile profilePicture, String username) throws UserNotFoundException{
+    public void updateUser(UserUpdateDTO userUpdateDTO, MultipartFile profilePicture, String username) throws UserNotFoundException, IOException {
 
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new UserNotFoundException(userUpdateDTO.username())
@@ -75,7 +76,7 @@ public class UserService implements IUserService {
         user.setLastName(userUpdateDTO.lastName() != null ? userUpdateDTO.lastName() : user.getLastName());
         user.setEmail(userUpdateDTO.email() != null ? userUpdateDTO.email() : user.getEmail());
         if(profilePicture != null) {
-            //fileStorageService.
+            fileStorageService.storeProfilePicture(user.getUserId().toString(), profilePicture);
             //TODO: create picture file system
         }
         userRepository.save(user);

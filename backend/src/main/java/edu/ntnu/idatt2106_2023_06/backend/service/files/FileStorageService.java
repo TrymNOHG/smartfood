@@ -81,47 +81,6 @@ public class FileStorageService implements IFileStorageService {
         }
     }
 
-    /**
-     * Get a single image from a listing. The image is returned as a byte array.
-     *
-     * @param listingId The id of the listing.
-     * @param imageIndex The index of the image in the listing.
-     * @return A ResponseEntity containing the image as a byte array.
-     */
-    public ResponseEntity<byte[]> getImageInListing(String listingId, String imageIndex) {
-        Path filePath = this.fileStorageLocation.resolve(listingId + "/" + imageIndex).normalize();
-        File file = filePath.toFile();
-        if (!file.exists()) {
-            return ResponseEntity.badRequest().build();
-        }
-        try {
-            byte[] fileContent = Files.readAllBytes(file.toPath());
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+file.getName()+"\"")
-                    .contentType(MediaType.IMAGE_JPEG)
-                    .body(fileContent);
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    /**
-     * Deletes a folder and all its contents.
-     *
-     * @param folderName The name of the folder to delete.
-     * @return True if the folder was deleted, false otherwise.
-     * @throws IOException If the folder could not be deleted.
-     */
-    public boolean deleteFolder(String folderName) throws IOException {
-        Path folderPath = this.fileStorageLocation.resolve(folderName).normalize();
-        File folder = folderPath.toFile();
-        if (!folder.exists()) {
-            throw new RuntimeException("Folder not found: " + folderName);
-        }
-        FileUtils.deleteDirectory(folder);
-        return true;
-    }
-
     @Override
     public void storeProfilePicture(String userId, MultipartFile profilePicture) throws IOException {
         if (profilePicture != null && !profilePicture.isEmpty()) {
