@@ -5,7 +5,6 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.security.AuthenticationResponseDTO
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserCreateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserPasswordUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserUpdateDTO;
-import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.AuthenticationService;
 import edu.ntnu.idatt2106_2023_06.backend.service.users.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,8 +19,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -44,14 +45,13 @@ public class UserController {
                             schema = @Schema(implementation = AuthenticationResponseDTO.class)
                     )
             })
-    }
-    )
+    })
     public ResponseEntity<Object> register(@ParameterObject @RequestBody UserCreateDTO user) {
         logger.info("User " + user.username() + " is being registered!");
         return ResponseEntity.ok(authenticationService.register(user));
     }
 
-    @PostMapping("/auth/authenticate")
+    @PostMapping("/login")
     @Operation(summary = "Authenticate a user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Authentication token", content = {
@@ -63,7 +63,6 @@ public class UserController {
     public ResponseEntity<AuthenticationResponseDTO> register(@ParameterObject @RequestBody AuthenticationRequestDTO request) {
         logger.info("New Authentication request: " + request.toString());
         return ResponseEntity.ok(authenticationService.authenticate(request));
-
     }
 
     @PutMapping(
@@ -72,23 +71,11 @@ public class UserController {
             produces = { MediaType.APPLICATION_JSON_VALUE}
     )
     @Operation(summary = "Update user")
-    public ResponseEntity<Object> update(@ParameterObject @RequestBody UserUpdateDTO userUpdateDTO,
-//                                         @ParameterObject @RequestPart("profilePicture") List<MultipartFile> profilePicture,
-                                         Authentication authentication) throws IOException {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        UserUpdateDTO user = objectMapper.readValue(userUpdateDTO, UserUpdateDTO.class);
-        if(!Objects.equals(authentication.getName(), userUpdateDTO.username())) {
-            logger.info("The user who sent the request is not the same as the one being changed.");
-            throw new UnauthorizedException(authentication.getName());
-        }
-
-//        byte[] profilePic;
-//
-//        if(!profilePicture.isEmpty()) profilePic = profilePicture.get(0).getBytes();
-//        else profilePic = null;
-
-        logger.info(String.format("User %s wants to been updated!", userUpdateDTO.username()));
-        userService.updateUser(userUpdateDTO, null); //To work on profile picture, undo null
+    public ResponseEntity<Object> update(@RequestPart("userUpdateDTO") UserUpdateDTO userUpdateDTO,
+                                         @RequestPart(value = "picture", required = false) MultipartFile picture,
+                                         Authentication authentication) {
+        logger.info(String.format("User %s wants to be updated!", userUpdateDTO.username()));
+        userService.updateUser(userUpdateDTO, userUpdateDTO.picture(), authentication.getName());
         logger.info(String.format("User %s has been updated!", userUpdateDTO.username()));
 
         return ResponseEntity.ok().build();
