@@ -2,8 +2,12 @@ package edu.ntnu.idatt2106_2023_06.backend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * This class represents a food item. A food item has an id, name, brief description, price, purchase and expiration date,
@@ -77,6 +81,30 @@ public class Item {
      */
     @Column(name = "picture_link")
     private String pictureLink;
+
+    /**
+     * The items in the recipe.
+     */
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    private List<RecipeItems> itemsInRecipe = new ArrayList<>();
+
+    /**
+     * The items in the shopping list.
+     */
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    private List<ShoppingItems> itemsInShoppingList = new ArrayList<>();
+
+    /**
+     * The items in the fridge.
+     */
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    private List<FridgeItems> itemsInFridge = new ArrayList<>();
 
 
 }

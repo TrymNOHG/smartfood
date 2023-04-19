@@ -26,7 +26,9 @@ class FridgeItemsTest {
         @Test
         void all_arg_constructor_can_be_made() {
             try {
-                Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(), null);
+                Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                        new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(),
+                        null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
                 FridgeItems items = new FridgeItems(null, item, new Fridge(), 1);
             } catch (Exception e) {
                 fail();
@@ -37,7 +39,9 @@ class FridgeItemsTest {
         @Test
         void builder_can_be_made() {
             try {
-                Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(), null);
+                Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                        new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(),
+                        null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
                 FridgeItems items = FridgeItems
                         .builder()
                         .fridge(new Fridge())
@@ -97,7 +101,7 @@ class FridgeItemsTest {
             Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
-                    200000, new Date(), new Date(), "picture.png");
+                    200000, new Date(), new Date(), "picture.png", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1);
             assertEquals(item, fridgeItem.getItem());
         }
@@ -107,7 +111,7 @@ class FridgeItemsTest {
             Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
-                    200000, new Date(), new Date(), "picture.png");
+                    200000, new Date(), new Date(), "picture.png", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1);
             assertEquals(fridge, fridgeItem.getFridge());
         }
