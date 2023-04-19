@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106_2023_06.backend.model.users;
+package edu.ntnu.idatt2106_2023_06.backend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -69,18 +69,6 @@ public class User implements UserDetails {
     @Column(name = "email", nullable = false, unique = true)
     @NonNull
     private String email;
-
-    /**
-     * The birthdate of the user, can be null
-     */
-    @Column(name = "birth_date")
-    private Date birthDate;
-
-    /**
-     * The phone number of the user, can be null
-     */
-    @Column(name = "phone", unique = true)
-    private String phone;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
