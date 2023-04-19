@@ -72,6 +72,7 @@
           </p>
         </div>
       </form>
+      <h2 v-if="submitMessage" id="submit-message" aria-describedby="login-form">{{ submitMessage }}</h2>
     </div>
   </div>
 </template>
@@ -80,10 +81,13 @@
 import * as yup from "yup";
 import { useField, useForm } from "vee-validate";
 import { registerUser } from "@/services/UserService";
+import {ref} from "vue";
 
 export default {
   name: "RegisterComponent",
   setup() {
+    const submitMessage = ref('');
+
     const validationSchema = yup.object({
       firstName: yup.string().required("first_name_error"),
       lastName: yup.string().required("last_name_error"),
@@ -135,6 +139,7 @@ export default {
             }, 3000);
             await router.push("/");
           } else {
+            console.log('Something went wrong registering')
             submitMessage.value =
               "Something went wrong. Please try again later.";
             setTimeout(() => {
@@ -143,7 +148,9 @@ export default {
           }
         })
         .catch((error) => {
-          alert(error.body); //TODO: format!!!!
+          submitMessage.value = error.response.data["Message:"]
+          console.log(error.response.data);
+          alert(error.response.data["Message"]); //TODO: format!!!!
           console.warn("error1", error); //TODO: add exception handling
         });
     });
@@ -166,6 +173,7 @@ export default {
       hasErrors,
       setFieldTouched,
       setFieldValue,
+      submitMessage,
     };
   },
 };
