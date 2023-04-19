@@ -13,10 +13,6 @@ export default {
       type: String,
       default: "Button"
     },
-    buttonClass: {
-      type: String,
-      default: "basic-button"
-    }
   }
 };
 </script>

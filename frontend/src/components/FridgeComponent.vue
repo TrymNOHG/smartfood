@@ -1,7 +1,7 @@
 <template>
   <h1>{{ $t('fridges') }}</h1>
   <list :items="['Item 1', 'Item 2', 'Item 3']"/>
-  <basic-button/>
+  <basic-button :button-text="'New Fridge'"/>
 </template>
 
 <script>
