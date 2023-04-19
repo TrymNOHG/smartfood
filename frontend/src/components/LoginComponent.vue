@@ -203,7 +203,7 @@ button {
   color: white;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 800px) {
   .wrapper .form-box {
     padding: 20px;
   }

@@ -10,3 +10,7 @@ export const getAllFridges = async (username) => {
         }
     });
 }
+
+export const getFridgeById = async(fridgeID) => {
+    return await axios.get(`${BASE_LISTING_URL}/user/load?fridgeID=${fridgeID}}`);
+}
