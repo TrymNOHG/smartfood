@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"edu.ntnu.idatt2106_2023_06.backend","c":"BackendApplication","l":"BackendApplication()","u":"%3Cinit%3E()"},{"p":"edu.ntnu.idatt2106_2023_06.backend","c":"BackendApplication","l":"main(String[])","u":"main(java.lang.String[])"}];updateSearchResults();

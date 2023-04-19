@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"edu.ntnu.idatt2106_2023_06.backend","l":"BackendApplication"}];updateSearchResults();
