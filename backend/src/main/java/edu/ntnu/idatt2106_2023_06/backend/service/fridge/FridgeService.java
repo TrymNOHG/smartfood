@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.fridge;
 
+import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeUserDTO;
+import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFound;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.FridgeMemberMapper;
 import edu.ntnu.idatt2106_2023_06.backend.model.*;
@@ -10,6 +12,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +43,19 @@ public class FridgeService implements IFridgeService{
         //TODO: add ability to change fridge name
 
         fridgeMemberRepository.save(FridgeMemberMapper.toFridgeMember(user, savedFridge, true));
+    }
+
+    public void addUserToFridge(FridgeUserDTO fridgeUserDTO) {
+        User userToBeAdded = userRepository.findByUsername(fridgeUserDTO.username())
+                .orElseThrow(() -> new UsernameNotFoundException(fridgeUserDTO.username()));
+
+        Fridge fridgeToBeAddedTo = fridgeRepository.findByFridgeId(fridgeUserDTO.fridgeId())
+                .orElseThrow(() -> new FridgeNotFound(fridgeUserDTO.fridgeId()));
+
+        fridgeMemberRepository.save(FridgeMemberMapper.toFridgeMember(
+                userToBeAdded, fridgeToBeAddedTo, fridgeUserDTO.isSuperUser())
+        );
+
     }
 
 }
