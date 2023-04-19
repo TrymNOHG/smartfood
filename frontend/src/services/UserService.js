@@ -9,7 +9,7 @@ export const registerUser = async (userData) => {
 }
 
 export const loginUser = async (userLoginDTO) => {
-    return axios.post(`${BASE_USER_URL}/auth/authenticate`, userLoginDTO)
+    return axios.post(`${BASE_USER_URL}/login`, userLoginDTO)
 }
 
 export const getUser = async () => {

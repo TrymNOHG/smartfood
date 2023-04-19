@@ -4,37 +4,58 @@
       <h2>Login</h2>
       <form @submit.prevent="submit" :class="{ 'has-errors': hasErrors }">
         <div class="input-box">
-          <span class="icon"><font-awesome-icon icon="fa-solid fa-envelope" /></span>
-          <input type="text" required v-model.trim="email" name="email">
-          <label>{{ $t('email') }}</label>
-          <div v-if="errors['email']" class="error">{{ $t(errors['email']) }}</div>
+          <span class="icon"
+            ><font-awesome-icon icon="fa-solid fa-envelope"
+          /></span>
+          <input type="text" required v-model.trim="email" name="email" />
+          <label>{{ $t("email") }}</label>
+          <div v-if="errors['email']" class="error">
+            {{ $t(errors["email"]) }}
+          </div>
         </div>
         <div class="input-box">
-          <span class="icon"><font-awesome-icon icon="fa-solid fa-lock" /></span>
-          <input type="password" required v-model.trim="password" name="password">
-          <label>{{ $t('password') }}</label>
-          <div v-if="errors['password']" class="error">{{ $t(errors['password']) }}</div>
+          <span class="icon"
+            ><font-awesome-icon icon="fa-solid fa-lock"
+          /></span>
+          <input
+            type="password"
+            required
+            v-model.trim="password"
+            name="password"
+          />
+          <label>{{ $t("password") }}</label>
+          <div v-if="errors['password']" class="error">
+            {{ $t(errors["password"]) }}
+          </div>
         </div>
+
+        <h5 v-if="submitMessage" class="submit-message">
+          {{ submitMessage }}
+        </h5>
+
         <div class="remember-forgot">
-          <a href="#">{{ $t('forgot_password') }}</a>
+          <a href="#">{{ $t("forgot_password") }}</a>
         </div>
-        <button type="submit" @click="submit">{{ $t('login') }}</button>
+
+        <button type="submit" @click="submit">{{ $t("login") }}</button>
         <div class="login-register">
-          <p>{{ $t('dont_have_account') }} <a href="/register" class="register-link">{{ $t('register') }}</a></p>
+          <p>
+            {{ $t("dont_have_account") }}
+            <a href="/register" class="register-link">{{ $t("register") }}</a>
+          </p>
         </div>
-        <div v-if="submitMessage" class="submit-message">{{ submitMessage }}</div>
       </form>
     </div>
   </div>
 </template>
 <script>
-import * as yup from 'yup'
+import * as yup from "yup";
 import { useField, useForm } from "vee-validate";
 import { useLoggedInStore } from "@/store/store";
 import { ref } from "vue";
 import router from "@/router/router";
 import { loginUser } from "@/services/UserService";
-import { useStorage } from 'vue3-storage';
+import { useStorage } from "vue3-storage";
 
 export default {
   name: "LoginComponent",
@@ -44,7 +65,10 @@ export default {
     const store = useLoggedInStore();
     const validationSchema = yup.object({
       email: yup.string().required("email_error"),
-      password: yup.string().required("error_password").min(8, "password_length"),
+      password: yup
+        .string()
+        .required("error_password")
+        .min(8, "password_length"),
     });
     const { handleSubmit, errors, setFieldTouched, setFieldValue } = useForm({
       validationSchema,
@@ -56,7 +80,7 @@ export default {
     const { value: email } = useField("email");
     const { value: password } = useField("password");
     const submit = handleSubmit(async () => {
-      console.log("Submit clicked") 
+      console.log("Submit clicked");
       const request = {
         email: email.value,
         password: password.value,
@@ -81,6 +105,7 @@ export default {
           }
         })
         .catch((error) => {
+          submitMessage.value = error.response.data["Message:"];
           console.warn("error", error);
         });
     });
@@ -105,7 +130,6 @@ export default {
 </script>
 
 <style scoped>
-
 .wrapper {
   position: relative;
   width: 100%;
@@ -125,13 +149,15 @@ export default {
   width: 90%;
   padding: 40px;
 }
-
+h5{
+  margin-top: -40px;
+}
 .form-box {
   font-size: 1rem;
   text-align: center;
 }
 
-h2{
+h2 {
   font-weight: bold;
 }
 
@@ -155,7 +181,6 @@ label {
   margin-top: 10px;
 }
 
-
 input {
   width: 100%;
   height: 100%;
@@ -167,14 +192,11 @@ input {
 }
 
 .has-errors input[type="email"],
-
-
 .error {
   font-size: 12px;
   margin: 5px;
   position: relative;
 }
-
 
 .icon {
   position: absolute;
@@ -217,5 +239,4 @@ button {
     font-size: 1.2em;
   }
 }
-
 </style>
