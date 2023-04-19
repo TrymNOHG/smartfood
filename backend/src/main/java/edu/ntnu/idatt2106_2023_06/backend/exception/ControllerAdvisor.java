@@ -2,6 +2,8 @@ package edu.ntnu.idatt2106_2023_06.backend.exception;
 
 import edu.ntnu.idatt2106_2023_06.backend.exception.exists.ExistsException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.NotFoundException;
+import io.jsonwebtoken.JwtException;
+import jakarta.servlet.ServletException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,6 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.io.IOException;
+import java.security.SignatureException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,7 +35,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> existsAction(ExistsException e, WebRequest webRequest) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("Time of error: ", LocalDateTime.now());
-        body.put("Message:", e.getMessage());
+        body.put("Message: ", e.getMessage());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
@@ -41,7 +44,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> notFoundAction(NotFoundException e, WebRequest webRequest){
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("Time of error: ", LocalDateTime.now());
-        body.put("Message:", e.getMessage());
+        body.put("Message: ", e.getMessage());
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
@@ -50,7 +53,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> exceptionAction(Exception e, WebRequest webRequest) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("Time of error: ", LocalDateTime.now());
-        body.put("Message:", e.getMessage());
+        body.put("Message: ", e.getMessage());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
@@ -59,7 +62,16 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> ioExceptionAction(IOException e, WebRequest webRequest) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("Time of error: ", LocalDateTime.now());
-        body.put("Message:", e.getMessage());
+        body.put("Message: ", e.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(JwtException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> jwtExceptionAction(ServletException e, WebRequest webRequest) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("Time of error: ", LocalDateTime.now());
+        body.put("Message: ", e.getMessage());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 

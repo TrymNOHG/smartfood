@@ -14,10 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.FileSystemException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -29,7 +26,7 @@ import java.util.Objects;
  */
 @Service
 @RequiredArgsConstructor
-public class FileStorageService {
+public class FileStorageService implements IFileStorageService {
 
     private final Path fileStorageLocation;
     private final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
@@ -84,96 +81,27 @@ public class FileStorageService {
         }
     }
 
-    /**
-     * Get a single image from a listing. The image is returned as a byte array.
-     *
-     * @param listingId The id of the listing.
-     * @param imageIndex The index of the image in the listing.
-     * @return A ResponseEntity containing the image as a byte array.
-     */
-    public ResponseEntity<byte[]> getImageInListing(String listingId, String imageIndex) {
-        Path filePath = this.fileStorageLocation.resolve(listingId + "/" + imageIndex).normalize();
-        File file = filePath.toFile();
-        if (!file.exists()) {
-            return ResponseEntity.badRequest().build();
-        }
-        try {
-            byte[] fileContent = Files.readAllBytes(file.toPath());
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+file.getName()+"\"")
-                    .contentType(MediaType.IMAGE_JPEG)
-                    .body(fileContent);
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().build();
+    @Override
+    public void storeProfilePicture(String userId, MultipartFile profilePicture) throws IOException {
+        if (profilePicture != null && !profilePicture.isEmpty()) {
+            Path targetLocation = fileStorageLocation.resolve(userId);
+            Files.copy(profilePicture.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
-    /**
-     * Deletes a folder and all its contents.
-     *
-     * @param folderName The name of the folder to delete.
-     * @return True if the folder was deleted, false otherwise.
-     * @throws IOException If the folder could not be deleted.
-     */
-    public boolean deleteFolder(String folderName) throws IOException {
-        Path folderPath = this.fileStorageLocation.resolve(folderName).normalize();
-        File folder = folderPath.toFile();
-        if (!folder.exists()) {
-            throw new RuntimeException("Folder not found: " + folderName);
+    @Override
+    public void deleteProfilePicture(String userId) throws IOException {
+        Path targetLocation = fileStorageLocation.resolve(userId);
+        try{
+            Files.deleteIfExists(targetLocation);
+        } catch (NoSuchFileException e) {
+            logger.info("No profile picture found for user " + userId);
+            throw new NoSuchFileException("No profile picture found for user with ID " + userId);
         }
-        FileUtils.deleteDirectory(folder);
-        return true;
     }
 
-    /**
-     * Deletes a file from a directory. If the directory only contains one file, this method will throw an exception.
-     * This is to prevent a listing from having no images.
-     *
-     * @param listingId The id of the listing that the file belongs to.
-     * @param imageIndex The index of the image in the listing.
-     * @return True if the file was deleted, false otherwise.
-     */
-    public boolean deleteFile(String listingId, String imageIndex) {
-        Path filePath = this.fileStorageLocation.resolve(listingId + "/" + imageIndex).normalize();
-        File file = filePath.toFile();
-        if(Objects.requireNonNull(fileStorageLocation.resolve(listingId).toFile().listFiles()).length < 2) {
-            throw new RuntimeException("Cannot delete last image in listing");
-        }
-        if (!file.exists()) {
-            throw new RuntimeException("File not found: " + listingId + "/" + imageIndex);
-        }
-        file.delete();
-        return true;
-    }
-
-    /**
-     * Renames all files in a directory to remove gaps in the numbering. For example, if the directory contains files
-     * 0, 2, 3. This method will rename the files to 0, 1, 2. This method is useful when deleting files from a
-     * directory, and you want to keep the numbering of the files in the directory.
-     *
-     * @param directoryPath The path to the directory that is to be sorted.
-     */
-    public void removeFileGaps(String directoryPath) {
-        File directory = this.fileStorageLocation.resolve(directoryPath).toFile();
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new RuntimeException("Directory not found: " + directoryPath);
-        }
-        Arrays.sort(files);
-        int expectedIndex = 0;
-        for (File file : files) {
-            String fileName = file.getName();
-            int fileIndex = Integer.parseInt(fileName);
-            if (fileIndex != expectedIndex) {
-                String newFileName = Integer.toString(expectedIndex);
-                File newFile = new File(fileStorageLocation.resolve(directoryPath) + File.separator + newFileName);
-                if (file.renameTo(newFile)) {
-                    logger.info("Renamed file " + fileName + " to " + newFileName);
-                } else {
-                    logger.info("Failed to rename file " + fileName);
-                }
-            }
-            expectedIndex++;
-        }
+    @Override
+    public MultipartFile getProfilePicture(String userID) throws IOException {
+        return null;
     }
 }

@@ -10,17 +10,21 @@ import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundExcept
 import edu.ntnu.idatt2106_2023_06.backend.mapper.UserMapper;
 import edu.ntnu.idatt2106_2023_06.backend.model.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
+import edu.ntnu.idatt2106_2023_06.backend.service.files.FileStorageService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -39,6 +43,11 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationProvider authenticationProvider;
+    private final UserDetailsService userDetailsService;
+    private final FileStorageService fileStorageService;
+
+
+
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @PostConstruct
@@ -60,25 +69,24 @@ public class UserService implements IUserService {
      */
     @Transactional
     @Override
-    public void updateUser(UserUpdateDTO userUpdateDTO, byte[] profilePicture){
+    public void updateUser(UserUpdateDTO userUpdateDTO, MultipartFile profilePicture, String username) throws UserNotFoundException, IOException {
 
-        User user = userRepository.findByUsername(userUpdateDTO.username()).orElseThrow(() -> new UserNotFoundException(userUpdateDTO.username()));
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new UserNotFoundException(userUpdateDTO.username())
+        );
         logger.info("User " + user.getUsername() + " was found!");
-        Optional<User> newUser = userRepository.findByUsername(userUpdateDTO.newUsername());
 
-        if(!user.getUsername().equals(userUpdateDTO.newUsername())){
-            if (newUser.isPresent()) {
-                logger.info("User " + user.getUsername() + " with same name found!");
-                throw new UserExistsException(userUpdateDTO.newUsername());
-            }
-            user.setUsername(userUpdateDTO.newUsername() != null ? userUpdateDTO.username() : user.getUsername());
-        }
+        if(userRepository.findByEmail(userUpdateDTO.email()).isPresent())
+            throw new UserExistsException(userUpdateDTO.email());
 
+        user.setUsername(userUpdateDTO.username() != null ? userUpdateDTO.username() : user.getUsername());
         user.setFirstName(userUpdateDTO.firstName() != null ? userUpdateDTO.firstName() : user.getFirstName());
         user.setLastName(userUpdateDTO.lastName() != null ? userUpdateDTO.lastName() : user.getLastName());
         user.setEmail(userUpdateDTO.email() != null ? userUpdateDTO.email() : user.getEmail());
-        //TODO: create picture file system
-
+        if(profilePicture != null) {
+            fileStorageService.storeProfilePicture(user.getUserId().toString(), profilePicture);
+            //TODO: create picture file system
+        }
         userRepository.save(user);
 
     }

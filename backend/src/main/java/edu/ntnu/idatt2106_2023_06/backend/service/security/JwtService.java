@@ -1,12 +1,18 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.security;
 
+import edu.ntnu.idatt2106_2023_06.backend.model.User;
+import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +27,8 @@ public class JwtService {
     private static final String SECRET_KEY = "aGYU91Clj78WFxeVR6rRuiguWK6boLtXTPHKKOMN6J7KSoQJYd3BHHueiZTJG8BSqOjb/7cl";
 
     private final Logger logger = LoggerFactory.getLogger(JwtService.class);
+
+    private UserRepository userRepository;
 
     /**
      * Extracts the username from a JWT token.
@@ -113,7 +121,7 @@ public class JwtService {
      * @return A {@link Claims} object containing all the claims from the token.
      * @throws Exception If there is an error parsing the token.
      */
-    private Claims extractAllClaims(String token) {
+    private Claims extractAllClaims(String token) throws JwtException{
         logger.info("Token being checked: " + token);
         logger.info("Token length: " + token.length());
         try {
@@ -125,7 +133,7 @@ public class JwtService {
                     .getBody();
         } catch (Exception e) {
             logger.error("Error parsing JWT token: " + e.getMessage());
-            throw e;
+            throw new JwtException("Error parsing JWT token: " + e.getMessage());
         }
     }
 
@@ -137,5 +145,15 @@ public class JwtService {
     private Key getSigningKey() {
         byte[] key = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(key);
+    }
+
+    /**
+     * Gets the ID of the authenticated user.
+     *
+     * @return The ID of the authenticated user. Returns null if the user is not authenticated.
+     */
+    public Long getAuthenticatedUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return ((User) authentication.getPrincipal()).getUserId();
     }
 }
