@@ -18,6 +18,7 @@
   "firstname": "First Name",
   "lastname": "Last Name",
   "email": "Email",
+  "forgot_password": "Forgot your password?",
   "phoneNumber": "Phone Number",
   "dateOfBirth": "Date of Birth",
   "city": "City Name",

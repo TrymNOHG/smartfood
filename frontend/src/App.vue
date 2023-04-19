@@ -44,11 +44,40 @@
             <span class="text">Profile</span>
           </RouterLink>
         </li>
+        <div class="language" @click="changeLanguage()">{{language}}</div>
       </ul>
     </nav>
   </header>
   <RouterView/>
 </template>
+
+
+<script>
+import {computed} from "vue";
+import i18n from "@/locales/i18n";
+
+export default {
+  data() {
+    return {
+      language: "NO",
+    }
+  },
+
+  methods: {
+    changeLanguage() {
+      if (this.language === "NO") {
+        this.language = "EN";
+        i18n.global.locale = "en"
+      } else {
+        i18n.global.locale = "no"
+        this.language = "NO"
+      }
+    }
+  }
+}
+</script>
+
+
 
 <style scoped>
 * {
@@ -76,6 +105,12 @@ header img {
   margin-right: 225px;
 }
 
+.language {
+  color: white;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
 h1 {
   color: white;
   margin: 0;
@@ -97,7 +132,7 @@ nav ul {
 
 nav ul li {
   position: relative;
-  width: 70px;
+  width: 80px;
   height: 70px;
   z-index: 1;
 }
@@ -158,7 +193,7 @@ nav ul li:hover a .text {
   }
 
   h1 {
-    font-size: 1.25rem;
+    font-size: 1rem;
     letter-spacing: 2px;
   }
 
@@ -212,23 +247,23 @@ nav ul li:hover a .text {
   }
 }
 
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 980px) and (min-width: 800px) {
   header img {
-    height: 30px;
+    height: 50px;
   }
 
   h1 {
-    font-size: 0.8rem;
+    font-size: 2rem;
   }
 
   nav ul li {
-    width: 30px;
+    width: 50px;
     height: 50px;
   }
 
   nav ul li a .icon {
     line-height: 55px;
-    font-size: 3em;
+    font-size: 1.5em;
   }
 
   nav ul li a .text {

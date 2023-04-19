@@ -6,17 +6,17 @@
         <div class="input-box">
           <span class="icon"><font-awesome-icon icon="fa-solid fa-envelope" /></span>
           <input type="email" required v-model.trim="username" name="username">
-          <label>Email</label>
+          <label>{{ $t('username') }}</label>
           <div v-if="errors['username']" class="error">{{ errors['username'] }}</div>
         </div>
         <div class="input-box">
           <span class="icon"><font-awesome-icon icon="fa-solid fa-lock" /></span>
           <input type="password" required v-model.trim="password" name="password">
-          <label>Password</label>
+          <label>{{ $t('password') }}</label>
           <div v-if="errors['password']" class="error">{{ errors['password'] }}</div>
         </div>
         <div class="remember-forgot">
-          <a href="#">Forgot Password?</a>
+          <a href="#">{{ $t('forgot_password') }}</a>
         </div>
         <button type="submit" @click="submit">Login</button>
         <div class="login-register">

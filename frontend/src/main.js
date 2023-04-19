@@ -21,7 +21,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 /* Imports fr multiple languages */
-
+import i18n from "@/locales/i18n";
 
 /* add icons to the library */
 library.add(
