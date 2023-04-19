@@ -70,18 +70,6 @@ public class User implements UserDetails {
     @NonNull
     private String email;
 
-    /**
-     * The birthdate of the user, can be null
-     */
-    @Column(name = "birth_date")
-    private Date birthDate;
-
-    /**
-     * The phone number of the user, can be null
-     */
-    @Column(name = "phone", unique = true)
-    private String phone;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ADMIN"));

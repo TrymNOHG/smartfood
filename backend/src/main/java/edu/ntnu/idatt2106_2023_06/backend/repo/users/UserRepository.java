@@ -7,6 +7,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+
+ This repository provides CRUD operations for the User entity.
+
+ It extends JpaRepository and JpaSpecificationExecutor interfaces.
+
+ JpaRepository provides basic CRUD operations while JpaSpecificationExecutor provides
+ search functionality using specifications.
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
     /**
