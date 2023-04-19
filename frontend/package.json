@@ -19,7 +19,8 @@
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
     "vue3-storage": "^0.1.11",
-    "yup": "^1.1.1"
+    "yup": "^1.1.1",
+    "font-awesome": "^4.7.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
