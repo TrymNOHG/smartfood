@@ -91,7 +91,7 @@ export default {
             store.setSessionToken(response.data.token);
             console.log(store.getSessionToken);
             await store.fetchUser();
-            console.log(store.getUser)
+            console.log(store.user)
             submitMessage.value = "Login Successful";
             setTimeout(() => {
               submitMessage.value = "";
