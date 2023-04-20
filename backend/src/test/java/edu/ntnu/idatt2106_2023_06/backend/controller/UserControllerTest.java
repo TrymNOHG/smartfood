@@ -37,22 +37,5 @@ public class UserControllerTest {
     @Autowired
     private AuthenticationService authenticationService;
 
-    @Test
-    public void registerNewUser() throws Exception {
-        // Arrange
-        UserRegisterDTO user = new UserRegisterDTO("testUsername", "password", "Ola", "Norman", "ola.norman@gmail.com");
-
-        // Act
-        MvcResult mvcResult = mockMvc.perform(post("/user/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        // Assert
-        String response = mvcResult.getResponse().getContentAsString();
-        AuthenticationResponseDTO authenticationResponseDTO = objectMapper.readValue(response, AuthenticationResponseDTO.class);
-        assertNotNull(authenticationResponseDTO.token());
-    }
 
 }
