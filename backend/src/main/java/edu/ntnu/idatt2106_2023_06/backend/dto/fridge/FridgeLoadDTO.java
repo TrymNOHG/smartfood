@@ -1,13 +1,11 @@
 package edu.ntnu.idatt2106_2023_06.backend.dto.fridge;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.Fridge;
 import lombok.NonNull;
-
-import java.util.List;
 
 /**
  * This record represents a fridge loading DTO.
- * @param fridgeList The list of fridges
+ * @param fridgeId      The id of the fridge, given as a Long.
+ * @param fridgeName    The name of the fridge, given as a String.
  */
-public record FridgeLoadDTO(@NonNull List<Fridge> fridgeList) {
+public record FridgeLoadDTO(@NonNull Long fridgeId, @NonNull String fridgeName) {
 }

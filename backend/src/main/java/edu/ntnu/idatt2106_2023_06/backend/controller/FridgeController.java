@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.controller;
 
-import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeLoadAllDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeUserDTO;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -102,8 +102,8 @@ public class FridgeController {
      */
     @GetMapping(value = "/loadAll")
     @Operation(summary = "Load all fridge ids for a given user.")
-    public ResponseEntity<FridgeLoadDTO> loadFridgesByUser(@ParameterObject @RequestParam(name = "user") String username) {
-        FridgeLoadDTO fridgeLoadDTO = fridgeService.retrieveFridgesByUsername(username);
+    public ResponseEntity<FridgeLoadAllDTO> loadFridgesByUser(@ParameterObject @RequestParam(name = "user") String username) {
+        FridgeLoadAllDTO fridgeLoadDTO = fridgeService.retrieveFridgesByUsername(username);
         logger.info("All of the fridge ids for " + username + " have been retrieved.");
         return ResponseEntity.ok(fridgeLoadDTO);
     }

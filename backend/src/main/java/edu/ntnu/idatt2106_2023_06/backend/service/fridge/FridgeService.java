@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.fridge;
 
-import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeLoadAllDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeUserDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.exists.UserExistsException;
@@ -12,7 +12,6 @@ import edu.ntnu.idatt2106_2023_06.backend.model.*;
 import edu.ntnu.idatt2106_2023_06.backend.repo.FridgeMemberRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,12 +39,6 @@ public class FridgeService implements IFridgeService{
 
     private final Logger logger = LoggerFactory.getLogger(FridgeService.class);
 
-
-    @PostConstruct
-    public void init() {
-        fridgeRepository.dropTrigger();
-        fridgeRepository.createTrigger();
-    }
 
     /**
      * This method creates a new fridge and a new fridge member entry for a given user.
@@ -160,10 +153,10 @@ public class FridgeService implements IFridgeService{
      * @param username  The username of the user, given as a String.
      * @return          FridgeLoadDTO containing the list of Fridge objects
      */
-    public FridgeLoadDTO retrieveFridgesByUsername(String username) {
+    public FridgeLoadAllDTO retrieveFridgesByUsername(String username) {
         logger.info("Retrieving fridges for " + username);
 
-        return FridgeMapper.toFridgeLoadDTO(fridgeMemberRepository.findFridgeMembersByUser_Username(username)
+        return FridgeMapper.toFridgeLoadAllDTO(fridgeMemberRepository.findFridgeMembersByUser_Username(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username))
                 .stream().map(FridgeMember::getFridge)
                 .collect(Collectors.toList()));
@@ -199,7 +192,7 @@ public class FridgeService implements IFridgeService{
      */
     private boolean userExistsInFridge(Long fridgeId, String username) {
         logger.info("Checking whether the soon-to-be effected user is a part of the fridge");
-        if(!fridgeMemberRepository.existsFridgeMemberByFridge_FridgeIdAndUser_Username(fridgeId, username)) {
+        if(fridgeMemberRepository.existsFridgeMemberByFridge_FridgeIdAndUser_Username(fridgeId, username)) {
             logger.warn("User exists!!!");
             return true;
         }
