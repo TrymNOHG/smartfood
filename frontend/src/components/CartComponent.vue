@@ -2,8 +2,8 @@
   <div>
     <h1>Cart</h1>
     <div id="myDropdown" class="dropdown-content">
-      <SearchInput v-model="searchQuery" label="Search" ></SearchInput>
-      <button id="search-button" @click="handleSearch"></button>
+      <SearchInput v-model="searchQuery" label="Search product" ></SearchInput>
+      <button id="searchbtn" @click="handleSearch"> Search</button>
       <SearchItem
         v-for="(item, index) in searchItems"
         :key="index"
@@ -13,15 +13,6 @@
         :price="item.price_history[0].price"
         style="text-align: center;"
       />
-      <a href="#about">About</a>
-      <a href="#base">Base</a>
-      <a href="#blog">Blog</a>
-      <a href="#contact">Contact</a>
-      <a href="#custom">Custom</a>
-      <a href="#support">Support</a>
-      <a href="#tools">Tools</a>
-
-      
     </div>
 
     <div class="item">
@@ -207,7 +198,22 @@ export default {
 * {
   text-align: center;
 }
-
+#searchbtn
+{ border:0;
+  padding: 0px 10px;
+  margin-top: 10px;
+  color: #fff;
+  background:#888;
+  font-size: 27px;
+  font-weight: 500;
+    border: 3px solid #555;
+    border-left: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    min-height:60px;
+    height: auto;
+border-radius: 0 50px 50px 0 !important;
+}
 #search-button {
   width: 50px !important;
   height: 50px !important;
