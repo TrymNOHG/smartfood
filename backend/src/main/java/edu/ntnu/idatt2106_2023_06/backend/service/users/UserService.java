@@ -145,13 +145,14 @@ public class UserService implements IUserService {
     }
 
     /**
-     Loads a user's information.
-     @param username The username of the user to load.
+     Loads user information from the database. The user is identified by the ID in the JWT token.
      @return The user object.
      @throws UsernameNotFoundException If the user is not found in the database.
      */
-    public User loadByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+    public UserLoadDTO loadUser() {
+        long id = jwtService.getAuthenticatedUserId();
+        User user =  userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        return UserMapper.userLoadDTO(user);
     }
 }

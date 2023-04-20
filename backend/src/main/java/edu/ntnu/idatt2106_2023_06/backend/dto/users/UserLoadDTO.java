@@ -8,5 +8,5 @@ import java.util.Date;
 
 @Builder
 public record UserLoadDTO(@NonNull Long userId, @NonNull String username, @NonNull String firstName,
-                          @NonNull String lastName, @NonNull String email, @Nullable byte[] picture) {
+                          @NonNull String lastName, @NonNull String email) {
 }
