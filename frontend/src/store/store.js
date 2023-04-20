@@ -10,14 +10,10 @@ export const useLoggedInStore = defineStore('user', {
     state: () => ({
         sessionToken: null,
         user: {
-            userId: null,
-            username: null,
-            fullName: null,
             email: null,
-            birthDate: null,
-            phone: null,
-            picture: null,
-            role: null,
+            firstname: null,
+            lastname: null,
+            username: null,
         },
     }),
 
