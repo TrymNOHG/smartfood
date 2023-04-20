@@ -1,10 +1,43 @@
 <template>
   <div>
     <h1>Cart</h1>
-    <div class="search-bar">
-      <input type="text" placeholder="Search items..." v-model="searchQuery" />
-      <button type="button" @click="handleSearch">Search</button>
+    <div id="myDropdown" class="dropdown-content">
+      <input
+        type="text"
+        placeholder="Search.."
+        id="myInput"
+        v-model="searchQuery"
+      />
+      <button id="search-button" @click="handleSearch"></button>
+
+      <div v-if="searchItems.length">
+        <h2>Search Results:</h2>
+        <ul>
+          <li v-for="item in searchItems" :key="item.id">
+            <img :src="item.image" />
+            <p>{{ item.text }}</p>
+            <p>{{ item.price }}</p>
+          </li>
+        </ul>
+      </div>
+
+      <a href="#about">About</a>
+      <a href="#base">Base</a>
+      <a href="#blog">Blog</a>
+      <a href="#contact">Contact</a>
+      <a href="#custom">Custom</a>
+      <a href="#support">Support</a>
+      <a href="#tools">Tools</a>
+
+      <search-item
+        v-for="(item, index) in searchItems"
+        :key="index"
+        :image="item.image"
+        :text="item.text"
+        :price="item.price"
+      />
     </div>
+
     <div class="item">
       <div class="product-img">
         <img src="../assets/images/face.webp" alt="" style="width: 80px" />
@@ -45,7 +78,7 @@ import { deleteItemFromShoppingList } from "../services/ItemService";
 import { addItemToShoppingList } from "../services/ItemService";
 import { getItems } from "../services/ApiService";
 import { useLoggedInStore } from "@/store/store";
-import { ref, computed } from "vue";
+import { ref } from "vue";
 export default {
   name: "Cart",
   components: {
@@ -56,6 +89,7 @@ export default {
     var submitMessage = ref("");
     const items = ref([]); // list of items in the cart
     const searchQuery = ref(""); // search query entered by the user
+    const searchItems = ref([]);
     const store = useLoggedInStore();
     const handleAdd = async () => {
       itemAmount.value += 1;
@@ -145,43 +179,21 @@ export default {
         });
     };
 
-    const filteredItems = computed(() => {
-      // filter the list of items based on the search query
-      return items.value.filter((item) => {
-        return item.name
-          .toLowerCase()
-          .includes(searchQuery.value.toLowerCase());
-      });
-    });
-
     function handleSearch() {
-      console.log("clicked search")
+      console.log("clicked search");
       // filter the list of items based on the search query
-      const filteredItems = getItems(searchQuery.value)
-        .then(async (response) => {
-          if (response !== undefined) {
-            console.log(response.data.data)
-            submitMessage.value = "Succesful request";
-            setTimeout(() => {
-              submitMessage.value = "";
-            }, 3000);
-          } else {
-            console.log("Something went wrong");
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
-            setTimeout(() => {
-              submitMessage.value = "";
-            }, 3000);
-          }
+      var items = async () => {
+        return await getItems(searchQuery.value);
+        console.log(searchQuery.value)
+      };
+      items()
+        .then((response) => {
+          searchItems.value = response;
+          console.log(response);
         })
         .catch((error) => {
-          submitMessage.value = error.response.data["Message:"];
-          console.log(error.response.data);
-          console.warn("error1", error); //TODO: add exception handling
+          console.error(error);
         });
-        console.log(filteredItems);
-      // update the list of items to show only the filtered items
-      items.value = filteredItems;
     }
 
     return {
@@ -192,7 +204,7 @@ export default {
       submitMessage,
       items: [], // list of items in the cart
       searchQuery: "", // search query entered by the user
-      filteredItems,
+      searchItems,
       handleSearch,
     };
   },
@@ -204,6 +216,10 @@ export default {
   text-align: center;
 }
 
+#search-button {
+  width: 50px !important;
+  height: 50px !important;
+}
 .icon {
   margin-left: 10px;
 }
@@ -220,9 +236,58 @@ body {
   background-color: #7ec855;
   font-family: "Roboto", sans-serif;
 }
+img{
+  width: 50px;
+}
 .image img {
   width: 50%;
 }
+
+#myInput {
+  box-sizing: border-box;
+  background-image: url("searchicon.png");
+  background-position: 14px 12px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 20px 12px 45px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+}
+
+#myInput:focus {
+  outline: 3px solid #ddd;
+}
+
+.dropdown {
+  position: absolute;
+  display: inline-block;
+}
+
+.dropdown-content {
+  top: 100%;
+  position: relative;
+  background-color: #f6f6f6;
+  min-width: 230px;
+  overflow: auto;
+  border: 1px solid #ddd;
+  z-index: 2;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown a:hover {
+  background-color: #ddd;
+}
+
+.show {
+  display: block;
+}
+
 .shopping-cart {
   width: 750px;
   height: 423px;
