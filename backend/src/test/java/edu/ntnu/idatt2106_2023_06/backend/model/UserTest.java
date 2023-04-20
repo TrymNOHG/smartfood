@@ -3,8 +3,6 @@ package edu.ntnu.idatt2106_2023_06.backend.model;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -212,7 +210,7 @@ class UserTest {
             User user = getUser();
             Set<FridgeMember> expectedMembers = new HashSet<>();
 
-            Set<FridgeMember> actualMembers = user.getMembers();
+            Set<FridgeMember> actualMembers = user.getMemberships();
 
             assertEquals(expectedMembers, actualMembers);
         }

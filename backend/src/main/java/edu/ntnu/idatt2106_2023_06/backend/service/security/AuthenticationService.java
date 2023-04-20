@@ -49,7 +49,7 @@ public class AuthenticationService implements IAuthenticationService {
                 .firstName(userRegisterDTO.firstName())
                 .lastName(userRegisterDTO.lastName())
                 .email(userRegisterDTO.email())
-                .members(new HashSet<>())
+                .memberships(new HashSet<>())
                 .build();
         if(userRepository.findByEmail(userRegisterDTO.email()).isPresent())
             throw new UserExistsException("email", userRegisterDTO.email());
