@@ -1,16 +1,20 @@
 <template>
   <div class="list">
-    <div v-for="(item, index) in items" :key="index" class="item">
-      <span v-if="!isEditing[index]" class="item-text">{{ item.fridgeName }}</span>
-      <input v-else type="text" v-model="editedItems[index]" @keyup.enter="confirmEdit(index)" class="edit-input" />
-      <div class="icons">
-        <font-awesome-icon v-if="!isEditing[index]" icon="fa-solid fa-pen-to-square" @click="onEditClick(index)" class="icon edit-conf-icon" />
-        <font-awesome-icon v-else icon="fa-solid fa-circle-check" @click="confirmEdit(index)" class="icon edit-conf-icon conf"/>
-        <font-awesome-icon icon="fa-solid fa-trash" @click="onDeleteClick(index)" class="icon delete-icon" />
+    <router-link v-for="(item, index) in items" :key="index" :to="{name: 'fridgeView', params: {id: item.fridgeID, name: item.fridgeName.toString()}}" class="link">
+      <div class="item">
+        <span v-if="!isEditing[index]" class="item-text">{{ item.fridgeName }}</span>
+        <input v-else type="text" v-model="editedItems[index].fridgeName" @keyup.enter="confirmEdit(index)" class="edit-input" @click.prevent />
+        <div class="icons" @click.prevent>
+          <font-awesome-icon v-if="!isEditing[index]" icon="fa-solid fa-pen-to-square" @click="onEditClick(index)" class="icon edit-conf-icon" />
+          <font-awesome-icon v-else icon="fa-solid fa-circle-check" @click="confirmEdit(index)" class="icon edit-conf-icon conf"/>
+          <font-awesome-icon icon="fa-solid fa-trash" @click="onDeleteClick(index)" class="icon delete-icon" />
+        </div>
       </div>
-    </div>
+    </router-link>
   </div>
 </template>
+
+
 
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -34,10 +38,7 @@ export default {
     };
   },
   methods: {
-    onItemClick() {
-      console.log("Item clicked");
-      // Add your code to handle the click event here
-    },
+
     onEditClick(index) {
       console.log("Edit clicked");
       this.isEditing[index] = true;
@@ -78,6 +79,16 @@ export default {
 </script>
 
 <style>
+
+.link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
 .list {
   display: flex;
   flex-direction: column;
@@ -103,8 +114,15 @@ export default {
   transform: scale(1.02);
 }
 
-.item-text {
+.link-text {
   flex-grow: 1;
+  color: #039be5;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link-text:hover {
+  color: #0277bd;
 }
 
 .icons {
