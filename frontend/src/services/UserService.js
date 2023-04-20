@@ -20,6 +20,36 @@ export const getUser = async () => {
     })
 }
 
+export const getProfilePicture = async () => {
+    return axios.get(`${BASE_USER_URL}/get/picture`, {
+        responseType: 'arraybuffer', // To receive the image as binary data
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
+
+export const updateProfilePicture = async (pictureFile) => {
+    const formData = new FormData();
+    formData.append('picture', pictureFile);
+
+    return axios.put(`${BASE_USER_URL}/update/picture`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
+
+export const deleteProfilePicture = async () => {
+        await axios.delete(`${BASE_USER_URL}/delete/picture`, {
+            headers: {
+                Authorization: `Bearer ${await SessionToken()}`,
+            },
+        });
+
+}
+
 //get all members for a fridge
 export const getMembers = async () => {
     return axios.get(`${BASE_USER_URL}/members`, {
@@ -35,7 +65,7 @@ export const loadUserByUsername = async (username) => {
 
 export const updateUser = async (userUpdateDTO) => {
     console.log(userUpdateDTO)
-    return axios.put(`${BASE_USER_URL}/update/user`, userUpdateDTO, {
+    return axios.put(`${BASE_USER_URL}/update/info`, userUpdateDTO, {
         headers: {
             // 'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${await SessionToken()}`
