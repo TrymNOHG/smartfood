@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 
 /**
  * This class contains all the mapping methods between the fridge model and DTO.
+ *
+ * @author Trym Hamer Gudvangen
  */
 public class FridgeMapper {
 
