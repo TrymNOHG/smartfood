@@ -3,6 +3,8 @@ package edu.ntnu.idatt2106_2023_06.backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -69,6 +71,14 @@ public class User implements UserDetails {
     @Column(name = "email", nullable = false, unique = true)
     @NonNull
     private String email;
+
+    /**
+     * The memberships to fridges.
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    private Set<FridgeMember> memberships = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

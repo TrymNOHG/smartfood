@@ -3,8 +3,8 @@
     <figure class="picture">
       <img :src='item.thumbnail' alt="Thumbnail of item" width="100" height="100"/>
     </figure>
-    <label class="description"> {{$t('briefdescription')}}: </label>
-    <h4 class="description"> {{item.briefDesc}} </h4>
+    <label class="description"> {{  }}: </label>
+    <h4 class="description"> {{}} </h4>
     <label class="description"> {{$t('price')}} </label>
     <h4 class="cost"> {{item.price}} </h4>
   </div>

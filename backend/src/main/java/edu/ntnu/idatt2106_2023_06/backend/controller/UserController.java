@@ -5,7 +5,10 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoginDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserRegisterDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserPasswordUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserUpdateDTO;
+import edu.ntnu.idatt2106_2023_06.backend.service.files.FileStorageService;
+import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.AuthenticationService;
+import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
 import edu.ntnu.idatt2106_2023_06.backend.service.users.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,6 +21,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,11 +35,15 @@ public class UserController {
     Logger logger = org.slf4j.LoggerFactory.getLogger(UserController.class);
 
     private final AuthenticationService authenticationService;
+    private final FridgeService fridgeService;
 
     private final UserService userService;
+    private final FileStorageService fileStorageService;
+    private final JwtService jwtService;
 
     @PostMapping("/register")
     @Operation(summary = "Register a new user")
+    @Transactional
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Authentication token", content = {
                     @Content(
@@ -47,7 +55,13 @@ public class UserController {
     })
     public ResponseEntity<Object> register(@ParameterObject @RequestBody UserRegisterDTO user) {
         logger.info("User " + user.username() + " is being registered!");
-        return ResponseEntity.ok(authenticationService.register(user));
+        AuthenticationResponseDTO authenticationResponseDTO =  authenticationService.register(user);
+
+        logger.info("A fridge is being initialized for " + user.username());
+        fridgeService.initializeFridge(user.username());
+
+        logger.info("Transaction completed successfully!");
+        return ResponseEntity.ok(authenticationResponseDTO);
     }
 
     @PostMapping("/login")
@@ -70,13 +84,24 @@ public class UserController {
             produces = { MediaType.APPLICATION_JSON_VALUE}
     )
     @Operation(summary = "Update user")
-    public ResponseEntity<Object> update(@RequestPart("userUpdateDTO") UserUpdateDTO userUpdateDTO,
-                                         @RequestPart(value = "picture", required = false) MultipartFile picture,
-                                         Authentication authentication) {
+    public ResponseEntity<Object> update(@RequestPart UserUpdateDTO userUpdateDTO,
+                                         @RequestParam(value = "picture", required = false) MultipartFile picture,
+                                         Authentication authentication) throws IOException {
         logger.info(String.format("User %s wants to be updated!", userUpdateDTO.username()));
-        userService.updateUser(userUpdateDTO, userUpdateDTO.picture(), authentication.getName());
+        //TODO: logic
         logger.info(String.format("User %s has been updated!", userUpdateDTO.username()));
 
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/update/picture")
+    @Operation(summary = "Update user profile picture")
+    public ResponseEntity<Object> updatePicture(@RequestParam(value = "picture") MultipartFile picture,
+                                                Authentication authentication) throws IOException {
+
+        logger.info(String.format("User %s wants to be updated!", authentication.getName()));
+        fileStorageService.storeProfilePicture(jwtService.getAuthenticatedUserId().toString(), picture);
+        logger.info(String.format("User %s has been updated!", authentication.getName()));
         return ResponseEntity.ok().build();
     }
 

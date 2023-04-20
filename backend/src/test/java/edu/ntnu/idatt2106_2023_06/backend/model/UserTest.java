@@ -3,8 +3,8 @@ package edu.ntnu.idatt2106_2023_06.backend.model;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +26,7 @@ class UserTest {
         void all_arg_constructor_can_be_made() {
             try {
                 User user = new User(null, "Ole123", "Ole", "Norman",
-                        "password", "Ole@gmail.com");
+                        "password", "Ole@gmail.com", new HashSet<>());
             } catch (Exception e) {
                 fail();
             }
@@ -67,14 +67,14 @@ class UserTest {
         public void username_throws_NullPointer_Exception_if_null() {
             assertThrows(NullPointerException.class, () -> {
                 User user = new User(null, null, "Ole", "Norman",
-                        "password", "Ole@gmail.com");
+                        "password", "Ole@gmail.com", new HashSet<>());
             });
         }
         @Test
         public void password_throws_NullPointer_Exception_if_null() {
             assertThrows(NullPointerException.class, () -> {
                 User user = new User(null, "Ole123", "Ole", "Norman",
-                        null, "Ole@gmail.com");
+                        null, "Ole@gmail.com", new HashSet<>());
             });
         }
 
@@ -82,14 +82,14 @@ class UserTest {
         public void first_name_throws_NullPointer_Exception_if_null() {
             assertThrows(NullPointerException.class, () -> {
                 User user = new User(null, "Ole123", null, "Norman",
-                        "password","Ole@gmail.com");
+                        "password","Ole@gmail.com", new HashSet<>());
             });
         }
         @Test
         public void last_name_throws_NullPointer_Exception_if_null() {
             assertThrows(NullPointerException.class, () -> {
                 User user = new User(null, "Ole123", "Ole", null,
-                        "password","Ole@gmail.com");
+                        "password","Ole@gmail.com", new HashSet<>());
             });
         }
 
@@ -97,7 +97,7 @@ class UserTest {
         public void email_throws_NullPointer_Exception_if_null() {
             assertThrows(NullPointerException.class, () -> {
                 User user = new User(null, "Ole123", "Ole", "Norman",
-                        "password",null);
+                        "password", null, new HashSet<>());
             });
         }
 
@@ -148,8 +148,17 @@ class UserTest {
     @Nested
     class User_can_properly_get {
         User getUser() {
-            return new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com");
+            return new User(1L, "Ole123", "Ole", "Norman",
+                    "password","Ole@gmail.com", new HashSet<>());
+        }
+
+        @Test
+        void user_id() {
+            User user = getUser();
+            Long expectedId = 1L;
+            Long actualId = user.getUserId();
+
+            assertEquals(expectedId, actualId);
         }
 
         @Test
@@ -194,6 +203,16 @@ class UserTest {
             String actualEmail = user.getEmail();
 
             assertEquals(expectedEmail, actualEmail);
+        }
+
+        @Test
+        void fridge_members() {
+            User user = getUser();
+            Set<FridgeMember> expectedMembers = new HashSet<>();
+
+            Set<FridgeMember> actualMembers = user.getMemberships();
+
+            assertEquals(expectedMembers, actualMembers);
         }
 
 

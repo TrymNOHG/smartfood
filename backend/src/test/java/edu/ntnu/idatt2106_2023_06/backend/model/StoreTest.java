@@ -39,7 +39,7 @@ class StoreTest {
                         .builder()
                         .storeId(1L)
                         .storeName("Store")
-                        .itemsWithCategory(new ArrayList<>())
+                        .itemsInStore(new ArrayList<>())
                         .build();
             } catch (Exception e) {
                 fail();
@@ -95,10 +95,12 @@ class StoreTest {
         void item_list() {
             Store store = getFoodCategory();
             List<Item> items = new ArrayList<>();
-            items.add(new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.", new Store(3L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(), null));
+            items.add(new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(3L, "Dairy", new ArrayList<>()), 200000,
+                    new Date(), new Date(), null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
 
-            store.setItemsWithCategory(items);
-            List<Item> actualItems = store.getItemsWithCategory();
+            store.setItemsInStore(items);
+            List<Item> actualItems = store.getItemsInStore();
 
             assertEquals(items, actualItems);
         }

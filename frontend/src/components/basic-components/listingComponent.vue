@@ -1,0 +1,201 @@
+<template>
+  <div class="list">
+    <div v-for="(item, index) in items" :key="index" class="item">
+      <span v-if="!isEditing[index]" class="item-text">{{ item.fridgeName }}</span>
+      <input v-else type="text" v-model="editedItems[index]" @keyup.enter="confirmEdit(index)" class="edit-input" />
+      <div class="icons">
+        <font-awesome-icon v-if="!isEditing[index]" icon="fa-solid fa-pen-to-square" @click="onEditClick(index)" class="icon edit-conf-icon" />
+        <font-awesome-icon v-else icon="fa-solid fa-circle-check" @click="confirmEdit(index)" class="icon edit-conf-icon conf"/>
+        <font-awesome-icon icon="fa-solid fa-trash" @click="onDeleteClick(index)" class="icon delete-icon" />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import 'sweetalert2/dist/sweetalert2.min.css';
+import swal from 'sweetalert2';
+
+
+export default {
+  name: "List",
+  components: { FontAwesomeIcon },
+  props: {
+    items: {
+      type: Array,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      isEditing: new Array(this.items.length).fill(false),
+      editedItems: [...this.items],
+    };
+  },
+  methods: {
+    onItemClick() {
+      console.log("Item clicked");
+      // Add your code to handle the click event here
+    },
+    onEditClick(index) {
+      console.log("Edit clicked");
+      this.isEditing[index] = true;
+    },
+    confirmEdit(index){
+      console.log("Edit confirm");
+      this.isEditing[index] = false;
+      if (this.items[index] !== this.editedItems[index]) {
+        this.$emit("update-item", index, this.editedItems[index]);
+      }
+    },
+    onDeleteClick(index) {
+      swal.fire({
+        title: this.$t('confirm_title'),
+        text: this.$t('confirm_text'),
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4dce38',
+        cancelButtonColor: '#d33',
+        confirmButtonText: this.$t('confirm_button'),
+        cancelButtonText: this.$t('cancel_button'),
+        customClass: {
+          container: 'my-swal-dialog-container'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$emit('delete-item', index);
+          swal.fire(
+              this.$t('success_message'),
+              '',
+              'success'
+          )
+        }
+      })
+    },
+  },
+};
+</script>
+
+<style>
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  height: 60px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px 5px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item:hover {
+  box-shadow: 0 0 5px #ccc;
+  transform: scale(1.02);
+}
+
+.item-text {
+  flex-grow: 1;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+}
+
+.edit-conf-icon {
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-right: 10px;
+  color: #888;
+  transition: color 0.2s ease-in-out;
+}
+
+.edit-conf-icon:hover {
+  color: #000;
+}
+
+.conf:hover {
+  color: #4dce38;
+}
+
+.delete-icon {
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s ease-in-out;
+}
+
+.delete-icon:hover {
+  color: #f00;
+}
+.swal2-modal {
+  background-color: white;
+  flex-direction: column;
+  position: fixed;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 5px;
+  z-index: 100;
+  display: flex;
+  width: 60%;
+  max-width: 500px;
+}
+
+.swal2-title {
+  background-color: white;
+  margin-top: 5%;
+}
+
+@media only screen and (max-width: 860px) {
+  .list {
+    margin: 0;
+  }
+
+  .item {
+    height: auto;
+    padding: 10px;
+    margin: 5px 0;
+  }
+
+  .item:hover {
+    box-shadow: none;
+    transform: none;
+  }
+
+  .item-text {
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+  }
+
+  .edit-input {
+    font-size: 1.2rem;
+  }
+
+  .icons {
+    margin-top: 5px;
+    justify-content: flex-end;
+  }
+
+  .delete-icon {
+    font-size: 1.5rem;
+    margin-left: 10px;
+  }
+
+  .swal2-modal {
+    width: 80%;
+    height: 50%;
+    max-width: none;
+  }
+}
+
+</style>

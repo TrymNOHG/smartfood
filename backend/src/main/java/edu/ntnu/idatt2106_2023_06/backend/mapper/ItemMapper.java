@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.mapper;
 
-import edu.ntnu.idatt2106_2023_06.backend.dto.ItemDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.model.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.Store;
 
@@ -18,10 +18,10 @@ public class ItemMapper {
                 .build();
     }
 
-    public static ItemDTO toItemDTO(Item item){
+    public static ItemDTO toItemDTO(Item item, int quantity){
         return new ItemDTO(item.getProductName(), item.getBriefDesc(),
                 item.getStore().getStoreName(), item.getPrice(),
                 item.getPurchaseDate(), item.getExpirationDate(),
-                item.getPictureLink());
+                item.getPictureLink(), quantity);
     }
 }
