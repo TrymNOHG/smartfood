@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106_2023_06.backend.security;
+package edu.ntnu.idatt2106_2023_06.backend.config;
 
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Configuration
 @RequiredArgsConstructor
-@ImportAutoConfiguration(DatabaseConfiguration.class)
+@ImportAutoConfiguration(DatabaseConfig.class)
 public class ApplicationConfig {
 
     private final UserRepository userRepository;

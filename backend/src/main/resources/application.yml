@@ -11,6 +11,8 @@ springdoc:
     operations-sorter: method
   packages-to-scan: edu.ntnu.idatt2106_2023_06.backend.controller
 
+kassal:
+  api-key: your-api-key-here
 
 spring:
   profiles:
