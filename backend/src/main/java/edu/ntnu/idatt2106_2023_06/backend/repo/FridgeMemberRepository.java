@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -47,6 +48,13 @@ public interface FridgeMemberRepository extends JpaRepository<FridgeMember, Frid
      * @return          The Fridge member with the specified info, given as an Optional object.
      */
     Optional<FridgeMember> findFridgeMemberByFridge_FridgeIdAndUser_Username(Long fridgeId, String username);
+
+    /**
+     * This method retrieves all the entries in the fridge member table for a given user.
+     * @param username  The username of a user, given as a String
+     * @return          List of fridge member entries, given as an Optional.
+     */
+    Optional<List<FridgeMember>> findFridgeMembersByUser_Username(String username);
 
     /**
      * This method deletes the user attached to a given fridge id and which has a given username.

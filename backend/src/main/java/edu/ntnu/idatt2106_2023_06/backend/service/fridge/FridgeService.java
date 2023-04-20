@@ -1,10 +1,12 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.fridge;
 
+import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeUserDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.exists.UserExistsException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFound;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
+import edu.ntnu.idatt2106_2023_06.backend.mapper.FridgeMapper;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.FridgeMemberMapper;
 import edu.ntnu.idatt2106_2023_06.backend.model.*;
 import edu.ntnu.idatt2106_2023_06.backend.repo.FridgeMemberRepository;
@@ -17,6 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *  This service class handles the business logic for fridge-related operations.
@@ -134,6 +139,34 @@ public class FridgeService implements IFridgeService{
 
         logger.info(String.format(fridgeUserDTO.username() + " was changed %s super user.",
                 fridgeUserDTO.isSuperUser() ? "to" : "from"));
+    }
+
+    /**
+     * This method retrieves all the fridge ids for a given user.
+     * @param username  The username of the user, given as a String.
+     * @return          List of fridge ids.
+     */
+    public List<Long> retrieveFridgeIdsByUsername(String username) {
+        logger.info("Retrieving fridge ids for " + username);
+
+        return fridgeMemberRepository.findFridgeMembersByUser_Username(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username))
+                .stream().map(fridgeMember -> fridgeMember.getFridge().getFridgeId())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * This method retrieves all the fridge ids for a given user.
+     * @param username  The username of the user, given as a String.
+     * @return          FridgeLoadDTO containing the list of Fridge objects
+     */
+    public FridgeLoadDTO retrieveFridgesByUsername(String username) {
+        logger.info("Retrieving fridges for " + username);
+
+        return FridgeMapper.toFridgeLoadDTO(fridgeMemberRepository.findFridgeMembersByUser_Username(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username))
+                .stream().map(FridgeMember::getFridge)
+                .collect(Collectors.toList()));
     }
 
 

@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.controller;
 
+import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeUserDTO;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,8 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  *  The FridgeController class provides API endpoints for managing fridge users.
@@ -70,13 +73,39 @@ public class FridgeController {
      * @param authentication    The Authentication object of the user making the request.
      * @return                  A ResponseEntity indicating whether the operation was successful.
      */
-    @DeleteMapping(value="/delete/user")
+    @PutMapping(value="/update/user")
     @Operation(summary = "Update user from fridge")
     public ResponseEntity<Object> updateUserFromFridge(@ParameterObject @RequestBody FridgeUserDTO fridgeUserDTO,
                                                        Authentication authentication){
         logger.info("User, " + authentication.getName() + " wants to update the user, " + fridgeUserDTO.username() + ", from the fridge");
         fridgeService.updateUserFromFridge(fridgeUserDTO, authentication.getName());
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * This endpoint retrieves all the fridge ids for a given user.
+     * @param username  The username of the user, given as a String.
+     * @return          Response entity containing the fridge ids.
+     */
+    @GetMapping(value = "/loadByUser")
+    @Operation(summary = "Load all fridge ids for a given user.")
+    public ResponseEntity<List<Long>> loadFridgeIdsByUser(@ParameterObject @RequestBody String username) {
+        List<Long> fridgeIds = fridgeService.retrieveFridgeIdsByUsername(username);
+        logger.info("All of the fridge ids for " + username + " have been retrieved.");
+        return ResponseEntity.ok(fridgeIds);
+    }
+
+    /**
+     * This endpoint retrieves all the fridges for a given user.
+     * @param username  The username of the user, given as a String.
+     * @return          Response entity containing a FridgeLoadDTO.
+     */
+    @GetMapping(value = "/loadAll")
+    @Operation(summary = "Load all fridge ids for a given user.")
+    public ResponseEntity<FridgeLoadDTO> loadFridgesByUser(@ParameterObject @RequestParam(name = "user") String username) {
+        FridgeLoadDTO fridgeLoadDTO = fridgeService.retrieveFridgesByUsername(username);
+        logger.info("All of the fridge ids for " + username + " have been retrieved.");
+        return ResponseEntity.ok(fridgeLoadDTO);
     }
 
 }
