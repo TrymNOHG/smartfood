@@ -203,7 +203,7 @@ export default {
   padding: 0px 10px;
   margin-top: 10px;
   color: #fff;
-  background:#888;
+  background:#31C48D;
   font-size: 27px;
   font-weight: 500;
     border: 3px solid #555;
