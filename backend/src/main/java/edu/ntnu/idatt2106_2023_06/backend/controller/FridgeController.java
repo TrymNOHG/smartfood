@@ -135,14 +135,12 @@ public class FridgeController {
      * @return                  A ResponseEntity indicating whether the operation was successful.
      */
     @PutMapping(value="/update")
-    @Operation(summary = "Update user from fridge")
+    @Operation(summary = "Update fridge name")
     public ResponseEntity<Object> updateFridgeName(@ParameterObject @RequestBody FridgeDTO fridgeDTO,
                                                    Authentication authentication){
         logger.info("User, " + authentication.getName() + " wants to update the fridge name");
         fridgeService.updateFridgeName(fridgeDTO, authentication.getName());
         return ResponseEntity.ok().build();
     }
-
-    //TODO: endre navn på fridge
 
 }

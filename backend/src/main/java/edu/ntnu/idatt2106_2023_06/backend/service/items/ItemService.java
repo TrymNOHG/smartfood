@@ -12,6 +12,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+
+ ItemService is responsible for handling requests related to items, including adding items to the store,
+ fridge and shopping list. It also has methods to retrieve items from the fridge and shopping list and delete
+ them from the fridge.
+ */
 @Service
 @RequiredArgsConstructor
 public class ItemService implements IItemService {
@@ -22,6 +28,14 @@ public class ItemService implements IItemService {
     private final StoreRepository storeRepository;
     private final ShoppingItemsRepository shoppingItemsRepository;
 
+    /**
+     * Adds an item to the item database.
+     *
+     * @param itemDTO The ItemDTO containing the item to add.
+     * @return The ID of the added item.
+     * @throws StoreNotFoundException if the store cannot be found.
+     * @throws ItemNotFoundException if the item cannot be found.
+     */
     @Override
     public Long addItem(ItemDTO itemDTO) {
         Store store = storeRepository.findByStoreName(itemDTO.store()).orElse(null);
@@ -44,6 +58,15 @@ public class ItemService implements IItemService {
         return item.getItemId();
     }
 
+    /**
+     * Adds an item to the fridge.
+     *
+     * @param itemId The ID of the item to add.
+     * @param fridgeId The ID of the fridge to add the item to.
+     * @param quantity The quantity of the item to add.
+     * @throws ItemNotFoundException if the item cannot be found.
+     * @throws FridgeNotFoundException if the fridge cannot be found.
+     */
     @Override
     public void addToFridge(Long itemId, Long fridgeId, int quantity) {
         Item item = itemRepository.findByItemId(itemId).orElseThrow(() -> new ItemNotFoundException(itemId));
@@ -63,6 +86,14 @@ public class ItemService implements IItemService {
         fridgeItemsRepository.save(fridgeItem);
     }
 
+    /**
+     * Retrieves a list of items from the specified fridge.
+     *
+     * @param fridgeId The ID of the fridge to retrieve items from.
+     * @return A list of ItemDTO objects representing the items in the fridge.
+     * @throws FridgeNotFoundException if the specified fridge ID does not exist.
+     * @throws FridgeItemsNotFoundException if there are no items in the specified fridge.
+     */
     @Override
     public List<ItemDTO> getFridgeItems(Long fridgeId) {
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new FridgeNotFoundException(fridgeId));
@@ -74,6 +105,40 @@ public class ItemService implements IItemService {
         return itemDTOList;
     }
 
+    /**
+     * Deletes the specified quantity of an item from the specified fridge.
+     *
+     * @param itemRemoveDTO A DTO object containing the details of the item to remove.
+     * @throws StoreNotFoundException if the specified store name does not exist.
+     * @throws ItemNotFoundException if the specified item name does not exist in the specified store.
+     * @throws FridgeNotFoundException if the specified fridge ID does not exist.
+     * @throws FridgeItemsNotFoundException if the specified item does not exist in the specified fridge.
+     */
+    @Override
+    public void deleteItemFromFridge(ItemRemoveDTO itemRemoveDTO) {
+        Store store = storeRepository.findByStoreName(itemRemoveDTO.store()).orElseThrow(() -> new StoreNotFoundException(itemRemoveDTO.store()));
+        Item item = itemRepository.findByProductNameAndStore(itemRemoveDTO.itemName(), store).orElseThrow(() -> new ItemNotFoundException(itemRemoveDTO.itemName()));
+        Fridge fridge = fridgeRepository.findByFridgeId(itemRemoveDTO.fridgeId()).orElseThrow(() -> new FridgeNotFoundException(itemRemoveDTO.fridgeId()));
+        FridgeItems fridgeItem = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElseThrow(() -> new FridgeItemsNotFoundException(""));
+        if (fridgeItem.getQuantity() <= itemRemoveDTO.quantity()){
+            fridgeItemsRepository.delete(fridgeItem);
+        }
+        else {
+            fridgeItem.setQuantity(fridgeItem.getQuantity() - itemRemoveDTO.quantity());
+            fridgeItemsRepository.save(fridgeItem);
+        }
+    }
+
+    /**
+     * Adds an item to the shopping list for the specified fridge.
+     *
+     * @param itemName The ID of the item to add to the shopping list.
+     * @param fridgeId The ID of the fridge to add the item to the shopping list for.
+     * @param quantity The quantity of the item to add to the shopping list.
+     * @param suggestion A boolean indicating whether the item is a suggested item or not.
+     * @throws ItemNotFoundException if the specified item ID does not exist.
+     * @throws FridgeNotFoundException if the specified fridge ID does not exist.
+     */
     @Override
     public void addToShoppingList(Long itemName, Long fridgeId, int quantity, boolean suggestion) {
         Item item = itemRepository.findByItemId(itemName).orElseThrow(() -> new ItemNotFoundException(itemName));
@@ -94,9 +159,17 @@ public class ItemService implements IItemService {
         shoppingItemsRepository.save(shoppingItem);
     }
 
+    /**
+     * Retrieves a list of items from the shopping list for the specified fridge.
+     *
+     * @param fridgeId The ID of the fridge to retrieve shopping list items for.
+     * @return A list of ItemDTO objects representing the items in the shopping list for the specified fridge.
+     * @throws FridgeNotFoundException if the specified fridge ID does not exist.
+     * @throws ShoppingItemsNotFoundException if there are no items in the shopping list for the specified fridge.
+     */
     @Override
     public List<ItemDTO> getShoppingListItems(Long fridgeId) {
-        Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new ItemNotFoundException(fridgeId));
+        Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new FridgeNotFoundException(fridgeId));
         List<ShoppingItems> shoppingItems = shoppingItemsRepository.findByFridge(fridge).orElseThrow(() -> new ShoppingItemsNotFoundException(fridgeId));
         List<ItemDTO> itemDTOList = new ArrayList<>();
         for (ShoppingItems item : shoppingItems){
@@ -105,6 +178,16 @@ public class ItemService implements IItemService {
         return itemDTOList;
     }
 
+    /**
+     * Deletes the specified quantity of an item from the shopping list for the specified fridge.
+     *
+     * @param itemRemoveDTO A DTO object containing the details of the item to remove.
+     * @param suggestion A boolean indicating whether the item is a suggested item or not.
+     * @throws StoreNotFoundException if the specified store name does not exist.
+     * @throws ItemNotFoundException if the specified item name does not exist in the specified store.
+     * @throws FridgeNotFoundException if the specified fridge ID does not exist.
+     * @throws ShoppingItemsNotFoundException if the specified item does not exist in the shopping list for the specified fridge.
+     */
     @Override
     public void deleteItemFromShoppingList(ItemRemoveDTO itemRemoveDTO, boolean suggestion) {
         Store store = storeRepository.findByStoreName(itemRemoveDTO.store()).orElseThrow(() -> new StoreNotFoundException(itemRemoveDTO.store()));
@@ -120,16 +203,36 @@ public class ItemService implements IItemService {
         }
     }
 
+    /**
+     * Buys the specified list of items from the shopping list.
+     *
+     * @param itemDTOList A list of DTO objects containing the details of the items to buy.
+     * @throws StoreNotFoundException if the specified store name does not exist.
+     * @throws ItemNotFoundException if the specified item name does not exist in the specified store.
+     * @throws FridgeNotFoundException if the specified fridge ID does not exist.
+     * @throws FridgeItemsNotFoundException if the specified item does not exist in the specified fridge.
+     * @throws ShoppingItemsNotFoundException if the specified item does not exist in the shopping list for the specified fridge.
+     */
     @Override
     public void buyItemsFromShoppingList(List<ItemRemoveDTO> itemDTOList) {
         for(ItemRemoveDTO i: itemDTOList){
-            Store store = storeRepository.findByStoreName(i.store()).orElseThrow();
+            Store store = storeRepository.findByStoreName(i.store()).orElseThrow(() -> new StoreNotFoundException(i.store()));
             Long itemId = itemRepository.findByProductNameAndStore(i.itemName(), store).orElseThrow(() -> new ItemNotFoundException(i.itemName())).getItemId();
             addToFridge(itemId, i.fridgeId(), i.quantity());
             deleteItemFromShoppingList(i, false);
         }
     }
 
+    /**
+     Accepts the suggested item by finding the store, item, fridge, and shopping item associated with the given itemDTO,
+     and then sets the suggestion status of the shopping item to false.
+
+     @param itemDTO an object containing the name of the store, item, and fridge, as well as the ID of the fridge and a boolean indicating whether the item was suggested for removal
+     @throws StoreNotFoundException if the store with the given name cannot be found in the store repository
+     @throws ItemNotFoundException if the item with the given name cannot be found in the item repository for the given store
+     @throws FridgeNotFoundException if the fridge with the given ID cannot be found in the fridge repository
+     @throws ShoppingItemsNotFoundException if the shopping item associated with the given item, fridge, and suggestion status cannot be found in the shopping items repository
+     */
     @Override
     public void acceptSuggestion(ItemRemoveDTO itemDTO) {
         Store store = storeRepository.findByStoreName(itemDTO.store()).orElseThrow(() -> new StoreNotFoundException(itemDTO.store()));
@@ -140,19 +243,6 @@ public class ItemService implements IItemService {
         shoppingItemsRepository.save(shoppingItem);
     }
 
-    @Override
-    public void deleteItemFromFridge(ItemRemoveDTO itemRemoveDTO) {
-        Store store = storeRepository.findByStoreName(itemRemoveDTO.store()).orElseThrow(() -> new StoreNotFoundException(itemRemoveDTO.store()));
-        Item item = itemRepository.findByProductNameAndStore(itemRemoveDTO.itemName(), store).orElseThrow(() -> new ItemNotFoundException(itemRemoveDTO.itemName()));
-        Fridge fridge = fridgeRepository.findByFridgeId(itemRemoveDTO.fridgeId()).orElseThrow(() -> new FridgeNotFoundException(itemRemoveDTO.fridgeId()));
-        FridgeItems fridgeItem = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElseThrow(() -> new FridgeItemsNotFoundException(""));
-        if (fridgeItem.getQuantity() <= itemRemoveDTO.quantity()){
-            fridgeItemsRepository.delete(fridgeItem);
-        }
-        else {
-            fridgeItem.setQuantity(fridgeItem.getQuantity() - itemRemoveDTO.quantity());
-            fridgeItemsRepository.save(fridgeItem);
-        }
-    }
+
 
 }

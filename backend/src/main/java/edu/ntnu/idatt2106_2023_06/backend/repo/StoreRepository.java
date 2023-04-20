@@ -19,7 +19,7 @@ import java.util.Optional;
 public interface StoreRepository extends JpaRepository<Store, Long> {
 
     /**
-     * Find a Category by its name
+     * Find a Store by its name
      *
      * @param name The Category name of the Category to find
      * @return An Optional containing the Category found, or an empty Optional if not found
@@ -27,7 +27,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     Optional<Store> findByStoreName(String name);
 
     /**
-     * Find a Category by its ID
+     * Find a Store by its ID
      *
      * @param categoryId The ID of the Category to find
      * @return An Optional containing the Category found, or an empty Optional if not found

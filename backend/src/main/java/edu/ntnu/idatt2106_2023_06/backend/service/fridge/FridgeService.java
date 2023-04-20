@@ -85,7 +85,7 @@ public class FridgeService implements IFridgeService{
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeDTO.fridgeId())
                 .orElseThrow(() -> new FridgeNotFoundException(fridgeDTO.fridgeId()));
 
-        fridge.setFridgeName(fridge.getFridgeName());
+        fridge.setFridgeName(fridgeDTO.fridgeName());
 
         fridgeRepository.save(fridge);
 

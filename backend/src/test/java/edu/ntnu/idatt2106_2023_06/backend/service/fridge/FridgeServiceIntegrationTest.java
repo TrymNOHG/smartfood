@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.fridge;
 
+import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeLoadAllDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeUserDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
@@ -23,6 +25,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import static org.junit.Assert.fail;
 
@@ -32,7 +35,6 @@ import static org.junit.Assert.fail;
 @AutoConfigureTestDatabase
 @ActiveProfiles("test")
 public class FridgeServiceIntegrationTest {
-
 
 
     @Nested
@@ -50,6 +52,8 @@ public class FridgeServiceIntegrationTest {
 
         @Autowired
         UserService userService;
+        @Autowired
+        private FridgeMemberRepository fridgeMemberRepository;
 
 
         void populateDB() {
@@ -91,6 +95,159 @@ public class FridgeServiceIntegrationTest {
                     .orElseThrow(() -> new FridgeNotFoundException(1L));
 
             Assertions.assertEquals(expectedFridge, actualFridge);
+        }
+
+        @Test
+        void updated_through_name_by_super_user(){
+            User user = User
+                    .builder()
+                    .userId(1L)
+                    .username("OleN")
+                    .password("password")
+                    .firstName("Ole")
+                    .lastName("Norman")
+                    .email("test@gamil.com")
+                    .memberships(new HashSet<>())
+                    .build();
+
+            userRepository.save(user);
+            fridgeService.initializeFridge(user.getUsername());
+
+            String newName = "Away Fridge";
+
+            FridgeDTO fridgeDTO = new FridgeDTO(1L, newName);
+
+            fridgeService.updateFridgeName(fridgeDTO, user.getUsername());
+
+            Fridge actualFridge = fridgeRepository.findByFridgeId(1L)
+                    .orElseThrow(() -> new FridgeNotFoundException(1L));
+
+            Assertions.assertEquals(newName, actualFridge.getFridgeName());
+
+        }
+
+        @Test
+        void created_by_user() {
+            User user = User
+                    .builder()
+                    .userId(1L)
+                    .username("OleN")
+                    .password("password")
+                    .firstName("Ole")
+                    .lastName("Norman")
+                    .email("test@gamil.com")
+                    .memberships(new HashSet<>())
+                    .build();
+
+            userRepository.save(user);
+            fridgeService.initializeFridge(user.getUsername());
+
+            Assertions.assertEquals(1, fridgeService.retrieveFridgeIdsByUsername(user.getUsername()).size());
+
+            fridgeService.createFridge("New fridge", user.getUsername());
+
+            List<FridgeDTO> fridgeDTOS = fridgeService.retrieveFridgesByUsername(user.getUsername())
+                            .fridgeDTOS();
+            Assertions.assertEquals(2, fridgeDTOS.size());
+            Assertions.assertEquals("New fridge", fridgeDTOS.get(1).fridgeName());
+
+        }
+
+    }
+
+    @Nested
+    @SpringBootTest
+    class Fridge_cannot_be{
+
+        @Autowired
+        UserRepository userRepository;
+
+        @Autowired
+        FridgeRepository fridgeRepository;
+
+
+        @Autowired
+        FridgeService fridgeService;
+
+        @Autowired
+        UserService userService;
+        @Autowired
+        private FridgeMemberRepository fridgeMemberRepository;
+
+
+        void populateDB() {
+            User user = User
+                    .builder()
+                    .userId(1L)
+                    .username("OleN")
+                    .password("password")
+                    .firstName("Ole")
+                    .lastName("Norman")
+                    .email("test@gamil.com")
+                    .build();
+
+            userRepository.save(user);
+            fridgeService.initializeFridge(user.getUsername());
+        }
+
+        @Test
+        void updated_through_name_by_regular_user(){
+            //TODO: fix
+            User user = User
+                    .builder()
+                    .userId(1L)
+                    .username("OleN")
+                    .password("password")
+                    .firstName("Ole")
+                    .lastName("Norman")
+                    .email("test@gamil.com")
+                    .memberships(new HashSet<>())
+                    .build();
+
+            userRepository.save(user);
+            fridgeService.initializeFridge(user.getUsername());
+
+            String newName = "Away Fridge";
+
+            FridgeDTO fridgeDTO = new FridgeDTO(1L, newName);
+
+            fridgeService.updateFridgeName(fridgeDTO, user.getUsername());
+
+            Fridge actualFridge = fridgeRepository.findByFridgeId(1L)
+                    .orElseThrow(() -> new FridgeNotFoundException(1L));
+
+            Assertions.assertEquals(newName, actualFridge.getFridgeName());
+
+        }
+
+        @Test
+        void updated_through_name_by_non_member(){
+            //TODO: fix
+            User user = User
+                    .builder()
+                    .userId(1L)
+                    .username("OleN")
+                    .password("password")
+                    .firstName("Ole")
+                    .lastName("Norman")
+                    .email("test@gamil.com")
+                    .memberships(new HashSet<>())
+                    .build();
+
+            userRepository.save(user);
+            fridgeService.initializeFridge(user.getUsername());
+
+            String newName = "Away Fridge";
+
+            FridgeDTO fridgeDTO = new FridgeDTO(1L, newName);
+
+            fridgeService.updateFridgeName(fridgeDTO, user.getUsername());
+
+            Fridge actualFridge = fridgeRepository.findByFridgeId(1L)
+                    .orElseThrow(() -> new FridgeNotFoundException(1L));
+
+            Assertions.assertEquals(newName, actualFridge.getFridgeName());
+
         }
 
     }
@@ -795,17 +952,209 @@ public class FridgeServiceIntegrationTest {
 
         @Test
         void removed_from_database_by_user_not_in_fridge() {
-            //TODO: use example above
+            //This user is automatically superuser, since they started the fridge
+            User user = populateDB();
+            Fridge fridge = fridgeRepository.findByFridgeId(1L)
+                    .orElseThrow(() -> new FridgeNotFoundException(1L));
+
+            User newUser = User
+                    .builder()
+                    .userId(2L)
+                    .username("Hans1234")
+                    .password("password")
+                    .firstName("Hans")
+                    .lastName("Norman")
+                    .email("test@hotmail.com")
+                    .memberships(new HashSet<>())
+                    .build();
+
+            userRepository.save(newUser);
+
+            FridgeUserDTO fridgeUserDTO = FridgeUserDTO
+                    .builder()
+                    .fridgeId(1L)
+                    .isSuperUser(false)
+                    .username(newUser.getUsername())
+                    .build();
+
+            fridgeService.addUserToFridge(fridgeUserDTO, user.getUsername());
+            Assertions.assertTrue(fridgeMemberRepository.existsFridgeMemberByFridge_FridgeIdAndUser_Username(1L, "Hans1234"));
+
+            User thirdUser = User
+                    .builder()
+                    .userId(3L)
+                    .username("Nils1234")
+                    .password("password")
+                    .firstName("Nils")
+                    .lastName("Norman")
+                    .email("test123@hotmail.com")
+                    .memberships(new HashSet<>())
+                    .build();
+
+            userRepository.save(thirdUser);
+            Assertions.assertTrue(userRepository.existsById(3L));
+
+            try {
+                fridgeService.deleteUserFromFridge(fridgeUserDTO, thirdUser.getUsername());
+                fail("User not part of fridge should not be able to add user to fridge");
+            } catch (Exception e) {
+                Assertions.assertTrue(fridgeMemberRepository.existsFridgeMemberByFridge_FridgeIdAndUser_Username(1L, newUser.getUsername()));
+            }
         }
 
         @Test
         void updated_by_regular_user(){
+            //This user is automatically superuser, since they started the fridge
+            User user = populateDB();
+            Fridge fridge = fridgeRepository.findByFridgeId(1L)
+                    .orElseThrow(() -> new FridgeNotFoundException(1L));
 
+            User newUser = User
+                    .builder()
+                    .userId(2L)
+                    .username("Hans1234")
+                    .password("password")
+                    .firstName("Hans")
+                    .lastName("Norman")
+                    .email("test@hotmail.com")
+                    .memberships(new HashSet<>())
+                    .build();
+
+            userRepository.save(newUser);
+
+            FridgeUserDTO fridgeUserDTO = FridgeUserDTO
+                    .builder()
+                    .fridgeId(1L)
+                    .isSuperUser(false)
+                    .username(newUser.getUsername())
+                    .build();
+
+            fridgeService.addUserToFridge(fridgeUserDTO, user.getUsername());
+
+            Assertions.assertTrue(fridgeMemberRepository.existsFridgeMemberByFridge_FridgeIdAndUser_Username(1L, newUser.getUsername()));
+
+            User thirdUser = User
+                    .builder()
+                    .userId(3L)
+                    .username("Hanne1234")
+                    .password("password")
+                    .firstName("Hanne")
+                    .lastName("Norman")
+                    .email("test321@hotmail.com")
+                    .memberships(new HashSet<>())
+                    .build();
+
+            userRepository.save(thirdUser);
+
+            fridgeUserDTO = FridgeUserDTO
+                    .builder()
+                    .fridgeId(1L)
+                    .isSuperUser(false)
+                    .username(thirdUser.getUsername())
+                    .build();
+
+            fridgeService.addUserToFridge(fridgeUserDTO, user.getUsername());
+
+            Assertions.assertTrue(fridgeMemberRepository.existsFridgeMemberByFridge_FridgeIdAndUser_Username(1L, thirdUser.getUsername()));
+
+
+            FridgeUserDTO updatedFridgeMember = FridgeUserDTO
+                    .builder()
+                    .fridgeId(1L)
+                    .isSuperUser(true)
+                    .username(newUser.getUsername())
+                    .build();
+
+            try {
+                FridgeMember fridgeMember = fridgeMemberRepository
+                        .findFridgeMemberByFridge_FridgeIdAndUser_Username(1L, newUser.getUsername())
+                        .orElseThrow(() -> new UserNotFoundException(newUser.getUsername()));
+
+                Assertions.assertFalse(fridgeMember.isSuperUser());
+                fridgeService.updateUserFromFridge(updatedFridgeMember, thirdUser.getUsername());
+
+                fail("Update was successful...");
+
+            } catch (Exception e) {
+                FridgeMember fridgeMember = fridgeMemberRepository
+                        .findFridgeMemberByFridge_FridgeIdAndUser_Username(1L, newUser.getUsername())
+                        .orElseThrow(() -> new UserNotFoundException(newUser.getUsername()));
+
+                Assertions.assertFalse(fridgeMember.isSuperUser());
+            }
         }
 
         @Test
         void updated_by_user_not_in_fridge(){
+            //This user is automatically superuser, since they started the fridge
+            User user = populateDB();
+            Fridge fridge = fridgeRepository.findByFridgeId(1L)
+                    .orElseThrow(() -> new FridgeNotFoundException(1L));
 
+            User newUser = User
+                    .builder()
+                    .userId(2L)
+                    .username("Hans1234")
+                    .password("password")
+                    .firstName("Hans")
+                    .lastName("Norman")
+                    .email("test@hotmail.com")
+                    .memberships(new HashSet<>())
+                    .build();
+
+            userRepository.save(newUser);
+
+            FridgeUserDTO fridgeUserDTO = FridgeUserDTO
+                    .builder()
+                    .fridgeId(1L)
+                    .isSuperUser(false)
+                    .username(newUser.getUsername())
+                    .build();
+
+            fridgeService.addUserToFridge(fridgeUserDTO, user.getUsername());
+
+            Assertions.assertTrue(fridgeMemberRepository.existsFridgeMemberByFridge_FridgeIdAndUser_Username(1L, newUser.getUsername()));
+
+            User thirdUser = User
+                    .builder()
+                    .userId(3L)
+                    .username("Hanne1234")
+                    .password("password")
+                    .firstName("Hanne")
+                    .lastName("Norman")
+                    .email("test321@hotmail.com")
+                    .memberships(new HashSet<>())
+                    .build();
+
+            userRepository.save(thirdUser);
+
+            Assertions.assertFalse(fridgeMemberRepository.existsFridgeMemberByFridge_FridgeIdAndUser_Username(1L, thirdUser.getUsername()));
+
+
+            FridgeUserDTO updatedFridgeMember = FridgeUserDTO
+                    .builder()
+                    .fridgeId(1L)
+                    .isSuperUser(true)
+                    .username(newUser.getUsername())
+                    .build();
+
+            try {
+                FridgeMember fridgeMember = fridgeMemberRepository
+                        .findFridgeMemberByFridge_FridgeIdAndUser_Username(1L, newUser.getUsername())
+                        .orElseThrow(() -> new UserNotFoundException(newUser.getUsername()));
+
+                Assertions.assertFalse(fridgeMember.isSuperUser());
+                fridgeService.updateUserFromFridge(updatedFridgeMember, thirdUser.getUsername());
+
+                fail("Update was successful...");
+
+            } catch (Exception e) {
+                FridgeMember fridgeMember = fridgeMemberRepository
+                        .findFridgeMemberByFridge_FridgeIdAndUser_Username(1L, newUser.getUsername())
+                        .orElseThrow(() -> new UserNotFoundException(newUser.getUsername()));
+
+                Assertions.assertFalse(fridgeMember.isSuperUser());
+            }
         }
 
     }
