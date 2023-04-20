@@ -87,9 +87,9 @@ public class FridgeController {
      * @param username  The username of the user, given as a String.
      * @return          Response entity containing the fridge ids.
      */
-    @GetMapping(value = "/loadByUser")
+    @GetMapping(value = "/loadAllId")
     @Operation(summary = "Load all fridge ids for a given user.")
-    public ResponseEntity<List<Long>> loadFridgeIdsByUser(@ParameterObject @RequestBody String username) {
+    public ResponseEntity<List<Long>> loadFridgeIdsByUser(@ParameterObject @RequestParam String username) {
         List<Long> fridgeIds = fridgeService.retrieveFridgeIdsByUsername(username);
         logger.info("All of the fridge ids for " + username + " have been retrieved.");
         return ResponseEntity.ok(fridgeIds);
