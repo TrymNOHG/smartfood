@@ -77,6 +77,7 @@ export default {
   components: {
     FontAwesomeIcon,
     SearchItem,
+    BasicButton,
   },
   setup() {
     var itemAmount = ref(1);
