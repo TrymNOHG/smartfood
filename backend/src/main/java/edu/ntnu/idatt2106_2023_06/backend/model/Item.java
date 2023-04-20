@@ -85,7 +85,7 @@ public class Item {
     /**
      * The items in the recipe.
      */
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private List<RecipeItems> itemsInRecipe = new ArrayList<>();
@@ -93,7 +93,7 @@ public class Item {
     /**
      * The items in the shopping list.
      */
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private List<ShoppingItems> itemsInShoppingList = new ArrayList<>();
@@ -101,7 +101,7 @@ public class Item {
     /**
      * The items in the fridge.
      */
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private List<FridgeItems> itemsInFridge = new ArrayList<>();

@@ -40,6 +40,8 @@ public class FridgeService implements IFridgeService{
     private final Logger logger = LoggerFactory.getLogger(FridgeService.class);
 
 
+
+
     /**
      * This method creates a new fridge and a new fridge member entry for a given user.
      * @param username  The username of the user, given as a String
