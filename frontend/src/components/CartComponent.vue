@@ -1,6 +1,10 @@
 <template>
   <div>
     <h1>Cart</h1>
+    <div class="search-bar">
+      <input type="text" placeholder="Search items..." v-model="searchQuery" />
+      <button type="button" @click="handleSearch">Search</button>
+    </div>
     <div class="item">
       <div class="product-img">
         <img src="../assets/images/face.webp" alt="" style="width: 80px" />
@@ -38,7 +42,10 @@
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { deleteItemFromShoppingList } from "../services/ItemService";
-import { ref } from "vue";
+import { addItemToShoppingList } from "../services/ItemService";
+import { getItems } from "../services/ApiService";
+import { useLoggedInStore } from "@/store/store";
+import { ref, computed } from "vue";
 export default {
   name: "Cart",
   components: {
@@ -46,8 +53,10 @@ export default {
   },
   setup() {
     var itemAmount = ref(1);
-    var submitMessage = ref('');
-
+    var submitMessage = ref("");
+    const items = ref([]); // list of items in the cart
+    const searchQuery = ref(""); // search query entered by the user
+    const store = useLoggedInStore();
     const handleAdd = async () => {
       itemAmount.value += 1;
       console.log(itemAmount.value);
@@ -67,9 +76,6 @@ export default {
         store: "Test",
         id: 100,
         quantity: itemAmount.value,
-        params: {
-          suggestion: false,
-        },
       };
       console.log(itemData);
 
@@ -78,13 +84,13 @@ export default {
           if (response !== undefined) {
             store.setSessionToken(response.data.token);
             await store.fetchUser();
-            submitMessage.value = "Registration Successful";
+            submitMessage.value = "Succesful request";
             setTimeout(() => {
               submitMessage.value = "";
             }, 3000);
             await router.push("/");
           } else {
-            console.log("Something went wrong registering");
+            console.log("Something went wrong");
             submitMessage.value =
               "Something went wrong. Please try again later.";
             setTimeout(() => {
@@ -99,7 +105,84 @@ export default {
         });
     };
 
-    const sendAmountToSever = async () => {};
+    const handleAddItemToShoppingList = async () => {
+      const itemData = {
+        name: "Test",
+        description: "Test",
+        store: "Test",
+        price: 100,
+        purchaseDate: "2023-04-20",
+        expirationDate: "2023-04-20",
+        image:
+          "https://i.imgur.com/CVFCV3O_d.webp?maxwidth=520&shape=thumb&fidelity=high",
+        quantity: 3,
+      };
+      const itemId = 1;
+
+      addItemToShoppingList(itemData, itemId, false)
+        .then(async (response) => {
+          if (response !== undefined) {
+            store.setSessionToken(response.data.token);
+            await store.fetchUser();
+            submitMessage.value = "Succesful request";
+            setTimeout(() => {
+              submitMessage.value = "";
+            }, 3000);
+            await router.push("/");
+          } else {
+            console.log("Something went wrong");
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+            setTimeout(() => {
+              submitMessage.value = "";
+            }, 3000);
+          }
+        })
+        .catch((error) => {
+          //submitMessage.value = error.response.data["Message:"];
+          //console.log(error.response.data);
+          console.warn("error1", error); //TODO: add exception handling
+        });
+    };
+
+    const filteredItems = computed(() => {
+      // filter the list of items based on the search query
+      return items.value.filter((item) => {
+        return item.name
+          .toLowerCase()
+          .includes(searchQuery.value.toLowerCase());
+      });
+    });
+
+    function handleSearch() {
+      console.log("clicked search")
+      // filter the list of items based on the search query
+      const filteredItems = getItems(searchQuery.value)
+        .then(async (response) => {
+          if (response !== undefined) {
+            console.log(response.data.data)
+            submitMessage.value = "Succesful request";
+            setTimeout(() => {
+              submitMessage.value = "";
+            }, 3000);
+          } else {
+            console.log("Something went wrong");
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+            setTimeout(() => {
+              submitMessage.value = "";
+            }, 3000);
+          }
+        })
+        .catch((error) => {
+          submitMessage.value = error.response.data["Message:"];
+          console.log(error.response.data);
+          console.warn("error1", error); //TODO: add exception handling
+        });
+        console.log(filteredItems);
+      // update the list of items to show only the filtered items
+      items.value = filteredItems;
+    }
 
     return {
       itemAmount,
@@ -107,6 +190,10 @@ export default {
       handleSubtract,
       handleDeleteItem,
       submitMessage,
+      items: [], // list of items in the cart
+      searchQuery: "", // search query entered by the user
+      filteredItems,
+      handleSearch,
     };
   },
 };

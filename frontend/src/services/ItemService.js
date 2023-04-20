@@ -28,6 +28,15 @@ export const deleteItemFromShoppingList = async (listingDeletionDTO, suggestion)
     });
   };
 
+  export const addItemToShoppingList = async (listingAdditionDTO, fridgeId, suggestion) => {
+    return await axios.post(`${BASE_LISTING_URL}/shopping/add?fridgeId=${fridgeId}&suggestion=${suggestion}`, listingAdditionDTO, {
+      headers: {
+        Authorization: `Bearer ${await SessionToken()}`,
+      },
+    });
+  };
+  
+
 
 export const updateListing = async (listingUpdateDTO) => {
     console.log(listingUpdateDTO)
