@@ -1,8 +1,10 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.files;
 
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+
 
 public interface IFileStorageService {
 
@@ -10,5 +12,6 @@ public interface IFileStorageService {
 
     void deleteProfilePicture(String userID) throws IOException;
 
-    MultipartFile getProfilePicture(String userID) throws IOException;
+    Resource getProfilePicture(String userId) throws IOException;
+
 }

@@ -10,10 +10,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.*;
 import java.util.Arrays;
 import java.util.Objects;
@@ -39,48 +43,6 @@ public class FileStorageService implements IFileStorageService {
         Files.createDirectories(this.fileStorageLocation);
     }
 
-    /**
-     * Store a file on the server. The file will be stored in a directory with the name of the listingID. The file
-     * must have the correct extension and name. A file with the same name will be overwritten and might break the
-     * listing. The filename has to be the same as the total number of files in the directory.
-     *
-     * @param file The file to store
-     * @param id The id of the listing
-     * @param filename The name of the file
-     * @return The filename without the extension
-     */
-    public String handleFileUpload(MultipartFile file, String id, String filename) {
-        String originalFileName = file.getOriginalFilename();
-        String extension = "";
-
-        // Extract the file extension from the original file name
-        if (originalFileName != null && originalFileName.lastIndexOf(".") > 0) {
-            extension = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
-        }
-
-        // Check if the file type is supported
-        if (!extension.matches("(?i)(jpg|jpeg|png|gif|bmp)")) {
-            throw new RuntimeException("File type not supported: " + extension);
-        }
-
-        // Construct the target location for the uploaded file
-        Path targetLocation = Paths.get(fileStorageLocation + "/" + id + "/" + filename);
-
-        try {
-            // Create the target directory if it doesn't exist
-            Files.createDirectories(targetLocation.getParent());
-
-            // Copy the file contents to the target location
-            Files.copy(file.getInputStream(), targetLocation);
-
-            // Return the filename without the extension
-            return filename;
-
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to store file " + originalFileName + " New filename: " + filename, e);
-        }
-    }
-
     @Override
     public void storeProfilePicture(String userId, MultipartFile profilePicture) throws IOException {
         if (profilePicture != null && !profilePicture.isEmpty()) {
@@ -101,7 +63,18 @@ public class FileStorageService implements IFileStorageService {
     }
 
     @Override
-    public MultipartFile getProfilePicture(String userID) throws IOException {
-        return null;
+    public Resource getProfilePicture(String userId) throws IOException {
+        Path targetLocation = fileStorageLocation.resolve(userId);
+
+        try {
+            Resource resource = new UrlResource(targetLocation.toUri());
+            if (resource.exists()) {
+                return resource;
+            } else {
+                throw new FileNotFoundException("No profile picture found for user with ID " + userId);
+            }
+        } catch (MalformedURLException e) {
+            throw new FileNotFoundException("No profile picture found for user with ID " + userId);
+        }
     }
 }

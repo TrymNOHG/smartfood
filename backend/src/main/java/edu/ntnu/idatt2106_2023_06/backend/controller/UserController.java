@@ -81,16 +81,15 @@ public class UserController {
     }
 
     @PutMapping(
-            value = "/update/user",
+            value = "/update/info",
             consumes = { MediaType.MULTIPART_FORM_DATA_VALUE },
             produces = { MediaType.APPLICATION_JSON_VALUE}
     )
-    @Operation(summary = "Update user")
-    public ResponseEntity<Object> update(@RequestPart UserUpdateDTO userUpdateDTO,
-                                         @RequestParam(value = "picture", required = false) MultipartFile picture,
-                                         Authentication authentication) throws IOException {
+    @Operation(summary = "Update user text information")
+    public ResponseEntity<Object> update(@ParameterObject @RequestBody UserUpdateDTO userUpdateDTO,
+                                         Authentication authentication) {
         logger.info(String.format("User %s wants to be updated!", userUpdateDTO.username()));
-        //TODO: logic
+        userService.updateUser(userUpdateDTO);
         logger.info(String.format("User %s has been updated!", userUpdateDTO.username()));
 
         return ResponseEntity.ok().build();
@@ -100,7 +99,6 @@ public class UserController {
     @Operation(summary = "Update user profile picture")
     public ResponseEntity<Object> updatePicture(@RequestParam(value = "picture") MultipartFile picture,
                                                 Authentication authentication) throws IOException {
-
         logger.info(String.format("User %s wants to be updated!", authentication.getName()));
         fileStorageService.storeProfilePicture(jwtService.getAuthenticatedUserId().toString(), picture);
         logger.info(String.format("User %s has been updated!", authentication.getName()));
@@ -115,5 +113,12 @@ public class UserController {
         logger.info(String.format("User %s wants to been updated!", authentication.getName()));
         userService.updateUserPassword(passwordUpdateDTO, authentication.getName());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/get/picture")
+    @Operation(summary = "Get user profile picture")
+    public ResponseEntity<Object> getPicture(Authentication authentication) throws IOException {
+        logger.info(String.format("User %s wants to get their profile picture!", authentication.getName()));
+        return ResponseEntity.ok(fileStorageService.getProfilePicture(jwtService.getAuthenticatedUserId().toString()));
     }
 }
