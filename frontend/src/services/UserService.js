@@ -9,11 +9,20 @@ export const registerUser = async (userData) => {
 }
 
 export const loginUser = async (userLoginDTO) => {
-    return axios.post(`${BASE_USER_URL}/auth/authenticate`, userLoginDTO)
+    return axios.post(`${BASE_USER_URL}/login`, userLoginDTO)
 }
 
 export const getUser = async () => {
     return axios.get(`${BASE_USER_URL}/load`, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    })
+}
+
+//get all members for a fridge
+export const getMembers = async () => {
+    return axios.get(`${BASE_USER_URL}/members`, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         },
