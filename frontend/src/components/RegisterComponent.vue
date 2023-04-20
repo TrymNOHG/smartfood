@@ -1,60 +1,99 @@
 <template>
   <div class="wrapper">
     <div class="form-box login">
-      <h2>{{ $t('register') }}</h2>
+      <h2>{{ $t("register") }}</h2>
       <form @submit.prevent="submit" :class="{ 'has-errors': hasErrors }">
         <div class="input-box">
-          <span class="icon"><font-awesome-icon icon="fa-solid fa-signature" /></span>
-          <input type="text" required v-model.trim="fullName" name="fullName">
-          <label>{{ $t('full_name') }}</label>
-          <div v-if="errors['fullName']" class="error">{{ $t(errors['fullName']) }}</div>
+          <span class="icon"
+            ><font-awesome-icon icon="fa-solid fa-signature"
+          /></span>
+          <input
+            type="text"
+            required
+            v-model.trim="firstName"
+            name="firstName"
+          />
+          <label>{{ $t("first_name") }}</label>
+          <div v-if="errors['firstName']" class="error">
+            {{ $t(errors["firstName"]) }}
+          </div>
         </div>
         <div class="input-box">
-          <span class="icon"><font-awesome-icon icon="fa-solid fa-person" /></span>
-          <input type="text" required v-model.trim="username" name="username">
-          <label>{{ $t('username') }}</label>
-          <div v-if="errors['username']" class="error">{{ $t(errors['username']) }}</div>
+          <span class="icon"
+            ><font-awesome-icon icon="fa-solid fa-signature"
+          /></span>
+          <input type="text" required v-model.trim="lastName" name="lastName" />
+          <label>{{ $t("last_name") }}</label>
+          <div v-if="errors['lastName']" class="error">
+            {{ $t(errors["lastName"]) }}
+          </div>
+        </div>
+
+        <div class="input-box">
+          <span class="icon"
+            ><font-awesome-icon icon="fa-solid fa-person"
+          /></span>
+          <input type="text" required v-model.trim="username" name="username" />
+          <label>{{ $t("username") }}</label>
+          <div v-if="errors['username']" class="error">
+            {{ $t(errors["username"]) }}
+          </div>
         </div>
         <div class="input-box">
-          <span class="icon"><font-awesome-icon icon="fa-solid fa-envelope" /></span>
-          <input type="email" required v-model.trim="email" name="email">
-          <label>{{ $t('email') }}</label>
-          <div v-if="errors['email']" class="error">{{ $t(errors['email']) }}</div>
+          <span class="icon"
+            ><font-awesome-icon icon="fa-solid fa-envelope"
+          /></span>
+          <input type="email" required v-model.trim="email" name="email" />
+          <label>{{ $t("email") }}</label>
+          <div v-if="errors['email']" class="error">
+            {{ $t(errors["email"]) }}
+          </div>
         </div>
         <div class="input-box">
-          <span class="icon"><font-awesome-icon icon="fa-solid fa-lock" /></span>
-          <input type="password" required v-model.trim="password" name="password">
-          <label>{{ $t('password') }}</label>
-          <div v-if="errors['password']" class="error">{{ $t(errors['password']) }}</div>
+          <span class="icon"
+            ><font-awesome-icon icon="fa-solid fa-lock"
+          /></span>
+          <input
+            type="password"
+            required
+            v-model.trim="password"
+            name="password"
+          />
+          <label>{{ $t("password") }}</label>
+          <div v-if="errors['password']" class="error">
+            {{ $t(errors["password"]) }}
+          </div>
         </div>
-        <button type="submit" @click="submit">{{ $t('register') }}</button>
+        <h5 v-if="submitMessage" id="submit-message" aria-describedby="login-form">{{ submitMessage }}</h5>
+        <button type="submit" @click="submit">{{ $t("register") }}</button>
         <div class="login-register">
-          <p>{{ $t('already_have_account') }}<a href="/login" class="register-link">{{ $t('login') }}</a></p>
+          <p>
+            {{ $t("already_have_account")
+            }}<a href="/login" class="register-link">{{ $t("login") }}</a>
+          </p>
         </div>
       </form>
+      
     </div>
   </div>
 </template>
 
 <script>
-import * as yup from 'yup';
+import * as yup from "yup";
 import { useField, useForm } from "vee-validate";
-import {registerUser} from "@/services/UserService";
+import { registerUser } from "@/services/UserService";
+import {ref} from "vue";
 
 export default {
   name: "RegisterComponent",
   setup() {
+    const submitMessage = ref('');
+
     const validationSchema = yup.object({
-      fullName: yup
-        .string()
-        .required("full_name_error"),
-      username: yup
-        .string()
-        .required("user_error"),
-      email: yup
-        .string()
-        .email("wrong_email_error")
-        .required("email_error"),
+      firstName: yup.string().required("first_name_error"),
+      lastName: yup.string().required("last_name_error"),
+      username: yup.string().required("user_error"),
+      email: yup.string().email("wrong_email_error").required("email_error"),
       password: yup
         .string()
         .required("password_error")
@@ -72,40 +111,49 @@ export default {
     });
 
     const { value: fullName } = useField("fullName");
+    const { value: firstName } = useField("firstName");
+    const { value: lastName } = useField("lastName");
     const { value: username } = useField("username");
     const { value: email } = useField("email");
     const { value: password } = useField("password");
 
     const submit = handleSubmit(async () => {
       // Handle registration form submission
-      console.log("Registering")
+      console.log("Registering");
       const userData = {
         username: username.value,
         password: password.value,
-        fullName: fullName.value,
-        email:  email.value,
-        role: "USER"
-      }
-      console.log(userData)
-      await registerUser(userData).then(async response => {
-        if (response !== undefined) {
-          store.setSessionToken(response.data.token)
-          await store.fetchUser()
-          submitMessage.value = "Registration Successful";
-          setTimeout(() => {
-            submitMessage.value = "";
-          }, 3000);
-          await router.push("/");
-        } else {
-          submitMessage.value = "Something went wrong. Please try again later.";
-          setTimeout(() => {
-            submitMessage.value = "";
-          }, 3000);
-        }
-      }).catch(error => {
-        alert(error.body) //TODO: format!!!!
-        console.warn('error1', error) //TODO: add exception handling
-      })
+        firstName: firstName.value,
+        lastName: lastName.value,
+        email: email.value,
+        picture: null,
+      };
+      console.log(userData);
+      await registerUser(userData)
+        .then(async (response) => {
+          if (response !== undefined) {
+            store.setSessionToken(response.data.token);
+            await store.fetchUser();
+            submitMessage.value = "Registration Successful";
+            setTimeout(() => {
+              submitMessage.value = "";
+            }, 3000);
+            await router.push("/");
+          } else {
+            console.log('Something went wrong registering')
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+            setTimeout(() => {
+              submitMessage.value = "";
+            }, 3000);
+          }
+        })
+        .catch((error) => {
+          submitMessage.value = error.response.data["Message:"]
+          console.log(error.response.data);
+          alert(error.response.data["Message"]); //TODO: format!!!!
+          console.warn("error1", error); //TODO: add exception handling
+        });
     });
 
     const hasErrors = () => {
@@ -115,6 +163,8 @@ export default {
 
     return {
       fullName,
+      firstName,
+      lastName,
       username,
       email,
       password,
@@ -124,9 +174,10 @@ export default {
       hasErrors,
       setFieldTouched,
       setFieldValue,
+      submitMessage,
     };
   },
-}
+};
 </script>
 
 <style scoped>
@@ -145,6 +196,10 @@ export default {
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
 }
 
+h5{
+  margin-top: -20px;
+  margin-bottom: 5px;
+}
 .wrapper .form-box {
   width: 90%;
   padding: 40px;
@@ -155,7 +210,7 @@ export default {
   text-align: center;
 }
 
-h2{
+h2 {
   font-weight: bold;
 }
 
@@ -202,11 +257,10 @@ input {
 
 .remember-forgot {
   font-weight: 400;
-  margin:  -15px 0 15px;
+  margin: -15px 0 15px;
   display: flex;
   justify-content: center;
 }
-
 
 button {
   width: 100%;
@@ -236,5 +290,4 @@ button {
     font-size: 1.2em;
   }
 }
-
 </style>

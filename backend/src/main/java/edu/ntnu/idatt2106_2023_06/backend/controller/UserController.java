@@ -124,6 +124,7 @@ public class UserController {
     @Operation(summary = "Get user text information")
     public ResponseEntity<Object> getInfo(Authentication authentication) {
         logger.info(String.format("User %s wants to get their text information!", authentication.getName()));
+        logger.info(userService.loadUser().toString());
         return ResponseEntity.ok(userService.loadUser());
     }
 
