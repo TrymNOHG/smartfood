@@ -32,19 +32,15 @@ public class UserMapper {
      * @return a UserLoadDTO object
      */
     public static UserLoadDTO userLoadDTO(User user) {
-        UserLoadDTO userLoadDTO = UserLoadDTO
+        return UserLoadDTO
                 .builder()
-                .userId(user.getUserId())
+                //.userId(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 //.picture(user.getPicture())
                 .build();
-
-        return userLoadDTO;
     }
-
-
 
 }

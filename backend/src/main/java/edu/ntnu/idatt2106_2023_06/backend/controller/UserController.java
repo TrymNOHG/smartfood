@@ -120,6 +120,13 @@ public class UserController {
                 .body(file);
     }
 
+    @GetMapping("/get/info")
+    @Operation(summary = "Get user text information")
+    public ResponseEntity<Object> getInfo(Authentication authentication) {
+        logger.info(String.format("User %s wants to get their text information!", authentication.getName()));
+        return ResponseEntity.ok(userService.loadUser());
+    }
+
     @DeleteMapping("/delete/picture")
     @Operation(summary = "Delete user profile picture")
     public ResponseEntity<Object> deletePicture(Authentication authentication) throws IOException {
