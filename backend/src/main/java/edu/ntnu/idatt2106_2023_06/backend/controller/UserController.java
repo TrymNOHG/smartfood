@@ -5,7 +5,6 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoginDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserRegisterDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserPasswordUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserUpdateDTO;
-import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.service.files.FileStorageService;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.AuthenticationService;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Objects;
 
 @RestController
 @CrossOrigin("*")

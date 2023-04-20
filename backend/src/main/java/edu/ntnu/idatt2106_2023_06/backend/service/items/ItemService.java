@@ -139,4 +139,19 @@ public class ItemService implements IItemService {
         shoppingItemsRepository.save(shoppingItem);
     }
 
+    @Override
+    public void deleteItemFromFridge(ItemRemoveDTO itemRemoveDTO) {
+        Store store = storeRepository.findByStoreName(itemRemoveDTO.store()).orElseThrow();
+        Item item = itemRepository.findByProductNameAndStore(itemRemoveDTO.itemName(), store).orElseThrow();
+        Fridge fridge = fridgeRepository.findByFridgeId(itemRemoveDTO.fridgeId()).orElseThrow();
+        FridgeItems fridgeItem = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElseThrow();
+        if (fridgeItem.getQuantity() <= itemRemoveDTO.quantity()){
+            fridgeItemsRepository.delete(fridgeItem);
+        }
+        else {
+            fridgeItem.setQuantity(fridgeItem.getQuantity() - itemRemoveDTO.quantity());
+            fridgeItemsRepository.save(fridgeItem);
+        }
+    }
+
 }

@@ -54,6 +54,15 @@ public class ItemController {
         return ResponseEntity.ok(itemList);
     }
 
+    @DeleteMapping(value="/fridge/delete")
+    @Operation(summary = "Delete item from fridge")
+    public ResponseEntity<Object> deleteItemFromFridge(@ParameterObject @RequestBody ItemRemoveDTO itemRemoveDTO){
+        logger.info("User wants to delete item from fridge");
+        itemService.deleteItemFromFridge(itemRemoveDTO);
+        logger.info("Items have been removed!");
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping(value="/shopping/add")
     @Operation(summary = "Add items to shopping list")
     public ResponseEntity<Object> addToShoppingList(@ParameterObject @RequestBody ItemDTO itemDTO,

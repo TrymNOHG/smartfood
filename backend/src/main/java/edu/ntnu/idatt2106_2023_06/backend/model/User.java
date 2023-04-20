@@ -73,12 +73,12 @@ public class User implements UserDetails {
     private String email;
 
     /**
-     * The members of the fridge.
+     * The memberships to fridges.
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
-    private Set<FridgeMember> members = new HashSet<>();
+    private Set<FridgeMember> memberships = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
