@@ -75,6 +75,21 @@ public class ItemService implements IItemService {
     }
 
     @Override
+    public void deleteItemFromFridge(ItemRemoveDTO itemRemoveDTO) {
+        Store store = storeRepository.findByStoreName(itemRemoveDTO.store()).orElseThrow(() -> new StoreNotFoundException(itemRemoveDTO.store()));
+        Item item = itemRepository.findByProductNameAndStore(itemRemoveDTO.itemName(), store).orElseThrow(() -> new ItemNotFoundException(itemRemoveDTO.itemName()));
+        Fridge fridge = fridgeRepository.findByFridgeId(itemRemoveDTO.fridgeId()).orElseThrow(() -> new FridgeNotFoundException(itemRemoveDTO.fridgeId()));
+        FridgeItems fridgeItem = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElseThrow(() -> new FridgeItemsNotFoundException(""));
+        if (fridgeItem.getQuantity() <= itemRemoveDTO.quantity()){
+            fridgeItemsRepository.delete(fridgeItem);
+        }
+        else {
+            fridgeItem.setQuantity(fridgeItem.getQuantity() - itemRemoveDTO.quantity());
+            fridgeItemsRepository.save(fridgeItem);
+        }
+    }
+
+    @Override
     public void addToShoppingList(Long itemName, Long fridgeId, int quantity, boolean suggestion) {
         Item item = itemRepository.findByItemId(itemName).orElseThrow(() -> new ItemNotFoundException(itemName));
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new FridgeNotFoundException(fridgeId));
@@ -96,7 +111,7 @@ public class ItemService implements IItemService {
 
     @Override
     public List<ItemDTO> getShoppingListItems(Long fridgeId) {
-        Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new ItemNotFoundException(fridgeId));
+        Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new FridgeNotFoundException(fridgeId));
         List<ShoppingItems> shoppingItems = shoppingItemsRepository.findByFridge(fridge).orElseThrow(() -> new ShoppingItemsNotFoundException(fridgeId));
         List<ItemDTO> itemDTOList = new ArrayList<>();
         for (ShoppingItems item : shoppingItems){
@@ -123,7 +138,7 @@ public class ItemService implements IItemService {
     @Override
     public void buyItemsFromShoppingList(List<ItemRemoveDTO> itemDTOList) {
         for(ItemRemoveDTO i: itemDTOList){
-            Store store = storeRepository.findByStoreName(i.store()).orElseThrow();
+            Store store = storeRepository.findByStoreName(i.store()).orElseThrow(() -> new StoreNotFoundException(i.store()));
             Long itemId = itemRepository.findByProductNameAndStore(i.itemName(), store).orElseThrow(() -> new ItemNotFoundException(i.itemName())).getItemId();
             addToFridge(itemId, i.fridgeId(), i.quantity());
             deleteItemFromShoppingList(i, false);
@@ -140,19 +155,6 @@ public class ItemService implements IItemService {
         shoppingItemsRepository.save(shoppingItem);
     }
 
-    @Override
-    public void deleteItemFromFridge(ItemRemoveDTO itemRemoveDTO) {
-        Store store = storeRepository.findByStoreName(itemRemoveDTO.store()).orElseThrow(() -> new StoreNotFoundException(itemRemoveDTO.store()));
-        Item item = itemRepository.findByProductNameAndStore(itemRemoveDTO.itemName(), store).orElseThrow(() -> new ItemNotFoundException(itemRemoveDTO.itemName()));
-        Fridge fridge = fridgeRepository.findByFridgeId(itemRemoveDTO.fridgeId()).orElseThrow(() -> new FridgeNotFoundException(itemRemoveDTO.fridgeId()));
-        FridgeItems fridgeItem = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElseThrow(() -> new FridgeItemsNotFoundException(""));
-        if (fridgeItem.getQuantity() <= itemRemoveDTO.quantity()){
-            fridgeItemsRepository.delete(fridgeItem);
-        }
-        else {
-            fridgeItem.setQuantity(fridgeItem.getQuantity() - itemRemoveDTO.quantity());
-            fridgeItemsRepository.save(fridgeItem);
-        }
-    }
+
 
 }
