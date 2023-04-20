@@ -3,10 +3,11 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from "@/views/LoginView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import DinnerView from "@/views/DinnerView.vue";
-import FridgeView from "@/views/FridgeView.vue";
+import FridgesView from "@/views/FridgesView.vue";
 import CartView from "@/views/CartView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import StatisticsView from "@/views/StatisticsView.vue";
+import FridgeView from "@/views/FridgeView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,9 +33,9 @@ const router = createRouter({
       component: DinnerView
     },
     {
-      path: '/fridge',
-      name: 'fridge',
-      component: FridgeView
+      path: '/fridges',
+      name: 'fridges',
+      component: FridgesView
     },
     {
       path: '/cart',
@@ -50,7 +51,12 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: ProfileView 
-    }
+    },
+    {
+      path: '/fridges/:name/fridge?id=:id',
+      name: 'fridgeView',
+      component: FridgeView,
+    },
 
   ]
 })

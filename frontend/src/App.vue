@@ -13,7 +13,7 @@
           </RouterLink>
         </li>
         <li>
-          <RouterLink to="/fridge">
+          <RouterLink to="/fridges">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-kitchen-set" />
             </span>
