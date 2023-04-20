@@ -3,7 +3,7 @@
     <router-link v-for="(item, index) in items" :key="index" :to="{name: 'fridgeView', params: {id: item.fridgeID, name: item.fridgeName.toString()}}" class="link">
       <div class="item">
         <span v-if="!isEditing[index]" class="item-text">{{ item.fridgeName }}</span>
-        <input v-else type="text" v-model="editedItems[index].fridgeName" @keyup.enter="confirmEdit(index)" class="edit-input" />
+        <input v-else type="text" v-model="editedItems[index].fridgeName" @keyup.enter="confirmEdit(index)" class="edit-input" @click.prevent />
         <div class="icons" @click.prevent>
           <font-awesome-icon v-if="!isEditing[index]" icon="fa-solid fa-pen-to-square" @click="onEditClick(index)" class="icon edit-conf-icon" />
           <font-awesome-icon v-else icon="fa-solid fa-circle-check" @click="confirmEdit(index)" class="icon edit-conf-icon conf"/>
