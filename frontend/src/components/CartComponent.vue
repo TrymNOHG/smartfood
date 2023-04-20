@@ -2,12 +2,7 @@
   <div>
     <h1>Cart</h1>
     <div id="myDropdown" class="dropdown-content">
-      <input
-        type="text"
-        placeholder="Search.."
-        id="myInput"
-        v-model="searchQuery"
-      />
+      <SearchInput v-model="searchQuery" label="Search" ></SearchInput>
       <button id="search-button" @click="handleSearch"></button>
       <SearchItem
         v-for="(item, index) in searchItems"
@@ -70,6 +65,7 @@ import { addItemToShoppingList } from "../services/ItemService";
 import { getItems } from "../services/ApiService";
 import SearchItem from '../components/basic-components/SearchItem.vue';
 import BasicButton from '../components/basic-components/BasicButton.vue';
+import SearchInput from '../components/basic-components/SearchInput.vue';
 import { useLoggedInStore } from "@/store/store";
 import { ref } from "vue";
 export default {
@@ -78,6 +74,7 @@ export default {
     FontAwesomeIcon,
     SearchItem,
     BasicButton,
+    SearchInput,
   },
   setup() {
     var itemAmount = ref(1);
