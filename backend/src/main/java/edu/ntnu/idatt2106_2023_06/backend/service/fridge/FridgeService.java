@@ -1,10 +1,11 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.fridge;
 
+import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeLoadAllDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeUserDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
-import edu.ntnu.idatt2106_2023_06.backend.exception.exists.UserExistsException;
-import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFound;
+import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeMemberNotFoundException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.FridgeMapper;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.FridgeMemberMapper;
@@ -49,13 +50,46 @@ public class FridgeService implements IFridgeService{
     @Override
     @Transactional
     public void initializeFridge(String username) {
+        createFridge("Home Fridge", username);
+    }
+
+    /**
+     * This method creates a new fridge and a new fridge member entry for a given user.
+     * @param fridgeName    The name of the fridge to be created, given as a String.
+     * @param username      The username of the user, given as a String
+     */
+    @Override
+    @Transactional
+    public void createFridge(String fridgeName, String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
 
-        Fridge savedFridge = fridgeRepository.save(new Fridge("Home Fridge"));
-        //TODO: add ability to change fridge name
+        Fridge savedFridge = fridgeRepository.save(new Fridge(fridgeName));
 
         fridgeMemberRepository.save(FridgeMemberMapper.toFridgeMember(user, savedFridge, true));
+    }
+
+    /**
+     * This method updates fridge's name. However, this is only possible if the person trying to update
+     * the user is already a part of the fridge and is a superuser.
+     * @param fridgeDTO          The information surrounding the fridge, given as a FridgeDTO object.
+     * @param userTryingToUpdate The username of the user trying to update the other user, given as a String
+     */
+    @Transactional
+    public void updateFridgeName(FridgeDTO fridgeDTO, String userTryingToUpdate) {
+
+        authorizeFridgeMemberAction(fridgeDTO.fridgeId(), userTryingToUpdate, "update");
+
+
+        logger.info("Attempting to change the name of the fridge.");
+        Fridge fridge = fridgeRepository.findByFridgeId(fridgeDTO.fridgeId())
+                .orElseThrow(() -> new FridgeNotFoundException(fridgeDTO.fridgeId()));
+
+        fridge.setFridgeName(fridge.getFridgeName());
+
+        fridgeRepository.save(fridge);
+
+        logger.info("Fridge name has been successfully changed.");
     }
 
     /**
@@ -67,16 +101,13 @@ public class FridgeService implements IFridgeService{
     @Transactional
     public void addUserToFridge(FridgeUserDTO fridgeUserDTO, String userTryingToAdd) {
 
-        if(userExistsInFridge(fridgeUserDTO.fridgeId(), fridgeUserDTO.username()))
-            throw new UserExistsException(fridgeUserDTO.username());
-
         authorizeFridgeMemberAction(fridgeUserDTO.fridgeId(), userTryingToAdd, "add");
 
         User userToBeAdded = userRepository.findByUsername(fridgeUserDTO.username())
                 .orElseThrow(() -> new UsernameNotFoundException(fridgeUserDTO.username()));
 
         Fridge fridgeToBeAddedTo = fridgeRepository.findByFridgeId(fridgeUserDTO.fridgeId())
-                .orElseThrow(() -> new FridgeNotFound(fridgeUserDTO.fridgeId()));
+                .orElseThrow(() -> new FridgeNotFoundException(fridgeUserDTO.fridgeId()));
 
         fridgeMemberRepository.save(FridgeMemberMapper.toFridgeMember(
                 userToBeAdded, fridgeToBeAddedTo, fridgeUserDTO.isSuperUser())
@@ -116,16 +147,12 @@ public class FridgeService implements IFridgeService{
     @Transactional
     public void updateUserFromFridge(FridgeUserDTO fridgeUserDTO, String userTryingToUpdate) {
 
-        if(!userExistsInFridge(fridgeUserDTO.fridgeId(), fridgeUserDTO.username()))
-            throw new UserNotFoundException(fridgeUserDTO.username());
-
         authorizeFridgeMemberAction(fridgeUserDTO.fridgeId(), userTryingToUpdate, "update");
-
 
         FridgeMember fridgeMemberToBeUpdated = fridgeMemberRepository
                 .findFridgeMemberByFridge_FridgeIdAndUser_Username(fridgeUserDTO.fridgeId(),
                         fridgeUserDTO.username())
-                        .orElseThrow(() -> new FridgeNotFound(fridgeUserDTO.fridgeId()));
+                        .orElseThrow(() -> new FridgeNotFoundException(fridgeUserDTO.fridgeId()));
 
 
         fridgeMemberToBeUpdated.setSuperUser(fridgeUserDTO.isSuperUser());
@@ -153,7 +180,7 @@ public class FridgeService implements IFridgeService{
     /**
      * This method retrieves all the fridge ids for a given user.
      * @param username  The username of the user, given as a String.
-     * @return          FridgeLoadDTO containing the list of Fridge objects
+     * @return          FridgeDTO containing the list of Fridge objects
      */
     public FridgeLoadAllDTO retrieveFridgesByUsername(String username) {
         logger.info("Retrieving fridges for " + username);
@@ -178,7 +205,7 @@ public class FridgeService implements IFridgeService{
         logger.info(String.format("Checking that the user trying to %s is a super user and a member of the fridge", action));
         if(!fridgeMemberRepository
                 .findFridgeMemberByFridge_FridgeIdAndUser_Username(fridgeId, userPerformingAction)
-                .orElseThrow(() -> new UnauthorizedException(userPerformingAction))
+                .orElseThrow(() -> new FridgeMemberNotFoundException(userPerformingAction))
                 .isSuperUser()) {
             logger.warn("User is not authorized since they are not a super user!");
             throw new UnauthorizedException(userPerformingAction, "This user is part of the fridge but not a super user.");

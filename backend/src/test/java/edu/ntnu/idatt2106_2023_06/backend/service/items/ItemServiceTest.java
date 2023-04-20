@@ -1,16 +1,13 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.items;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
-import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFound;
+import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.ItemNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.model.Fridge;
 import edu.ntnu.idatt2106_2023_06.backend.model.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.Store;
 import edu.ntnu.idatt2106_2023_06.backend.repo.*;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -123,7 +119,7 @@ public class ItemServiceTest {
                     new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(),
                     null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
-            assertThrows(FridgeNotFound.class, () -> {
+            assertThrows(FridgeNotFoundException.class, () -> {
                 itemService.addToFridge(1L, 1L, 1);
 
             });

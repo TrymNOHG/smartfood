@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * This record represents a list of fridge loading DTO.
- * @param fridgeLoadDTOS The list of fridges
+ * @param fridgeDTOS The list of fridges
  */
-public record FridgeLoadAllDTO(@NonNull List<FridgeLoadDTO> fridgeLoadDTOS) {
+public record FridgeLoadAllDTO(@NonNull List<FridgeDTO> fridgeDTOS) {
 }
