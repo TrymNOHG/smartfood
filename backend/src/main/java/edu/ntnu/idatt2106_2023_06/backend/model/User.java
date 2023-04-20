@@ -75,7 +75,7 @@ public class User implements UserDetails {
     /**
      * The memberships to fridges.
      */
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Set<FridgeMember> memberships = new HashSet<>();

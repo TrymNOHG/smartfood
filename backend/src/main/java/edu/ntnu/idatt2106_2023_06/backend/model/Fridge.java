@@ -46,7 +46,7 @@ public class Fridge {
     /**
      * The members of the fridge.
      */
-    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Set<FridgeMember> members = new HashSet<>();
@@ -54,7 +54,7 @@ public class Fridge {
     /**
      * The members of the fridge.
      */
-    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private List<ShoppingItems> shoppingItems = new ArrayList<>();
@@ -62,7 +62,7 @@ public class Fridge {
     /**
      * The members of the fridge.
      */
-    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private List<FridgeItems> fridgeItems = new ArrayList<>();
