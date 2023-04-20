@@ -27,16 +27,6 @@ export const updateListing = async (listingUpdateDTO) => {
         }
     })
 }
-
-//TODO: add token use instead
-export const loadListingByUser = async (username) => {
-    return await axios.get(`${BASE_LISTING_URL}/user/load?username=${username}`, {
-        headers: {
-            Authorization: `Bearer ${await SessionToken()}`,
-        }
-    });
-}
-
 export const loadAllListings = async () => {
     return await axios.get(`${BASE_LISTING_URL}/load`)
 }

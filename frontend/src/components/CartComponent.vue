@@ -14,13 +14,13 @@
       </div>
 
       <div class="quantity">
-        <button class="minus-btn" type="button" name="button">
+        <button class="minus-btn" type="button" name="button" @click="handleSubtract">
           <img src="../assets/images/minus.svg" alt="" />
         </button>
 
-        <input type="text" name="name" value="1" />
+        <input type="number" name="name" v-model="itemAmount"/>
 
-        <button class="plus-btn" type="button" name="button">
+        <button class="plus-btn" type="button" name="button" @click="handleAdd">
           <img src="../assets/images/plus.svg" alt="" />
         </button>
       </div>
@@ -35,28 +35,71 @@
 
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { ref } from "vue";
 export default {
   name: "Cart",
   components: {
     FontAwesomeIcon,
   },
-  data() {
-    return {
-      items: [],
-      newItem: "",
+  setup(){
+    var itemAmount = ref(1);
+
+    const handleAdd = async () => {
+      itemAmount.value+=1;
+      console.log(itemAmount.value)
     };
-  },
-  methods: {
-    addItem() {
-      if (this.newItem) {
-        this.items.push({
-          id: Date.now(),
-          name: this.newItem,
-        });
-        this.newItem = "";
+
+    const handleSubtract = async () => {
+      if(itemAmount.value == 1){
+        return
       }
-    },
-  },
+      itemAmount.value-=1;
+      console.log(itemAmount.value)
+    };
+
+
+    
+    const sendAmountToSever = async() => {
+      console.log("Sending amount to server");
+      const itemUpdateQuantity = {
+        itemName: 'Test milk',
+        store: 'Test store',
+        fridgeId: 100,
+        quantity: itemAmount,
+      };
+      console.log(userData);
+      await updateItem(userData)
+        .then(async (response) => {
+          if (response !== undefined) {
+            store.setSessionToken(response.data.token);
+            await store.fetchUser();
+            submitMessage.value = "Registration Successful";
+            setTimeout(() => {
+              submitMessage.value = "";
+            }, 3000);
+            await router.push("/");
+          } else {
+            console.log('Something went wrong registering')
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+            setTimeout(() => {
+              submitMessage.value = "";
+            }, 3000);
+          }
+        })
+        .catch((error) => {
+          submitMessage.value = error.response.data["Message:"]
+          console.log(error.response.data);
+          console.warn("error1", error); //TODO: add exception handling
+        });
+    }
+
+  return{
+    itemAmount,
+    handleAdd,
+    handleSubtract,
+  }
+  }
 };
 </script>
 
