@@ -98,6 +98,25 @@ public class ItemServiceTest {
 
         @Test
         @Transactional
+        void adds_correct_quantity(){
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .build();
+            fridgeRepository.save(fridge);
+            Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(),
+                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            itemRepository.save(item);
+            itemService.addToFridge(1L, 1L, 1);
+            itemService.addToFridge(1L, 1L, 1);
+            FridgeItems fridgeItems = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElseThrow();
+
+            assertEquals(2, fridgeItems.getQuantity());
+        }
+
+        @Test
+        @Transactional
         void throws_ItemNotFoundException(){
             Fridge fridge = Fridge.builder()
                     .fridgeId(1L)
@@ -358,6 +377,25 @@ public class ItemServiceTest {
             assertDoesNotThrow(() -> {
                 shoppingItemsRepository.findByItemAndFridgeAndSuggestion(item, fridge, false).orElseThrow();
             });
+        }
+
+        @Test
+        @Transactional
+        void adds_correct_quantity(){
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .build();
+            fridgeRepository.save(fridge);
+            Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(),
+                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            itemRepository.save(item);
+            itemService.addToShoppingList(1L, 1L, 1, false);
+            itemService.addToShoppingList(1L, 1L, 1, false);
+            ShoppingItems shoppingItems = shoppingItemsRepository.findByItemAndFridgeAndSuggestion(item, fridge, false).orElseThrow();
+
+            assertEquals(2, shoppingItems.getQuantity());
         }
 
         @Test
