@@ -83,7 +83,11 @@ public class FridgeService implements IFridgeService{
 
         if(!userExistsInFridge(fridgeUserDTO.fridgeId(), fridgeUserDTO.username())) return;
 
-        authorizeFridgeMemberAction(fridgeUserDTO.fridgeId(), userTryingToRemove, "remove");
+        logger.info("Checking if the user wanting to remove is the same as the one being removed");
+        if(!fridgeUserDTO.username().equals(userTryingToRemove)) {
+            authorizeFridgeMemberAction(fridgeUserDTO.fridgeId(), userTryingToRemove, "remove");
+        }
+        else logger.info("User is trying to remove themselves.");
 
         fridgeMemberRepository.deleteFridgeMemberByFridge_FridgeIdAndUser_Username(
                 fridgeUserDTO.fridgeId(), fridgeUserDTO.username()
@@ -130,7 +134,7 @@ public class FridgeService implements IFridgeService{
      * @param userPerformingAction  The username of the user performing the action, given as a String.
      * @param action                A verb describing the action, given as a String.
      */
-    private void authorizeFridgeMemberAction(Long fridgeId, String userPerformingAction, String action) {
+    private void  authorizeFridgeMemberAction(Long fridgeId, String userPerformingAction, String action) {
 
         logger.info(String.format("Checking that the user trying to %s is a super user and a member of the fridge", action));
         if(!fridgeMemberRepository
