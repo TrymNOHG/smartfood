@@ -41,8 +41,6 @@ export default {
     }
   },
 
-
-
   methods: {
     onEditClick(index) {
       console.log("Edit clicked");
@@ -151,6 +149,19 @@ export default {
   transition: color 0.2s ease-in-out;
 }
 
+.edit-input {
+  border: none;
+  outline: none;
+  font-size: 16px;
+  font-weight: 400;
+  color: #333;
+  background-color: #fff;
+  border-radius: 3px;
+  padding: 5px 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
 .edit-conf-icon:hover {
   color: #000;
 }
@@ -228,5 +239,27 @@ export default {
     max-width: none;
   }
 }
+
+@media only screen and (max-width: 600px) {
+  .icons {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .edit-input {
+    width: 100%;
+  }
+
+  .edit-conf-icon {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .delete-icon {
+    margin-left: 0;
+  }
+}
+
 
 </style>

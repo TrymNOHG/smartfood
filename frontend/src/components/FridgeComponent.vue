@@ -76,6 +76,8 @@ export default {
         "isSuperUser": false
       }
 
+      console.log(fridgeUserDTO)
+
       await this.fridgeStore.deleteUserFromFridgeByDTO(fridgeUserDTO);
       this.fridgeList = await this.fridgeStore.fetchFridgesByUsername(this.user.username);
     },
