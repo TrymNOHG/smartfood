@@ -16,6 +16,7 @@ public interface IItemService {
     void deleteItemFromShoppingList(ItemRemoveDTO itemRemoveDTO, boolean suggestion);
     void buyItemsFromShoppingList(List<ItemRemoveDTO> itemDTOList);
     void acceptSuggestion(ItemRemoveDTO itemDTO);
+    void deleteItemFromFridge(ItemRemoveDTO itemRemoveDTO);
 
 
 }
