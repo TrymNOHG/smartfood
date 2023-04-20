@@ -18,6 +18,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ *  This service class handles the business logic for fridge-related operations.
+ *  It implements the IFridgeService interface.
+ *  It provides methods for updating and deleting users from a fridge, as well as authorization of these actions.
+ *
+ * @author Trym Hamer Gudvangen
+ */
 @Service
 @RequiredArgsConstructor
 public class FridgeService implements IFridgeService{
@@ -35,6 +42,10 @@ public class FridgeService implements IFridgeService{
         fridgeRepository.createTrigger();
     }
 
+    /**
+     * This method creates a new fridge and a new fridge member entry for a given user.
+     * @param username  The username of the user, given as a String
+     */
     @Override
     @Transactional
     public void initializeFridge(String username) {
