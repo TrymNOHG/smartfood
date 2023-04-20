@@ -332,6 +332,17 @@ input:focus {
   nav ul li.active a .icon {
     color: #fcfbfb;
   }
+
+  .buttons {
+    position: relative;
+    margin-right: 0;
+  }
+
+  .quantity {
+    padding-top: 25px;
+    margin-left: 0;
+    display: flex;
+  }
 }
 
 @media only screen and (min-width: 350px) and (max-width: 480px) {
@@ -359,13 +370,14 @@ input:focus {
 @media only screen and (max-width: 350px) {
   .buttons {
     position: relative;
-    padding-top: 30px;
-
+    margin-top: -20px;
     margin-right: 0;
   }
 
   .quantity {
     padding-top: 0;
+    margin-top: 5px;
+    display: block;
   }
   .quantity input {
     -webkit-appearance: none;
