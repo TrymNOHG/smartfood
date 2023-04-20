@@ -50,8 +50,12 @@ public class FileStorageService implements IFileStorageService {
         String userId = Long.toString(jwtService.getAuthenticatedUserId());
         Path targetLocation = fileStorageLocation.resolve(userId);
         try{
-            Files.deleteIfExists(targetLocation);
-            logger.info("Profile picture deleted for user " + userId);
+            if(Files.deleteIfExists(targetLocation))
+                logger.info("Profile picture deleted for user " + userId);
+            else {
+                logger.info("No profile picture found for user " + userId);
+                throw new NoSuchFileException("No profile picture found for user with ID " + userId);
+            }
         } catch (NoSuchFileException e) {
             logger.info("No profile picture found for user " + userId);
             throw new NoSuchFileException("No profile picture found for user with ID " + userId);
