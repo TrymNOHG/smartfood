@@ -131,11 +131,10 @@ public class FridgeService implements IFridgeService{
         }
         else logger.info("User is trying to remove themselves.");
 
-        fridgeMemberRepository.deleteFridgeMemberByFridge_FridgeIdAndUser_Username(
-                fridgeUserDTO.fridgeId(), fridgeUserDTO.username()
-        );
+        fridgeMemberRepository.deleteFridgeMemberByFridge_FridgeIdAndUser_Username(fridgeUserDTO.fridgeId(), fridgeUserDTO.username());
 
-        logger.info(fridgeUserDTO.username() + " was removed from the fridge.");
+        logger.info("User " + fridgeUserDTO.username() + " is no longer in the fridge with id: " + fridgeUserDTO.fridgeId() +"!");
+
     }
 
     /**

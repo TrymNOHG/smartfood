@@ -1,8 +1,12 @@
 package edu.ntnu.idatt2106_2023_06.backend.repo;
 
 import edu.ntnu.idatt2106_2023_06.backend.model.*;
+import jakarta.persistence.LockModeType;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -61,6 +65,9 @@ public interface FridgeMemberRepository extends JpaRepository<FridgeMember, Frid
      * @param fridgeId  The id of the fridge to be checked, given as a Long object.
      * @param username  The username of the person, given as a String
      */
+    @Lock(LockModeType.PESSIMISTIC_READ)
+    @Modifying
+    @Transactional
     void deleteFridgeMemberByFridge_FridgeIdAndUser_Username(Long fridgeId, String username);
 
 }

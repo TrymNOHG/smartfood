@@ -63,7 +63,6 @@ public class FridgeController {
                                                        Authentication authentication){
         logger.info("User wants to delete the user, " + fridgeUserDTO.username() + ", from the fridge");
         fridgeService.deleteUserFromFridge(fridgeUserDTO, authentication.getName());
-        logger.info("User " + fridgeUserDTO.username() + " is no longer in the fridge with id: " + fridgeUserDTO.fridgeId() +"!");
         return ResponseEntity.ok().build();
     }
 
