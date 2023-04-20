@@ -9,18 +9,15 @@
         v-model="searchQuery"
       />
       <button id="search-button" @click="handleSearch"></button>
-
-      <div v-if="searchItems.length">
-        <h2>Search Results:</h2>
-        <ul>
-          <li v-for="item in searchItems" :key="item.id">
-            <img :src="item.image" />
-            <p>{{ item.text }}</p>
-            <p>{{ item.price }}</p>
-          </li>
-        </ul>
-      </div>
-
+      <SearchItem
+        v-for="(item, index) in searchItems"
+        :key="index"
+        :image="item.image"
+        :text="item.name"
+        :store="item.store.name"
+        :price="item.price_history[0].price"
+        style="text-align: center;"
+      />
       <a href="#about">About</a>
       <a href="#base">Base</a>
       <a href="#blog">Blog</a>
@@ -29,13 +26,7 @@
       <a href="#support">Support</a>
       <a href="#tools">Tools</a>
 
-      <search-item
-        v-for="(item, index) in searchItems"
-        :key="index"
-        :image="item.image"
-        :text="item.text"
-        :price="item.price"
-      />
+      
     </div>
 
     <div class="item">
@@ -77,16 +68,19 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { deleteItemFromShoppingList } from "../services/ItemService";
 import { addItemToShoppingList } from "../services/ItemService";
 import { getItems } from "../services/ApiService";
+import SearchItem from '../components/basic-components/SearchItem.vue';
+import BasicButton from '../components/basic-components/BasicButton.vue';
 import { useLoggedInStore } from "@/store/store";
 import { ref } from "vue";
 export default {
   name: "Cart",
   components: {
     FontAwesomeIcon,
+    SearchItem,
   },
   setup() {
     var itemAmount = ref(1);
-    var submitMessage = ref("");
+    var submitMessage = ref("norvegia");
     const items = ref([]); // list of items in the cart
     const searchQuery = ref(""); // search query entered by the user
     const searchItems = ref([]);
@@ -184,12 +178,12 @@ export default {
       // filter the list of items based on the search query
       var items = async () => {
         return await getItems(searchQuery.value);
-        console.log(searchQuery.value)
       };
       items()
         .then((response) => {
           searchItems.value = response;
           console.log(response);
+          console.log(searchQuery.value)
         })
         .catch((error) => {
           console.error(error);
@@ -203,7 +197,7 @@ export default {
       handleDeleteItem,
       submitMessage,
       items: [], // list of items in the cart
-      searchQuery: "", // search query entered by the user
+      searchQuery, // search query entered by the user
       searchItems,
       handleSearch,
     };
@@ -236,8 +230,8 @@ body {
   background-color: #7ec855;
   font-family: "Roboto", sans-serif;
 }
-img{
-  width: 50px;
+.search-image{
+  width: .1vw;
 }
 .image img {
   width: 50%;

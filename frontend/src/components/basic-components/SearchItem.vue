@@ -1,8 +1,9 @@
 <template>
     <div class="search-item">
-      <img :src="image" />
+      <img class="search-image" :src="image" />
       <div class="text">{{ text }}</div>
-      <div class="price">{{ price }}</div>
+      <div class="store">{{ store }}</div>
+      <div class="price">{{ price + " KR"}}</div>
     </div>
   </template>
   
@@ -21,20 +22,28 @@
         type: Number,
         required: true,
       },
+      store: {
+      type: String,
+      required: true,
+    },
+
     },
   };
   </script>
   
   <style>
+
   .search-item {
-    display: flex;
     align-items: center;
+    justify-content: center;
     padding: 8px;
   }
   
   .search-item img {
-    width: 50px;
-    height: 50px;
+   width: 10%;
+   height: 12%;
+   max-height: 120px;
+   max-width: 200px;
     margin-right: 16px;
   }
   
