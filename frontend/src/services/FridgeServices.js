@@ -19,10 +19,8 @@ export const addNewFridge = async (fridgeName) => {
     });
 }
 
-export const updateFridge = async (username, newName) => {
-    await axios.post(`${BASE_LISTING_URL}/update`, {
-        fridgeName: newName
-    }, {
+export const updateFridge = async (fridgeDTO) => {
+    await axios.put(`${BASE_LISTING_URL}/update`, fridgeDTO, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         }

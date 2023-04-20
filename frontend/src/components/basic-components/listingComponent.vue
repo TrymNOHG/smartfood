@@ -3,7 +3,7 @@
     <router-link v-for="(fridge, index) in fridgeList" :key="index" :to="{name: 'fridgeView', params: {id: fridge.fridgeId.toString(), name: fridge.fridgeName}}" class="link">
       <div class="item">
         <span v-if="!isEditing[index]" class="item-text">{{ fridge.fridgeName }}</span>
-        <input v-else type="text" v-model="fridgeList[index].fridgeName" @keyup.enter="confirmEdit(index)" class="edit-input" @click.prevent />
+        <input v-else type="text" v-model="editingFridge.fridgeName" @keyup.enter="confirmEdit(index)" class="edit-input" @click.prevent />
         <div class="icons" @click.prevent>
           <font-awesome-icon v-if="!isEditing[index]" icon="fa-solid fa-pen-to-square" @click="onEditClick(index)" class="icon edit-conf-icon" />
           <font-awesome-icon v-else icon="fa-solid fa-circle-check" @click="confirmEdit(index)" class="icon edit-conf-icon conf"/>
@@ -32,26 +32,36 @@ export default {
     },
   },
   data() {
-    return {
-      isEditing: new Array(this.fridgeList.length).fill(false),
-    };
+    return{
+      isEditing: false,
+      editingFridge: {
+        editingIndex: null,
+        fridgeName: "",
+      }
+    }
   },
-  methods: {
 
+
+
+  methods: {
     onEditClick(index) {
       console.log("Edit clicked");
+      this.editingFridge.editingIndex = index;
+      this.editingFridge.fridgeName = this.fridgeList[index].fridgeName;
+      console.log(this.editingFridge.fridgeName)
+      this.isEditing = Array(this.fridgeList.length).fill(false);
       this.isEditing[index] = true;
-      console.log(this.isEditing)
     },
 
     confirmEdit(index) {
       console.log("Edit confirm");
       this.isEditing[index] = false;
-      const editedFridge = this.fridgeList[index];
-      if (this.fridgeList[index].fridgeName !== editedFridge.fridgeName) {
-        this.$emit("update-item", index, editedFridge);
+      const editedFridge = this.editingFridge;
+      if (editedFridge.fridgeName !== this.fridgeList[index].fridgeName) {
+        this.$emit("update-item", index, editedFridge.fridgeName);
       }
     },
+
 
     onDeleteClick(index) {
       swal.fire({

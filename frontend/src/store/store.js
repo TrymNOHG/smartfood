@@ -3,7 +3,7 @@ import { getUser } from "@/services/UserService"
 import {loadAllCategories, loadMainCategories} from "@/services/CategoryService";
 import {filterByFullDesc, loadListingsByCategoryId} from "@/services/ItemService";
 import { ref, computed, watch } from "vue";
-import {addNewFridge, deleteUserFromFridge, getAllFridges} from "@/services/FridgeServices";
+import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
 
 export const useLoggedInStore = defineStore('user', {
 
@@ -77,6 +77,9 @@ export const useFridgeStore = defineStore('fridgeStore', {
         },
         async deleteUserFromFridgeByDTO(fridgeUserDTO){
             await deleteUserFromFridge(fridgeUserDTO);
+        },
+        async updateFridgeNameByDTO(fridgeDTO){
+            await updateFridge(fridgeDTO)
         }
     }
 });

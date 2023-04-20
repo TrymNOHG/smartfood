@@ -54,15 +54,17 @@ export default {
     };
   },
   methods: {
-    onUpdateItem(index, name) {
+
+    async onUpdateItem(index, name) {
       const fridgeToChange = this.fridgeList[index];
 
       const fridgeDTO = {
         "fridgeId": fridgeToChange.fridgeId,
-        "fridgeName": fridgeToChange.fridgeName
+        "fridgeName": name
       }
 
-
+      await this.fridgeStore.updateFridgeNameByDTO(fridgeDTO);
+      this.fridgeList = await this.fridgeStore.fetchFridgesByUsername(this.user.username);
     },
 
     async onDeleteItem(index) {
@@ -83,7 +85,6 @@ export default {
     },
 
     async addNewFridge() {
-      const newFridge = this.newFridgeName;
       this.showModal = false;
       await this.fridgeStore.addNewFridgeByFridgeNameAndUsername(this.newFridgeName);
       this.fridgeList = await this.fridgeStore.fetchFridgesByUsername(this.user.username);
