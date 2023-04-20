@@ -13,7 +13,7 @@ export const loginUser = async (userLoginDTO) => {
 }
 
 export const getUser = async () => {
-    return axios.get(`${BASE_USER_URL}/load`, {
+    return axios.get(`${BASE_USER_URL}/get/info`, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         },
