@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -78,17 +79,11 @@ public class UserController {
         return ResponseEntity.ok(authenticationService.authenticate(userLoginDTO));
     }
 
-    @PutMapping(
-            value = "/update/user",
-            consumes = { MediaType.MULTIPART_FORM_DATA_VALUE },
-            produces = { MediaType.APPLICATION_JSON_VALUE}
-    )
-    @Operation(summary = "Update user")
-    public ResponseEntity<Object> update(@RequestPart UserUpdateDTO userUpdateDTO,
-                                         @RequestParam(value = "picture", required = false) MultipartFile picture,
-                                         Authentication authentication) throws IOException {
+    @PutMapping(value = "/update/info")
+    @Operation(summary = "Update user text information")
+    public ResponseEntity<Object> update(@RequestBody UserUpdateDTO userUpdateDTO) {
         logger.info(String.format("User %s wants to be updated!", userUpdateDTO.username()));
-        //TODO: logic
+        userService.updateUser(userUpdateDTO);
         logger.info(String.format("User %s has been updated!", userUpdateDTO.username()));
 
         return ResponseEntity.ok().build();
@@ -98,7 +93,6 @@ public class UserController {
     @Operation(summary = "Update user profile picture")
     public ResponseEntity<Object> updatePicture(@RequestParam(value = "picture") MultipartFile picture,
                                                 Authentication authentication) throws IOException {
-
         logger.info(String.format("User %s wants to be updated!", authentication.getName()));
         fileStorageService.storeProfilePicture(jwtService.getAuthenticatedUserId().toString(), picture);
         logger.info(String.format("User %s has been updated!", authentication.getName()));
@@ -108,10 +102,37 @@ public class UserController {
     @PutMapping(value = "/update/password")
     @Operation(summary = "Update user")
     public ResponseEntity<Object> updatePassword(@ParameterObject @RequestBody UserPasswordUpdateDTO passwordUpdateDTO,
-                                                 Authentication authentication) throws IOException {
+                                                 Authentication authentication) {
 
         logger.info(String.format("User %s wants to been updated!", authentication.getName()));
         userService.updateUserPassword(passwordUpdateDTO, authentication.getName());
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/get/picture")
+    @Operation(summary = "Get user profile picture")
+    public ResponseEntity<Object> getPicture(Authentication authentication) {
+        logger.info(String.format("User %s wants to get their profile picture!", authentication.getName()));
+        byte[] file = fileStorageService.getProfilePicture(jwtService.getAuthenticatedUserId());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+jwtService.getAuthenticatedUserId()+"\"")
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(file);
+    }
+
+    @GetMapping("/get/info")
+    @Operation(summary = "Get user text information")
+    public ResponseEntity<Object> getInfo(Authentication authentication) {
+        logger.info(String.format("User %s wants to get their text information!", authentication.getName()));
+        logger.info(userService.loadUser().toString());
+        return ResponseEntity.ok(userService.loadUser());
+    }
+
+    @DeleteMapping("/delete/picture")
+    @Operation(summary = "Delete user profile picture")
+    public ResponseEntity<Object> deletePicture(Authentication authentication) throws IOException {
+        logger.info(String.format("User %s wants to delete their profile picture!", authentication.getName()));
+        fileStorageService.deleteProfilePicture();
         return ResponseEntity.ok().build();
     }
 }

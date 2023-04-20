@@ -13,7 +13,7 @@
           </RouterLink>
         </li>
         <li>
-          <RouterLink to="/fridge">
+          <RouterLink to="/fridges">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-kitchen-set" />
             </span>
@@ -97,6 +97,7 @@ header {
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
+  z-index: 1;
 }
 
 header img {

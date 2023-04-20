@@ -40,12 +40,15 @@ export default {
     return {
       fridgeList: [
         {
+          fridgeID: 1,
           fridgeName: 'Fridge 1'
         },
         {
+          fridgeID: 2,
           fridgeName: 'Fridge 2'
         },
         {
+          fridgeID: 3,
           fridgeName: 'Fridge 3'
         }],
       showModal: false,

@@ -11,6 +11,7 @@ import edu.ntnu.idatt2106_2023_06.backend.mapper.UserMapper;
 import edu.ntnu.idatt2106_2023_06.backend.model.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import edu.ntnu.idatt2106_2023_06.backend.service.files.FileStorageService;
+import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,10 +25,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.Optional;
 
 /**
  This service class handles the business logic for user-related operations.
@@ -47,6 +44,7 @@ public class UserService implements IUserService {
     private final AuthenticationProvider authenticationProvider;
     private final UserDetailsService userDetailsService;
     private final FileStorageService fileStorageService;
+    private final JwtService jwtService;
 
 
 
@@ -65,24 +63,21 @@ public class UserService implements IUserService {
      */
     @Transactional
     @Override
-    public void updateUser(UserUpdateDTO userUpdateDTO, MultipartFile profilePicture, String username) throws UserNotFoundException, IOException {
-
-        User user = userRepository.findByUsername(username).orElseThrow(
+    public void updateUser(UserUpdateDTO userUpdateDTO) throws UserNotFoundException {
+        long userId = jwtService.getAuthenticatedUserId();
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException(userUpdateDTO.username())
         );
         logger.info("User " + user.getUsername() + " was found!");
 
-        if(userRepository.findByEmail(userUpdateDTO.email()).isPresent())
+        if(userRepository.findByEmail(userUpdateDTO.email()).isPresent() && !user.getEmail().equals(userUpdateDTO.email()))
             throw new UserExistsException(userUpdateDTO.email());
 
         user.setUsername(userUpdateDTO.username() != null ? userUpdateDTO.username() : user.getUsername());
         user.setFirstName(userUpdateDTO.firstName() != null ? userUpdateDTO.firstName() : user.getFirstName());
         user.setLastName(userUpdateDTO.lastName() != null ? userUpdateDTO.lastName() : user.getLastName());
         user.setEmail(userUpdateDTO.email() != null ? userUpdateDTO.email() : user.getEmail());
-        if(profilePicture != null) {
-            fileStorageService.storeProfilePicture(user.getUserId().toString(), profilePicture);
-            //TODO: create picture file system
-        }
+
         userRepository.save(user);
 
     }
@@ -146,14 +141,16 @@ public class UserService implements IUserService {
     }
 
     /**
-     Loads a user's information.
-     @param username The username of the user to load.
+     Loads user information from the database. The user is identified by the ID in the JWT token.
      @return The user object.
      @throws UsernameNotFoundException If the user is not found in the database.
      */
-    public User loadByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+    public UserLoadDTO loadUser() {
+        long id = jwtService.getAuthenticatedUserId();
+        logger.info("Loading user with id " + id);
+        User user =  userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        logger.info("User " + user.getUsername() + " was found!");
+        return UserMapper.userLoadDTO(user);
     }
-
 }
