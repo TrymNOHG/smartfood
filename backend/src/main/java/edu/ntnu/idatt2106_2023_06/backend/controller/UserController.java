@@ -5,7 +5,6 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoginDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserRegisterDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserPasswordUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserUpdateDTO;
-import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.service.files.FileStorageService;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.AuthenticationService;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Objects;
 
 @RestController
 @CrossOrigin("*")
@@ -104,7 +102,7 @@ public class UserController {
     @PutMapping(value = "/update/password")
     @Operation(summary = "Update user")
     public ResponseEntity<Object> updatePassword(@ParameterObject @RequestBody UserPasswordUpdateDTO passwordUpdateDTO,
-                                                 Authentication authentication) throws IOException {
+                                                 Authentication authentication) {
 
         logger.info(String.format("User %s wants to been updated!", authentication.getName()));
         userService.updateUserPassword(passwordUpdateDTO, authentication.getName());
@@ -113,7 +111,7 @@ public class UserController {
 
     @GetMapping("/get/picture")
     @Operation(summary = "Get user profile picture")
-    public ResponseEntity<Object> getPicture(Authentication authentication) throws IOException {
+    public ResponseEntity<Object> getPicture(Authentication authentication) {
         logger.info(String.format("User %s wants to get their profile picture!", authentication.getName()));
         byte[] file = fileStorageService.getProfilePicture(jwtService.getAuthenticatedUserId());
         return ResponseEntity.ok()

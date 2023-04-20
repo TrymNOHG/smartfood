@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.files;
 
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 
