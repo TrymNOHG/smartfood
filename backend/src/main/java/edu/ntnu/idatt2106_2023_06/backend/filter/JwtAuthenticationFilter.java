@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106_2023_06.backend.security;
+package edu.ntnu.idatt2106_2023_06.backend.filter;
 
 import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
 import edu.ntnu.idatt2106_2023_06.backend.service.users.UserService;
