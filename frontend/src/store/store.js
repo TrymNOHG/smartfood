@@ -51,25 +51,28 @@ export const useLoggedInStore = defineStore('user', {
 
 export const useFridgeStore = defineStore('fridgeStore', {
     state: () => ({
-        allFridges: []
+        allFridges: [{
+            "fridgeId": null,
+            "fridgeName": null
+        }]
     }),
 
     getters: {
-        async fetchFridgesByUsername(username) {
-            await getAllFridges(username).then(response => {
-                this.allFridges = [];
-                for(const fridge of response.data) {
-                    const { fridgeId, fridgeName } = fridge
-                    this.allFridges.push({fridgeId, fridgeName})
-                }
-            })
-            return this.allFridges;
-        }
     },
 
     actions: {
         async addNewFridgeByFridgeNameAndUsername(username, fridgename) {
             await addNewFridge(fridgename, username);
+        },
+        async fetchFridgesByUsername(username) {
+            await getAllFridges(username).then(response => {
+                this.allFridges = []
+                for(const fridge of response.data.fridgeLoadDTOS) {
+                    const { fridgeId, fridgeName } = fridge
+                    this.allFridges.push({ fridgeId, fridgeName })
+                }
+            })
+            return this.allFridges;
         }
     }
 });

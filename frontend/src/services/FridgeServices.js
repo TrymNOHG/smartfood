@@ -4,11 +4,8 @@ import SessionToken from '@/features/SessionToken.js'
 const BASE_LISTING_URL = "http://localhost:8080/fridge";
 
 export const getAllFridges = async (username) => {
-    return await axios.get(`${BASE_LISTING_URL}/user/load?username=${username}`, {
-        headers: {
-            Authorization: `Bearer ${await SessionToken()}`,
-        }
-    });
+    console.log(username)
+    return await axios.get(`${BASE_LISTING_URL}/loadAll?user=${username}`);
 }
 
 export const getFridgeById = async(fridgeID) => {

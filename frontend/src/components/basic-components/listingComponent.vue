@@ -1,9 +1,9 @@
 <template>
   <div class="list">
-    <router-link v-for="(item, index) in items" :key="index" :to="{name: 'fridgeView', params: {id: item.fridgeID, name: item.fridgeName.toString()}}" class="link">
+    <router-link v-for="(fridge, index) in fridgeList" :key="index" :to="{name: 'fridgeView', params: {id: fridge.fridgeId.toString(), name: fridge.fridgeName}}" class="link">
       <div class="item">
-        <span v-if="!isEditing[index]" class="item-text">{{ item.fridgeName }}</span>
-        <input v-else type="text" v-model="editedItems[index].fridgeName" @keyup.enter="confirmEdit(index)" class="edit-input" @click.prevent />
+        <span v-if="!isEditing[index]" class="item-text">{{ fridge.fridgeName }}</span>
+        <input v-else type="text" v-model="fridgeList[index].fridgeName" @keyup.enter="confirmEdit(index)" class="edit-input" @click.prevent />
         <div class="icons" @click.prevent>
           <font-awesome-icon v-if="!isEditing[index]" icon="fa-solid fa-pen-to-square" @click="onEditClick(index)" class="icon edit-conf-icon" />
           <font-awesome-icon v-else icon="fa-solid fa-circle-check" @click="confirmEdit(index)" class="icon edit-conf-icon conf"/>
@@ -26,15 +26,14 @@ export default {
   name: "List",
   components: { FontAwesomeIcon },
   props: {
-    items: {
+    fridgeList: {
       type: Array,
       required: true,
     },
   },
   data() {
     return {
-      isEditing: new Array(this.items.length).fill(false),
-      editedItems: [...this.items],
+      isEditing: new Array(this.fridgeList.length).fill(false),
     };
   },
   methods: {
@@ -42,14 +41,18 @@ export default {
     onEditClick(index) {
       console.log("Edit clicked");
       this.isEditing[index] = true;
+      console.log(this.isEditing)
     },
-    confirmEdit(index){
+
+    confirmEdit(index) {
       console.log("Edit confirm");
       this.isEditing[index] = false;
-      if (this.items[index] !== this.editedItems[index]) {
-        this.$emit("update-item", index, this.editedItems[index]);
+      const editedFridge = this.editedItems[index];
+      if (this.fridgeList[index].fridgeName !== editedFridge.fridgeName) {
+        this.$emit("update-item", index, editedFridge);
       }
     },
+
     onDeleteClick(index) {
       swal.fire({
         title: this.$t('confirm_title'),
