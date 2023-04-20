@@ -41,6 +41,7 @@ export default {
 
     return {
       fridgeStore,
+      user,
       userStore,
       fridgeList,
     };
@@ -54,26 +55,38 @@ export default {
   },
   methods: {
     onUpdateItem(index, name) {
-      this.fridgeList[index].fridgeName = name;
+      const fridgeToChange = this.fridgeList[index];
+
+      const fridgeDTO = {
+        "fridgeId": fridgeToChange.fridgeId,
+        "fridgeName": fridgeToChange.fridgeName
+      }
+
+
     },
-    onDeleteItem(index) {
-      this.fridgeList.splice(index, 1);
-      console.log(this.fridgeList);
+
+    async onDeleteItem(index) {
+      const deleteFridge = this.fridgeList[index];
+
+      const fridgeUserDTO = {
+        "fridgeId": deleteFridge.fridgeId,
+        "username": this.user.username,
+        "isSuperUser": false
+      }
+
+      await this.fridgeStore.deleteUserFromFridgeByDTO(fridgeUserDTO);
+      this.fridgeList = await this.fridgeStore.fetchFridgesByUsername(this.user.username);
     },
+
     changeModal() {
       this.showModal = this.showModal === false;
     },
+
     async addNewFridge() {
-      console.log(this.newFridgeName);
-      const newFridge = { fridgeName: this.newFridgeName };
-      this.fridgeList.push(newFridge);
+      const newFridge = this.newFridgeName;
       this.showModal = false;
-      /*
-      await this.userStore.fetchUser();
-      const user = this.userStore.user;
-      await this.fridgeStore.addNewFridgeByFridgeNameAndUsername(user.username, this.newFridgeName);
-      this.fridgeList = await this.fridgeStore.fetchFridgesByUsername(user.username);
-      */
+      await this.fridgeStore.addNewFridgeByFridgeNameAndUsername(this.newFridgeName);
+      this.fridgeList = await this.fridgeStore.fetchFridgesByUsername(this.user.username);
     },
   },
 };

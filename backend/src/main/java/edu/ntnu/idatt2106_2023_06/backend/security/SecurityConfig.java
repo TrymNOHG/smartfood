@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .headers().frameOptions().sameOrigin()
                 .and()
                 .authorizeHttpRequests(authorize ->
-                                authorize.requestMatchers("/home", "/login", "/user/register", "/about", "/swagger/**", "/docs/**", "/swagger-ui/**", "/category/load/**", "/listing/category/**", "/listing/load/**", "/user/load/{username}")
+                                authorize.requestMatchers("/home", "/login", "/user/register", "/about", "/swagger/**", "/docs/**", "/swagger-ui/**", "/category/load/**", "/listing/category/**", "/listing/load/**", "/user/load/{username}", "/fridge/**")
                                         .permitAll()
                                         .requestMatchers("/user/**", "/auth/**", "/admin/**", "/listing/user/**", "/fridge/loadAll")
                                         .permitAll().anyRequest().authenticated()

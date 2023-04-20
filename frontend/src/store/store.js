@@ -3,7 +3,7 @@ import { getUser } from "@/services/UserService"
 import {loadAllCategories, loadMainCategories} from "@/services/CategoryService";
 import {filterByFullDesc, loadListingsByCategoryId} from "@/services/ItemService";
 import { ref, computed, watch } from "vue";
-import {addNewFridge, getAllFridges} from "@/services/FridgeServices";
+import {addNewFridge, deleteUserFromFridge, getAllFridges} from "@/services/FridgeServices";
 
 export const useLoggedInStore = defineStore('user', {
 
@@ -61,18 +61,22 @@ export const useFridgeStore = defineStore('fridgeStore', {
     },
 
     actions: {
-        async addNewFridgeByFridgeNameAndUsername(username, fridgename) {
-            await addNewFridge(fridgename, username);
+        async addNewFridgeByFridgeNameAndUsername(fridgename) {
+            await addNewFridge(fridgename);
         },
         async fetchFridgesByUsername(username) {
             await getAllFridges(username).then(response => {
                 this.allFridges = []
-                for(const fridge of response.data.fridgeLoadDTOS) {
+                for(const fridge of response.data.fridgeDTOS) {
                     const { fridgeId, fridgeName } = fridge
                     this.allFridges.push({ fridgeId, fridgeName })
                 }
             })
+            console.log(this.allFridges)
             return this.allFridges;
+        },
+        async deleteUserFromFridgeByDTO(fridgeUserDTO){
+            await deleteUserFromFridge(fridgeUserDTO);
         }
     }
 });

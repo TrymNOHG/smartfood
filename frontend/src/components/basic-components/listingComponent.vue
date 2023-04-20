@@ -47,7 +47,7 @@ export default {
     confirmEdit(index) {
       console.log("Edit confirm");
       this.isEditing[index] = false;
-      const editedFridge = this.editedItems[index];
+      const editedFridge = this.fridgeList[index];
       if (this.fridgeList[index].fridgeName !== editedFridge.fridgeName) {
         this.$emit("update-item", index, editedFridge);
       }

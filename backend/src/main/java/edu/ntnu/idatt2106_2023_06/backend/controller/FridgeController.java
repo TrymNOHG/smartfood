@@ -61,6 +61,7 @@ public class FridgeController {
     @Operation(summary = "Delete user from fridge")
     public ResponseEntity<Object> deleteUserFromFridge(@ParameterObject @RequestBody FridgeUserDTO fridgeUserDTO,
                                                        Authentication authentication){
+        logger.info("bruh: " + fridgeUserDTO.toString());
         logger.info("User wants to delete the user, " + fridgeUserDTO.username() + ", from the fridge");
         fridgeService.deleteUserFromFridge(fridgeUserDTO, authentication.getName());
         logger.info("User " + fridgeUserDTO.username() + " is no longer in the fridge with id: " + fridgeUserDTO.fridgeId() +"!");
