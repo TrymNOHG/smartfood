@@ -151,8 +151,10 @@ public class UserService implements IUserService {
      */
     public UserLoadDTO loadUser() {
         long id = jwtService.getAuthenticatedUserId();
+        logger.info("Loading user with id " + id);
         User user =  userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+        logger.info("User " + user.getUsername() + " was found!");
         return UserMapper.userLoadDTO(user);
     }
 }
