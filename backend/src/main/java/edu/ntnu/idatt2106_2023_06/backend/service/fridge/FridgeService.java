@@ -16,6 +16,8 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,12 +42,6 @@ public class FridgeService implements IFridgeService{
 
     private final Logger logger = LoggerFactory.getLogger(FridgeService.class);
 
-
-    @PostConstruct
-    public void init() {
-        fridgeRepository.dropTrigger();
-        fridgeRepository.createTrigger();
-    }
 
     /**
      * This method creates a new fridge and a new fridge member entry for a given user.
