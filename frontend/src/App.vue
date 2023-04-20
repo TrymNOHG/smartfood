@@ -123,7 +123,7 @@ nav {
   display: flex;
   align-items: center;
   max-width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 nav ul {

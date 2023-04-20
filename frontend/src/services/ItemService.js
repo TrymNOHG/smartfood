@@ -1,7 +1,7 @@
 import axios from "axios";
 import SessionToken from '@/features/SessionToken.js'
 
-const BASE_LISTING_URL = "http://localhost:8080/listing";
+const BASE_LISTING_URL = "http://localhost:8080/item";
 export const createNewListing = async (listingDTO) => {
     return await axios.post(`${BASE_LISTING_URL}/user/create`, listingDTO, {
         headers: {
@@ -18,6 +18,16 @@ export const deleteListing = async (listingDeletionDTO) => {
         }
     })
 }
+
+export const deleteItemFromShoppingList = async (listingDeletionDTO, suggestion) => {
+    return await axios.delete(`${BASE_LISTING_URL}/shopping/delete?suggestion=${suggestion}`, {
+      data: listingDeletionDTO,
+      headers: {
+        Authorization: `Bearer ${await SessionToken()}`,
+      },
+    });
+  };
+
 
 export const updateListing = async (listingUpdateDTO) => {
     console.log(listingUpdateDTO)

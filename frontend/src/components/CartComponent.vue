@@ -2,10 +2,8 @@
   <div>
     <h1>Cart</h1>
     <div class="item">
-      
-
       <div class="product-img">
-        <img src="../assets/images/face.webp" alt="" style="width: 80px;"/>
+        <img src="../assets/images/face.webp" alt="" style="width: 80px" />
       </div>
 
       <div class="description">
@@ -14,11 +12,16 @@
       </div>
 
       <div class="quantity">
-        <button class="minus-btn" type="button" name="button" @click="handleSubtract">
+        <button
+          class="minus-btn"
+          type="button"
+          name="button"
+          @click="handleSubtract"
+        >
           <img src="../assets/images/minus.svg" alt="" />
         </button>
 
-        <input type="number" name="name" v-model="itemAmount"/>
+        <input type="number" name="name" v-model="itemAmount" />
 
         <button class="plus-btn" type="button" name="button" @click="handleAdd">
           <img src="../assets/images/plus.svg" alt="" />
@@ -26,49 +29,51 @@
       </div>
 
       <div class="buttons">
-        <span class="delete-btn"></span>
+        <span class="delete-btn" @click="handleDeleteItem"></span>
       </div>
     </div>
-    
   </div>
 </template>
 
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { deleteItemFromShoppingList } from "../services/ItemService";
 import { ref } from "vue";
 export default {
   name: "Cart",
   components: {
     FontAwesomeIcon,
   },
-  setup(){
+  setup() {
     var itemAmount = ref(1);
+    var submitMessage = ref('');
 
     const handleAdd = async () => {
-      itemAmount.value+=1;
-      console.log(itemAmount.value)
+      itemAmount.value += 1;
+      console.log(itemAmount.value);
     };
 
     const handleSubtract = async () => {
-      if(itemAmount.value == 1){
-        return
+      if (itemAmount.value == 1) {
+        return;
       }
-      itemAmount.value-=1;
-      console.log(itemAmount.value)
+      itemAmount.value -= 1;
+      console.log(itemAmount.value);
     };
 
-
-    
-    const sendAmountToSever = async() => {
-      console.log("Sending amount to server");
-      const itemUpdateQuantity = {
-        itemName: 'Test milk',
-        store: 'Test store',
-        fridgeId: 100,
-        quantity: itemAmount,
+    const handleDeleteItem = async () => {
+      const itemData = {
+        itemName: "Test",
+        store: "Test",
+        id: 100,
+        quantity: itemAmount.value,
+        params: {
+          suggestion: false,
+        },
       };
-      console.log(userData);
-      await updateItem(userData)
+      console.log(itemData);
+
+      deleteItemFromShoppingList(itemData, false)
         .then(async (response) => {
           if (response !== undefined) {
             store.setSessionToken(response.data.token);
@@ -79,7 +84,7 @@ export default {
             }, 3000);
             await router.push("/");
           } else {
-            console.log('Something went wrong registering')
+            console.log("Something went wrong registering");
             submitMessage.value =
               "Something went wrong. Please try again later.";
             setTimeout(() => {
@@ -88,18 +93,22 @@ export default {
           }
         })
         .catch((error) => {
-          submitMessage.value = error.response.data["Message:"]
-          console.log(error.response.data);
+          //submitMessage.value = error.response.data["Message:"];
+          //console.log(error.response.data);
           console.warn("error1", error); //TODO: add exception handling
         });
-    }
+    };
 
-  return{
-    itemAmount,
-    handleAdd,
-    handleSubtract,
-  }
-  }
+    const sendAmountToSever = async () => {};
+
+    return {
+      itemAmount,
+      handleAdd,
+      handleSubtract,
+      handleDeleteItem,
+      submitMessage,
+    };
+  },
 };
 </script>
 
@@ -125,8 +134,8 @@ body {
   font-family: "Roboto", sans-serif;
 }
 .image img {
-    width: 50%;
-  }
+  width: 50%;
+}
 .shopping-cart {
   width: 750px;
   height: 423px;
@@ -199,7 +208,7 @@ body {
 .image {
   margin-right: 50px;
 }
- .description {
+.description {
   padding-top: 10px;
   margin-right: 60px;
   width: 115px;
@@ -325,53 +334,47 @@ input:focus {
   }
 }
 
-
 @media only screen and (min-width: 350px) and (max-width: 480px) {
   .buttons {
-  position: relative;
-  padding-top: 30px;
-  margin-left: 20px;
-  margin-right: 0;
-}
+    position: relative;
+    margin-left: 20px;
+    margin-right: 0;
+  }
 
-.quantity {
-  padding-top: 25px;
-  display: flex;
+  .quantity {
+    padding-top: 25px;
+    display: flex;
+  }
+  .quantity input {
+    -webkit-appearance: none;
+    border: none;
+    text-align: center;
+    width: 32px;
+    font-size: 16px;
+    color: #43484d;
+    font-weight: 300;
+  }
 }
-.quantity input {
-  margin-top: -25px;
-  -webkit-appearance: none;
-  border: none;
-  text-align: center;
-  width: 32px;
-  font-size: 16px;
-  color: #43484d;
-  font-weight: 300;
-}
-
-}
-
 
 @media only screen and (max-width: 350px) {
   .buttons {
-  position: relative;
-  padding-top: 30px;
+    position: relative;
+    padding-top: 30px;
 
-  margin-right: 0;
-}
+    margin-right: 0;
+  }
 
-.quantity {
-  padding-top: 0;
-}
-.quantity input {
-  -webkit-appearance: none;
-  border: none;
-  text-align: center;
-  width: 32px;
-  font-size: 16px;
-  color: #43484d;
-  font-weight: 300;
-}
-
+  .quantity {
+    padding-top: 0;
+  }
+  .quantity input {
+    -webkit-appearance: none;
+    border: none;
+    text-align: center;
+    width: 32px;
+    font-size: 16px;
+    color: #43484d;
+    font-weight: 300;
+  }
 }
 </style>
