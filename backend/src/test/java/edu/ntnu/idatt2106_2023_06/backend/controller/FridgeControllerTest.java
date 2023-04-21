@@ -1,14 +1,10 @@
 package edu.ntnu.idatt2106_2023_06.backend.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.*;
 import edu.ntnu.idatt2106_2023_06.backend.model.Fridge;
-import edu.ntnu.idatt2106_2023_06.backend.model.FridgeMember;
 import edu.ntnu.idatt2106_2023_06.backend.model.User;
-import edu.ntnu.idatt2106_2023_06.backend.repo.FridgeMemberRepository;
-import edu.ntnu.idatt2106_2023_06.backend.repo.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
@@ -22,9 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,10 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,12 +47,6 @@ public class FridgeControllerTest {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private FridgeRepository fridgeRepository;
-
-    @Autowired
-    private FridgeMemberRepository fridgeMemberRepository;
 
     private String jwt;
     private User user;
@@ -269,7 +254,8 @@ public class FridgeControllerTest {
 
             ObjectMapper objectMapper = new ObjectMapper();
             List<Long> returnedFridgeIds = objectMapper.readValue(response.getResponse().getContentAsString(),
-                    new TypeReference<List<Long>>(){});
+                    new TypeReference<>() {
+                    });
             Assertions.assertEquals(fridgeIds, returnedFridgeIds);
 
         }
@@ -298,7 +284,8 @@ public class FridgeControllerTest {
 
             ObjectMapper objectMapper = new ObjectMapper();
             FridgeLoadAllDTO returnedFridges = objectMapper.readValue(response.getResponse().getContentAsString(),
-                    new TypeReference<FridgeLoadAllDTO>(){});
+                    new TypeReference<>() {
+                    });
             Assertions.assertEquals(fridgeLoadAllDTO, returnedFridges);
 
         }
