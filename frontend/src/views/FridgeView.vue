@@ -1,16 +1,16 @@
 <template>
   <div class="break-line"/>
   <div class="name-display">
-      <h1 class="fridge-name">
-        <router-link to="/fridges" class="link-name">
-          {{ fridgeName }}
-        </router-link>
-      </h1>
-      <div class="change-button">
-        <router-link class="link-button" to="/fridges">
-          Endre Kjøleskap
-        </router-link>
-      </div>
+    <h1 class="fridge-name">
+      <router-link to="/fridges" class="link-name">
+        {{ fridgeName }}
+      </router-link>
+    </h1>
+    <div class="change-button">
+      <router-link class="link-button" to="/fridges">
+        Endre Kjøleskap
+      </router-link>
+    </div>
   </div>
   <div class="members-fridge">
     <router-link id="member" class="link" to="/members">Members</router-link>
@@ -18,11 +18,7 @@
   </div>
   <!--TODO: add infinite scroller or pagination-->
   <div class="wrapper">
-    <specific-fridge-component/>
-    <specific-fridge-component/>
-    <specific-fridge-component/>
-    <specific-fridge-component/>
-
+    <specific-fridge-component v-for="(item, index) in items" :key="index" :item="item" />
   </div>
 
 </template>
@@ -47,8 +43,33 @@ export default {
     }
   },
 
-
+  data() {
+    return {
+      items: [{
+        itemName: "Bananas",
+        itemPrice: "2.50",
+        itemBuyDate: "2023-04-19",
+        itemExpirationDate: "2023-04-23",
+        itemLeft: "4"
+      },
+        {
+          itemName: "Milk",
+          itemPrice: "3.99",
+          itemBuyDate: "2023-04-21",
+          itemExpirationDate: "2023-04-30",
+          itemLeft: "1"
+        },
+        {
+          itemName: "Eggs",
+          itemPrice: "1.99",
+          itemBuyDate: "2023-04-21",
+          itemExpirationDate: "2023-04-26",
+          itemLeft: "1"
+        }]
+    }
+  }
 }
+
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <basic-fridge-item/>
+    <basic-fridge-item :item="item"/>
   </div>
 </template>
 
@@ -12,9 +12,8 @@ export default {
   components: {BasicFridgeItem},
 
   props: {
-    fridge: {
-      fridgeId: null,
-      fridgeName: ""
+    item: {
+      type: Object,
     }
   }
 }

@@ -7,14 +7,14 @@
     <div class="back-side">
       <div class="item-detail">
         <div class="item-name">
-          <h2>Egg</h2>
-          <h3>Expiration date: 10.12.2012</h3>
+          <h2>{{item.itemName}}</h2>
+          <h3>Expiration date: {{ item.itemExpirationDate }}</h3>
           <br>
         </div>
-        <h4>Price: 420; kr</h4>
-        <h4>Buy date: 10.12.2012</h4>
-        <h4>Expiration date: 10.12.2012</h4>
-        <h4>How much is Left: 0.5L</h4>
+        <h4>Price: {{ item.itemPrice }}; kr</h4>
+        <h4>Buy date: {{ item.itemBuyDate }}</h4>
+        <h4>Expiration date: {{ item.itemExpirationDate }}</h4>
+        <h4>How much is Left: {{ item.itemLeft }}L</h4>
         <button class="delete-btn" @click="deleteCard">
           <span>
             <font-awesome-icon icon="fa-solid fa-trash" @click="deleteCard()" class="icon delete-icon" />
@@ -50,9 +50,9 @@ export default {
   setup(props) {
     function calculateExpirationDate(itemBuyDate, itemExpirationDate) {
       let borderColor = '';
-      const daysUntilExpiration = (new Date(itemExpirationDate) - new Date(itemBuyDate)) / (1000 * 60 * 60 * 24);
+      const daysUntilExpiration = (new Date(itemExpirationDate) - new Date()) / (1000 * 60 * 60 * 24);
       console.log(daysUntilExpiration);
-      if (daysUntilExpiration <= 3 || daysUntilExpiration >=0) {
+      if (daysUntilExpiration <= 3) {
         borderColor = 'red';
       } else if (daysUntilExpiration <= 8) {
         borderColor = 'orange'
