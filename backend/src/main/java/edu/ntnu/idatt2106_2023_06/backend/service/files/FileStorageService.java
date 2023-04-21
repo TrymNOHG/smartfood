@@ -23,7 +23,7 @@ import java.nio.file.*;
 @RequiredArgsConstructor
 public class FileStorageService implements IFileStorageService {
 
-    private final Path fileStorageLocation;
+    private Path fileStorageLocation;
     private final JwtService jwtService;
     private final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
 
@@ -35,6 +35,15 @@ public class FileStorageService implements IFileStorageService {
         this.jwtService = new JwtService();
         this.fileStorageLocation = Paths.get("src/main/resources/images").toAbsolutePath().normalize();
         Files.createDirectories(this.fileStorageLocation);
+    }
+
+    /**
+     * Sets the file storage location. This method is used for testing purposes.
+     *
+     * @param fileStorageLocation The file storage location.
+     */
+    public void setFileStorageLocation(Path fileStorageLocation) {
+        this.fileStorageLocation = fileStorageLocation;
     }
 
     @Override
