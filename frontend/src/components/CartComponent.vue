@@ -17,44 +17,14 @@
                 :store="item.store.name"
                 :price="item.price_history[0].price"
                 style="text-align: center"
-                @click="handleItemClick( item.name, item.store.name)"
+                @click="handleItemClick(item)"
               />
             </template>
           </vue-collapsible-panel>
         </vue-collapsible-panel-group>
       </div>
     </div>
-    <div class="item">
-      <div class="product-img">
-        <img src="../assets/images/face.webp" alt="" style="width: 80px" />
-      </div>
-
-      <div class="description">
-        <span>Matvare navn</span>
-        <span>Vekt/Liter</span>
-      </div>
-
-      <div class="quantity">
-        <button
-          class="minus-btn"
-          type="button"
-          name="button"
-          @click="handleSubtract"
-        >
-          <img src="../assets/images/minus.svg" alt="" />
-        </button>
-
-        <input type="number" name="name" v-model="itemAmount" />
-
-        <button class="plus-btn" type="button" name="button" @click="handleAdd">
-          <img src="../assets/images/plus.svg" alt="" />
-        </button>
-      </div>
-
-      <div class="buttons">
-        <span class="delete-btn" @click="handleDeleteItem"></span>
-      </div>
-    </div>
+    
 
     <div class="cart-items">
       <CartItem
@@ -197,12 +167,47 @@ export default {
     };
 
     //buy item from search
-    function handleItemClick(itemName, storeName ){
+    function handleItemClick(item){
+      console.log(item.name + " " + item.store.name);
+      
+      const itemData = {
+        name: item.name,
+        description: item.description,
+        store: item.store.name,
+        price: item.price_history[0].price,
+        purchaseDate: new Date(),
+        expirationDate: "2023-04-20",
+        image:
+          item.image,
+        quantity: 1,
+      };
+      const fridgeId = 1;
 
-        console.log(itemName + " " + storeName);
-      event.stopPropagation();
-
-
+      addItemToShoppingList(itemData, fridgeId, false)
+        .then(async (response) => {
+          if (response !== undefined) {
+            store.setSessionToken(response.data.token);
+            await store.fetchUser();
+            submitMessage.value = "Succesful request";
+            setTimeout(() => {
+              submitMessage.value = "";
+            }, 3000);
+            await router.push("/");
+          } else {
+            console.log("Something went wrong");
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+            setTimeout(() => {
+              submitMessage.value = "";
+            }, 3000);
+          }
+        })
+        .catch((error) => {
+          //submitMessage.value = error.response.data["Message:"];
+          //console.log(error.response.data);
+          console.warn("error1", error); //TODO: add exception handling
+        });
+        event.stopPropagation();
     
     }
 
