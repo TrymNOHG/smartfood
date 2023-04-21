@@ -198,10 +198,12 @@ export default {
 
     //buy item from search
     function handleItemClick(itemName, storeName ){
+
+        console.log(itemName + " " + storeName);
       event.stopPropagation();
 
 
-      console.log("clicked me");
+    
     }
 
     function handleSearch() {
@@ -578,6 +580,12 @@ input:focus {
     margin-right: 0;
   }
 
+  .dropper{
+    width: 100vw;
+  }
+  .item{
+    width: 100vw;
+  }
   .quantity {
     padding-top: 25px;
     display: flex;
@@ -594,12 +602,17 @@ input:focus {
 }
 
 @media only screen and (max-width: 350px) {
+  .item{
+    width: 100vw;
+  }
   .buttons {
     position: relative;
     margin-top: -20px;
     margin-right: 0;
   }
-
+  .dropper{
+    width: 100vw;
+  }
   .quantity {
     padding-top: 0;
     margin-top: 5px;
