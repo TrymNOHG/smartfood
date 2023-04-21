@@ -2,17 +2,26 @@
   <div>
     <h1>Cart</h1>
     <div id="myDropdown" class="dropdown-content">
-      <SearchInput v-model="searchQuery" label="Search product" ></SearchInput>
-      <button id="searchbtn" @click="handleSearch"> Search</button>
-      <SearchItem
-        v-for="(item, index) in searchItems"
-        :key="index"
-        :image="item.image"
-        :text="item.name"
-        :store="item.store.name"
-        :price="item.price_history[0].price"
-        style="text-align: center;"
-      />
+      <SearchInput v-model="searchQuery" label="Search product"></SearchInput>
+      <button id="searchbtn" @click="handleSearch">Search</button>
+      <div class="dropper">
+      <vue-collapsible-panel-group accordion>
+        <vue-collapsible-panel :expanded="false">
+          <template #title> Search results </template>
+          <template #content>
+            <SearchItem
+              v-for="(item, index) in searchItems"
+              :key="index"
+              :image="item.image"
+              :text="item.name"
+              :store="item.store.name"
+              :price="item.price_history[0].price"
+              style="text-align: center"
+            />
+          </template>
+        </vue-collapsible-panel>
+      </vue-collapsible-panel-group>
+    </div>
     </div>
 
     <div class="item">
@@ -50,13 +59,18 @@
 </template>
 
 <script>
+import {
+  VueCollapsiblePanelGroup,
+  VueCollapsiblePanel,
+} from "@dafcoe/vue-collapsible-panel";
+import "@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { deleteItemFromShoppingList } from "../services/ItemService";
 import { addItemToShoppingList } from "../services/ItemService";
 import { getItems } from "../services/ApiService";
-import SearchItem from '../components/basic-components/SearchItem.vue';
-import BasicButton from '../components/basic-components/BasicButton.vue';
-import SearchInput from '../components/basic-components/SearchInput.vue';
+import SearchItem from "../components/basic-components/SearchItem.vue";
+import BasicButton from "../components/basic-components/BasicButton.vue";
+import SearchInput from "../components/basic-components/SearchInput.vue";
 import { useLoggedInStore } from "@/store/store";
 import { ref } from "vue";
 export default {
@@ -66,6 +80,8 @@ export default {
     SearchItem,
     BasicButton,
     SearchInput,
+    VueCollapsiblePanelGroup,
+    VueCollapsiblePanel,
   },
   setup() {
     var itemAmount = ref(1);
@@ -172,7 +188,7 @@ export default {
         .then((response) => {
           searchItems.value = response;
           console.log(response);
-          console.log(searchQuery.value)
+          console.log(searchQuery.value);
         })
         .catch((error) => {
           console.error(error);
@@ -198,21 +214,27 @@ export default {
 * {
   text-align: center;
 }
-#searchbtn
-{ border:0;
+.dropper{
+  width: 50%;
+  margin: auto;
+  border-radius: 20px 20px 20px 20px;
+  border: #218838;
+}
+#searchbtn {
+  border: 0;
   padding: 0px 10px;
   margin-top: 10px;
   color: #fff;
-  background:#31C48D;
+  background: #31c48d;
   font-size: 27px;
   font-weight: 500;
-    border: 3px solid #555;
-    border-left: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    min-height:60px;
-    height: auto;
-border-radius: 0 50px 50px 0 !important;
+  border: 3px solid #555;
+  border-left: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  min-height: 60px;
+  height: auto;
+  border-radius: 0 50px 50px 0 !important;
 }
 #search-button {
   width: 50px !important;
@@ -234,8 +256,8 @@ body {
   background-color: #7ec855;
   font-family: "Roboto", sans-serif;
 }
-.search-image{
-  width: .1vw;
+.search-image {
+  width: 0.1vw;
 }
 .image img {
   width: 50%;
@@ -269,6 +291,7 @@ body {
   overflow: auto;
   border: 1px solid #ddd;
   z-index: 2;
+  text-align: center;
 }
 
 .dropdown-content a {
