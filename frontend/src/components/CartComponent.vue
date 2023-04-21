@@ -31,7 +31,7 @@
 
     <div class="cart-items">
       <CartItem
-        v-for="(item, index) in searchItems"
+        v-for="(item, index) in items"
         :key="index"
         :image="item.image"
         :name="item.name"
@@ -61,7 +61,7 @@ import BasicButton from "../components/basic-components/BasicButton.vue";
 import SearchInput from "../components/basic-components/SearchInput.vue";
 import CartItem from "@/components/basic-components/CartItem.vue";
 import { useLoggedInStore } from "@/store/store";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 export default {
   name: "Cart",
   components: {
@@ -80,6 +80,23 @@ export default {
     const searchQuery = ref(""); // search query entered by the user
     const searchItems = ref([]);
     const store = useLoggedInStore();
+
+    onMounted(() => {
+      loadItemsFromCart();
+      setInterval(() => {
+        loadItemsFromCart();
+      }, 10000); // call the method every 10 seconds
+    });
+
+    const loadItemsFromCart = async () => {
+  try {
+    const response = await getItems(); // replace with your API call to fetch the items from the backend
+    items.value = response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
     const handleAdd = async () => {
       itemAmount.value += 1;
       console.log(itemAmount.value);
@@ -144,8 +161,6 @@ export default {
       addItemToShoppingList(itemData, itemId, false)
         .then(async (response) => {
           if (response !== undefined) {
-            store.setSessionToken(response.data.token);
-            await store.fetchUser();
             submitMessage.value = "Succesful request";
             setTimeout(() => {
               submitMessage.value = "";
@@ -171,34 +186,20 @@ export default {
       console.log(item.name + " " + item.store.name);
 
       const itemData = {
-        /**
         name: item.name,
         description: item.description,
         store: item.store.name,
         price: item.price_history[0].price,
-        purchaseDate: new Date(),
+        purchaseDate: "2023-04-20",
         expirationDate: "2023-04-20",
-        image:
-          item.image,
+        image: item.image,
         quantity: 1,
-         */
-        name: "Test Item",
-        description: "This is a test item",
-        store: "Test Store",
-        price: 10.0,
-        purchaseDate: "2022-05-01T00:00:00.000Z",
-        expirationDate: "2022-06-01T00:00:00.000Z",
-        image:
-          "https://i.imgur.com/CVFCV3O_d.webp?maxwidth=520&shape=thumb&fidelity=high",
-        quantity: 2,
       };
       const fridgeId = 1;
 
       addItemToShoppingList(itemData, fridgeId, false)
         .then(async (response) => {
           if (response !== undefined) {
-            store.setSessionToken(response.data.token);
-            await store.fetchUser();
             submitMessage.value = "Succesful request";
             setTimeout(() => {
               submitMessage.value = "";
@@ -248,6 +249,7 @@ export default {
       searchItems,
       handleSearch,
       handleItemClick,
+      loadItemsFromCart,
     };
   },
 };
