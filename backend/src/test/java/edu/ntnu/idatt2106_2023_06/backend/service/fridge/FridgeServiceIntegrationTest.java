@@ -456,6 +456,41 @@ public class FridgeServiceIntegrationTest {
         }
 
         @Test
+        void removed_from_database_when_already_removed() {
+            //This user is automatically superuser, since they started the fridge
+            User user = populateDB();
+            Fridge fridge = fridgeRepository.findByFridgeId(1L)
+                    .orElseThrow(() -> new FridgeNotFoundException(1L));
+
+            User newUser = User
+                    .builder()
+                    .userId(2L)
+                    .username("Hans1234")
+                    .password("password")
+                    .firstName("Hans")
+                    .lastName("Norman")
+                    .email("test@hotmail.com")
+                    .memberships(new HashSet<>())
+                    .build();
+
+            userRepository.save(newUser);
+
+            FridgeUserDTO fridgeUserDTO = FridgeUserDTO
+                    .builder()
+                    .fridgeId(1L)
+                    .isSuperUser(false)
+                    .username(newUser.getUsername())
+                    .build();
+
+
+            Assertions.assertFalse(fridgeMemberRepository.existsFridgeMemberByFridge_FridgeIdAndUser_Username(1L, newUser.getUsername()));
+
+            fridgeService.deleteUserFromFridge(fridgeUserDTO, newUser.getUsername());
+
+            Assertions.assertFalse(fridgeMemberRepository.existsFridgeMemberByFridge_FridgeIdAndUser_Username(1L, newUser.getUsername()));
+        }
+
+        @Test
         void updated_by_super_user_from_user_to_super_user(){
             //This user is automatically superuser, since they started the fridge
             User user = populateDB();

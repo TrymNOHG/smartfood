@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 @ImportAutoConfiguration(DatabaseConfig.class)
+@Import(ApiKeyConfig.class)
 public class ApplicationConfig {
 
     private final UserRepository userRepository;
@@ -54,9 +56,9 @@ public class ApplicationConfig {
     /**
      * This method returns an AuthenticationManager bean that can be used to authenticate users.
      *
-     * @param config    the AuthenticationConfiguration to use
-     * @return          an AuthenticationManager bean that can be used to authenticate users.
-     * @throws Exception
+     * @param config        The AuthenticationConfiguration to use
+     * @return              An AuthenticationManager bean that can be used to authenticate users.
+     * @throws Exception    Any exception thrown by the {@link AuthenticationConfiguration#getAuthenticationManager()}
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
