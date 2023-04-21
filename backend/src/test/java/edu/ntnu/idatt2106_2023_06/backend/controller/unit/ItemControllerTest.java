@@ -1,6 +1,7 @@
-package edu.ntnu.idatt2106_2023_06.backend.controller;
+package edu.ntnu.idatt2106_2023_06.backend.controller.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.ntnu.idatt2106_2023_06.backend.controller.ItemController;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.filter.JwtAuthenticationFilter;

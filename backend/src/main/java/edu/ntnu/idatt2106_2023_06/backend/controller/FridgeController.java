@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106_2023_06.backend.controller;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeLoadAllDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeUserDTO;
+import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  *  The FridgeController class provides API endpoints for managing fridge users.
@@ -43,6 +45,7 @@ public class FridgeController {
     @Operation(summary = "Add user to fridge")
     public ResponseEntity<Object> addUserToFridge(@ParameterObject @RequestBody FridgeUserDTO fridgeUserDTO,
                                                   Authentication authentication){
+        if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
         logger.info("User, " + authentication.getName() + " wants to add a new person, " + fridgeUserDTO.username()
                 + " to fridge");
         fridgeService.addUserToFridge(fridgeUserDTO, authentication.getName());
@@ -61,6 +64,7 @@ public class FridgeController {
     @Operation(summary = "Delete user from fridge")
     public ResponseEntity<Object> deleteUserFromFridge(@ParameterObject @RequestBody FridgeUserDTO fridgeUserDTO,
                                                        Authentication authentication){
+        if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
         logger.info("User wants to delete the user, " + fridgeUserDTO.username() + ", from the fridge");
         fridgeService.deleteUserFromFridge(fridgeUserDTO, authentication.getName());
         return ResponseEntity.ok().build();
@@ -77,6 +81,7 @@ public class FridgeController {
     @Operation(summary = "Update user from fridge")
     public ResponseEntity<Object> updateUserFromFridge(@ParameterObject @RequestBody FridgeUserDTO fridgeUserDTO,
                                                        Authentication authentication){
+        if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
         logger.info("User, " + authentication.getName() + " wants to update the user, " + fridgeUserDTO.username() + ", from the fridge");
         fridgeService.updateUserFromFridge(fridgeUserDTO, authentication.getName());
         return ResponseEntity.ok().build();
@@ -118,7 +123,7 @@ public class FridgeController {
     @Operation(summary = "Load all fridge ids for a given user.")
     public ResponseEntity<Object> createFridge(@ParameterObject @RequestParam(name = "fridgeName") String fridgeName,
                                                Authentication authentication) {
-
+        if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
         logger.info("Attempting to create fridge for user " + authentication.getName());
         fridgeService.createFridge(fridgeName, authentication.getName());
         logger.info("Fridge and fridge member was successfully created!");

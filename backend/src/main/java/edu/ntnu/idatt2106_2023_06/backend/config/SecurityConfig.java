@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -50,9 +51,9 @@ public class SecurityConfig {
                 .headers().frameOptions().sameOrigin()
                 .and()
                 .authorizeHttpRequests(authorize ->
-                                authorize.requestMatchers("/home", "/login", "/user/register", "/about", "/swagger/**", "/docs/**", "/swagger-ui/**", "/category/load/**", "/listing/category/**", "/listing/load/**", "/user/load/{username}", "/fridge/**")
+                                authorize.requestMatchers("/home", "/login", "/user/register", "/about", "/swagger/**", "/docs/**", "/swagger-ui/**", "/user/load/{username}", "/fridge/loadAll", "/fridge/loadAllId")
                                         .permitAll()
-                                        .requestMatchers("/user/**", "/auth/**", "/admin/**", "/listing/user/**", "/fridge/loadAll")
+                                        .requestMatchers("/user/**", "/auth/**", "/admin/**", "/listing/user/**", "/fridge/**")
                                         .permitAll().anyRequest().authenticated()
 //                        .requestMatchers("/user/**", "/auth/**")
 //                            .hasAnyRole( "USER", "ADMIN") //TODO: is authenticated applied?
