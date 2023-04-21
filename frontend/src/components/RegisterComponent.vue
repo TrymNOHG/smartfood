@@ -156,7 +156,6 @@ export default {
         .catch((error) => {
           submitMessage.value = error.response.data["Message:"]
           console.log(error.response.data);
-          alert(error.response.data["Message"]); //TODO: format!!!!
           console.warn("error1", error); //TODO: add exception handling
         });
     });

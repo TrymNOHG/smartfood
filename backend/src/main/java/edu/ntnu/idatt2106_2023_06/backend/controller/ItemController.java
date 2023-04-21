@@ -138,15 +138,15 @@ public class ItemController {
      * @param suggestion     whether or not the item was a suggestion
      * @return               a response entity indicating success
      */
-    @DeleteMapping(value="/shopping/delete")
-    @Operation(summary = "Delete item from shopping list")
-    public ResponseEntity<Object> deleteItemFromShoppingList(@ParameterObject @RequestBody ItemRemoveDTO itemRemoveDTO,
-                                                             @ParameterObject @RequestParam(name = "suggestion") boolean suggestion){
-        logger.info("User wants to delete item from shopping list");
-        itemService.deleteItemFromShoppingList(itemRemoveDTO, suggestion);
-        logger.info("Items have been deleted!");
-        return ResponseEntity.ok().build();
-    }
+        @DeleteMapping(value="/shopping/delete")
+        @Operation(summary = "Delete item from shopping list")
+        public ResponseEntity<Object> deleteItemFromShoppingList(@ParameterObject @RequestBody ItemRemoveDTO itemRemoveDTO,
+                                                                 @ParameterObject @RequestParam(name = "suggestion") boolean suggestion){
+            logger.info("User wants to delete item from shopping list");
+            itemService.deleteItemFromShoppingList(itemRemoveDTO, suggestion);
+            logger.info("Items have been deleted!");
+            return ResponseEntity.ok().build();
+        }
 
     /**
      * Buys the items on the shopping list for a given fridge.
