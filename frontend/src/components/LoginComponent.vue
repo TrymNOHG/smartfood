@@ -89,9 +89,7 @@ export default {
         .then(async (response) => {
           if (response !== undefined) {
             store.setSessionToken(response.data.token);
-            console.log(store.getSessionToken);
             await store.fetchUser();
-            console.log(store.user)
             submitMessage.value = "Login Successful";
             setTimeout(() => {
               submitMessage.value = "";

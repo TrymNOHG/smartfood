@@ -3,7 +3,7 @@ import { getUser } from "@/services/UserService"
 import {loadAllCategories, loadMainCategories} from "@/services/CategoryService";
 import {filterByFullDesc, loadListingsByCategoryId} from "@/services/ItemService";
 import { ref, computed, watch } from "vue";
-import {addNewFridge, getAllFridges} from "@/services/FridgeServices";
+import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
 
 export const useLoggedInStore = defineStore('user', {
 
@@ -19,8 +19,7 @@ export const useLoggedInStore = defineStore('user', {
 
     getters: {
         isLoggedIn(){
-            return this.sessionToken !== null;
-        },
+            return this.sessionToken !== null || localStorage.getItem("sessionToken") !== null;        },
         getUser() {
             return this.user;
         },
@@ -46,30 +45,49 @@ export const useLoggedInStore = defineStore('user', {
                     //TODO: handle error
                 })
         },
+        logout() {
+            this.sessionToken = null;
+            localStorage.removeItem("sessionToken");
+            this.user = {
+                email: null,
+                firstname: null,
+                lastname: null,
+                username: null,
+            };
+        }
     }
 });
 
 export const useFridgeStore = defineStore('fridgeStore', {
     state: () => ({
-        allFridges: []
+        allFridges: [{
+            "fridgeId": null,
+            "fridgeName": null
+        }]
     }),
 
     getters: {
-        async fetchFridgesByUsername(username) {
-            await getAllFridges(username).then(response => {
-                this.allFridges = [];
-                for(const fridge of response.data) {
-                    const { fridgeId, fridgeName } = fridge
-                    this.allFridges.push({fridgeId, fridgeName})
-                }
-            })
-            return this.allFridges;
-        }
     },
 
     actions: {
-        async addNewFridgeByFridgeNameAndUsername(username, fridgename) {
-            await addNewFridge(fridgename, username);
+        async addNewFridgeByFridgeNameAndUsername(fridgename) {
+            await addNewFridge(fridgename);
+        },
+        async fetchFridgesByUsername(username) {
+            await getAllFridges(username).then(response => {
+                this.allFridges = []
+                for(const fridge of response.data.fridgeDTOS) {
+                    const { fridgeId, fridgeName } = fridge
+                    this.allFridges.push({ fridgeId, fridgeName })
+                }
+            })
+            return this.allFridges;
+        },
+        async deleteUserFromFridgeByDTO(fridgeUserDTO){
+            await deleteUserFromFridge(fridgeUserDTO);
+        },
+        async updateFridgeNameByDTO(fridgeDTO){
+            await updateFridge(fridgeDTO)
         }
     }
 });

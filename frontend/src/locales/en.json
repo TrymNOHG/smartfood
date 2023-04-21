@@ -37,5 +37,15 @@
   "addNewFridgeTitle": "Add New Fridge",
   "fridgeNameLabel": "What is the name of your new Fridge?",
   "addFridgeButtonText": "Add Fridge",
-  "fridges": "List of your refrigerators"
+  "fridges": "List of your refrigerators",
+  "edit": "Edit",
+  "changePassword": "Change password",
+  "logout": "Logout",
+  "first_name": "First Name",
+  "last_name": "Last Name",
+  "current_password": "Current Password",
+  "new_password": "New Password",
+  "confirm_password": "Confirm Password",
+  "save_changes": "Save Changes",
+  "cancel": "Cancel"
 }

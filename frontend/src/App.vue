@@ -37,7 +37,7 @@
           </RouterLink>
         </li>
         <li>
-          <RouterLink to="/login">
+          <RouterLink to="/profile">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-circle-user" />
             </span>
