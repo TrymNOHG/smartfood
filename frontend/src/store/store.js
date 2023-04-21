@@ -19,8 +19,7 @@ export const useLoggedInStore = defineStore('user', {
 
     getters: {
         isLoggedIn(){
-            return this.sessionToken !== null;
-        },
+            return this.sessionToken !== null || localStorage.getItem("sessionToken") !== null;        },
         getUser() {
             return this.user;
         },
@@ -46,6 +45,16 @@ export const useLoggedInStore = defineStore('user', {
                     //TODO: handle error
                 })
         },
+        logout() {
+            this.sessionToken = null;
+            localStorage.removeItem("sessionToken");
+            this.user = {
+                email: null,
+                firstname: null,
+                lastname: null,
+                username: null,
+            };
+        }
     }
 });
 
