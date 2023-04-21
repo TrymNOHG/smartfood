@@ -2,13 +2,17 @@ package edu.ntnu.idatt2106_2023_06.backend.mapper;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserRegisterDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserSearchDTO;
 import edu.ntnu.idatt2106_2023_06.backend.model.User;
 import org.aspectj.bridge.MessageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- This mapper class is responsible for converting User objects to UserLoadDTO objects and vice versa.
+ This mapper class is responsible for converting User objects to User dDTO objects and vice versa.
  */
 public class UserMapper {
 
@@ -49,6 +53,17 @@ public class UserMapper {
                 .build();
         logger.info("User converted to UserLoadDTO");
         return userDTO;
+    }
+
+    public static List<UserSearchDTO> userSearchDTO(List<User> user) {
+        List<UserSearchDTO> userSearchDTO = new ArrayList<>();
+        for(User u : user){
+            userSearchDTO.add(UserSearchDTO.builder()
+                    .userId(u.getUserId())
+                    .username(u.getUsername())
+                    .build());
+        }
+        return userSearchDTO;
     }
 
 }

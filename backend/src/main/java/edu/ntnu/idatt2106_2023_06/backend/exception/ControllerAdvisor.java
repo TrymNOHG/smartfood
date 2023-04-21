@@ -129,4 +129,13 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<Object> runtimeExceptionAction(RuntimeException e, WebRequest webRequest) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("Time of error: ", LocalDateTime.now());
+        body.put("Message: ", e.getMessage());
+        return ResponseEntity.badRequest().body(body);
+    }
+
 }
