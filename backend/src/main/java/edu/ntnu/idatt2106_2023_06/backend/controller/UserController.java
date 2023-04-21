@@ -226,4 +226,21 @@ public class UserController {
         fileStorageService.deleteProfilePicture();
         return ResponseEntity.ok("Picture deleted");
     }
+
+    /**
+     * Searches for a user by username.
+     *
+     * @param username The username of the user to be searched for.
+     * @return ResponseEntity containing the user's text information.
+     */
+    @GetMapping("/search/{username}")
+    @Operation(summary = "Search for a user by username")
+    @ApiResponse(responseCode = "200", description = "User text information retrieved successfully.", content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = UserLoadDTO.class),
+            examples = @ExampleObject(value = "{\"username\":\"user\",\"id\":\"69\"}")))
+    public ResponseEntity<Object> search(@PathVariable String username) {
+        logger.info(String.format("Searching for %s", username));
+        return ResponseEntity.ok(userService.searchUser(username));
+    }
 }
