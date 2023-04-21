@@ -16,6 +16,7 @@
     <router-link id="member" class="link" to="/members">Members</router-link>
     <router-link id="fridge" class="link" to="/fridge">Fridge</router-link>
   </div>
+  <!--TODO: add infinite scroller or pagination-->
   <div class="wrapper">
     <specific-fridge-component/>
     <specific-fridge-component/>
