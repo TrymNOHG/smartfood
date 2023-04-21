@@ -19,6 +19,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+
+ This class represents the REST controller for managing items in a fridge and shopping list.
+ It handles requests related to adding, retrieving, and deleting items from a fridge and a shopping list.
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/item")
@@ -26,8 +31,18 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
+    /**
+     * The logger for logging information about the operations performed by this controller.
+     */
     private final Logger logger = LoggerFactory.getLogger(ItemController.class);
 
+    /**
+     * Adds an item to the fridge.
+     *
+     * @param itemDTO The item to add to the fridge.
+     * @param fridgeId The id of the fridge to add the item to.
+     * @return A ResponseEntity indicating the success or failure of the operation.
+     */
     @PostMapping(value="/fridge/add")
     @Operation(summary = "Add items to fridge")
     public ResponseEntity<Object> addToFridge(@ParameterObject @RequestBody ItemDTO itemDTO,
@@ -40,6 +55,12 @@ public class ItemController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Retrieves items from a fridge.
+     *
+     * @param fridgeId The id of the fridge to retrieve items from.
+     * @return A ResponseEntity containing the retrieved items, or indicating a failure if appropriate.
+     */
     @GetMapping(value="/fridge/get")
     @Operation(summary = "Get items from fridge")
     @ApiResponses(value = {
@@ -54,6 +75,12 @@ public class ItemController {
         return ResponseEntity.ok(itemList);
     }
 
+    /**
+     * Removes an item from a fridge.
+     *
+     * @param itemRemoveDTO The item to remove from the fridge.
+     * @return A ResponseEntity indicating the success or failure of the operation.
+     */
     @DeleteMapping(value="/fridge/delete")
     @Operation(summary = "Delete item from fridge")
     public ResponseEntity<Object> deleteItemFromFridge(@ParameterObject @RequestBody ItemRemoveDTO itemRemoveDTO){
@@ -63,6 +90,14 @@ public class ItemController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Adds items to the shopping list for a given fridge.
+     *
+     * @param itemDTO     the item to add to the shopping list
+     * @param fridgeId    the ID of the fridge for which to add items to the shopping list
+     * @param suggestion  whether or not the item was a suggestion
+     * @return            a response entity indicating success
+     */
     @PostMapping(value="/shopping/add")
     @Operation(summary = "Add items to shopping list")
     public ResponseEntity<Object> addToShoppingList(@ParameterObject @RequestBody ItemDTO itemDTO,
@@ -76,6 +111,12 @@ public class ItemController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Gets the items on the shopping list for a given fridge.
+     *
+     * @param fridgeId  the ID of the fridge for which to retrieve items from the shopping list
+     * @return          a response entity containing the shopping list items
+     */
     @GetMapping(value="/shopping/get")
     @Operation(summary = "Get items from fridge")
     @ApiResponses(value = {
@@ -90,6 +131,13 @@ public class ItemController {
         return ResponseEntity.ok(itemList);
     }
 
+    /**
+     * Deletes an item from the shopping list for a given fridge.
+     *
+     * @param itemRemoveDTO  the item to remove from the shopping list
+     * @param suggestion     whether or not the item was a suggestion
+     * @return               a response entity indicating success
+     */
     @DeleteMapping(value="/shopping/delete")
     @Operation(summary = "Delete item from shopping list")
     public ResponseEntity<Object> deleteItemFromShoppingList(@ParameterObject @RequestBody ItemRemoveDTO itemRemoveDTO,
@@ -100,6 +148,12 @@ public class ItemController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Buys the items on the shopping list for a given fridge.
+     *
+     * @param itemDTOList  the list of items to buy
+     * @return             a response entity indicating success
+     */
     @PostMapping(value="/shopping/buy", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Buy items from shopping list")
     public ResponseEntity<Object> buyItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList){
@@ -109,6 +163,12 @@ public class ItemController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Accepts a suggested item on the shopping list for a given fridge.
+     *
+     * @param itemDTO  the item to accept
+     * @return         a response entity indicating success
+     */
     @PostMapping(value="/shopping/suggestion")
     @Operation(summary = "Accept suggestion in shopping list")
     public ResponseEntity<Object> acceptSuggestion(@ParameterObject @RequestBody ItemRemoveDTO itemDTO){

@@ -1,15 +1,11 @@
 package edu.ntnu.idatt2106_2023_06.backend.model;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.validator.SuperUserFridgeMemberConstraint;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Fridge class represents a common storage of food items in the application. It can, therefore, include dry, frozen, or
@@ -46,7 +42,7 @@ public class Fridge {
     /**
      * The members of the fridge.
      */
-    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Set<FridgeMember> members = new HashSet<>();
@@ -54,7 +50,7 @@ public class Fridge {
     /**
      * The members of the fridge.
      */
-    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private List<ShoppingItems> shoppingItems = new ArrayList<>();
@@ -62,9 +58,26 @@ public class Fridge {
     /**
      * The members of the fridge.
      */
-    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private List<FridgeItems> fridgeItems = new ArrayList<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Fridge fridge)) return false;
+
+        return Objects.equals(fridgeId, fridge.fridgeId);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = fridgeId != null ? fridgeId.hashCode() : 0;
+        result = 31 * result + fridgeName.hashCode();
+        result = 31 * result + (members != null ? members.hashCode() : 0);
+        result = 31 * result + (shoppingItems != null ? shoppingItems.hashCode() : 0);
+        result = 31 * result + (fridgeItems != null ? fridgeItems.hashCode() : 0);
+        return result;
+    }
 }

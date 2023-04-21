@@ -19,15 +19,14 @@ export default {
 
 <style scoped>
 button {
-  background-color: #0F1CF3;
-  color: white;
-  width: 100px;
-  height: 33px;
-  border-radius: 5px;
-  font-size: 12px;
+  width: 100%;
+  height: 40px;
+  background: #181818;
   border: none;
   outline: none;
-  transition: all 0.2s ease;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
 }
 
 button:hover {

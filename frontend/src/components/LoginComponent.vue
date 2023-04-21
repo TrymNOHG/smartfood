@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="form-box login">
-      <h2>Login</h2>
+      <h2>{{ $t("login") }}</h2>
       <form @submit.prevent="submit" :class="{ 'has-errors': hasErrors }">
         <div class="input-box">
           <span class="icon"
@@ -41,7 +41,7 @@
         <div class="login-register">
           <p>
             {{ $t("dont_have_account") }}
-            <a href="/register" class="register-link">{{ $t("register") }}</a>
+            <router-link to="/register" class="register-link">{{ $t("register") }}</router-link>
           </p>
         </div>
       </form>
@@ -56,9 +56,14 @@ import { ref } from "vue";
 import router from "@/router/router";
 import { loginUser } from "@/services/UserService";
 import { useStorage } from "vue3-storage";
+import { RouterLink } from 'vue-router'
+
 
 export default {
   name: "LoginComponent",
+  components: {
+    RouterLink
+  },
   setup() {
     const submitMessage = ref("");
     const storage = useStorage();
@@ -89,13 +94,12 @@ export default {
         .then(async (response) => {
           if (response !== undefined) {
             store.setSessionToken(response.data.token);
-            console.log(store.getSessionToken);
             await store.fetchUser();
             submitMessage.value = "Login Successful";
             setTimeout(() => {
               submitMessage.value = "";
             }, 3000);
-            await router.push("/");
+            await router.push("/fridges");
           } else {
             submitMessage.value =
               "Something went wrong. Please try again later.";

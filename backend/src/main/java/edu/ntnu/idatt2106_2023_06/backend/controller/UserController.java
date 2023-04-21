@@ -1,10 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.controller;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.security.AuthenticationResponseDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoginDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserRegisterDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserPasswordUpdateDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserUpdateDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.users.*;
 import edu.ntnu.idatt2106_2023_06.backend.service.files.FileStorageService;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.AuthenticationService;
@@ -12,9 +9,11 @@ import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
 import edu.ntnu.idatt2106_2023_06.backend.service.users.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springdoc.core.annotations.ParameterObject;
@@ -22,16 +21,23 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+/**
+ * UserController handles HTTP requests related to user management and authentication.
+ * This controller provides endpoints for user registration, login, and various user operations such as updating
+ * profile information, uploading and retrieving profile pictures, and changing the user's password.
+ *
+ * @author Brage H. Kvamme, Trym Gudvangen
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/user")
 @RequiredArgsConstructor
+@Tag(name = "User Controller", description = "Handles user management and authentication")
 public class UserController {
     Logger logger = org.slf4j.LoggerFactory.getLogger(UserController.class);
 
@@ -42,17 +48,25 @@ public class UserController {
     private final FileStorageService fileStorageService;
     private final JwtService jwtService;
 
+    /**
+     * Registers a new user.
+     *
+     * @param user The UserRegisterDTO object containing the user's registration details.
+     * @return ResponseEntity containing the generated authentication token upon successful registration.
+     */
     @PostMapping("/register")
     @Operation(summary = "Register a new user")
-    @Transactional
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Authentication token", content = {
-                    @Content(
+            @ApiResponse(responseCode = "200", description = "User registered successfully and received an authentication token.",
+                    content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = AuthenticationResponseDTO.class
-                            )
-                    )
-            })
+                            schema = @Schema(implementation = AuthenticationResponseDTO.class),
+                            examples = @ExampleObject(value = "{\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"}"))),
+            @ApiResponse(responseCode = "400", description = "User already exists.", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = AuthenticationResponseDTO.class),
+                    examples = @ExampleObject(value = "{\"message\":\"Username already exists!\"}")
+            ))
     })
     public ResponseEntity<Object> register(@ParameterObject @RequestBody UserRegisterDTO user) {
         logger.info("User " + user.username() + " is being registered!");
@@ -65,6 +79,12 @@ public class UserController {
         return ResponseEntity.ok(authenticationResponseDTO);
     }
 
+    /**
+     * Authenticates a user with login information.
+     *
+     * @param userLoginDTO The UserLoginDTO object containing the user's login details.
+     * @return ResponseEntity containing the generated authentication token upon successful authentication.
+     */
     @PostMapping("/login")
     @Operation(summary = "Authenticate a user")
     @ApiResponses(value = {
@@ -79,8 +99,15 @@ public class UserController {
         return ResponseEntity.ok(authenticationService.authenticate(userLoginDTO));
     }
 
+    /**
+     * Updates the user's text information.
+     *
+     * @param userUpdateDTO The UserUpdateDTO object containing the user's updated information.
+     * @return ResponseEntity indicating the success of the update operation.
+     */
     @PutMapping(value = "/update/info")
     @Operation(summary = "Update user text information")
+    @ApiResponse(responseCode = "200", description = "User text information updated successfully.")
     public ResponseEntity<Object> update(@RequestBody UserUpdateDTO userUpdateDTO) {
         logger.info(String.format("User %s wants to be updated!", userUpdateDTO.username()));
         userService.updateUser(userUpdateDTO);
@@ -89,8 +116,16 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Updates the user's profile picture.
+     *
+     * @param picture The MultipartFile containing the user's new profile picture.
+     * @param authentication The authentication object containing the user's authentication details.
+     * @return ResponseEntity indicating the success of the update operation.
+     */
     @PutMapping("/update/picture")
     @Operation(summary = "Update user profile picture")
+    @ApiResponse(responseCode = "200", description = "User profile picture updated successfully.")
     public ResponseEntity<Object> updatePicture(@RequestParam(value = "picture") MultipartFile picture,
                                                 Authentication authentication) throws IOException {
         logger.info(String.format("User %s wants to be updated!", authentication.getName()));
@@ -99,8 +134,16 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Updates the user's password.
+     *
+     * @param passwordUpdateDTO The UserPasswordUpdateDTO object containing the user's new password.
+     * @param authentication The authentication object containing the user's authentication details.
+     * @return ResponseEntity indicating the success of the update operation.
+     */
     @PutMapping(value = "/update/password")
     @Operation(summary = "Update user")
+    @ApiResponse(responseCode = "200", description = "User password updated successfully.")
     public ResponseEntity<Object> updatePassword(@ParameterObject @RequestBody UserPasswordUpdateDTO passwordUpdateDTO,
                                                  Authentication authentication) {
 
@@ -109,8 +152,17 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Retrieves the user's profile picture.
+     *
+     * @param authentication The authentication object containing the user's authentication details.
+     * @return ResponseEntity containing the user's profile picture as a byte array.
+     */
     @GetMapping("/get/picture")
     @Operation(summary = "Get user profile picture")
+    @ApiResponse(responseCode = "200", description = "User profile picture retrieved successfully.", content = @Content(
+            mediaType = "image/jpeg",
+            schema = @Schema(implementation = byte[].class)))
     public ResponseEntity<Object> getPicture(Authentication authentication) {
         logger.info(String.format("User %s wants to get their profile picture!", authentication.getName()));
         byte[] file = fileStorageService.getProfilePicture(jwtService.getAuthenticatedUserId());
@@ -120,11 +172,39 @@ public class UserController {
                 .body(file);
     }
 
+    /**
+     * Retrieves the user's text information.
+     *
+     * @param authentication The authentication object containing the user's authentication details.
+     * @return ResponseEntity containing the user's text information.
+     */
+    @GetMapping("/get/info")
+    @Operation(summary = "Get user text information")
+    @ApiResponse(responseCode = "200", description = "User text information retrieved successfully.", content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = UserLoadDTO.class),
+            examples = @ExampleObject(value = "{\"username\":\"user\",\"email\":\"test.test@gmail.com\",\"firstName\":\"Test\",\"lastName\":\"Test\"}")))
+    public ResponseEntity<Object> getInfo(Authentication authentication) {
+        logger.info(String.format("User %s wants to get their text information!", authentication.getName()));
+        logger.info(userService.loadUser().toString());
+        return ResponseEntity.ok(userService.loadUser());
+    }
+
+    /**
+     * Deletes the user's profile picture.
+     *
+     * @param authentication The authentication object containing the user's authentication details.
+     * @return ResponseEntity indicating the success of the delete operation.
+     */
     @DeleteMapping("/delete/picture")
     @Operation(summary = "Delete user profile picture")
+    @ApiResponse(responseCode = "200", description = "User text information retrieved successfully.", content = @Content(
+            mediaType = "application/text",
+            examples = @ExampleObject(value = "Picture deleted")
+    ))
     public ResponseEntity<Object> deletePicture(Authentication authentication) throws IOException {
         logger.info(String.format("User %s wants to delete their profile picture!", authentication.getName()));
         fileStorageService.deleteProfilePicture();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Picture deleted");
     }
 }

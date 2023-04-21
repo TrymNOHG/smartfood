@@ -68,9 +68,8 @@
         <button type="submit" @click="submit">{{ $t("register") }}</button>
         <div class="login-register">
           <p>
-            {{ $t("already_have_account")
-            }}<a href="/login" class="register-link">{{ $t("login") }}</a>
-          </p>
+            {{ $t("already_have_account") }}
+            <router-link to="/login" class="register-link">{{ $t("login") }}</router-link>          </p>
         </div>
       </form>
       
@@ -83,10 +82,17 @@ import * as yup from "yup";
 import { useField, useForm } from "vee-validate";
 import { registerUser } from "@/services/UserService";
 import {ref} from "vue";
+import {useLoggedInStore} from "@/store/store";
+import router from "@/router/router";
+import { RouterLink } from 'vue-router'
 
 export default {
   name: "RegisterComponent",
+  components: {
+    RouterLink
+  },
   setup() {
+    const store = useLoggedInStore();
     const submitMessage = ref('');
 
     const validationSchema = yup.object({
@@ -126,7 +132,6 @@ export default {
         firstName: firstName.value,
         lastName: lastName.value,
         email: email.value,
-        picture: null,
       };
       console.log(userData);
       await registerUser(userData)
@@ -138,7 +143,7 @@ export default {
             setTimeout(() => {
               submitMessage.value = "";
             }, 3000);
-            await router.push("/");
+            await router.push("/fridges");
           } else {
             console.log('Something went wrong registering')
             submitMessage.value =
@@ -174,6 +179,7 @@ export default {
       setFieldTouched,
       setFieldValue,
       submitMessage,
+      store
     };
   },
 };

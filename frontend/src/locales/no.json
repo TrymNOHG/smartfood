@@ -41,6 +41,13 @@
   "addNewFridgeTitle": "Legg til nytt kjøleskap",
   "fridgeNameLabel": "Hva er navnet på det nye kjøleskapet ditt?",
   "addFridgeButtonText": "Legg til kjøleskap",
-  "fridges": "Liste over dine kjøleskap"
-
+  "fridges": "Liste over dine kjøleskap",
+  "edit": "Rediger",
+  "changePassword": "Endre passord",
+  "logout": "Logg ut",
+  "current_password": "Nåværende passord",
+  "new_password": "Nytt passord",
+  "confirm_password": "Bekreft passord",
+  "save_changes": "Lagre endringer",
+  "cancel": "Avbryt"
 }
