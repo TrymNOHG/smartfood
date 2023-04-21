@@ -23,9 +23,6 @@ export default {
 <style scoped>
 
 .wrapper {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 200px));
-  margin: 25px;
 }
 
 </style>

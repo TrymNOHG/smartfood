@@ -5,14 +5,21 @@
       <img src="@/assets/images/Large.jpg" alt="item picture">
     </div>
     <div class="back-side">
-      <div class="item-name">
-        <div class="item-detail">
-          <h2>Egg <br><span>12.12.2012</span></h2>
-          <h4>Price: 420; kr</h4>
-          <h4>Buy date: 10.12.2012</h4>
-          <h4>Expiration date: 10.12.2012</h4>
-          <h4>How much is Left: 0.5L</h4>
+      <div class="item-detail">
+        <div class="item-name">
+          <h2>Egg</h2>
+          <h3>Expiration date: 10.12.2012</h3>
+          <br>
         </div>
+        <h4>Price: 420; kr</h4>
+        <h4>Buy date: 10.12.2012</h4>
+        <h4>Expiration date: 10.12.2012</h4>
+        <h4>How much is Left: 0.5L</h4>
+        <button class="delete-btn" @click="deleteCard">
+          <span>
+            <font-awesome-icon icon="fa-solid fa-trash" @click="deleteCard()" class="icon delete-icon" />
+          </span>
+        </button>
       </div>
     </div>
   </div>
@@ -20,8 +27,11 @@
 </template>
 
 <script>
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+
 export default {
   name: "BasicFridgeItem",
+  components: {FontAwesomeIcon},
 
   props: {
     item: {
@@ -42,7 +52,7 @@ export default {
       let borderColor = '';
       const daysUntilExpiration = (new Date(itemExpirationDate) - new Date(itemBuyDate)) / (1000 * 60 * 60 * 24);
       console.log(daysUntilExpiration);
-      if (daysUntilExpiration <= 3) {
+      if (daysUntilExpiration <= 3 || daysUntilExpiration >=0) {
         borderColor = 'red';
       } else if (daysUntilExpiration <= 8) {
         borderColor = 'orange'
@@ -53,8 +63,13 @@ export default {
     }
 
     const borderColor = calculateExpirationDate(props.item.itemBuyDate, props.item.itemExpirationDate);
+
+    function deleteCard() {
+    }
+
     return {
-      borderColor
+      borderColor,
+      deleteCard
     }
   },
 }
@@ -106,6 +121,7 @@ img {
 .card:hover .back-side {
   transform: rotateY(0deg);
 }
+
 .card .back-side {
   display: flex;
   flex-direction: column;
@@ -123,30 +139,113 @@ img {
   transition: 1s;
 }
 
-@media (max-width: 800px) {
+.delete-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: white;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  opacity: 100%;
+}
+
+.delete-btn:hover {
+  transform: scale(1.2);
+  background-color: white;
+}
+
+.icon {
+  color: black;
+}
+
+@media (max-width: 650px) {
+  body{
+    height: 80px;
+  }
   .card {
-    border-radius: 20px;
-    border: 2px solid;
-    box-shadow: none;
-    position: static;
-    width: 100%;;
+    display: flex;
+    justify-content: end;
+    width: 350px;
+    height: 80px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
   }
+
+  h3 {
+    font-weight: normal;
+    font-size: 15px;
+  }
+
   .front-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 5px;
+  }
+
+  img {
+    margin-right: auto;
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+    background-color: #eee;
+    color: #eee;
+  }
+
+  .delete-btn {
+    background-color: white;
+    width: 25px;
+    height: 25px;
+    top: 13px;
+    right: 2px;
+  }
+  .icon{
+    color: black;
+    font-size: 15px;
+  }
+
+  .item-name {
     display: block;
+    font-size: 18px;
+    margin-top: 10px;
   }
-  img{
-    border-radius: 0;
-    right: 40%;
-    width: 50px;
-    height: 50px;
+
+  .card:hover .front-side {
+    transform: rotateY(0deg);
   }
-  .back-side {
-    display: none;
+
+  .card:hover .back-side {
+    transform: rotateY(0deg);
   }
+
+  .card .back-side {
+    margin-right: auto;
+    backface-visibility: visible;
+    transform: rotateY(0deg);
+    color: black;
+    opacity: 100%;
+    width: 220px;
+    background-color: #eee;
+    border-radius: 5px;
+  }
+
   h2 {
     font-size: 18px;
     margin: 10px 0;
   }
+
+  h4 {
+    display: none;
+  }
 }
+
 
 </style>

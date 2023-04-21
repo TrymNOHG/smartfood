@@ -1,5 +1,5 @@
 <template>
-  <div class="breakline"/>
+  <div class="break-line"/>
   <div class="name-display">
       <h1 class="fridge-name">
         <router-link to="/fridges" class="link-name">
@@ -8,7 +8,7 @@
       </h1>
       <div class="change-button">
         <router-link class="link-button" to="/fridges">
-          Endre
+          Endre Kjøleskap
         </router-link>
       </div>
   </div>
@@ -16,7 +16,14 @@
     <router-link id="member" class="link" to="/members">Members</router-link>
     <router-link id="fridge" class="link" to="/fridge">Fridge</router-link>
   </div>
-  <specific-fridge-component/>
+  <div class="wrapper">
+    <specific-fridge-component/>
+    <specific-fridge-component/>
+    <specific-fridge-component/>
+    <specific-fridge-component/>
+
+  </div>
+
 </template>
 
 <script>
@@ -45,7 +52,16 @@ export default {
 
 <style scoped>
 
-.breakline {
+.wrapper {
+  margin-top: 2%;
+  margin-left: 5%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(345px, 300px));
+  grid-template-rows: repeat(auto-fill, minmax(250px, 225px));
+}
+
+
+.break-line {
   height: 7px;
   background-color: black;
 }
@@ -119,6 +135,10 @@ export default {
 }
 .members-fridge:hover .fridge-name {
   color: #3b3b3b;
+  height: 25px;
+  border-radius: 5px;
+  background-color: #fff;
+  transition: all 0.2s ease-in-out;
 }
 
 .change-button {
@@ -143,7 +163,15 @@ export default {
   cursor: pointer;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 650px) {
+
+  .wrapper {
+    margin-left: 2.5%;
+    height: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(325px, 325px));
+    grid-template-rows: repeat(auto-fill, minmax(95px, 95px));
+  }
+
   .fridge-name {
     margin-left: 30%;
     font-size: 18px;
