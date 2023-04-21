@@ -241,6 +241,6 @@ public class UserController {
             examples = @ExampleObject(value = "{\"username\":\"user\",\"id\":\"69\"}")))
     public ResponseEntity<Object> search(@PathVariable String username) {
         logger.info(String.format("Searching for %s", username));
-        return ResponseEntity.ok(userService.searchUser(username));
+        return ResponseEntity.ok(userService.searchUser(username.toLowerCase()));
     }
 }

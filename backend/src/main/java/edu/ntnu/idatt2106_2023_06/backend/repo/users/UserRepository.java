@@ -49,7 +49,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     Optional<User> findByEmail(String email);
 
-    @Query("SELECT u FROM User u WHERE u.username LIKE %:inputString%")
+    @Query("SELECT u FROM User u WHERE LOWER(u.username) LIKE %:inputString%")
     List<User> findByUsernameContaining(@Param("inputString") String inputString);
 
 }
