@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.repo.users;
 
 import edu.ntnu.idatt2106_2023_06.backend.model.User;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,11 +29,13 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             "BEGIN " +
             "DELETE FROM fridge_members WHERE fridge_members.user_id = OLD.user_id; " +
             "END; ", nativeQuery = true)
+    @Profile("!test")
     void createTrigger();
 
     @Modifying
     @Transactional
     @Query(value = "DROP TRIGGER IF EXISTS delete_fridge_member", nativeQuery = true)
+    @Profile("!test")
     void dropTrigger();
 
     /**

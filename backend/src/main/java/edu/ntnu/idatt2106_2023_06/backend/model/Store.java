@@ -39,7 +39,7 @@ public class Store {
     /**
      * The items from the given store.
      */
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Item> itemsInStore = new ArrayList<>();
 
