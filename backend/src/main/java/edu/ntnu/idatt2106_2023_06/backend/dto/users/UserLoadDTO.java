@@ -17,6 +17,6 @@ import java.util.Date;
  * @author Brage Halvorsen Kvamme, Trym Hamer Gudvangen
  */
 @Builder
-public record UserLoadDTO(@NonNull String username, @NonNull String firstName,
+public record UserLoadDTO(@Nullable long userId, @NonNull String username, @NonNull String firstName,
                           @NonNull String lastName, @NonNull String email) {
 }

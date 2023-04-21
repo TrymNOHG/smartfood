@@ -40,7 +40,7 @@ public class UserMapper {
         logger.info(user.getLastName() + " " + user.getFirstName() + " " + user.getEmail() + " " + user.getUsername());
         UserLoadDTO userDTO =  UserLoadDTO
                 .builder()
-                //.userId(user.getUserId())
+                .userId(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
