@@ -5,23 +5,23 @@
       <SearchInput v-model="searchQuery" label="Search product"></SearchInput>
       <button id="searchbtn" @click="handleSearch">Search</button>
       <div class="dropper">
-      <vue-collapsible-panel-group accordion>
-        <vue-collapsible-panel :expanded="false">
-          <template #title> Search results </template>
-          <template #content>
-            <SearchItem
-              v-for="(item, index) in searchItems"
-              :key="index"
-              :image="item.image"
-              :text="item.name"
-              :store="item.store.name"
-              :price="item.price_history[0].price"
-              style="text-align: center"
-            />
-          </template>
-        </vue-collapsible-panel>
-      </vue-collapsible-panel-group>
-    </div>
+        <vue-collapsible-panel-group accordion>
+          <vue-collapsible-panel :expanded="false">
+            <template #title> Search results </template>
+            <template #content>
+              <SearchItem
+                v-for="(item, index) in searchItems"
+                :key="index"
+                :image="item.image"
+                :text="item.name"
+                :store="item.store.name"
+                :price="item.price_history[0].price"
+                style="text-align: center"
+              />
+            </template>
+          </vue-collapsible-panel>
+        </vue-collapsible-panel-group>
+      </div>
     </div>
 
     <div class="item">
@@ -44,7 +44,12 @@
           <img src="../assets/images/minus.svg" alt="" />
         </button>
 
-        <input type="number" name="name" v-model="itemAmount" />
+        <input
+          class="number-input"
+          type="number"
+          name="name"
+          v-model="itemAmount"
+        />
 
         <button class="plus-btn" type="button" name="button" @click="handleAdd">
           <img src="../assets/images/plus.svg" alt="" />
@@ -214,10 +219,19 @@ export default {
 * {
   text-align: center;
 }
-.dropper{
-  width: 50%;
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+.dropper {
+  width: 70%;
   margin: auto;
-  border-radius: 20px 20px 20px 20px;
+  margin-bottom: 20px;
   border: #218838;
 }
 #searchbtn {
@@ -333,6 +347,8 @@ body {
 .item {
   padding: 20px 30px;
   height: 120px;
+  width: 70%;
+  margin: auto;
   display: flex;
   justify-content: space-between;
 }
@@ -444,6 +460,13 @@ input:focus {
     align-items: center;
     justify-content: center;
     height: 80px;
+  }
+
+  .item{
+    width: 98vw;
+  }
+  .dropper{
+    width: 97vw;
   }
 
   header img {
