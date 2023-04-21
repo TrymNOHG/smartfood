@@ -72,7 +72,6 @@ export const useFridgeStore = defineStore('fridgeStore', {
                     this.allFridges.push({ fridgeId, fridgeName })
                 }
             })
-            console.log(this.allFridges)
             return this.allFridges;
         },
         async deleteUserFromFridgeByDTO(fridgeUserDTO){

@@ -43,16 +43,13 @@ export default {
 
   methods: {
     onEditClick(index) {
-      console.log("Edit clicked");
       this.editingFridge.editingIndex = index;
       this.editingFridge.fridgeName = this.fridgeList[index].fridgeName;
-      console.log(this.editingFridge.fridgeName)
       this.isEditing = Array(this.fridgeList.length).fill(false);
       this.isEditing[index] = true;
     },
 
     confirmEdit(index) {
-      console.log("Edit confirm");
       this.isEditing[index] = false;
       const editedFridge = this.editingFridge;
       if (editedFridge.fridgeName !== this.fridgeList[index].fridgeName) {
