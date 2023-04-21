@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.users;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserDeletionDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserPasswordUpdateDTO;
@@ -25,6 +27,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  This service class handles the business logic for user-related operations.
@@ -152,5 +156,22 @@ public class UserService implements IUserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
         logger.info("User " + user.getUsername() + " was found!");
         return UserMapper.userLoadDTO(user);
+    }
+
+    /**
+     * This method searches for users by username.
+     *
+     * @param username The username to search for.
+     * @return A JSON string containing the users' information.
+     */
+    public String searchUser(String username) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<User> users = userRepository.findByUsernameContaining(username);
+        logger.info("Found " + users.size() + " users");
+        try {
+            return objectMapper.writeValueAsString(UserMapper.userSearchDTO(users));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error converting users to JSON", e);
+        }
     }
 }

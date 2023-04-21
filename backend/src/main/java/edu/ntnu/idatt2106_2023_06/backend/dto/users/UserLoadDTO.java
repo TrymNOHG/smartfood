@@ -4,8 +4,6 @@ import lombok.Builder;
 import lombok.NonNull;
 import org.springframework.lang.Nullable;
 
-import java.util.Date;
-
 /**
  * A data transfer object representing a user's basic information, used for loading user data.
  *

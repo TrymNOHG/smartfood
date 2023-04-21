@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,5 +48,8 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Optional<User> findByUsername(String username);
 
     Optional<User> findByEmail(String email);
+
+    @Query("SELECT u FROM User u WHERE LOWER(u.username) LIKE %:inputString%")
+    List<User> findByUsernameContaining(@Param("inputString") String inputString);
 
 }

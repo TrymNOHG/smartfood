@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.security.AuthenticationResponseDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.*;
@@ -47,11 +48,13 @@ import org.springframework.core.io.Resource;
 
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -377,5 +380,27 @@ public class UserControllerTest {
 
         // Assert
         assertThrows(ImageNotFoundException.class, () -> fileStorageService.getProfilePicture(userId));
+    }
+
+    @Test
+    public void searchUser() throws Exception {
+        // Arrange
+        UserRegisterDTO user1 = new UserRegisterDTO("testUsername1", "password", "Ola", "Nordmann", "ola@gmail.com");
+        UserRegisterDTO user2 = new UserRegisterDTO("testUsername2", "password", "Ola", "Nordmann", "ola2@gmail.com");
+        UserRegisterDTO user3 = new UserRegisterDTO("testUsername3", "password", "Ola", "Nordmann", "ola3@gmail.com");
+        UserRegisterDTO user4 = new UserRegisterDTO("Different", "password", "Ola", "Nordmann", "ola4@gmail.com");
+
+        authenticationService.register(user1);
+        authenticationService.register(user2);
+        authenticationService.register(user3);
+        authenticationService.register(user4);
+
+        // Act
+        MvcResult mvcResult = mockMvc.perform(get("/user/search/testu"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // Assert
+        assertEquals(3, objectMapper.readValue(mvcResult.getResponse().getContentAsString(), UserSearchDTO[].class).length);
     }
 }
