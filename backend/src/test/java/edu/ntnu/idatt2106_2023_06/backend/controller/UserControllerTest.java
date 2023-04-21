@@ -3,10 +3,9 @@ package edu.ntnu.idatt2106_2023_06.backend.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.security.AuthenticationResponseDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoadDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoginDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserRegisterDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserUpdateDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.users.*;
+import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FileNotFoundException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.ImageNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.model.User;
 import edu.ntnu.idatt2106_2023_06.backend.service.files.FileStorageService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.AuthenticationService;
@@ -29,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -46,12 +46,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
 
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -218,22 +218,14 @@ public class UserControllerTest {
         authenticationService.register(user);
 
         UserLoginDTO authenticationRequest = new UserLoginDTO("ola.nordmann@gmail.com", "password");
-        MvcResult mvcResult = mockMvc.perform(post("/user/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(authenticationRequest)))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String response = mvcResult.getResponse().getContentAsString();
-        AuthenticationResponseDTO authenticationResponse = objectMapper.readValue(response, AuthenticationResponseDTO.class);
-        assertNotNull(authenticationResponse.token());
+        String token = authenticationService.authenticate(authenticationRequest).token();
 
         UserUpdateDTO userUpdate = new UserUpdateDTO("newUsername", "newFirstName", "newLastName", "newEmail@msn.ru");
 
         // Act
         mockMvc.perform(put("/user/update/info")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + authenticationResponse.token())
+                        .header("Authorization", "Bearer " + token)
                         .content(objectMapper.writeValueAsString(userUpdate)))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -255,15 +247,7 @@ public class UserControllerTest {
         authenticationService.register(user);
 
         UserLoginDTO authenticationRequest = new UserLoginDTO("ola.nordmann@gmail.com", "password");
-        MvcResult mvcResult = mockMvc.perform(post("/user/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(authenticationRequest)))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String response = mvcResult.getResponse().getContentAsString();
-        AuthenticationResponseDTO authenticationResponse = objectMapper.readValue(response, AuthenticationResponseDTO.class);
-        assertNotNull(authenticationResponse.token());
+        String token = authenticationService.authenticate(authenticationRequest).token();
 
         Resource testImageResource = new ClassPathResource("test-image.jpg");
         MockMultipartFile testImageFile = new MockMultipartFile("picture",
@@ -278,7 +262,7 @@ public class UserControllerTest {
                             request.setMethod("PUT");
                             return request;
                         })
-                        .header("Authorization", "Bearer " + authenticationResponse.token())
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -290,10 +274,108 @@ public class UserControllerTest {
     }
 
     @Test
+    public void getUserPicture() throws Exception {
+        // Arrange
+        UserRegisterDTO user = new UserRegisterDTO("testUsername", "password", "Ola", "Nordmann", "ola.nordmann@gmail.com");
+        authenticationService.register(user);
+
+        UserLoginDTO authenticationRequest = new UserLoginDTO("ola.nordmann@gmail.com", "password");
+        String token = authenticationService.authenticate(authenticationRequest).token();
+
+        Resource testImageResource = new ClassPathResource("test-image.jpg");
+        MockMultipartFile testImageFile = new MockMultipartFile("picture",
+                "test-image.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                testImageResource.getInputStream());
+
+        long userId = userService.loadUserDTOByUsername("testUsername").userId();
+        fileStorageService.storeProfilePicture(Long.toString(userId), testImageFile);
+
+        // Act
+        MvcResult mvcResult = mockMvc.perform(get("/user/get/picture")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // Assert
+        byte[] response = mvcResult.getResponse().getContentAsByteArray();
+        assertArrayEquals(testImageFile.getBytes(), response);
+    }
+
+    @Test
     public void updateUserPassword() throws Exception {
         // Arrange
         UserRegisterDTO user = new UserRegisterDTO("testUsername", "password", "Ola", "Nordmann", "test@test.test");
         authenticationService.register(user);
 
+        UserLoginDTO authenticationRequest = new UserLoginDTO("test@test.test", "password");
+        String token = authenticationService.authenticate(authenticationRequest).token();
+
+        UserPasswordUpdateDTO userPasswordUpdate = new UserPasswordUpdateDTO("password", "newPassword");
+
+        // Act
+        mockMvc.perform(put("/user/update/password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)
+                        .content(objectMapper.writeValueAsString(userPasswordUpdate)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // Assert
+        UserLoginDTO authenticationRequest2 = new UserLoginDTO("test@test.test", "newPassword");
+
+        assertThrows(Exception.class, () -> authenticationService.authenticate(authenticationRequest));
+        assertDoesNotThrow(() -> authenticationService.authenticate(authenticationRequest2));
+    }
+
+    @Test
+    public void getUserInfo() throws Exception {
+        // Arrange
+        UserRegisterDTO user = new UserRegisterDTO("testUsername", "password", "Ola", "Nordmann", "test@test.test");
+        authenticationService.register(user);
+
+        UserLoginDTO authenticationRequest = new UserLoginDTO("test@test.test", "password");
+        String token = authenticationService.authenticate(authenticationRequest).token();
+
+        // Act
+        MvcResult mvcResult = mockMvc.perform(get("/user/get/info")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // Assert
+        UserLoadDTO userLoadDTO = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), UserLoadDTO.class);
+        assertEquals("testUsername", userLoadDTO.username());
+        assertEquals("Ola", userLoadDTO.firstName());
+        assertEquals("Nordmann", userLoadDTO.lastName());
+        assertEquals("test@test.test", userLoadDTO.email());
+    }
+
+    @Test
+    public void deletePicture() throws Exception {
+        // Arrange
+        UserRegisterDTO user = new UserRegisterDTO("testUsername", "password", "Ola", "Nordmann", "test@test.test");
+        authenticationService.register(user);
+
+        UserLoginDTO authenticationRequest = new UserLoginDTO("test@test.test", "password");
+        String token = authenticationService.authenticate(authenticationRequest).token();
+
+        Resource testImageResource = new ClassPathResource("test-image.jpg");
+        MockMultipartFile testImageFile = new MockMultipartFile("picture",
+                "test-image.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                testImageResource.getInputStream());
+
+        long userId = userService.loadUserDTOByUsername("testUsername").userId();
+        fileStorageService.storeProfilePicture(Long.toString(userId), testImageFile);
+
+        // Act
+        mockMvc.perform(delete("/user/delete/picture")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // Assert
+        assertThrows(ImageNotFoundException.class, () -> fileStorageService.getProfilePicture(userId));
     }
 }
