@@ -144,11 +144,11 @@ export default {
 
 .change-button {
   text-align: center;
-  margin-top: 1%;
   background-color: white;
   color: black;
-  height: 25px;
-  width: 100px;
+  height: 35px;
+  width: 20%;
+  margin-top: 0.5%;
   margin-right: 5%;
   text-shadow: white 0 0 0;
   font-weight: 500;
@@ -157,7 +157,6 @@ export default {
 
 .change-button:hover {
   color: white;
-  height: 25px;
   border-radius: 5px;
   background-color: #b1b1b1;
   transition: all 0.2s ease-in-out;
@@ -179,8 +178,9 @@ export default {
   }
 
   .change-button {
+    width: 20%;
     top: 20%;
-    width: 50px;
+    font-size: 0.7rem;
   }
 }
 
