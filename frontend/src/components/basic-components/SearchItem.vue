@@ -1,6 +1,6 @@
 <template>
     <div class="search-item">
-      <div class="item-info">
+      <div class="item-info" @click="$emit('click')">
         <img class="search-image" :src="image" />
         <div class="text">product: <br>{{ text }}</div>
         <div class="store">store: <br>{{ store }}</div>

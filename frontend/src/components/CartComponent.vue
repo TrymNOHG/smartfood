@@ -17,13 +17,13 @@
                 :store="item.store.name"
                 :price="item.price_history[0].price"
                 style="text-align: center"
+                @click="handleItemClick( item.name, item.store.name)"
               />
             </template>
           </vue-collapsible-panel>
         </vue-collapsible-panel-group>
       </div>
     </div>
-
     <div class="item">
       <div class="product-img">
         <img src="../assets/images/face.webp" alt="" style="width: 80px" />
@@ -44,12 +44,7 @@
           <img src="../assets/images/minus.svg" alt="" />
         </button>
 
-        <input
-          class="number-input"
-          type="number"
-          name="name"
-          v-model="itemAmount"
-        />
+        <input type="number" name="name" v-model="itemAmount" />
 
         <button class="plus-btn" type="button" name="button" @click="handleAdd">
           <img src="../assets/images/plus.svg" alt="" />
@@ -60,6 +55,22 @@
         <span class="delete-btn" @click="handleDeleteItem"></span>
       </div>
     </div>
+
+    <div class="cart-items">
+      <CartItem
+        v-for="(item, index) in searchItems"
+        :key="index"
+        :image="item.image"
+        :name="item.name"
+        :weight="item.weight"
+        :price="item.price"
+        :quantity="item.quantity"
+        @add="handleAddItem(index)"
+        @subtract="handleSubtractItem(index)"
+        @delete-item="handleDeleteItem(index)"
+      />
+    </div>
+   
   </div>
 </template>
 
@@ -76,6 +87,7 @@ import { getItems } from "../services/ApiService";
 import SearchItem from "../components/basic-components/SearchItem.vue";
 import BasicButton from "../components/basic-components/BasicButton.vue";
 import SearchInput from "../components/basic-components/SearchInput.vue";
+import CartItem from "@/components/basic-components/CartItem.vue";
 import { useLoggedInStore } from "@/store/store";
 import { ref } from "vue";
 export default {
@@ -87,6 +99,7 @@ export default {
     SearchInput,
     VueCollapsiblePanelGroup,
     VueCollapsiblePanel,
+    CartItem,
   },
   setup() {
     var itemAmount = ref(1);
@@ -108,11 +121,11 @@ export default {
       console.log(itemAmount.value);
     };
 
-    const handleDeleteItem = async () => {
+    const handleDeleteItem = async (item) => {
       const itemData = {
-        itemName: "Test",
-        store: "Test",
-        id: 100,
+        itemName: item.name,
+        store: item.store.name,
+        id: 1,
         quantity: itemAmount.value,
       };
       console.log(itemData);
@@ -183,6 +196,14 @@ export default {
         });
     };
 
+    //buy item from search
+    function handleItemClick(itemName, storeName ){
+      event.stopPropagation();
+
+
+      console.log("clicked me");
+    }
+
     function handleSearch() {
       console.log("clicked search");
       // filter the list of items based on the search query
@@ -210,6 +231,7 @@ export default {
       searchQuery, // search query entered by the user
       searchItems,
       handleSearch,
+      handleItemClick,
     };
   },
 };
