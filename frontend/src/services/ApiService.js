@@ -18,10 +18,6 @@ const BASE_API_URL = "https://kassal.app/api/v1";
     }
     });
     console.log(searchQuery)
-    console.log(searchQuery)
-    console.log(searchQuery)
-    
-    
     return (await response).data.data
     }
  

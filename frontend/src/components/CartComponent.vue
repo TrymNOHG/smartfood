@@ -2,7 +2,11 @@
   <div>
     <h1>Cart</h1>
     <div id="myDropdown" class="dropdown-content">
-      <SearchInput v-model="searchQuery" @input="handleSearch" label="Search product"></SearchInput>
+      <SearchInput
+        v-model="searchQuery"
+        @input="handleSearch"
+        label="Search product"
+      ></SearchInput>
       <button id="searchbtn" @click="handleSearch">Search</button>
       <div class="dropper">
         <vue-collapsible-panel-group accordion>
@@ -17,18 +21,17 @@
                 :store="item.store.name"
                 :price="item.price_history[0].price"
                 style="text-align: center"
-                @click="handleItemClick(item)"
+                @click="addItemToShoppingList(item)"
               />
             </template>
           </vue-collapsible-panel>
         </vue-collapsible-panel-group>
       </div>
     </div>
-    
 
     <div class="cart-items">
       <CartItem
-        v-for="(item, index) in searchItems"
+        v-for="(item, index) in items"
         :key="index"
         :image="item.image"
         :name="item.name"
@@ -40,7 +43,6 @@
         @delete-item="handleDeleteItem(index)"
       />
     </div>
-   
   </div>
 </template>
 
@@ -53,13 +55,14 @@ import "@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { deleteItemFromShoppingList } from "../services/ItemService";
 import { addItemToShoppingList } from "../services/ItemService";
+import { getItemsFromShoppingList } from "../services/ItemService";
 import { getItems } from "../services/ApiService";
 import SearchItem from "../components/basic-components/SearchItem.vue";
 import BasicButton from "../components/basic-components/BasicButton.vue";
 import SearchInput from "../components/basic-components/SearchInput.vue";
 import CartItem from "@/components/basic-components/CartItem.vue";
 import { useLoggedInStore } from "@/store/store";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 export default {
   name: "Cart",
   components: {
@@ -78,6 +81,24 @@ export default {
     const searchQuery = ref(""); // search query entered by the user
     const searchItems = ref([]);
     const store = useLoggedInStore();
+
+    onMounted(() => {
+      loadItemsFromCart();
+      setInterval(() => {
+        loadItemsFromCart();
+      }, 10000); // call the method every 10 seconds
+    });
+
+    const loadItemsFromCart = async () => {
+  try {
+    const response = await getItemsFromShoppingList(1); // replace with your API call to fetch the items from the backend
+    items.value = response.data;
+    console.log(response.data)
+  } catch (error) {
+    console.error(error);
+  }
+};
+
     const handleAdd = async () => {
       itemAmount.value += 1;
       console.log(itemAmount.value);
@@ -109,47 +130,6 @@ export default {
             setTimeout(() => {
               submitMessage.value = "";
             }, 3000);
-            await router.push("/");
-          } else {
-            console.log("Something went wrong");
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
-            setTimeout(() => {
-              submitMessage.value = "";
-            }, 3000);
-          }
-        })
-        .catch((error) => {
-          //submitMessage.value = error.response.data["Message:"];
-          //console.log(error.response.data);
-          console.warn("error1", error); //TODO: add exception handling
-        });
-    };
-
-    const handleAddItemToShoppingList = async () => {
-      const itemData = {
-        name: "Test",
-        description: "Test",
-        store: "Test",
-        price: 100,
-        purchaseDate: "2023-04-20",
-        expirationDate: "2023-04-20",
-        image:
-          "https://i.imgur.com/CVFCV3O_d.webp?maxwidth=520&shape=thumb&fidelity=high",
-        quantity: 3,
-      };
-      const itemId = 1;
-
-      addItemToShoppingList(itemData, itemId, false)
-        .then(async (response) => {
-          if (response !== undefined) {
-            store.setSessionToken(response.data.token);
-            await store.fetchUser();
-            submitMessage.value = "Succesful request";
-            setTimeout(() => {
-              submitMessage.value = "";
-            }, 3000);
-            await router.push("/");
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -167,18 +147,17 @@ export default {
     };
 
     //buy item from search
-    function handleItemClick(item){
+    function addItemToShoppingList(item) {
       console.log(item.name + " " + item.store.name);
-      
+
       const itemData = {
         name: item.name,
         description: item.description,
         store: item.store.name,
         price: item.price_history[0].price,
-        purchaseDate: new Date(),
+        purchaseDate: "2023-04-20",
         expirationDate: "2023-04-20",
-        image:
-          item.image,
+        image: item.image,
         quantity: 1,
       };
       const fridgeId = 1;
@@ -186,13 +165,10 @@ export default {
       addItemToShoppingList(itemData, fridgeId, false)
         .then(async (response) => {
           if (response !== undefined) {
-            store.setSessionToken(response.data.token);
-            await store.fetchUser();
             submitMessage.value = "Succesful request";
             setTimeout(() => {
               submitMessage.value = "";
             }, 3000);
-            await router.push("/");
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -207,8 +183,7 @@ export default {
           //console.log(error.response.data);
           console.warn("error1", error); //TODO: add exception handling
         });
-        event.stopPropagation();
-    
+      event.stopPropagation();
     }
 
     function handleSearch() {
@@ -238,7 +213,8 @@ export default {
       searchQuery, // search query entered by the user
       searchItems,
       handleSearch,
-      handleItemClick,
+      addItemToShoppingList,
+      loadItemsFromCart,
     };
   },
 };
@@ -262,13 +238,12 @@ input[type="number"] {
   color: white;
   margin: auto;
   margin-bottom: 20px;
-
 }
 
-.vcpg{
-  --bg-color-header: #6C6C6C !important;
-  --bg-color-header-hover: #6C6C6C !important;
-  --bg-color-header-active: #6C6C6C !important;
+.vcpg {
+  --bg-color-header: #6c6c6c !important;
+  --bg-color-header-hover: #6c6c6c !important;
+  --bg-color-header-active: #6c6c6c !important;
   border-radius: 10px 10px 10px 10px;
 }
 #searchbtn {
@@ -276,7 +251,7 @@ input[type="number"] {
   padding: 0px 10px;
   margin-top: 10px;
   color: #fff;
-  background: #6C6C6C;
+  background: #6c6c6c;
   font-size: 27px;
   font-weight: 500;
   border: 3px solid #555;
@@ -499,10 +474,10 @@ input:focus {
     height: 80px;
   }
 
-  .item{
+  .item {
     width: 98vw;
   }
-  .dropper{
+  .dropper {
     width: 97vw;
   }
 
@@ -585,10 +560,10 @@ input:focus {
     margin-right: 0;
   }
 
-  .dropper{
+  .dropper {
     width: 100vw;
   }
-  .item{
+  .item {
     width: 100vw;
   }
   .quantity {
@@ -607,7 +582,7 @@ input:focus {
 }
 
 @media only screen and (max-width: 350px) {
-  .item{
+  .item {
     width: 100vw;
   }
   .buttons {
@@ -615,7 +590,7 @@ input:focus {
     margin-top: -20px;
     margin-right: 0;
   }
-  .dropper{
+  .dropper {
     width: 100vw;
   }
   .quantity {
