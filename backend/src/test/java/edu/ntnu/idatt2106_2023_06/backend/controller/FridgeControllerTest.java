@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106_2023_06.backend.controller.integration;
+package edu.ntnu.idatt2106_2023_06.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeUserDTO;
@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class FridgeControllerIntegrationTest {
+public class FridgeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

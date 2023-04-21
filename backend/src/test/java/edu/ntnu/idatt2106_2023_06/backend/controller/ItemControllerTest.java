@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106_2023_06.backend.controller.unit;
+package edu.ntnu.idatt2106_2023_06.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.controller.ItemController;
