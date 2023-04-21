@@ -230,16 +230,24 @@ input[type="number"] {
 }
 .dropper {
   width: 70%;
+  color: white;
   margin: auto;
   margin-bottom: 20px;
-  border: #218838;
+
+}
+
+.vcpg{
+  --bg-color-header: #6C6C6C !important;
+  --bg-color-header-hover: #6C6C6C !important;
+  --bg-color-header-active: #6C6C6C !important;
+  border-radius: 10px 10px 10px 10px;
 }
 #searchbtn {
   border: 0;
   padding: 0px 10px;
   margin-top: 10px;
   color: #fff;
-  background: #31c48d;
+  background: #6C6C6C;
   font-size: 27px;
   font-weight: 500;
   border: 3px solid #555;

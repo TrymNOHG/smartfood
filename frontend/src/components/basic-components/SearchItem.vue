@@ -44,6 +44,7 @@ export default {
   align-items: center;  
   justify-content: center;
   padding: 15px;
+  color: #444444 !important;
 }
 
 .item-info {
@@ -69,6 +70,7 @@ export default {
 .search-item .text {
   flex: 1;
   font-weight: bold;
+  
 }
 
 .search-item .price {
