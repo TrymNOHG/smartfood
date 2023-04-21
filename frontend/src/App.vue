@@ -1,6 +1,6 @@
 <template>
   <header>
-    <img src="@/assets/smartmat.png" alt="Logo">
+    <img src="@/assets/images/smartmat.png" alt="Logo">
     <h1>{{ $t('matsmart') }}</h1>
     <nav>
       <ul>
