@@ -21,7 +21,7 @@
                 :store="item.store.name"
                 :price="item.price_history[0].price"
                 style="text-align: center"
-                @click="handleItemClick(item)"
+                @click="addItemToShoppingList(item)"
               />
             </template>
           </vue-collapsible-panel>
@@ -55,6 +55,7 @@ import "@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { deleteItemFromShoppingList } from "../services/ItemService";
 import { addItemToShoppingList } from "../services/ItemService";
+import { getItemsFromShoppingList } from "../services/ItemService";
 import { getItems } from "../services/ApiService";
 import SearchItem from "../components/basic-components/SearchItem.vue";
 import BasicButton from "../components/basic-components/BasicButton.vue";
@@ -90,8 +91,9 @@ export default {
 
     const loadItemsFromCart = async () => {
   try {
-    const response = await getItems(); // replace with your API call to fetch the items from the backend
+    const response = await getItemsFromShoppingList(1); // replace with your API call to fetch the items from the backend
     items.value = response.data;
+    console.log(response.data)
   } catch (error) {
     console.error(error);
   }
@@ -144,45 +146,8 @@ export default {
         });
     };
 
-    const handleAddItemToShoppingList = async () => {
-      const itemData = {
-        name: "Test",
-        description: "Test",
-        store: "Test",
-        price: 100,
-        purchaseDate: "2023-04-20",
-        expirationDate: "2023-04-20",
-        image:
-          "https://i.imgur.com/CVFCV3O_d.webp?maxwidth=520&shape=thumb&fidelity=high",
-        quantity: 3,
-      };
-      const itemId = 1;
-
-      addItemToShoppingList(itemData, itemId, false)
-        .then(async (response) => {
-          if (response !== undefined) {
-            submitMessage.value = "Succesful request";
-            setTimeout(() => {
-              submitMessage.value = "";
-            }, 3000);
-          } else {
-            console.log("Something went wrong");
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
-            setTimeout(() => {
-              submitMessage.value = "";
-            }, 3000);
-          }
-        })
-        .catch((error) => {
-          //submitMessage.value = error.response.data["Message:"];
-          //console.log(error.response.data);
-          console.warn("error1", error); //TODO: add exception handling
-        });
-    };
-
     //buy item from search
-    function handleItemClick(item) {
+    function addItemToShoppingList(item) {
       console.log(item.name + " " + item.store.name);
 
       const itemData = {
@@ -248,7 +213,7 @@ export default {
       searchQuery, // search query entered by the user
       searchItems,
       handleSearch,
-      handleItemClick,
+      addItemToShoppingList,
       loadItemsFromCart,
     };
   },
