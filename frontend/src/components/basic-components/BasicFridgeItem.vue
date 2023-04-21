@@ -76,7 +76,7 @@ img {
 
 .card {
   position: absolute;
-  border: black 4px solid;
+  border: 4px solid;
   border-radius: 23px;
   text-align: center;
   width: 325px;
@@ -113,8 +113,6 @@ img {
   border-radius: 20px;
   position: absolute;
   text-align: center;
-  top: 0;
-  left: 0;
   opacity: 60%;
   width: 100%;
   height: 100%;
@@ -127,14 +125,20 @@ img {
 
 @media (max-width: 800px) {
   .card {
-    border-radius: 0;
+    border-radius: 20px;
+    border: 2px solid;
     box-shadow: none;
-    height: auto;
     position: static;
     width: 100%;;
   }
   .front-side {
     display: block;
+  }
+  img{
+    border-radius: 0;
+    right: 40%;
+    width: 50px;
+    height: 50px;
   }
   .back-side {
     display: none;
