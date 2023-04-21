@@ -53,7 +53,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                                 authorize.requestMatchers("/home", "/login", "/user/register", "/about", "/swagger/**", "/docs/**", "/swagger-ui/**", "/user/load/{username}", "/fridge/loadAll", "/fridge/loadAllId")
                                         .permitAll()
-                                        .requestMatchers("/user/**", "/auth/**", "/admin/**", "/listing/user/**", "/fridge/**")
+                                        .requestMatchers("/user/**", "/auth/**", "/admin/**", "/listing/user/**", "/fridge/**", "/item/**")
                                         .permitAll().anyRequest().authenticated()
 //                        .requestMatchers("/user/**", "/auth/**")
 //                            .hasAnyRole( "USER", "ADMIN") //TODO: is authenticated applied?

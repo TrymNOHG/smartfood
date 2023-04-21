@@ -2,7 +2,11 @@
   <div>
     <h1>Cart</h1>
     <div id="myDropdown" class="dropdown-content">
-      <SearchInput v-model="searchQuery" @input="handleSearch" label="Search product"></SearchInput>
+      <SearchInput
+        v-model="searchQuery"
+        @input="handleSearch"
+        label="Search product"
+      ></SearchInput>
       <button id="searchbtn" @click="handleSearch">Search</button>
       <div class="dropper">
         <vue-collapsible-panel-group accordion>
@@ -24,7 +28,6 @@
         </vue-collapsible-panel-group>
       </div>
     </div>
-    
 
     <div class="cart-items">
       <CartItem
@@ -40,7 +43,6 @@
         @delete-item="handleDeleteItem(index)"
       />
     </div>
-   
   </div>
 </template>
 
@@ -109,7 +111,6 @@ export default {
             setTimeout(() => {
               submitMessage.value = "";
             }, 3000);
-            await router.push("/");
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -149,7 +150,6 @@ export default {
             setTimeout(() => {
               submitMessage.value = "";
             }, 3000);
-            await router.push("/");
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -167,10 +167,11 @@ export default {
     };
 
     //buy item from search
-    function handleItemClick(item){
+    function handleItemClick(item) {
       console.log(item.name + " " + item.store.name);
-      
+
       const itemData = {
+        /**
         name: item.name,
         description: item.description,
         store: item.store.name,
@@ -180,6 +181,16 @@ export default {
         image:
           item.image,
         quantity: 1,
+         */
+        name: "Test Item",
+        description: "This is a test item",
+        store: "Test Store",
+        price: 10.0,
+        purchaseDate: "2022-05-01T00:00:00.000Z",
+        expirationDate: "2022-06-01T00:00:00.000Z",
+        image:
+          "https://i.imgur.com/CVFCV3O_d.webp?maxwidth=520&shape=thumb&fidelity=high",
+        quantity: 2,
       };
       const fridgeId = 1;
 
@@ -192,7 +203,6 @@ export default {
             setTimeout(() => {
               submitMessage.value = "";
             }, 3000);
-            await router.push("/");
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -207,8 +217,7 @@ export default {
           //console.log(error.response.data);
           console.warn("error1", error); //TODO: add exception handling
         });
-        event.stopPropagation();
-    
+      event.stopPropagation();
     }
 
     function handleSearch() {
@@ -262,13 +271,12 @@ input[type="number"] {
   color: white;
   margin: auto;
   margin-bottom: 20px;
-
 }
 
-.vcpg{
-  --bg-color-header: #6C6C6C !important;
-  --bg-color-header-hover: #6C6C6C !important;
-  --bg-color-header-active: #6C6C6C !important;
+.vcpg {
+  --bg-color-header: #6c6c6c !important;
+  --bg-color-header-hover: #6c6c6c !important;
+  --bg-color-header-active: #6c6c6c !important;
   border-radius: 10px 10px 10px 10px;
 }
 #searchbtn {
@@ -276,7 +284,7 @@ input[type="number"] {
   padding: 0px 10px;
   margin-top: 10px;
   color: #fff;
-  background: #6C6C6C;
+  background: #6c6c6c;
   font-size: 27px;
   font-weight: 500;
   border: 3px solid #555;
@@ -499,10 +507,10 @@ input:focus {
     height: 80px;
   }
 
-  .item{
+  .item {
     width: 98vw;
   }
-  .dropper{
+  .dropper {
     width: 97vw;
   }
 
@@ -585,10 +593,10 @@ input:focus {
     margin-right: 0;
   }
 
-  .dropper{
+  .dropper {
     width: 100vw;
   }
-  .item{
+  .item {
     width: 100vw;
   }
   .quantity {
@@ -607,7 +615,7 @@ input:focus {
 }
 
 @media only screen and (max-width: 350px) {
-  .item{
+  .item {
     width: 100vw;
   }
   .buttons {
@@ -615,7 +623,7 @@ input:focus {
     margin-top: -20px;
     margin-right: 0;
   }
-  .dropper{
+  .dropper {
     width: 100vw;
   }
   .quantity {
