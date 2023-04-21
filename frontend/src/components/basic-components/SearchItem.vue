@@ -33,6 +33,12 @@ export default {
 </script>
 
 <style>
+.item-info:hover {
+  box-shadow: 0 0 5px #ccc;
+  transform: scale(1.02);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 .cart-icon{
     margin-left: 5%;
     margin-top: 20px;
