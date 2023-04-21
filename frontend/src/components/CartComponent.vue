@@ -19,9 +19,9 @@
                 :image="item.image"
                 :text="item.name"
                 :store="item.store.name"
-                :price="item.price_history[0].price"
+                :price="item.current_price"
                 style="text-align: center"
-                @click="addItemToShoppingList(item)"
+                @click="addItemToList(item)"
               />
             </template>
           </vue-collapsible-panel>
@@ -38,9 +38,9 @@
         :weight="item.weight"
         :price="item.price"
         :quantity="item.quantity"
-        @add="handleAddItem(index)"
-        @subtract="handleSubtractItem(index)"
-        @delete-item="handleDeleteItem(index)"
+        @add="handleAddItem(item)"
+        @subtract="handleSubtractItem(item)"
+        @delete-item="handleDeleteItem(item)"
       />
     </div>
   </div>
@@ -113,15 +113,15 @@ export default {
     };
 
     const handleDeleteItem = async (item) => {
-      const itemData = {
+      const ItemRemoveDTO = {
         itemName: item.name,
-        store: item.store.name,
-        id: 1,
-        quantity: itemAmount.value,
+        store: item.store,
+        fridgeId: 1,
+        quantity: item.quantity,
       };
-      console.log(itemData);
+      console.log(ItemRemoveDTO);
 
-      deleteItemFromShoppingList(itemData, false)
+      deleteItemFromShoppingList(ItemRemoveDTO, false)
         .then(async (response) => {
           if (response !== undefined) {
             store.setSessionToken(response.data.token);
@@ -147,7 +147,7 @@ export default {
     };
 
     //buy item from search
-    function addItemToShoppingList(item) {
+    function addItemToList(item) {
       console.log(item.name + " " + item.store.name);
 
       const itemData = {
@@ -213,7 +213,7 @@ export default {
       searchQuery, // search query entered by the user
       searchItems,
       handleSearch,
-      addItemToShoppingList,
+      addItemToList,
       loadItemsFromCart,
     };
   },
