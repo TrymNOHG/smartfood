@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106_2023_06.backend.controller;
+package edu.ntnu.idatt2106_2023_06.backend.controller.unit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
