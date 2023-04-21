@@ -2,7 +2,7 @@
   <div>
     <h1>Cart</h1>
     <div id="myDropdown" class="dropdown-content">
-      <SearchInput v-model="searchQuery" label="Search product"></SearchInput>
+      <SearchInput v-model="searchQuery" @input="handleSearch" label="Search product"></SearchInput>
       <button id="searchbtn" @click="handleSearch">Search</button>
       <div class="dropper">
         <vue-collapsible-panel-group accordion>
