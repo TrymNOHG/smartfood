@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106_2023_06.backend.security;
+package edu.ntnu.idatt2106_2023_06.backend.config;
 
 import edu.ntnu.idatt2106_2023_06.backend.repo.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
@@ -13,11 +13,16 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @RequiredArgsConstructor
 @Profile("!test")
-public class DatabaseConfiguration {
+public class DatabaseConfig {
 
     private final UserRepository userRepository;
     private final FridgeRepository fridgeRepository;
 
+    /**
+     * This method initializes the database triggers. The first of which is used to respond to a user being deleted.
+     * When a user is deleted, the corresponding FridgeMember is also deleted and ultimately, the fridge if possible.
+     * The second trigger deletes a fridge if the last superuser is deleted.
+     */
     @PostConstruct
     public void init() {
         userRepository.dropTrigger();

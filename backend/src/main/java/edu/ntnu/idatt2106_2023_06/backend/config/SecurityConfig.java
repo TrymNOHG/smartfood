@@ -1,5 +1,6 @@
-package edu.ntnu.idatt2106_2023_06.backend.security;
+package edu.ntnu.idatt2106_2023_06.backend.config;
 
+import edu.ntnu.idatt2106_2023_06.backend.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
