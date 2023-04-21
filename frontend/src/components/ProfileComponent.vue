@@ -19,9 +19,9 @@
         <p><strong>{{ $t("name") }}:</strong> {{ profileData.firstName + " " + profileData.lastName}}</p>
         <p><strong>{{ $t("username") }}:</strong> {{ profileData.username }}</p>
         <p><strong>{{ $t("email") }}:</strong> {{ profileData.email }}</p>
-        <BasicButton buttonText="Edit" @click="isEditing = true" />
-        <BasicButton buttonText="Change Password" @click="isChangingPassword = true" />
-        <BasicButton buttonText="Logout" @click="logout" />
+        <button class="basic-button" @click="isEditing = true">{{ $t('edit') }}</button>
+        <button class="basic-button" @click="isChangingPassword = true">{{ $t('changePassword') }}</button>
+        <button class="basic-button" @click="logout">{{ $t('logout') }}</button>
       </div>
       <form v-else-if="isEditing" @submit.prevent="updateUserProfile" :class="{ 'has-errors': hasErrors }">        <div class="input-box">
           <label for="firstName">{{ $t("first_name") }}</label>
@@ -73,8 +73,8 @@
           /></span>
         </div>
         <div class="button-container">
-          <BasicButton buttonText="Save Changes" type="submit" />
-          <BasicButton buttonText="Cancel" type="button" @click="isEditing = false" />
+          <button class="basic-button" type="submit">{{ $t('save_changes') }}</button>
+          <button class="basic-button" type="button" @click="isEditing = false">{{ $t('cancel') }}</button>
         </div>
       </form>
       <form v-else-if="isChangingPassword" @submit.prevent="updatePassword" :class="{ 'has-errors': hasErrors }">
@@ -95,8 +95,8 @@
           <span class="icon"><font-awesome-icon icon="fa-solid fa-lock"/></span>
         </div>
         <div class="button-container">
-          <BasicButton buttonText="Save Changes" type="submit" @click="updatePassword"/>
-          <BasicButton buttonText="Cancel" type="button" @click="isChangingPassword = false" />
+          <button class="basic-button" type="submit" @click="updatePassword">{{ $t('save_changes') }}</button>
+          <button class="basic-button" type="button" @click="isChangingPassword = false">{{ $t('cancel') }}</button>
         </div>
       </form>
     </div>
@@ -365,6 +365,17 @@
     display: flex;
     justify-content: space-between;
     gap: 0.5rem;
+  }
+
+  button {
+    width: 100%;
+    height: 40px;
+    background: #181818;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
   }
 
   @media (max-width: 768px) {
