@@ -8,6 +8,8 @@ import CartView from "@/views/CartView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import StatisticsView from "@/views/StatisticsView.vue";
 import FridgeView from "@/views/FridgeView.vue";
+import { useLoggedInStore } from '@/store/store';
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,42 +17,45 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      meta: { requiresAuth: false }
     },
     {
       path: '/login',
       name: 'login',
-      component: LoginView
+      component: LoginView,
+      meta: { requiresAuth: false }
     },
     {
       path: '/register',
       name: 'register',
-      component: RegisterView
+      component: RegisterView,
+      meta: { requiresAuth: false }
     },
     {
       path: '/dinner',
       name: 'dinner',
-      component: DinnerView
+      component: DinnerView,
     },
     {
       path: '/fridges',
       name: 'fridges',
-      component: FridgesView
+      component: FridgesView,
     },
     {
       path: '/cart',
       name: 'cart',
-      component: CartView
+      component: CartView,
     },
     {
       path: '/statistics',
       name: 'statistics',
-      component: StatisticsView
+      component: StatisticsView,
     },
     {
       path: '/profile',
       name: 'profile',
-      component: ProfileView 
+      component: ProfileView,
     },
     {
       path: '/fridges/:name/fridge?id=:id',
@@ -60,5 +65,30 @@ const router = createRouter({
 
   ]
 })
+
+
+
+
+router.beforeEach((to, from, next) => {
+  const userStore = useLoggedInStore();
+  const isAuthenticated = userStore.isLoggedIn;
+
+  const notRequiresAuth = to.matched.some(record => record.meta.requiresAuth === false);
+
+
+  if (notRequiresAuth) {
+    if (['/', '/register', '/login'].includes(to.path) && isAuthenticated) {
+      next({ path: '/fridges' });
+    } else {
+      next();
+    }
+  } else {
+    if (!isAuthenticated) {
+      next({ path: '/' });
+    } else {
+      next();
+    }
+  }
+});
 
 export default router
