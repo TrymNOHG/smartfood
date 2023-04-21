@@ -685,7 +685,6 @@ public class FridgeServiceIntegrationTest {
 
     }
 
-    @Nested
     @SpringBootTest
     @Nested
     class A_Fridge_Member_cannot_be {

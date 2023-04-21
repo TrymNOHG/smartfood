@@ -2,6 +2,7 @@ package edu.ntnu.idatt2106_2023_06.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.security.AuthenticationResponseDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoginDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserRegisterDTO;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.AuthenticationService;
 import edu.ntnu.idatt2106_2023_06.backend.service.users.UserService;
@@ -60,11 +61,103 @@ public class UserControllerTest {
     @Autowired
     private AuthenticationService authenticationService;
 
+    @Test
+    public void registerNewUser() throws Exception {
+        // Arrange
+        UserRegisterDTO user = new UserRegisterDTO("username", "password", "Ole", "Brumm", "ole.brumm@gmail.com");
 
-    /*@Test
+        // Act
+        MvcResult mvcResult = mockMvc.perform(post("/user/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // Assert
+        String response = mvcResult.getResponse().getContentAsString();
+        AuthenticationResponseDTO authenticationResponse = objectMapper.readValue(response, AuthenticationResponseDTO.class);
+        assertNotNull(authenticationResponse.token());
+    }
+
+    @Test
     public void registerNewUserWithExistingUsername() throws Exception {
         // Arrange
-        UserRegisterDTO user = new UserRegisterDTO("testUsername", "password", "Ola", "Norman", "ola.norman@gmail.com");
+        UserRegisterDTO user1 = new UserRegisterDTO("testUsername", "password", "Ola", "Norman", "ola.norman@gmail.com");
+        UserRegisterDTO user2 = new UserRegisterDTO("testUsername", "password", "Geir", "Smith", "geir@gmail.com");
+
+        // Act
+        MvcResult mvcResult = mockMvc.perform(post("/user/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user1)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MvcResult mvcResult2 = mockMvc.perform(post("/user/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user2)))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        // Assert
+        String response1 = mvcResult.getResponse().getContentAsString();
+        AuthenticationResponseDTO authenticationResponse1 = objectMapper.readValue(response1, AuthenticationResponseDTO.class);
+        assertNotNull(authenticationResponse1.token());
+
+        String response2 = mvcResult2.getResponse().getContentAsString();
+        assertTrue(response2.contains("Time of error: "));
+    }
+
+    @Test
+    public void registerNewUserWithExistingEmail() throws Exception {
+        // Arrange
+        UserRegisterDTO user1 = new UserRegisterDTO("testUsername1", "password", "Ola", "Norman", "geir@gmail.com");
+        UserRegisterDTO user2 = new UserRegisterDTO("testUsername2", "password", "Geir", "Smith", "geir@gmail.com");
+
+        // Act
+        MvcResult mvcResult = mockMvc.perform(post("/user/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user1)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MvcResult mvcResult2 = mockMvc.perform(post("/user/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user2)))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        // Assert
+        String response1 = mvcResult.getResponse().getContentAsString();
+        AuthenticationResponseDTO authenticationResponse1 = objectMapper.readValue(response1, AuthenticationResponseDTO.class);
+        assertNotNull(authenticationResponse1.token());
+
+        String response2 = mvcResult2.getResponse().getContentAsString();
+        assertTrue(response2.contains("Time of error: "));
+    }
+
+    @Test
+    public void userLogin() throws Exception {
+        // Arrange
+        UserRegisterDTO user = new UserRegisterDTO("testUsername1", "password", "Ola", "Norman", "geir@gmail.com");
         authenticationService.register(user);
-*/
+
+        UserLoginDTO authenticationRequest = new UserLoginDTO("geir@gmail.com", "password");
+
+        // Act
+        MvcResult mvcResult = mockMvc.perform(post("/user/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(authenticationRequest)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // Assert
+        String response = mvcResult.getResponse().getContentAsString();
+        AuthenticationResponseDTO authenticationResponse = objectMapper.readValue(response, AuthenticationResponseDTO.class);
+        assertNotNull(authenticationResponse.token());
+    }
+
+    @Test
+    
+
+
 }
