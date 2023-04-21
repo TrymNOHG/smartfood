@@ -220,7 +220,7 @@
 
       const logout = () => {
         userStore.logout();
-        router.push('/login');
+        router.push('/');
       };
 
 

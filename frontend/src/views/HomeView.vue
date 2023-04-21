@@ -1,7 +1,11 @@
 <script setup>
+import WelcomeComponent from "../components/WelcomeComponent.vue";
+
+
 </script>
 
 <template>
-  <main>
-  </main>
+  <div>
+    <welcome-component/>
+  </div>
 </template>

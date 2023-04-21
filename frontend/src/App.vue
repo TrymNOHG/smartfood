@@ -1,9 +1,9 @@
 <template>
-  <header>
+  <header v-if="!isOnRootPage">
     <img src="@/assets/smartmat.png" alt="Logo">
-    <h1>{{ $t('matsmart') }}</h1>
+    <h1 class="matprat-title" :class="{ 'centered': isOnAuthPage }">{{ $t('matsmart') }}</h1>
     <nav>
-      <ul>
+      <ul v-if="!isOnAuthPage">
         <li>
           <RouterLink to="/dinner">
             <span class="icon">
@@ -44,8 +44,8 @@
             <span class="text">{{ $t('profile') }}</span>
           </RouterLink>
         </li>
-        <div class="language" @click="changeLanguage()">{{language}}</div>
       </ul>
+      <div class="language" @click="changeLanguage()">{{language}}</div>
     </nav>
   </header>
   <RouterView/>
@@ -53,31 +53,44 @@
 
 
 <script>
-import {computed} from "vue";
+import {computed, ref} from "vue";
+import {useRoute} from "vue-router";
 import i18n from "@/locales/i18n";
 
 export default {
-  data() {
-    return {
-      language: "NO",
-    }
-  },
+  setup() {
+    const route = useRoute();
 
-  methods: {
-    changeLanguage() {
-      if (this.language === "NO") {
-        this.language = "EN";
-        i18n.global.locale = "en"
+    const isOnRootPage = computed(() => {
+      return route.path === "/";
+    });
+
+    const isOnAuthPage = computed(() => {
+      return route.path === "/register" || route.path === "/login";
+    });
+
+
+    const changeLanguage = () => {
+      if (language.value === "NO") {
+        language.value = "EN";
+        i18n.global.locale = "en";
       } else {
-        i18n.global.locale = "no"
-        this.language = "NO"
+        i18n.global.locale = "no";
+        language.value = "NO";
       }
-    }
-  }
-}
+    };
+
+    const language = ref("NO");
+
+    return {
+      isOnAuthPage,
+      language,
+      changeLanguage,
+      isOnRootPage,
+    };
+  },
+};
 </script>
-
-
 
 <style scoped>
 * {
@@ -119,11 +132,21 @@ h1 {
   letter-spacing: 3px;
 }
 
+.matprat-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.matprat-title.centered {
+  left: 50%;
+}
+
 nav {
   display: flex;
   align-items: center;
   max-width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 nav ul {
@@ -188,9 +211,7 @@ nav ul li:hover a .text {
   }
 
   header img {
-    height: 40px;
-    margin-right: 0;
-    margin-bottom: 10px;
+    display: none;
   }
 
   h1 {
@@ -273,3 +294,5 @@ nav ul li:hover a .text {
 
 }
 </style>
+
+

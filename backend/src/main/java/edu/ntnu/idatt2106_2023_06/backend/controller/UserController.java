@@ -173,6 +173,25 @@ public class UserController {
     }
 
     /**
+     * Retrieves the user's profile picture from ID.
+     *
+     * @return ResponseEntity containing the user's profile picture as a byte array.
+     */
+    @GetMapping("/get/picture/{id}")
+    @Operation(summary = "Get user profile picture from ID")
+    @ApiResponse(responseCode = "200", description = "User profile picture retrieved successfully.", content = @Content(
+            mediaType = "image/jpeg",
+            schema = @Schema(implementation = byte[].class)))
+    public ResponseEntity<Object> getPictureFromId(@PathVariable Long id) {
+        logger.info(String.format("Getting the profile picture of user with ID %d!", id));
+        byte[] file = fileStorageService.getProfilePicture(id);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+jwtService.getAuthenticatedUserId()+"\"")
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(file);
+    }
+
+    /**
      * Retrieves the user's text information.
      *
      * @param authentication The authentication object containing the user's authentication details.

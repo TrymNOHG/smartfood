@@ -69,8 +69,7 @@
         <div class="login-register">
           <p>
             {{ $t("already_have_account") }}
-            <a href="/login" class="register-link">{{ $t("login") }}</a>
-          </p>
+            <router-link to="/login" class="register-link">{{ $t("login") }}</router-link>          </p>
         </div>
       </form>
       
@@ -85,9 +84,13 @@ import { registerUser } from "@/services/UserService";
 import {ref} from "vue";
 import {useLoggedInStore} from "@/store/store";
 import router from "@/router/router";
+import { RouterLink } from 'vue-router'
 
 export default {
   name: "RegisterComponent",
+  components: {
+    RouterLink
+  },
   setup() {
     const store = useLoggedInStore();
     const submitMessage = ref('');
@@ -140,7 +143,7 @@ export default {
             setTimeout(() => {
               submitMessage.value = "";
             }, 3000);
-            await router.push("/");
+            await router.push("/fridges");
           } else {
             console.log('Something went wrong registering')
             submitMessage.value =
@@ -153,7 +156,6 @@ export default {
         .catch((error) => {
           submitMessage.value = error.response.data["Message:"]
           console.log(error.response.data);
-          alert(error.response.data["Message"]); //TODO: format!!!!
           console.warn("error1", error); //TODO: add exception handling
         });
     });
