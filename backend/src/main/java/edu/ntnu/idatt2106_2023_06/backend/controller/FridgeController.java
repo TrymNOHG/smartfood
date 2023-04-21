@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.controller;
 
-import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeLoadAllDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeUserDTO;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,7 +63,6 @@ public class FridgeController {
                                                        Authentication authentication){
         logger.info("User wants to delete the user, " + fridgeUserDTO.username() + ", from the fridge");
         fridgeService.deleteUserFromFridge(fridgeUserDTO, authentication.getName());
-        logger.info("User " + fridgeUserDTO.username() + " is no longer in the fridge with id: " + fridgeUserDTO.fridgeId() +"!");
         return ResponseEntity.ok().build();
     }
 
@@ -98,14 +98,47 @@ public class FridgeController {
     /**
      * This endpoint retrieves all the fridges for a given user.
      * @param username  The username of the user, given as a String.
-     * @return          Response entity containing a FridgeLoadDTO.
+     * @return          Response entity containing a FridgeDTO.
      */
     @GetMapping(value = "/loadAll")
     @Operation(summary = "Load all fridge ids for a given user.")
-    public ResponseEntity<FridgeLoadDTO> loadFridgesByUser(@ParameterObject @RequestParam(name = "user") String username) {
-        FridgeLoadDTO fridgeLoadDTO = fridgeService.retrieveFridgesByUsername(username);
+    public ResponseEntity<FridgeLoadAllDTO> loadFridgesByUser(@ParameterObject @RequestParam(name = "user") String username) {
+        FridgeLoadAllDTO fridgeLoadDTO = fridgeService.retrieveFridgesByUsername(username);
         logger.info("All of the fridge ids for " + username + " have been retrieved.");
         return ResponseEntity.ok(fridgeLoadDTO);
+    }
+
+    /**
+     * This endpoint allows an authenticated user to create a new fridge.
+     * @param fridgeName        Name of the fridge, given as a String.
+     * @param authentication    The authentication of the HTTP Request sender, given as an Authentication object.
+     * @return                  Response entity containing the HTTP status.
+     */
+    @PostMapping(value = "/create")
+    @Operation(summary = "Load all fridge ids for a given user.")
+    public ResponseEntity<Object> createFridge(@ParameterObject @RequestParam(name = "fridgeName") String fridgeName,
+                                               Authentication authentication) {
+
+        logger.info("Attempting to create fridge for user " + authentication.getName());
+        fridgeService.createFridge(fridgeName, authentication.getName());
+        logger.info("Fridge and fridge member was successfully created!");
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * This endpoint serves to update the fridge name.
+     *
+     * @param fridgeDTO         New name of the fridge, given as String.
+     * @param authentication    The Authentication object of the user making the request.
+     * @return                  A ResponseEntity indicating whether the operation was successful.
+     */
+    @PutMapping(value="/update")
+    @Operation(summary = "Update fridge name")
+    public ResponseEntity<Object> updateFridgeName(@ParameterObject @RequestBody FridgeDTO fridgeDTO,
+                                                   Authentication authentication){
+        logger.info("User, " + authentication.getName() + " wants to update the fridge name");
+        fridgeService.updateFridgeName(fridgeDTO, authentication.getName());
+        return ResponseEntity.ok().build();
     }
 
 }

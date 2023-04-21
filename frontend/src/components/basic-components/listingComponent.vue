@@ -1,9 +1,9 @@
 <template>
   <div class="list">
-    <router-link v-for="(item, index) in items" :key="index" :to="{name: 'fridgeView', params: {id: item.fridgeID, name: item.fridgeName.toString()}}" class="link">
+    <router-link v-for="(fridge, index) in fridgeList" :key="index" :to="{name: 'fridgeView', params: {id: fridge.fridgeId.toString(), name: fridge.fridgeName}}" class="link">
       <div class="item">
-        <span v-if="!isEditing[index]" class="item-text">{{ item.fridgeName }}</span>
-        <input v-else type="text" v-model="editedItems[index].fridgeName" @keyup.enter="confirmEdit(index)" class="edit-input" @click.prevent />
+        <span v-if="!isEditing[index]" class="item-text">{{ fridge.fridgeName }}</span>
+        <input v-else type="text" v-model="editingFridge.fridgeName" @keyup.enter="confirmEdit(index)" class="edit-input" @click.prevent />
         <div class="icons" @click.prevent>
           <font-awesome-icon v-if="!isEditing[index]" icon="fa-solid fa-pen-to-square" @click="onEditClick(index)" class="icon edit-conf-icon" />
           <font-awesome-icon v-else icon="fa-solid fa-circle-check" @click="confirmEdit(index)" class="icon edit-conf-icon conf"/>
@@ -26,30 +26,38 @@ export default {
   name: "List",
   components: { FontAwesomeIcon },
   props: {
-    items: {
+    fridgeList: {
       type: Array,
       required: true,
     },
   },
   data() {
-    return {
-      isEditing: new Array(this.items.length).fill(false),
-      editedItems: [...this.items],
-    };
+    return{
+      isEditing: false,
+      editingFridge: {
+        editingIndex: null,
+        fridgeName: "",
+      }
+    }
   },
-  methods: {
 
+  methods: {
     onEditClick(index) {
-      console.log("Edit clicked");
+      this.editingFridge.editingIndex = index;
+      this.editingFridge.fridgeName = this.fridgeList[index].fridgeName;
+      this.isEditing = Array(this.fridgeList.length).fill(false);
       this.isEditing[index] = true;
     },
-    confirmEdit(index){
-      console.log("Edit confirm");
+
+    confirmEdit(index) {
       this.isEditing[index] = false;
-      if (this.items[index] !== this.editedItems[index]) {
-        this.$emit("update-item", index, this.editedItems[index]);
+      const editedFridge = this.editingFridge;
+      if (editedFridge.fridgeName !== this.fridgeList[index].fridgeName) {
+        this.$emit("update-item", index, editedFridge.fridgeName);
       }
     },
+
+
     onDeleteClick(index) {
       swal.fire({
         title: this.$t('confirm_title'),
@@ -138,6 +146,19 @@ export default {
   transition: color 0.2s ease-in-out;
 }
 
+.edit-input {
+  border: none;
+  outline: none;
+  font-size: 16px;
+  font-weight: 400;
+  color: #333;
+  background-color: #fff;
+  border-radius: 3px;
+  padding: 5px 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
 .edit-conf-icon:hover {
   color: #000;
 }
@@ -215,5 +236,27 @@ export default {
     max-width: none;
   }
 }
+
+@media only screen and (max-width: 600px) {
+  .icons {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .edit-input {
+    width: 100%;
+  }
+
+  .edit-conf-icon {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .delete-icon {
+    margin-left: 0;
+  }
+}
+
 
 </style>
