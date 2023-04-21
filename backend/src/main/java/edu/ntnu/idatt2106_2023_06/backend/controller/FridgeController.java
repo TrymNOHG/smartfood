@@ -96,7 +96,7 @@ public class FridgeController {
      */
     @GetMapping(value = "/loadAllId")
     @Operation(summary = "Load all fridge ids for a given user.")
-    public ResponseEntity<List<Long>> loadFridgeIdsByUser(@ParameterObject @RequestParam String username) {
+    public ResponseEntity<List<Long>> loadFridgeIdsByUser(@ParameterObject @RequestParam(name= "user") String username) {
         List<Long> fridgeIds = fridgeService.retrieveFridgeIdsByUsername(username);
         logger.info("All of the fridge ids for " + username + " have been retrieved.");
         return ResponseEntity.ok(fridgeIds);
@@ -108,7 +108,7 @@ public class FridgeController {
      * @return          Response entity containing a FridgeDTO.
      */
     @GetMapping(value = "/loadAll")
-    @Operation(summary = "Load all fridge ids for a given user.")
+    @Operation(summary = "Load all fridges for a given user.")
     public ResponseEntity<FridgeLoadAllDTO> loadFridgesByUser(@ParameterObject @RequestParam(name = "user") String username) {
         FridgeLoadAllDTO fridgeLoadDTO = fridgeService.retrieveFridgesByUsername(username);
         logger.info("All of the fridge ids for " + username + " have been retrieved.");
@@ -122,7 +122,7 @@ public class FridgeController {
      * @return                  Response entity containing the HTTP status.
      */
     @PostMapping(value = "/create")
-    @Operation(summary = "Load all fridge ids for a given user.")
+    @Operation(summary = "Create fridge with given name.")
     public ResponseEntity<Object> createFridge(@ParameterObject @RequestParam(name = "fridgeName") String fridgeName,
                                                Authentication authentication) {
         if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
@@ -160,7 +160,7 @@ public class FridgeController {
         if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
 
         FridgeMemberLoadAllDTO fridgeMembers = fridgeService.retrieveMembersByFridgeId(fridgeId, authentication.getName());
-        logger.info("All of the fridge members for fridge with id" + fridgeId + " have been retrieved.");
+        logger.info("All of the fridge members for fridge with id " + fridgeId + " have been retrieved.");
         return ResponseEntity.ok(fridgeMembers);
     }
 
