@@ -209,7 +209,7 @@ export default {
       handleSubtract,
       handleDeleteItem,
       submitMessage,
-      items: [], // list of items in the cart
+      items, // list of items in the cart
       searchQuery, // search query entered by the user
       searchItems,
       handleSearch,
