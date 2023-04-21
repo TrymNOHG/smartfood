@@ -17,6 +17,7 @@
   </div>
 </template>
 
+
 <script>
 import List from "@/components/basic-components/listingComponent.vue";
 import BasicInput from "@/components/basic-components/BasicInput.vue";
