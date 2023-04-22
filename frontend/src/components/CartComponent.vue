@@ -8,6 +8,7 @@
         label="Search product"
       ></SearchInput>
       <button id="searchbtn" @click="handleSearch">Search</button>
+
       <div class="dropper">
         <vue-collapsible-panel-group accordion>
           <vue-collapsible-panel :expanded="isExpanded.value">
@@ -61,6 +62,7 @@ import SearchItem from "../components/basic-components/SearchItem.vue";
 import BasicButton from "../components/basic-components/BasicButton.vue";
 import SearchInput from "../components/basic-components/SearchInput.vue";
 import CartItem from "@/components/basic-components/CartItem.vue";
+import CartControl from "@/components/basic-components/CartControl.vue";
 import { useLoggedInStore, useFridgeStore } from "@/store/store";
 import { ref, onMounted, computed, watch } from "vue";
 export default {
@@ -73,9 +75,9 @@ export default {
     VueCollapsiblePanelGroup,
     VueCollapsiblePanel,
     CartItem,
+    CartControl,
   },
   setup() {
-
     console.log(useFridgeStore().getCurrentFridge);
     var itemAmount = ref(1);
     var submitMessage = ref("norvegia");
@@ -89,13 +91,11 @@ export default {
       loadItemsFromCart();
     });
 
-     // Watch the searchItems array for changes and update the isExpanded ref accordingly
-     watch(searchItems, () => {
-      console.log("searchQuery: "+!searchQuery.value.length)
+    // Watch the searchItems array for changes and update the isExpanded ref accordingly
+    watch(searchItems, () => {
+      console.log("searchQuery: " + !searchQuery.value.length);
       isExpanded.value = !searchQuery.value.length;
     });
-
-    
 
     const loadItemsFromCart = async () => {
       try {
@@ -122,7 +122,7 @@ export default {
       const fridgeId = currentFridge.fridgeId;
 
       console.log(itemDTO);
-      event.stopPropagation();  
+      event.stopPropagation();
       addItemToShoppingList(itemDTO, fridgeId, false)
         .then(async (response) => {
           if (response !== undefined) {
@@ -138,7 +138,6 @@ export default {
         });
 
       loadItemsFromCart();
-    
     }
 
     const handleSubtract = async (item) => {
@@ -163,7 +162,7 @@ export default {
           if (response !== undefined) {
             loadItemsFromCart();
             submitMessage.value = "Succesful request";
-            
+
             setTimeout(() => {
               submitMessage.value = "";
             }, 3000);
