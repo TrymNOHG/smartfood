@@ -1,6 +1,7 @@
 <template>
   <div class="list">
-    <router-link v-for="(fridge, index) in fridgeList" :key="index" :to="{name: 'fridgeView', params: {id: fridge.fridgeId.toString(), name: fridge.fridgeName}}" class="link">
+    <router-link v-for="(fridge, index) in fridgeList" :key="index" :to="{name: 'fridgeView', params: {id: fridge.fridgeId.toString(), name: fridge.fridgeName}}"
+     class="link"  @click.prevent="setCurrentFridge(fridge)">
       <div class="item">
         <span v-if="!isEditing[index]" class="item-text">{{ fridge.fridgeName }}</span>
         <input v-else type="text" v-model="editingFridge.fridgeName" @keyup.enter="confirmEdit(index)" class="edit-input" @click.prevent />
@@ -56,6 +57,10 @@ export default {
         this.$emit("update-item", index, editedFridge.fridgeName);
       }
     },
+
+    setCurrentFridge(fridge) {
+    this.$store.currentFridge = fridge;
+  },
 
 
     onDeleteClick(index) {
