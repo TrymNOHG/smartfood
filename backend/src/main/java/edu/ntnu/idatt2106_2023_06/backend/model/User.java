@@ -80,6 +80,13 @@ public class User implements UserDetails {
     @ToString.Exclude
     private Set<FridgeMember> memberships = new HashSet<>();
 
+    /**
+     * The statistics of the fridge.
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @ToString.Exclude
+    private Set<Statistics> stats = new HashSet<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ADMIN"));
