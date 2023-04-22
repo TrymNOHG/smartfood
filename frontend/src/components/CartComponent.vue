@@ -150,10 +150,9 @@ export default {
       deleteItemFromShoppingList(ItemRemoveDTO, false)
         .then(async (response) => {
           if (response !== undefined) {
-            store.setSessionToken(response.data.token);
-            await store.fetchUser();
+            loadItemsFromCart();
             submitMessage.value = "Succesful request";
-            location.reload();
+            
             setTimeout(() => {
               submitMessage.value = "";
             }, 3000);
