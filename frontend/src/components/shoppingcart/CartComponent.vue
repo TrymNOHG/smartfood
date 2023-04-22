@@ -53,14 +53,14 @@ import {
 } from "@dafcoe/vue-collapsible-panel";
 import "@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { deleteItemFromShoppingList } from "../services/ItemService";
-import { addItemToShoppingList } from "../services/ItemService";
-import { getItemsFromShoppingList } from "../services/ItemService";
-import { getItems } from "../services/ApiService";
-import SearchItem from "../components/basic-components/SearchItem.vue";
-import BasicButton from "../components/basic-components/BasicButton.vue";
-import SearchInput from "../components/basic-components/SearchInput.vue";
-import CartItem from "@/components/basic-components/CartItem.vue";
+import { deleteItemFromShoppingList } from "@/services/ItemService";
+import {addItemToShoppingList} from "@/services/ItemService";
+import { getItemsFromShoppingList } from "@/services/ItemService";
+import { getItems } from "@/services/ApiService";
+import SearchItem from "@/components/searchFromApi/SearchItem.vue";
+import BasicButton from "@/components/basic-components/BasicButton.vue";
+import SearchInput from "@/components/searchFromApi/SearchInput.vue";
+import CartItem from "@/components/shoppingcart/CartItem.vue";
 import { useLoggedInStore, useFridgeStore } from "@/store/store";
 import { ref, onMounted, computed, watch } from "vue";
 export default {
