@@ -149,6 +149,7 @@ nav {
   align-items: center;
   max-width: 100%;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 nav ul {
