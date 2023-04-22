@@ -4,6 +4,9 @@ import {loadAllCategories, loadMainCategories} from "@/services/CategoryService"
 import {filterByFullDesc, loadListingsByCategoryId} from "@/services/ItemService";
 import { ref, computed, watch } from "vue";
 import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
+import UniqueId from '../features/UniqueId';
+
+const storeUUID = UniqueId();
 
 export const useLoggedInStore = defineStore('user', {
 
@@ -16,6 +19,10 @@ export const useLoggedInStore = defineStore('user', {
             username: null,
         },
     }),
+
+    persist: {
+        storage: sessionStorage,
+    },
 
     getters: {
         isLoggedIn(){
