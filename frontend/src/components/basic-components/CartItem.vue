@@ -204,6 +204,16 @@ button:focus,
 input:focus {
   outline: 0;
 }
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
 @media only screen and (max-width: 800px) {
     .product-img {
   width: 100px; /* set a fixed width for the containing div */
