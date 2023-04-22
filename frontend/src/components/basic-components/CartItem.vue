@@ -29,7 +29,6 @@
       </button>
     </div>
 
-    <div class="price">{{ price }}</div>
 
     <div class="buttons">
       <span class="delete-btn" @click="handleDeleteItem"></span>
@@ -50,10 +49,6 @@ export default {
     },
     date_added:{
       type: String,
-      required: true,
-    },
-    price: {
-      type: Number,
       required: true,
     },
     quantity: {

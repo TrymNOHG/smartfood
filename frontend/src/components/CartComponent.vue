@@ -37,7 +37,6 @@
         :name="item.name"
         :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
         :weight="item.weight"
-        :price="item.price"
         :quantity="item.quantity"
         @add="handleAddItem(item)"
         @subtract="handleSubtractItem(item)"
@@ -152,7 +151,7 @@ export default {
     function addItemToList(item) {
       console.log(item.name + " " + item.store.name);
 
-      const itemData = {
+      const itemDTO = {
         name: item.name,
         description: item.description,
         store: item.store.name,
@@ -164,7 +163,9 @@ export default {
       };
       const fridgeId = 1;
 
-      addItemToShoppingList(itemData, fridgeId, false)
+      console.log(itemDTO)
+
+      addItemToShoppingList(itemDTO, fridgeId, false)
         .then(async (response) => {
           if (response !== undefined) {
             submitMessage.value = "Succesful request";
