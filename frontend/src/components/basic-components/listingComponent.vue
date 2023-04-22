@@ -211,6 +211,8 @@ export default {
     box-shadow: none;
     transform: none;
   }
+  
+  
 
   .item-text {
     margin-bottom: 5px;

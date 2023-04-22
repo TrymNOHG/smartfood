@@ -61,7 +61,7 @@ import SearchItem from "../components/basic-components/SearchItem.vue";
 import BasicButton from "../components/basic-components/BasicButton.vue";
 import SearchInput from "../components/basic-components/SearchInput.vue";
 import CartItem from "@/components/basic-components/CartItem.vue";
-import { useLoggedInStore } from "@/store/store";
+import { useLoggedInStore, useFridgeStore } from "@/store/store";
 import { ref, onMounted, computed, watch } from "vue";
 export default {
   name: "Cart",
@@ -75,12 +75,15 @@ export default {
     CartItem,
   },
   setup() {
+
+    console.log(useFridgeStore().getCurrentFridge);
     var itemAmount = ref(1);
     var submitMessage = ref("norvegia");
     const items = ref([]); // list of items in the cart
     const searchQuery = ref(""); // search query entered by the user
     const searchItems = ref([]);
     const isExpanded = ref(true);
+    const currentFridge = useFridgeStore().getCurrentFridge;
 
     onMounted(() => {
       loadItemsFromCart();
@@ -96,7 +99,7 @@ export default {
 
     const loadItemsFromCart = async () => {
       try {
-        const response = await getItemsFromShoppingList(1); // replace with your API call to fetch the items from the backend
+        const response = await getItemsFromShoppingList(currentFridge.fridgeId); // replace with your API call to fetch the items from the backend
         items.value = response.data;
         console.log(response.data);
       } catch (error) {
@@ -116,7 +119,7 @@ export default {
         image: item.image,
         quantity: amount,
       };
-      const fridgeId = 1;
+      const fridgeId = currentFridge.fridgeId;
 
       console.log(itemDTO);
       event.stopPropagation();  
@@ -150,7 +153,7 @@ export default {
       const ItemRemoveDTO = {
         itemName: item.name,
         store: item.store,
-        fridgeId: 1,
+        fridgeId: currentFridge.fridgeId,
         quantity: item.quantity,
       };
       console.log(ItemRemoveDTO);
@@ -194,7 +197,7 @@ export default {
         image: item.image,
         quantity: 1,
       };
-      const fridgeId = 1;
+      const fridgeId = currentFridge.fridgeId;
 
       console.log(itemDTO);
 
