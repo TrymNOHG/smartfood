@@ -63,7 +63,7 @@ export const useFridgeStore = defineStore('fridgeStore', {
         allFridges: [{
             "fridgeId": null,
             "fridgeName": null
-        }]
+        }],
     }),
 
     getters: {

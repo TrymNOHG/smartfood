@@ -27,15 +27,18 @@
 import {useRoute} from "vue-router";
 import MemberComponent from "@/components/MemberComponent.vue";
 import SpecificFridgeComponent from "@/components/SpecificFridgeComponent.vue";
+import {useFridgeStore} from "@/store/store";
 
 export default {
   name: "FridgeView",
   components: {SpecificFridgeComponent, MemberComponent},
 
   setup() {
+    const fridgeStore = useFridgeStore();
     const route = useRoute()
     const fridgeName = route.params.name
     const fridgeId = route.params.id
+
 
     return{
       fridgeName,
