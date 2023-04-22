@@ -23,6 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -225,6 +226,7 @@ public class ItemServiceTest {
             Fridge fridge = Fridge.builder()
                     .fridgeId(1L)
                     .fridgeName("testFridge")
+                    .stats(new HashSet<>())
                     .build();
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",

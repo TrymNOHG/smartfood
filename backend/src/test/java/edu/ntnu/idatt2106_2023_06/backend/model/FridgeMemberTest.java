@@ -92,27 +92,30 @@ class FridgeMemberTest {
 
         @Test
         void user_getter_returns_correct_value(){
-            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
+                    new ArrayList<>(), new HashSet<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com", new HashSet<>());
+                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>());
             FridgeMember fridgeMember = new FridgeMember(null, user, fridge, true);
             assertEquals(user, fridgeMember.getUser());
         }
 
         @Test
         void fridge_getter_returns_correct_value(){
-            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
+                    new ArrayList<>(), new HashSet<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com", new HashSet<>());
+                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>());
             FridgeMember fridgeMember = new FridgeMember(null, user, fridge, true);
             assertEquals(fridge, fridgeMember.getFridge());
         }
 
         @Test
         void super_user_getter_returns_correct_value(){
-            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
+                    new ArrayList<>(), new HashSet<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com", new HashSet<>());
+                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>());
             FridgeMember fridgeMember = new FridgeMember(null, user, fridge, true);
             assertEquals(true, fridgeMember.isSuperUser());
         }

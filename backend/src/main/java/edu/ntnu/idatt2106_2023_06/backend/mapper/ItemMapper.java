@@ -21,7 +21,7 @@ public class ItemMapper {
     public static Item toItem(ItemDTO itemDTO, Store store){
         return Item.builder()
                 .productName(itemDTO.name())
-                .briefDesc(itemDTO.description())
+                .desc(itemDTO.description())
                 .store(store)
                 .expirationDate(itemDTO.expirationDate())
                 .purchaseDate(itemDTO.purchaseDate())
@@ -38,7 +38,7 @@ public class ItemMapper {
      * @return          The mapped item DTO
      */
     public static ItemDTO toItemDTO(Item item, int quantity){
-        return new ItemDTO(item.getProductName(), item.getBriefDesc(),
+        return new ItemDTO(item.getProductName(), item.getDesc(),
                 item.getStore().getStoreName(), item.getPrice(),
                 item.getPurchaseDate(), item.getExpirationDate(),
                 item.getPictureLink(), quantity);

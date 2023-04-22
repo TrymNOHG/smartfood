@@ -53,7 +53,7 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
      * @param phrase the phrase to search for
      * @return an Optional containing the list of items whose brief description contains the given phrase, or an empty Optional if no such items exist
      */
-    Optional<List<Item>> findItemsByBriefDescContainingIgnoreCase(String phrase);
+    Optional<List<Item>> findItemsByDescContainingIgnoreCase(String phrase);
 
     /**
      * Finds an items by their product name.
