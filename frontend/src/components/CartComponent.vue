@@ -10,7 +10,7 @@
       <button id="searchbtn" @click="handleSearch">Search</button>
       <div class="dropper">
         <vue-collapsible-panel-group accordion>
-          <vue-collapsible-panel :expanded="false">
+          <vue-collapsible-panel :expanded="isExpanded.value">
             <template #title> Search results </template>
             <template #content>
               <SearchItem
@@ -19,9 +19,9 @@
                 :image="item.image"
                 :text="item.name"
                 :store="item.store.name"
-                :price="item.price_history[0].price"
+                :price="item.current_price"
                 style="text-align: center"
-                @click="addItemToShoppingList(item)"
+                @click="addItemToList(item)"
               />
             </template>
           </vue-collapsible-panel>
@@ -35,12 +35,12 @@
         :key="index"
         :image="item.image"
         :name="item.name"
+        :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
         :weight="item.weight"
-        :price="item.price"
         :quantity="item.quantity"
-        @add="handleAddItem(index)"
-        @subtract="handleSubtractItem(index)"
-        @delete-item="handleDeleteItem(index)"
+        @add="inc_dec_CartItemAmount(item, 1)"
+        @subtract="inc_dec_CartItemAmount(item, -1)"
+        @delete-item="handleDeleteItem(item)"
       />
     </div>
   </div>
@@ -62,7 +62,7 @@ import BasicButton from "../components/basic-components/BasicButton.vue";
 import SearchInput from "../components/basic-components/SearchInput.vue";
 import CartItem from "@/components/basic-components/CartItem.vue";
 import { useLoggedInStore } from "@/store/store";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 export default {
   name: "Cart",
   components: {
@@ -80,31 +80,65 @@ export default {
     const items = ref([]); // list of items in the cart
     const searchQuery = ref(""); // search query entered by the user
     const searchItems = ref([]);
-    const store = useLoggedInStore();
+    const isExpanded = ref(true);
 
     onMounted(() => {
       loadItemsFromCart();
-      setInterval(() => {
-        loadItemsFromCart();
-      }, 10000); // call the method every 10 seconds
     });
 
-    const loadItemsFromCart = async () => {
-  try {
-    const response = await getItemsFromShoppingList(1); // replace with your API call to fetch the items from the backend
-    items.value = response.data;
-    console.log(response.data)
-  } catch (error) {
-    console.error(error);
-  }
-};
+     // Watch the searchItems array for changes and update the isExpanded ref accordingly
+     watch(searchItems, () => {
+      console.log("searchQuery: "+!searchQuery.value.length)
+      isExpanded.value = !searchQuery.value.length;
+    });
 
-    const handleAdd = async () => {
-      itemAmount.value += 1;
-      console.log(itemAmount.value);
+    
+
+    const loadItemsFromCart = async () => {
+      try {
+        const response = await getItemsFromShoppingList(1); // replace with your API call to fetch the items from the backend
+        items.value = response.data;
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
-    const handleSubtract = async () => {
+    function inc_dec_CartItemAmount(item, amount) {
+      console.log(item);
+      const itemDTO = {
+        name: item.name,
+        description: item.description,
+        store: item.store,
+        price: item.price,
+        purchaseDate: item.purhchaseDate,
+        expirationDate: item.expirationDate,
+        image: item.image,
+        quantity: amount,
+      };
+      const fridgeId = 1;
+
+      console.log(itemDTO);
+      event.stopPropagation();  
+      addItemToShoppingList(itemDTO, fridgeId, false)
+        .then(async (response) => {
+          if (response !== undefined) {
+            loadItemsFromCart();
+          } else {
+            console.log("Something went wrong");
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+          }
+        })
+        .catch((error) => {
+          console.warn("error1", error); //TODO: add exception handling
+        });
+
+      loadItemsFromCart();
+    
+    }
+
+    const handleSubtract = async (item) => {
       if (itemAmount.value == 1) {
         return;
       }
@@ -113,20 +147,20 @@ export default {
     };
 
     const handleDeleteItem = async (item) => {
-      const itemData = {
+      const ItemRemoveDTO = {
         itemName: item.name,
-        store: item.store.name,
-        id: 1,
-        quantity: itemAmount.value,
+        store: item.store,
+        fridgeId: 1,
+        quantity: item.quantity,
       };
-      console.log(itemData);
+      console.log(ItemRemoveDTO);
 
-      deleteItemFromShoppingList(itemData, false)
+      deleteItemFromShoppingList(ItemRemoveDTO, false)
         .then(async (response) => {
           if (response !== undefined) {
-            store.setSessionToken(response.data.token);
-            await store.fetchUser();
+            loadItemsFromCart();
             submitMessage.value = "Succesful request";
+            
             setTimeout(() => {
               submitMessage.value = "";
             }, 3000);
@@ -147,14 +181,14 @@ export default {
     };
 
     //buy item from search
-    function addItemToShoppingList(item) {
+    function addItemToList(item) {
       console.log(item.name + " " + item.store.name);
 
-      const itemData = {
+      const itemDTO = {
         name: item.name,
         description: item.description,
         store: item.store.name,
-        price: item.price_history[0].price,
+        price: item.currentPrice,
         purchaseDate: "2023-04-20",
         expirationDate: "2023-04-20",
         image: item.image,
@@ -162,25 +196,19 @@ export default {
       };
       const fridgeId = 1;
 
-      addItemToShoppingList(itemData, fridgeId, false)
+      console.log(itemDTO);
+
+      addItemToShoppingList(itemDTO, fridgeId, false)
         .then(async (response) => {
           if (response !== undefined) {
-            submitMessage.value = "Succesful request";
-            setTimeout(() => {
-              submitMessage.value = "";
-            }, 3000);
+            loadItemsFromCart();
           } else {
             console.log("Something went wrong");
             submitMessage.value =
               "Something went wrong. Please try again later.";
-            setTimeout(() => {
-              submitMessage.value = "";
-            }, 3000);
           }
         })
         .catch((error) => {
-          //submitMessage.value = error.response.data["Message:"];
-          //console.log(error.response.data);
           console.warn("error1", error); //TODO: add exception handling
         });
       event.stopPropagation();
@@ -205,16 +233,17 @@ export default {
 
     return {
       itemAmount,
-      handleAdd,
       handleSubtract,
       handleDeleteItem,
       submitMessage,
-      items: [], // list of items in the cart
+      items, // list of items in the cart
       searchQuery, // search query entered by the user
       searchItems,
       handleSearch,
-      addItemToShoppingList,
+      addItemToList,
       loadItemsFromCart,
+      inc_dec_CartItemAmount,
+      isExpanded,
     };
   },
 };
