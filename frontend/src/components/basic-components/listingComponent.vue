@@ -1,7 +1,6 @@
 <template>
   <div class="list">
-    <router-link v-for="(fridge, index) in fridgeList" :key="index" :to="{name: 'fridgeView', params: {id: fridge.fridgeId.toString(), name: fridge.fridgeName}}"
-     class="link"  @click.prevent="setCurrentFridge(fridge)">
+    <router-link v-for="(fridge, index) in fridgeList" :key="index" :to="{name: 'fridgeView', params: {id: fridge.fridgeId.toString(), name: fridge.fridgeName}}" class="link" >
       <div class="item">
         <span v-if="!isEditing[index]" class="item-text">{{ fridge.fridgeName }}</span>
         <input v-else type="text" v-model="editingFridge.fridgeName" @keyup.enter="confirmEdit(index)" class="edit-input" @click.prevent />
@@ -58,10 +57,6 @@ export default {
       }
     },
 
-    setCurrentFridge(fridge) {
-    this.$store.currentFridge = fridge;
-  },
-
 
     onDeleteClick(index) {
       swal.fire({
@@ -91,7 +86,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 
 .link {
   text-decoration: none;
@@ -120,7 +115,6 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: auto;
 }
 
 .item:hover {

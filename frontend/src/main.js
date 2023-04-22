@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import piniaPersist from 'pinia-plugin-persist'
+import piniaPluginPersistedState from "pinia-plugin-persistedstate"
+
 import App from './App.vue'
 import './assets/main.css'
 import router from "../src/router/router";
@@ -45,7 +46,8 @@ library.add(
 )
 
 const pinia = createPinia()
-pinia.use(piniaPersist)
+
+pinia.use(piniaPluginPersistedState)
 
 
 createApp(App)

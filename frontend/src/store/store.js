@@ -4,6 +4,9 @@ import {loadAllCategories, loadMainCategories} from "@/services/CategoryService"
 import {filterByFullDesc, loadListingsByCategoryId} from "@/services/ItemService";
 import { ref, computed, watch } from "vue";
 import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
+import UniqueId from '../features/UniqueId';
+
+const storeUUID = UniqueId();
 
 export const useLoggedInStore = defineStore('user', {
 
@@ -16,6 +19,10 @@ export const useLoggedInStore = defineStore('user', {
             username: null,
         },
     }),
+
+    persist: {
+        storage: sessionStorage,
+    },
 
     getters: {
         isLoggedIn(){
@@ -63,10 +70,17 @@ export const useFridgeStore = defineStore('fridgeStore', {
         allFridges: [{
             "fridgeId": null,
             "fridgeName": null
+        }],
+        currentFridge: [{
+            "fridgeId": null,
+            "fridgeName": null,
         }]
     }),
 
     getters: {
+        getCurrentFridge: (state) => {
+            return state.currentFridge
+        }
     },
 
     actions: {
@@ -88,9 +102,14 @@ export const useFridgeStore = defineStore('fridgeStore', {
         },
         async updateFridgeNameByDTO(fridgeDTO){
             await updateFridge(fridgeDTO)
+        },
+        // Define a mutation to update the value of currentFridge
+        setCurrentFridge(state, fridge) {
+            state.currentFridge = fridge
         }
-    }
+    }   
 });
+
 
 export const useImageStore = defineStore('imageStore', {
     state: () => ({

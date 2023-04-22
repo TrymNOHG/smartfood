@@ -20,7 +20,7 @@ import java.util.Date;
  *
  * @author Trym Hamer Gudvangen
  */
-public record ItemDTO(@NonNull String name, @NonNull String description,
+public record ItemDTO(@NonNull String name, String description,
                       @NonNull String store, double price, Date purchaseDate,
                       Date expirationDate, String image, int quantity) {
 }
