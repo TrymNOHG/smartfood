@@ -37,3 +37,12 @@ export const deleteUserFromFridge = async (fridgeUserDTO) => {
     });
 }
 
+export const loadUsersByFridgeId = async (fridgeId) => {
+    const token = await SessionToken();
+    return await axios.get(`${BASE_LISTING_URL}/loadAllUsers?fridgeId=${fridgeId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
+

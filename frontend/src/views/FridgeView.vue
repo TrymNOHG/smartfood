@@ -3,7 +3,7 @@
   <div class="name-display">
     <h1 class="fridge-name">
       <router-link to="/fridges" class="link-name">
-        {{ fridgeName }}
+        {{ fridge.fridgeName }}
       </router-link>
     </h1>
     <div class="change-button">
@@ -13,26 +13,31 @@
     </div>
   </div>
   <div class="members-fridge">
-    <router-link id="member" class="link" to="/members">Members</router-link>
-    <router-link id="fridge" class="link" to="/fridges">Fridge</router-link>
+      <div id="toggle-button" class="link" @click="selectedTab = 'members'" :class="{ active: selectedTab === 'members' }">Members</div>
+      <div id="toggle-button" class="link" @click="selectedTab = 'fridge'" :class="{ active: selectedTab === 'fridge' }">Fridge</div>
   </div>
   <!--TODO: add infinite scroller or pagination-->
-  <div class="wrapper">
-    <basic-fridge-item v-for="(item, index) in items" :key="index" :item="item" :currenFridge="fridge" />
+    <div class="fridge-wrapper" v-show="selectedTab === 'fridge'">
+        <basic-fridge-item v-for="(item, index) in items" :key="index" :item="item" :currenFridge="fridge" />
+  </div>
+    <div class="members-wrapper" v-show="selectedTab === 'members'">
+        <member-component :fridgeId="fridge.fridgeId"/>
   </div>
 
 </template>
 
 <script>
 import {useRoute} from "vue-router";
-import MemberComponent from "@/components/FridgeList/MemberComponent.vue";
+import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicFridgeItem.vue";
+import {ref} from "vue";
 
 export default {
   name: "FridgeView",
   components: {BasicFridgeItem, MemberComponent},
 
   setup() {
+    const selectedTab = ref("fridge");
     const route = useRoute()
     const fridge = {
       "fridgeId": route.params.id,
@@ -40,7 +45,8 @@ export default {
     }
 
     return {
-      fridge
+      fridge,
+      selectedTab
     }
   },
 
@@ -78,7 +84,7 @@ export default {
 
 <style scoped>
 
-.wrapper {
+.fridge-wrapper {
   margin-top: 2%;
   margin-left: 5%;
   display: grid;
@@ -106,30 +112,33 @@ export default {
   color: black;
 }
 
-#fridge {
-  height: 25px;
-  width: 150px;
-  background-color: #b1b1b1;
-  border-radius: 5px;
-  font-weight: bold;
-  text-decoration: black;
-  text-shadow: black 0 0 2px;
-  margin-left: 50px;
-  margin-top: 5px;
-}
 
-#member {
+
+
+#toggle-button {
   width: 150px;
   margin-top: 5px;
   margin-right: 50px;
 }
 
-#member:hover {
+#toggle-button:hover {
   color: #3b3b3b;
   height: 25px;
   border-radius: 5px;
   background-color: #fff;
   transition: all 0.2s ease-in-out;
+}
+
+.active {
+    height: 25px;
+    width: 150px;
+    background-color: #b1b1b1;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: black;
+    text-shadow: black 0 0 2px;
+    margin-left: 50px;
+    margin-top: 5px;
 }
 
 .members-fridge {
@@ -195,7 +204,7 @@ export default {
     width: 100%;
   }
 
-  .wrapper {
+  .fridge-wrapper {
     margin-left: 2.5%;
     height: 100%;
     grid-template-rows: repeat(auto-fill, minmax(95px, 95px));

@@ -69,6 +69,9 @@ const router = createRouter({
       name: 'itemView',
       component: itemView,
     },
+    {
+
+    }
 
   ]
 })
