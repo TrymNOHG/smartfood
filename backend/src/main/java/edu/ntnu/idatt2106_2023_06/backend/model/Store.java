@@ -22,7 +22,7 @@ import java.util.List;
 public class Store {
 
     /**
-     * The unique identifier for this category.
+     * The unique identifier for this store.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

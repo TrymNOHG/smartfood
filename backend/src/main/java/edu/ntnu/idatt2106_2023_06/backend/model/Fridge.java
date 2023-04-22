@@ -63,6 +63,14 @@ public class Fridge {
     @ToString.Exclude
     private List<FridgeItems> fridgeItems = new ArrayList<>();
 
+    /**
+     * The statistics of the fridge.
+     */
+    @OneToMany(mappedBy = "fridge")
+    @ToString.Exclude
+    private Set<Statistics> stats = new HashSet<>();
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
