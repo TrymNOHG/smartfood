@@ -84,9 +84,9 @@ export default {
     },
   },
 };
-</script>
+</script >
 
-<style>
+<style scoped>
 
 .link {
   text-decoration: none;
@@ -115,6 +115,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: auto;
 }
 
 .item:hover {
