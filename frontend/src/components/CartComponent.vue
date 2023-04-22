@@ -38,8 +38,8 @@
         :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
         :weight="item.weight"
         :quantity="item.quantity"
-        @add="handleAddItem(item)"
-        @subtract="handleSubtractItem(item)"
+        @add="handleAdd(item)"
+        @subtract="handleSubtract(item)"
         @delete-item="handleDeleteItem(item)"
       />
     </div>
@@ -84,9 +84,6 @@ export default {
 
     onMounted(() => {
       loadItemsFromCart();
-      setInterval(() => {
-        loadItemsFromCart();
-      }, 10000); // call the method every 10 seconds
     });
 
     const loadItemsFromCart = async () => {
@@ -99,12 +96,14 @@ export default {
   }
 };
 
-    const handleAdd = async () => {
-      itemAmount.value += 1;
-      console.log(itemAmount.value);
+    const handleAdd = async (item) => {
+      console.log()
+      addItemToList(item);
+      console.log(item.quantity);
+      loadItemsFromCart();
     };
 
-    const handleSubtract = async () => {
+    const handleSubtract = async (item) => {
       if (itemAmount.value == 1) {
         return;
       }
@@ -148,46 +147,43 @@ export default {
     };
 
     //buy item from search
-    function addItemToList(item) {
-      console.log(item.name + " " + item.store.name);
+      function addItemToList(item) {
+        console.log(item.name + " " + item.store.name);
 
-      const itemDTO = {
-        name: item.name,
-        description: item.description,
-        store: item.store.name,
-        price: item.price_history[0].price,
-        purchaseDate: "2023-04-20",
-        expirationDate: "2023-04-20",
-        image: item.image,
-        quantity: 1,
-      };
-      const fridgeId = 1;
+        const itemDTO = {
+          name: item.name,
+          description: item.description,
+          store: item.store.name,
+          price: item.price_history[0].price,
+          purchaseDate: "2023-04-20",
+          expirationDate: "2023-04-20",
+          image: item.image,
+          quantity: 1,
+        };
+        const fridgeId = 1;
 
-      console.log(itemDTO)
+        console.log(itemDTO)
 
-      addItemToShoppingList(itemDTO, fridgeId, false)
-        .then(async (response) => {
-          if (response !== undefined) {
-            submitMessage.value = "Succesful request";
-            setTimeout(() => {
-              submitMessage.value = "";
-            }, 3000);
-          } else {
-            console.log("Something went wrong");
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
-            setTimeout(() => {
-              submitMessage.value = "";
-            }, 3000);
-          }
-        })
-        .catch((error) => {
-          //submitMessage.value = error.response.data["Message:"];
-          //console.log(error.response.data);
-          console.warn("error1", error); //TODO: add exception handling
-        });
-      event.stopPropagation();
-    }
+        addItemToShoppingList(itemDTO, fridgeId, false)
+          .then(async (response) => {
+            if (response !== undefined) {
+              loadItemsFromCart();
+            } else {
+              console.log("Something went wrong");
+              submitMessage.value =
+                "Something went wrong. Please try again later.";
+              setTimeout(() => {
+                submitMessage.value = "";
+              }, 3000);
+            }
+          })
+          .catch((error) => {
+            //submitMessage.value = error.response.data["Message:"];
+            //console.log(error.response.data);
+            console.warn("error1", error); //TODO: add exception handling
+          });
+        event.stopPropagation();
+      }
 
     function handleSearch() {
       console.log("clicked search");
