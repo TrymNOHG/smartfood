@@ -98,7 +98,8 @@ class FridgeItemsTest {
 
         @Test
         void item_getter_returns_correct_value(){
-            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
+                    new ArrayList<>(), new HashSet<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, new Date(), new Date(), "picture.png", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
@@ -108,7 +109,8 @@ class FridgeItemsTest {
 
         @Test
         void fridge_items_getter_returns_correct_value(){
-            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
+            Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
+                    new ArrayList<>(), new HashSet<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, new Date(), new Date(), "picture.png", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());

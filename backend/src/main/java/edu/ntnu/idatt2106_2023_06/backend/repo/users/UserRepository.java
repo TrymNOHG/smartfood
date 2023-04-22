@@ -32,13 +32,30 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             "DELETE FROM fridge_members WHERE fridge_members.user_id = OLD.user_id; " +
             "END; ", nativeQuery = true)
     @Profile("!test")
-    void createTrigger();
+    void createTriggerForDeletingMember();
+
+
 
     @Modifying
     @Transactional
     @Query(value = "DROP TRIGGER IF EXISTS delete_fridge_member", nativeQuery = true)
     @Profile("!test")
-    void dropTrigger();
+    void dropMemberTrigger();
+
+    @Modifying
+    @Transactional
+    @Query(value = "CREATE TRIGGER delete_user_stat BEFORE DELETE ON users FOR EACH ROW " +
+            "BEGIN " +
+            "UPDATE stats SET user_id = null WHERE user_id = OLD.user_id; " +
+            "END; ", nativeQuery = true)
+    @Profile("!test")
+    void createTriggerForNullingUserStat();
+
+    @Modifying
+    @Transactional
+    @Query(value = "DROP TRIGGER IF EXISTS delete_user_stat", nativeQuery = true)
+    @Profile("!test")
+    void dropUserStatTrigger();
 
     /**
      Retrieves an Optional User instance based on the provided username.
