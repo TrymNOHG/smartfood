@@ -5,14 +5,14 @@ const BASE_LISTING_URL = "http://localhost:8080/item";
 
 export const deleteItemFromShoppingList = async (listingDeletionDTO, suggestion) => {
     return await axios.delete(`${BASE_LISTING_URL}/shopping/delete?suggestion=${suggestion}`, {
-      
+
       headers: {
         Authorization: `Bearer ${await SessionToken()}`,
       },
       data: listingDeletionDTO
     });
   };
-  
+
 
 export const addItemToShoppingList = async (itemDTO, fridgeId, suggestion) => {
   return await axios.post(`${BASE_LISTING_URL}/shopping/add?fridgeId=${fridgeId}&suggestion=${suggestion}`, itemDTO, {
@@ -29,7 +29,7 @@ export const getItemsFromShoppingList = async (fridgeId) => {
     },
   });
 };
-  
+
 
 export const loadAllListings = async () => {
     return await axios.get(`${BASE_LISTING_URL}/load`)
