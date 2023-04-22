@@ -83,6 +83,7 @@ export default {
     const searchQuery = ref(""); // search query entered by the user
     const searchItems = ref([]);
     const isExpanded = ref(true);
+    const currentFridge = useFridgeStore().getCurrentFridge;
 
     onMounted(() => {
       loadItemsFromCart();
@@ -98,7 +99,7 @@ export default {
 
     const loadItemsFromCart = async () => {
       try {
-        const response = await getItemsFromShoppingList(1); // replace with your API call to fetch the items from the backend
+        const response = await getItemsFromShoppingList(currentFridge.fridgeId); // replace with your API call to fetch the items from the backend
         items.value = response.data;
         console.log(response.data);
       } catch (error) {
@@ -118,7 +119,7 @@ export default {
         image: item.image,
         quantity: amount,
       };
-      const fridgeId = 1;
+      const fridgeId = currentFridge.fridgeId;
 
       console.log(itemDTO);
       event.stopPropagation();  
@@ -152,7 +153,7 @@ export default {
       const ItemRemoveDTO = {
         itemName: item.name,
         store: item.store,
-        fridgeId: 1,
+        fridgeId: currentFridge.fridgeId,
         quantity: item.quantity,
       };
       console.log(ItemRemoveDTO);
@@ -196,7 +197,7 @@ export default {
         image: item.image,
         quantity: 1,
       };
-      const fridgeId = 1;
+      const fridgeId = currentFridge.fridgeId;
 
       console.log(itemDTO);
 
