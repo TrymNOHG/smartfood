@@ -2,13 +2,16 @@ package edu.ntnu.idatt2106_2023_06.backend.service.fridge;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeLoadAllDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeMemberLoadAllDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeUserDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoadAllDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeMemberNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.FridgeMapper;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.FridgeMemberMapper;
+import edu.ntnu.idatt2106_2023_06.backend.mapper.UserMapper;
 import edu.ntnu.idatt2106_2023_06.backend.model.*;
 import edu.ntnu.idatt2106_2023_06.backend.repo.FridgeMemberRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.FridgeRepository;
@@ -190,6 +193,23 @@ public class FridgeService implements IFridgeService{
                 .collect(Collectors.toList()));
     }
 
+    /**
+     * This method retrieves all the users for a given fridge.
+     * @param fridgeId  The id of the fridge, given as a Long object.
+     * @param username  The username of the user checking the fridge, given as a String.
+     * @return          UserLoadALLDTO containing a list of all the users.
+     */
+    @Override
+    public FridgeMemberLoadAllDTO retrieveMembersByFridgeId(Long fridgeId, String username) {
+        if(!userExistsInFridge(fridgeId, username)) throw new UnauthorizedException(username);
+
+        logger.info("Retrieving users for fridge with id: " + fridgeId);
+        return FridgeMemberMapper.toFridgeMemberLoadAllDTO(
+                fridgeMemberRepository.findFridgeMembersByFridge_FridgeId(fridgeId)
+                .orElseThrow(() -> new FridgeNotFoundException(fridgeId))
+        );
+    }
+
 
 
     /**
@@ -221,7 +241,7 @@ public class FridgeService implements IFridgeService{
     private boolean userExistsInFridge(Long fridgeId, String username) {
         logger.info("Checking whether the soon-to-be effected user is a part of the fridge");
         if(fridgeMemberRepository.existsFridgeMemberByFridge_FridgeIdAndUser_Username(fridgeId, username)) {
-            logger.warn("User exists!!!");
+            logger.info("User exists!!!");
             return true;
         }
         return false;

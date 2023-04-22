@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -30,13 +32,30 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
             "DELETE FROM fridge_members WHERE fridge_members.user_id = OLD.user_id; " +
             "END; ", nativeQuery = true)
     @Profile("!test")
-    void createTrigger();
+    void createTriggerForDeletingMember();
+
+
 
     @Modifying
     @Transactional
     @Query(value = "DROP TRIGGER IF EXISTS delete_fridge_member", nativeQuery = true)
     @Profile("!test")
-    void dropTrigger();
+    void dropMemberTrigger();
+
+    @Modifying
+    @Transactional
+    @Query(value = "CREATE TRIGGER delete_user_stat BEFORE DELETE ON users FOR EACH ROW " +
+            "BEGIN " +
+            "UPDATE stats SET user_id = null WHERE user_id = OLD.user_id; " +
+            "END; ", nativeQuery = true)
+    @Profile("!test")
+    void createTriggerForNullingUserStat();
+
+    @Modifying
+    @Transactional
+    @Query(value = "DROP TRIGGER IF EXISTS delete_user_stat", nativeQuery = true)
+    @Profile("!test")
+    void dropUserStatTrigger();
 
     /**
      Retrieves an Optional User instance based on the provided username.
@@ -46,5 +65,8 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Optional<User> findByUsername(String username);
 
     Optional<User> findByEmail(String email);
+
+    @Query("SELECT u FROM User u WHERE LOWER(u.username) LIKE %:inputString%")
+    List<User> findByUsernameContaining(@Param("inputString") String inputString);
 
 }

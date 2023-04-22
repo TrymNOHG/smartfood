@@ -173,6 +173,25 @@ public class UserController {
     }
 
     /**
+     * Retrieves the user's profile picture from ID.
+     *
+     * @return ResponseEntity containing the user's profile picture as a byte array.
+     */
+    @GetMapping("/get/picture/{id}")
+    @Operation(summary = "Get user profile picture from ID")
+    @ApiResponse(responseCode = "200", description = "User profile picture retrieved successfully.", content = @Content(
+            mediaType = "image/jpeg",
+            schema = @Schema(implementation = byte[].class)))
+    public ResponseEntity<Object> getPictureFromId(@PathVariable Long id) {
+        logger.info(String.format("Getting the profile picture of user with ID %d!", id));
+        byte[] file = fileStorageService.getProfilePicture(id);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+jwtService.getAuthenticatedUserId()+"\"")
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(file);
+    }
+
+    /**
      * Retrieves the user's text information.
      *
      * @param authentication The authentication object containing the user's authentication details.
@@ -206,5 +225,22 @@ public class UserController {
         logger.info(String.format("User %s wants to delete their profile picture!", authentication.getName()));
         fileStorageService.deleteProfilePicture();
         return ResponseEntity.ok("Picture deleted");
+    }
+
+    /**
+     * Searches for a user by username.
+     *
+     * @param username The username of the user to be searched for.
+     * @return ResponseEntity containing the user's text information.
+     */
+    @GetMapping("/search/{username}")
+    @Operation(summary = "Search for a user by username")
+    @ApiResponse(responseCode = "200", description = "User text information retrieved successfully.", content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = UserLoadDTO.class),
+            examples = @ExampleObject(value = "{\"username\":\"user\",\"id\":\"69\"}")))
+    public ResponseEntity<Object> search(@PathVariable String username) {
+        logger.info(String.format("Searching for %s", username));
+        return ResponseEntity.ok(userService.searchUser(username.toLowerCase()));
     }
 }

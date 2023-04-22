@@ -61,6 +61,13 @@ public interface FridgeMemberRepository extends JpaRepository<FridgeMember, Frid
     Optional<List<FridgeMember>> findFridgeMembersByUser_Username(String username);
 
     /**
+     * This method retrieves all the entries in the fridge member table for a given fridge.
+     * @param fridgeId  The id of a given fridge, given as a Long object.
+     * @return          List of fridge member entries, given as an Optional.
+     */
+    Optional<List<FridgeMember>> findFridgeMembersByFridge_FridgeId(Long fridgeId);
+
+    /**
      * This method deletes the user attached to a given fridge id and which has a given username.
      * @param fridgeId  The id of the fridge to be checked, given as a Long object.
      * @param username  The username of the person, given as a String

@@ -2,7 +2,10 @@ package edu.ntnu.idatt2106_2023_06.backend.controller;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeLoadAllDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeMemberLoadAllDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeUserDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoadAllDTO;
+import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  *  The FridgeController class provides API endpoints for managing fridge users.
@@ -43,6 +47,7 @@ public class FridgeController {
     @Operation(summary = "Add user to fridge")
     public ResponseEntity<Object> addUserToFridge(@ParameterObject @RequestBody FridgeUserDTO fridgeUserDTO,
                                                   Authentication authentication){
+        if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
         logger.info("User, " + authentication.getName() + " wants to add a new person, " + fridgeUserDTO.username()
                 + " to fridge");
         fridgeService.addUserToFridge(fridgeUserDTO, authentication.getName());
@@ -61,6 +66,7 @@ public class FridgeController {
     @Operation(summary = "Delete user from fridge")
     public ResponseEntity<Object> deleteUserFromFridge(@ParameterObject @RequestBody FridgeUserDTO fridgeUserDTO,
                                                        Authentication authentication){
+        if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
         logger.info("User wants to delete the user, " + fridgeUserDTO.username() + ", from the fridge");
         fridgeService.deleteUserFromFridge(fridgeUserDTO, authentication.getName());
         return ResponseEntity.ok().build();
@@ -77,6 +83,7 @@ public class FridgeController {
     @Operation(summary = "Update user from fridge")
     public ResponseEntity<Object> updateUserFromFridge(@ParameterObject @RequestBody FridgeUserDTO fridgeUserDTO,
                                                        Authentication authentication){
+        if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
         logger.info("User, " + authentication.getName() + " wants to update the user, " + fridgeUserDTO.username() + ", from the fridge");
         fridgeService.updateUserFromFridge(fridgeUserDTO, authentication.getName());
         return ResponseEntity.ok().build();
@@ -89,7 +96,7 @@ public class FridgeController {
      */
     @GetMapping(value = "/loadAllId")
     @Operation(summary = "Load all fridge ids for a given user.")
-    public ResponseEntity<List<Long>> loadFridgeIdsByUser(@ParameterObject @RequestParam String username) {
+    public ResponseEntity<List<Long>> loadFridgeIdsByUser(@ParameterObject @RequestParam(name= "user") String username) {
         List<Long> fridgeIds = fridgeService.retrieveFridgeIdsByUsername(username);
         logger.info("All of the fridge ids for " + username + " have been retrieved.");
         return ResponseEntity.ok(fridgeIds);
@@ -101,7 +108,7 @@ public class FridgeController {
      * @return          Response entity containing a FridgeDTO.
      */
     @GetMapping(value = "/loadAll")
-    @Operation(summary = "Load all fridge ids for a given user.")
+    @Operation(summary = "Load all fridges for a given user.")
     public ResponseEntity<FridgeLoadAllDTO> loadFridgesByUser(@ParameterObject @RequestParam(name = "user") String username) {
         FridgeLoadAllDTO fridgeLoadDTO = fridgeService.retrieveFridgesByUsername(username);
         logger.info("All of the fridge ids for " + username + " have been retrieved.");
@@ -115,10 +122,10 @@ public class FridgeController {
      * @return                  Response entity containing the HTTP status.
      */
     @PostMapping(value = "/create")
-    @Operation(summary = "Load all fridge ids for a given user.")
+    @Operation(summary = "Create fridge with given name.")
     public ResponseEntity<Object> createFridge(@ParameterObject @RequestParam(name = "fridgeName") String fridgeName,
                                                Authentication authentication) {
-
+        if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
         logger.info("Attempting to create fridge for user " + authentication.getName());
         fridgeService.createFridge(fridgeName, authentication.getName());
         logger.info("Fridge and fridge member was successfully created!");
@@ -139,6 +146,22 @@ public class FridgeController {
         logger.info("User, " + authentication.getName() + " wants to update the fridge name");
         fridgeService.updateFridgeName(fridgeDTO, authentication.getName());
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * This endpoint retrieves all the users for a given fridge id.
+     * @param fridgeId  The id of the fridge to be checked, given as a Long
+     * @return          Response entity containing the users, given as a UserLoadAllDTO
+     */
+    @GetMapping(value = "/loadAllUsers")
+    @Operation(summary = "Load all fridge ids for a given user.")
+    public ResponseEntity<FridgeMemberLoadAllDTO> loadUsersByFridgeId(@ParameterObject @RequestParam(name="fridgeId") Long fridgeId,
+                                                                      Authentication authentication) {
+        if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
+
+        FridgeMemberLoadAllDTO fridgeMembers = fridgeService.retrieveMembersByFridgeId(fridgeId, authentication.getName());
+        logger.info("All of the fridge members for fridge with id " + fridgeId + " have been retrieved.");
+        return ResponseEntity.ok(fridgeMembers);
     }
 
 }

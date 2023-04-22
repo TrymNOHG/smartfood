@@ -89,7 +89,7 @@ public class FridgeServiceIntegrationTest {
             fridgeService.initializeFridge(user.getUsername());
 
             Fridge expectedFridge = new Fridge(1L, "Home Fridge",
-                    new HashSet<>(), new ArrayList<>(), new ArrayList<>());
+                    new HashSet<>(), new ArrayList<>(), new ArrayList<>(), new HashSet<>());
 
             Fridge actualFridge = fridgeRepository.findByFridgeId(1L)
                     .orElseThrow(() -> new FridgeNotFoundException(1L));
