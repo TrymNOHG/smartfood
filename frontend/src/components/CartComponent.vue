@@ -10,7 +10,7 @@
       <button id="searchbtn" @click="handleSearch">Search</button>
       <div class="dropper">
         <vue-collapsible-panel-group accordion>
-          <vue-collapsible-panel :expanded="false">
+          <vue-collapsible-panel :expanded="isExpanded.value">
             <template #title> Search results </template>
             <template #content>
               <SearchItem
@@ -62,7 +62,7 @@ import BasicButton from "../components/basic-components/BasicButton.vue";
 import SearchInput from "../components/basic-components/SearchInput.vue";
 import CartItem from "@/components/basic-components/CartItem.vue";
 import { useLoggedInStore } from "@/store/store";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 export default {
   name: "Cart",
   components: {
@@ -80,11 +80,19 @@ export default {
     const items = ref([]); // list of items in the cart
     const searchQuery = ref(""); // search query entered by the user
     const searchItems = ref([]);
-    const store = useLoggedInStore();
+    const isExpanded = ref(true);
 
     onMounted(() => {
       loadItemsFromCart();
     });
+
+     // Watch the searchItems array for changes and update the isExpanded ref accordingly
+     watch(searchItems, () => {
+      console.log("searchQuery: "+!searchQuery.value.length)
+      isExpanded.value = !searchQuery.value.length;
+    });
+
+    
 
     const loadItemsFromCart = async () => {
       try {
@@ -235,6 +243,7 @@ export default {
       addItemToList,
       loadItemsFromCart,
       inc_dec_CartItemAmount,
+      isExpanded,
     };
   },
 };
