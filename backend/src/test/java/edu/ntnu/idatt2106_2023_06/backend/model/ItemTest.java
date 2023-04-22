@@ -37,7 +37,7 @@ class ItemTest {
         @Test
         void required_args_constructor_can_be_made() {
             try {
-                Item item = new Item("Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()), 200000);
+                Item item = new Item("Tine Melk", new Store(1L, "Dairy", new ArrayList<>()), 200000);
             } catch (Exception e) {
                 fail();
             }
@@ -50,7 +50,7 @@ class ItemTest {
                         .builder()
                         .itemId(1L)
                         .productName("Tine Melk")
-                        .briefDesc("Tine melk kommer fra fri gående, grass matet kuer.")
+                        .desc("Tine melk kommer fra fri gående, grass matet kuer.")
                         .store(new Store(1L, "Dairy", new ArrayList<>()))
                         .price(200000)
                         .build();
@@ -73,14 +73,14 @@ class ItemTest {
             });
         }
 
-        @Test
-        void brief_description_cannot_be_null(){
-            assertThrows(NullPointerException.class, () -> {
-                Item item = new Item(1L, "Tine melk", null, new Store(1L, "Dairy",
-                        new ArrayList<>()), 200000, new Date(), new Date(), null, new ArrayList<>(),
-                        new ArrayList<>(), new ArrayList<>());
-            });
-        }
+//        @Test
+//        void brief_description_cannot_be_null(){
+//            assertThrows(NullPointerException.class, () -> {
+//                Item item = new Item(1L, "Tine melk", null, new Store(1L, "Dairy",
+//                        new ArrayList<>()), 200000, new Date(), new Date(), null, new ArrayList<>(),
+//                        new ArrayList<>(), new ArrayList<>());
+//            });
+//        }
 
         @Test
         void food_category_cannot_be_null(){
@@ -107,15 +107,15 @@ class ItemTest {
             });
         }
 
-        @Test
-        void brief_description_cannot_be_set_to_null(){
-            Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
-                    new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(),
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-            assertThrows(NullPointerException.class, () -> {
-                item.setBriefDesc(null);
-            });
-        }
+//        @Test
+//        void brief_description_cannot_be_set_to_null(){
+//            Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+//                    new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(),
+//                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+//            assertThrows(NullPointerException.class, () -> {
+//                item.setDesc(null);
+//            });
+//        }
 
         @Test
         void food_category_cannot_be_set_to_null(){
@@ -183,7 +183,7 @@ class ItemTest {
                     store, 200000, new Date(), new Date(), null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             String expectedBriefDesc = "Tine melk kommer fra fri gående, grass matet kuer.";
 
-            assertEquals(expectedBriefDesc, item.getBriefDesc());
+            assertEquals(expectedBriefDesc, item.getDesc());
         }
 
         @Test

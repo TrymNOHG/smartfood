@@ -24,7 +24,8 @@ class FridgeTest {
         @Test
         void all_arg_constructor_can_be_made() {
             try {
-                Fridge fridge = new Fridge(1L, "Fridge", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
+                Fridge fridge = new Fridge(1L, "Fridge", new HashSet<>(),
+                        new ArrayList<>(), new ArrayList<>(), new HashSet<>());
             } catch (Exception e) {
                 fail();
             }
@@ -57,7 +58,8 @@ class FridgeTest {
     @Nested
     class Fridge_can_properly_get {
         Fridge getFridge() {
-            return new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
+            return new Fridge(1L, "Norman family", new HashSet<>(),
+                    new ArrayList<>(), new ArrayList<>(), new HashSet<>());
         }
 
         @Test
@@ -109,13 +111,25 @@ class FridgeTest {
             assertEquals(expectedItems, actualItems);
         }
 
+        @Test
+        void statistics() {
+            Fridge fridge = getFridge();
+            Set<Statistics> expectedStats = new HashSet<>();
+
+            Set<Statistics> actualStats = fridge.getStats();
+
+            assertEquals(expectedStats, actualStats);
+        }
+
+
 
     }
 
     @Nested
     class Fridge_can_properly_set {
         Fridge getFridge() {
-            return new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(), new ArrayList<>());
+            return new Fridge(1L, "Norman family", new HashSet<>(),
+                    new ArrayList<>(), new ArrayList<>(), new HashSet<>());
         }
 
         @Test
@@ -161,6 +175,17 @@ class FridgeTest {
             List<FridgeItems> actualFridgeItems = fridge.getFridgeItems();
 
             assertEquals(expectedItems, actualFridgeItems);
+        }
+
+        @Test
+        void stats() {
+            Fridge fridge = getFridge();
+            Set<Statistics> expectedStats = new HashSet<>();
+
+            fridge.setStats(expectedStats);
+            Set<Statistics> actualStats = fridge.getStats();
+
+            assertEquals(expectedStats, actualStats);
         }
 
     }

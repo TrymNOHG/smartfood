@@ -44,12 +44,11 @@ public class Item {
     /**
      * A brief description of this items.
      */
-    @Column(name = "brief_desc", nullable = false)
-    @NonNull
-    private String briefDesc;
+    @Column(name = "description")
+    private String desc;
 
     /**
-     * The category this items belongs to.
+     * The store this items belongs to.
      */
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "store_id")
