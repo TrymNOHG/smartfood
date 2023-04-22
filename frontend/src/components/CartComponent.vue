@@ -53,10 +53,12 @@ import {
 } from "@dafcoe/vue-collapsible-panel";
 import "@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { deleteItemFromShoppingList } from "../services/ItemService";
-import { addItemToShoppingList } from "../services/ItemService";
-import { getItemsFromShoppingList } from "../services/ItemService";
-import { getItems } from "../services/ApiService";
+import {
+  deleteItemFromShoppingList,
+  addItemToShoppingList,
+  getItemsFromShoppingList
+} from "@/services/ItemService";
+import { getItems } from "@/services/ApiService";
 import SearchItem from "../components/basic-components/SearchItem.vue";
 import BasicButton from "../components/basic-components/BasicButton.vue";
 import SearchInput from "../components/basic-components/SearchInput.vue";
@@ -75,8 +77,8 @@ export default {
     CartItem,
   },
   setup() {
-    var itemAmount = ref(1);
-    var submitMessage = ref("norvegia");
+    const itemAmount = ref(1);
+    const submitMessage = ref("norvegia");
     const items = ref([]); // list of items in the cart
     const searchQuery = ref(""); // search query entered by the user
     const searchItems = ref([]);
@@ -123,7 +125,7 @@ export default {
       addItemToShoppingList(itemDTO, fridgeId, false)
         .then(async (response) => {
           if (response !== undefined) {
-            loadItemsFromCart();
+            await loadItemsFromCart();
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -139,7 +141,7 @@ export default {
     }
 
     const handleSubtract = async (item) => {
-      if (itemAmount.value == 1) {
+      if (itemAmount.value === 1) {
         return;
       }
       itemAmount.value -= 1;
@@ -158,7 +160,7 @@ export default {
       deleteItemFromShoppingList(ItemRemoveDTO, false)
         .then(async (response) => {
           if (response !== undefined) {
-            loadItemsFromCart();
+            await loadItemsFromCart();
             submitMessage.value = "Succesful request";
             
             setTimeout(() => {
@@ -201,7 +203,7 @@ export default {
       addItemToShoppingList(itemDTO, fridgeId, false)
         .then(async (response) => {
           if (response !== undefined) {
-            loadItemsFromCart();
+            await loadItemsFromCart();
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -216,7 +218,6 @@ export default {
 
     function handleSearch() {
       console.log("clicked search");
-      // filter the list of items based on the search query
       var items = async () => {
         return await getItems(searchQuery.value);
       };
@@ -236,8 +237,8 @@ export default {
       handleSubtract,
       handleDeleteItem,
       submitMessage,
-      items, // list of items in the cart
-      searchQuery, // search query entered by the user
+      items,
+      searchQuery,
       searchItems,
       handleSearch,
       addItemToList,
@@ -266,7 +267,6 @@ input[type="number"] {
   width: 70%;
   color: white;
   margin: auto;
-  margin-bottom: 20px;
 }
 
 .vcpg {
@@ -276,8 +276,7 @@ input[type="number"] {
   border-radius: 10px 10px 10px 10px;
 }
 #searchbtn {
-  border: 0;
-  padding: 0px 10px;
+  padding: 0 10px;
   margin-top: 10px;
   color: #fff;
   background: #6c6c6c;
@@ -369,7 +368,7 @@ body {
   height: 423px;
   margin: 80px auto;
   background: #ffffff;
-  box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 1px 2px 3px 0 rgba(0, 0, 0, 0.1);
   border-radius: 6px;
 
   display: flex;

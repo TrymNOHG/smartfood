@@ -99,8 +99,8 @@ export const useFridgeStore = defineStore('fridgeStore', {
         // Define a mutation to update the value of currentFridge
         setCurrentFridge(state, fridge) {
             state.currentFridge = fridge
-        }
-    }   
+        },
+    }
 });
 
 
