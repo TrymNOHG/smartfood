@@ -35,6 +35,7 @@
         :key="index"
         :image="item.image"
         :name="item.name"
+        :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
         :weight="item.weight"
         :price="item.price"
         :quantity="item.quantity"
@@ -127,6 +128,7 @@ export default {
             store.setSessionToken(response.data.token);
             await store.fetchUser();
             submitMessage.value = "Succesful request";
+            location.reload()
             setTimeout(() => {
               submitMessage.value = "";
             }, 3000);

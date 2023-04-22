@@ -8,7 +8,7 @@
 
     <div class="description">
       <span>{{ name }}</span>
-      <span>date added</span>
+      <span>{{ date_added }}</span>
     </div>
 
     <div class="quantity">
@@ -45,6 +45,10 @@ export default {
       required: true,
     },
     name: {
+      type: String,
+      required: true,
+    },
+    date_added:{
       type: String,
       required: true,
     },
