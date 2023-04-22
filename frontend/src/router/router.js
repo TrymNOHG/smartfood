@@ -9,6 +9,7 @@ import ProfileView from "@/views/ProfileView.vue";
 import StatisticsView from "@/views/StatisticsView.vue";
 import FridgeView from "@/views/FridgeView.vue";
 import { useLoggedInStore } from '@/store/store';
+import itemView from "@/views/itemView.vue";
 
 
 const router = createRouter({
@@ -62,6 +63,11 @@ const router = createRouter({
       name: 'fridgeView',
       component: FridgeView,
       props: true
+    },
+    {
+      path: '/fridge/:itemName/item?id=:itemId',
+      name: 'itemView',
+      component: itemView,
     },
 
   ]

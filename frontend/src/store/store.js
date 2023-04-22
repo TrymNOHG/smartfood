@@ -75,7 +75,7 @@ export const useFridgeStore = defineStore('fridgeStore', {
         getCurrentFridge(){
             return this.currentFridge
         },
-        
+
     },
 
     actions: {
@@ -98,7 +98,6 @@ export const useFridgeStore = defineStore('fridgeStore', {
         async updateFridgeNameByDTO(fridgeDTO){
             await updateFridge(fridgeDTO)
         },
-        // Define a mutation to update the value of currentFridge
         async setCurrentFridgeById(fridgeId) {
             for(let fridge of this.allFridges) {
                 if(fridge.fridgeId == fridgeId) {
@@ -111,8 +110,12 @@ export const useFridgeStore = defineStore('fridgeStore', {
         async setCurrentFridgeByFridge(state, fridge) {
             const { fridgeId, fridgeName } = fridge
             state.currentFridge = { fridgeId, fridgeName }
-        }
-    }   
+        },
+
+        setCurrentFridge(state, fridge) {
+            state.currentFridge = fridge
+        },
+    }
 });
 
 
