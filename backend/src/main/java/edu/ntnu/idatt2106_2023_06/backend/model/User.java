@@ -83,9 +83,16 @@ public class User implements UserDetails {
     /**
      * The statistics of the fridge.
      */
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user")
     @ToString.Exclude
     private Set<Statistics> stats = new HashSet<>();
+
+    @PreRemove
+    private void removeStats() {
+        for (Statistics s : stats) {
+            s.setUser(null);
+        }
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
