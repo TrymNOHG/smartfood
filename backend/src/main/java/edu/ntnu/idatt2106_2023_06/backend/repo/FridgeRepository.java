@@ -1,8 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.repo;
 
 import edu.ntnu.idatt2106_2023_06.backend.model.Fridge;
-import edu.ntnu.idatt2106_2023_06.backend.model.Item;
-import edu.ntnu.idatt2106_2023_06.backend.model.User;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -43,12 +41,30 @@ public interface FridgeRepository extends JpaRepository<Fridge, Long>, JpaSpecif
             "END IF; " +
             "END; ", nativeQuery = true)
     @Profile("!test")
-    void createTrigger();
+    void createTriggerForDeletingMember();
 
     @Modifying
     @Transactional
     @Query(value = "DROP TRIGGER IF EXISTS fridge_member_deleted", nativeQuery = true)
     @Profile("!test")
-    void dropTrigger();
+    void dropMemberTrigger();
+
+    @Modifying
+    @Transactional
+    @Query(value = "CREATE TRIGGER fridge_deleted " +
+            "BEFORE DELETE ON fridge " +
+            "FOR EACH ROW " +
+            "BEGIN " +
+            "UPDATE stats SET fridge_id = NULL WHERE fridge_id = OLD.fridge_id; " +
+            "END;", nativeQuery = true)
+    @Profile("!test")
+    void createTriggerForNullingFridgeStats();
+
+    @Modifying
+    @Transactional
+    @Query(value = "DROP TRIGGER IF EXISTS fridge_deleted", nativeQuery = true)
+    @Profile("!test")
+    void dropStatsTrigger();
+
 
 }

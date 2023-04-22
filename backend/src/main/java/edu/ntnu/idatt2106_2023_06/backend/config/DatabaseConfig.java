@@ -21,15 +21,23 @@ public class DatabaseConfig {
     /**
      * This method initializes the database triggers. The first of which is used to respond to a user being deleted.
      * When a user is deleted, the corresponding FridgeMember is also deleted and ultimately, the fridge if possible.
-     * The second trigger deletes a fridge if the last superuser is deleted.
+     * The second trigger sets the user value to null in the stats table when deleted. The third trigger deletes
+     * a fridge if the last superuser is deleted. The fourth trigger sets the fridge value to null in the stats table
+     * when fridge is deleted.
      */
     @PostConstruct
     public void init() {
-        userRepository.dropTrigger();
-        userRepository.createTrigger();
+        userRepository.dropMemberTrigger();
+        userRepository.createTriggerForDeletingMember();
 
-        fridgeRepository.dropTrigger();
-        fridgeRepository.createTrigger();
+        userRepository.dropUserStatTrigger();
+        userRepository.createTriggerForNullingUserStat();
+
+        fridgeRepository.dropMemberTrigger();
+        fridgeRepository.createTriggerForDeletingMember();
+
+        fridgeRepository.dropStatsTrigger();
+        fridgeRepository.createTriggerForNullingFridgeStats();
     }
 
 }
