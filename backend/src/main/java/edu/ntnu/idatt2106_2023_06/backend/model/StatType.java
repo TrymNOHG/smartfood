@@ -2,6 +2,8 @@ package edu.ntnu.idatt2106_2023_06.backend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +49,8 @@ public class StatType {
      * The items from the given store.
      */
     @OneToMany(mappedBy = "statType", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
-    private List<Statistics> itemsInStore = new ArrayList<>();
+    private List<Statistics> statistics = new ArrayList<>();
 
 }
