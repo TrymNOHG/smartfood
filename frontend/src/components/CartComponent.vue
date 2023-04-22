@@ -61,7 +61,7 @@ import SearchItem from "../components/basic-components/SearchItem.vue";
 import BasicButton from "../components/basic-components/BasicButton.vue";
 import SearchInput from "../components/basic-components/SearchInput.vue";
 import CartItem from "@/components/basic-components/CartItem.vue";
-import { useLoggedInStore } from "@/store/store";
+import { useLoggedInStore, useFridgeStore } from "@/store/store";
 import { ref, onMounted, computed, watch } from "vue";
 export default {
   name: "Cart",
@@ -75,6 +75,8 @@ export default {
     CartItem,
   },
   setup() {
+
+    console.log(useFridgeStore().getCurrentFridge);
     var itemAmount = ref(1);
     var submitMessage = ref("norvegia");
     const items = ref([]); // list of items in the cart
