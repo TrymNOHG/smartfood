@@ -26,7 +26,7 @@
     </div>
  
     <div class="image">
-      <img src="../assets/images/face.webp" alt="" style="width: 80px;"/>
+      <img src="../../assets/images/face.webp" alt="" style="width: 80px;"/>
     </div>
  
     <div class="description">
@@ -45,7 +45,7 @@
   </template>
   
   <script>
-  import BasicInput from '../components/basic-components/BasicInput.vue';
+  import BasicInput from '../basic-components/BasicInput.vue';
   
   export default {
     components: {
@@ -139,14 +139,14 @@ body {
 .delete-btn {
   width: 18px;
   height: 17px;
-  background: url('../assets/images/delete-icn.svg') no-repeat center;
+  background: url('../../assets/images/delete-icn.svg') no-repeat center;
 }
  
 .edit-user {
   position: absolute;
   top: 9px;
   left: 15px;
-  background: url('../assets/images/edit.svg');
+  background: url('../../assets/images/edit.svg');
   width: 60px;
   height: 60px;
   background-size: 2900%;

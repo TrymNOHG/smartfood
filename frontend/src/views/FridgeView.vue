@@ -14,38 +14,40 @@
   </div>
   <div class="members-fridge">
     <router-link id="member" class="link" to="/members">Members</router-link>
-    <router-link id="fridge" class="link" to="/fridge">Fridge</router-link>
+    <router-link id="fridge" class="link" to="/fridges">Fridge</router-link>
   </div>
   <!--TODO: add infinite scroller or pagination-->
   <div class="wrapper">
-    <specific-fridge-component v-for="(item, index) in items" :key="index" :item="item" />
+    <basic-fridge-item v-for="(item, index) in items" :key="index" :item="item" :currenFridge="fridge" />
   </div>
 
 </template>
 
 <script>
 import {useRoute} from "vue-router";
-import MemberComponent from "@/components/MemberComponent.vue";
-import SpecificFridgeComponent from "@/components/SpecificFridgeComponent.vue";
+import MemberComponent from "@/components/FridgeList/MemberComponent.vue";
+import BasicFridgeItem from "@/components/SpecificFridge/BasicFridgeItem.vue";
 
 export default {
   name: "FridgeView",
-  components: {SpecificFridgeComponent, MemberComponent},
+  components: {BasicFridgeItem, MemberComponent},
 
   setup() {
     const route = useRoute()
-    const fridgeName = route.params.name
-    const fridgeId = route.params.id
+    const fridge = {
+      "fridgeId": route.params.id,
+      "fridgeName": route.params.name
+    }
 
-    return{
-      fridgeName,
-      fridgeId,
+    return {
+      fridge
     }
   },
 
   data() {
     return {
       items: [{
+        itemId: 1,
         itemName: "Bananas",
         itemPrice: "2.50",
         itemBuyDate: "2023-04-19",
@@ -53,6 +55,7 @@ export default {
         itemLeft: "4"
       },
         {
+          itemId: 2,
           itemName: "Milk",
           itemPrice: "3.99",
           itemBuyDate: "2023-04-21",
@@ -60,6 +63,7 @@ export default {
           itemLeft: "1"
         },
         {
+          itemId: 3,
           itemName: "Eggs",
           itemPrice: "1.99",
           itemBuyDate: "2023-04-21",
@@ -186,10 +190,14 @@ export default {
 
 @media (max-width: 650px) {
 
+  body {
+    height: 95px;
+    width: 100%;
+  }
+
   .wrapper {
     margin-left: 2.5%;
     height: 100%;
-    grid-template-columns: repeat(auto-fill, minmax(325px, 325px));
     grid-template-rows: repeat(auto-fill, minmax(95px, 95px));
   }
 

@@ -1,28 +1,30 @@
 <template>
   <body>
-  <div class="card" :style="{ 'border-color': borderColor }">
-    <div class="front-side">
-      <img src="@/assets/images/Large.jpg" alt="item picture">
-    </div>
-    <div class="back-side">
-      <div class="item-detail">
-        <div class="item-name">
-          <h2>{{item.itemName}}</h2>
-          <h3>Expiration date: {{ item.itemExpirationDate }}</h3>
-          <br>
+  <router-link :to="{ name: 'itemView', params: { itemName: item.itemName, itemId: item.itemId}}">
+      <div class="card" :style="{ 'border-color': borderColor }">
+        <div class="front-side">
+          <img src="@/assets/images/Large.jpg" alt="item picture">
         </div>
-        <h4>Price: {{ item.itemPrice }}; kr</h4>
-        <h4>Buy date: {{ item.itemBuyDate }}</h4>
-        <h4>Expiration date: {{ item.itemExpirationDate }}</h4>
-        <h4>How much is Left: {{ item.itemLeft }}L</h4>
-        <button class="delete-btn" @click="deleteCard">
-          <span>
-            <font-awesome-icon icon="fa-solid fa-trash" @click="deleteCard()" class="icon delete-icon" />
-          </span>
-        </button>
+        <div class="back-side">
+          <div class="item-detail">
+            <div class="item-name">
+              <h2>{{item.itemName}}</h2>
+              <h3>Expiration date: {{ item.itemExpirationDate }}</h3>
+              <br>
+            </div>
+            <h4>Price: {{ item.itemPrice }}; kr</h4>
+            <h4>Buy date: {{ item.itemBuyDate }}</h4>
+            <h4>Expiration date: {{ item.itemExpirationDate }}</h4>
+            <h4>How much is Left: {{ item.itemLeft }}L</h4>
+            <button class="delete-btn" @click="deleteCard">
+            <span>
+              <font-awesome-icon icon="fa-solid fa-trash" @click="deleteCard()" class="icon delete-icon" />
+            </span>
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+    </router-link>
   </body>
 </template>
 
@@ -37,6 +39,7 @@ export default {
     item: {
       type: Object,
       default: () => ({
+        itemId: "",
         itemName: "",
         itemPicture: null,
         itemPrice: "",
@@ -44,7 +47,7 @@ export default {
         itemExpirationDate: "2023-04-16",
         itemLeft: ""
       })
-    }
+    },
   },
 
   setup(props) {

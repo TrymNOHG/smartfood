@@ -59,10 +59,10 @@ import {
   getItemsFromShoppingList
 } from "@/services/ItemService";
 import { getItems } from "@/services/ApiService";
-import SearchItem from "../components/basic-components/SearchItem.vue";
-import BasicButton from "../components/basic-components/BasicButton.vue";
-import SearchInput from "../components/basic-components/SearchInput.vue";
-import CartItem from "@/components/basic-components/CartItem.vue";
+import SearchItem from "../searchFromApi/SearchItem.vue";
+import BasicButton from "../basic-components/BasicButton.vue";
+import SearchInput from "../searchFromApi/SearchInput.vue";
+import CartItem from "@/components/shoppingcart/CartItem.vue";
 import { useLoggedInStore } from "@/store/store";
 import { ref, onMounted, computed, watch } from "vue";
 export default {
@@ -79,8 +79,8 @@ export default {
   setup() {
     const itemAmount = ref(1);
     const submitMessage = ref("norvegia");
-    const items = ref([]); // list of items in the cart
-    const searchQuery = ref(""); // search query entered by the user
+    const items = ref([]);
+    const searchQuery = ref("");
     const searchItems = ref([]);
     const isExpanded = ref(true);
 
@@ -88,7 +88,6 @@ export default {
       loadItemsFromCart();
     });
 
-     // Watch the searchItems array for changes and update the isExpanded ref accordingly
      watch(searchItems, () => {
       console.log("searchQuery: "+!searchQuery.value.length)
       isExpanded.value = !searchQuery.value.length;
@@ -98,7 +97,7 @@ export default {
 
     const loadItemsFromCart = async () => {
       try {
-        const response = await getItemsFromShoppingList(1); // replace with your API call to fetch the items from the backend
+        const response = await getItemsFromShoppingList(1);
         items.value = response.data;
         console.log(response.data);
       } catch (error) {
@@ -411,7 +410,7 @@ body {
 .delete-btn {
   width: 18px;
   height: 17px;
-  background: url("../assets/images/delete-icn.svg") no-repeat center;
+  background: url("../../assets/images/delete-icn.svg") no-repeat center;
 }
 
 .is-active {
