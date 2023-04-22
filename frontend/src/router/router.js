@@ -62,6 +62,7 @@ const router = createRouter({
       path: '/fridges/:name/fridge?id=:id',
       name: 'fridgeView',
       component: FridgeView,
+      props: true
     },
     {
       path: '/fridge/:itemName/item?id=:itemId',

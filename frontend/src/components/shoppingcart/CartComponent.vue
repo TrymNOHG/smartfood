@@ -53,17 +53,15 @@ import {
 } from "@dafcoe/vue-collapsible-panel";
 import "@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import {
-  deleteItemFromShoppingList,
-  addItemToShoppingList,
-  getItemsFromShoppingList
-} from "@/services/ItemService";
-import { getItems } from "@/services/ApiService";
-import SearchItem from "../searchFromApi/SearchItem.vue";
-import BasicButton from "../basic-components/BasicButton.vue";
-import SearchInput from "../searchFromApi/SearchInput.vue";
-import CartItem from "@/components/shoppingcart/CartItem.vue";
-import { useLoggedInStore } from "@/store/store";
+import { deleteItemFromShoppingList } from "../services/ItemService";
+import { addItemToShoppingList } from "../services/ItemService";
+import { getItemsFromShoppingList } from "../services/ItemService";
+import { getItems } from "../services/ApiService";
+import SearchItem from "../components/basic-components/SearchItem.vue";
+import BasicButton from "../components/basic-components/BasicButton.vue";
+import SearchInput from "../components/basic-components/SearchInput.vue";
+import CartItem from "@/components/basic-components/CartItem.vue";
+import { useLoggedInStore, useFridgeStore } from "@/store/store";
 import { ref, onMounted, computed, watch } from "vue";
 export default {
   name: "Cart",
@@ -77,17 +75,21 @@ export default {
     CartItem,
   },
   setup() {
-    const itemAmount = ref(1);
-    const submitMessage = ref("norvegia");
-    const items = ref([]);
-    const searchQuery = ref("");
+
+    console.log(useFridgeStore().getCurrentFridge);
+    var itemAmount = ref(1);
+    var submitMessage = ref("norvegia");
+    const items = ref([]); // list of items in the cart
+    const searchQuery = ref(""); // search query entered by the user
     const searchItems = ref([]);
     const isExpanded = ref(true);
+    const currentFridge = useFridgeStore().getCurrentFridge;
 
     onMounted(() => {
       loadItemsFromCart();
     });
 
+     // Watch the searchItems array for changes and update the isExpanded ref accordingly
      watch(searchItems, () => {
       console.log("searchQuery: "+!searchQuery.value.length)
       isExpanded.value = !searchQuery.value.length;
@@ -97,7 +99,7 @@ export default {
 
     const loadItemsFromCart = async () => {
       try {
-        const response = await getItemsFromShoppingList(1);
+        const response = await getItemsFromShoppingList(currentFridge.fridgeId); // replace with your API call to fetch the items from the backend
         items.value = response.data;
         console.log(response.data);
       } catch (error) {
@@ -117,7 +119,7 @@ export default {
         image: item.image,
         quantity: amount,
       };
-      const fridgeId = 1;
+      const fridgeId = currentFridge.fridgeId;
 
       console.log(itemDTO);
       event.stopPropagation();  
@@ -151,7 +153,7 @@ export default {
       const ItemRemoveDTO = {
         itemName: item.name,
         store: item.store,
-        fridgeId: 1,
+        fridgeId: currentFridge.fridgeId,
         quantity: item.quantity,
       };
       console.log(ItemRemoveDTO);
@@ -195,7 +197,7 @@ export default {
         image: item.image,
         quantity: 1,
       };
-      const fridgeId = 1;
+      const fridgeId = currentFridge.fridgeId;
 
       console.log(itemDTO);
 
