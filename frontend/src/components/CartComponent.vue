@@ -38,8 +38,8 @@
         :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
         :weight="item.weight"
         :quantity="item.quantity"
-        @add="handleAdd(item)"
-        @subtract="handleSubtract(item)"
+        @add="inc_dec_CartItemAmount(item, 1)"
+        @subtract="inc_dec_CartItemAmount(item, -1)"
         @delete-item="handleDeleteItem(item)"
       />
     </div>
@@ -87,21 +87,48 @@ export default {
     });
 
     const loadItemsFromCart = async () => {
-  try {
-    const response = await getItemsFromShoppingList(1); // replace with your API call to fetch the items from the backend
-    items.value = response.data;
-    console.log(response.data)
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-    const handleAdd = async (item) => {
-      console.log()
-      addItemToList(item);
-      console.log(item.quantity);
-      loadItemsFromCart();
+      try {
+        const response = await getItemsFromShoppingList(1); // replace with your API call to fetch the items from the backend
+        items.value = response.data;
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
     };
+
+    function inc_dec_CartItemAmount(item, amount) {
+      console.log(item);
+      const itemDTO = {
+        name: item.name,
+        description: item.description,
+        store: item.store,
+        price: item.price,
+        purchaseDate: item.purhchaseDate,
+        expirationDate: item.expirationDate,
+        image: item.image,
+        quantity: amount,
+      };
+      const fridgeId = 1;
+
+      console.log(itemDTO);
+      event.stopPropagation();  
+      addItemToShoppingList(itemDTO, fridgeId, false)
+        .then(async (response) => {
+          if (response !== undefined) {
+            loadItemsFromCart();
+          } else {
+            console.log("Something went wrong");
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+          }
+        })
+        .catch((error) => {
+          console.warn("error1", error); //TODO: add exception handling
+        });
+
+      loadItemsFromCart();
+    
+    }
 
     const handleSubtract = async (item) => {
       if (itemAmount.value == 1) {
@@ -126,7 +153,7 @@ export default {
             store.setSessionToken(response.data.token);
             await store.fetchUser();
             submitMessage.value = "Succesful request";
-            location.reload()
+            location.reload();
             setTimeout(() => {
               submitMessage.value = "";
             }, 3000);
@@ -147,43 +174,38 @@ export default {
     };
 
     //buy item from search
-      function addItemToList(item) {
-        console.log(item.name + " " + item.store.name);
+    function addItemToList(item) {
+      console.log(item.name + " " + item.store.name);
 
-        const itemDTO = {
-          name: item.name,
-          description: item.description,
-          store: item.store.name,
-          price: item.price_history[0].price,
-          purchaseDate: "2023-04-20",
-          expirationDate: "2023-04-20",
-          image: item.image,
-          quantity: 1,
-        };
-        const fridgeId = 1;
+      const itemDTO = {
+        name: item.name,
+        description: item.description,
+        store: item.store.name,
+        price: item.currentPrice,
+        purchaseDate: "2023-04-20",
+        expirationDate: "2023-04-20",
+        image: item.image,
+        quantity: 1,
+      };
+      const fridgeId = 1;
 
-        console.log(itemDTO)
+      console.log(itemDTO);
 
-        addItemToShoppingList(itemDTO, fridgeId, false)
-          .then(async (response) => {
-            if (response !== undefined) {
-              loadItemsFromCart();
-            } else {
-              console.log("Something went wrong");
-              submitMessage.value =
-                "Something went wrong. Please try again later.";
-              setTimeout(() => {
-                submitMessage.value = "";
-              }, 3000);
-            }
-          })
-          .catch((error) => {
-            //submitMessage.value = error.response.data["Message:"];
-            //console.log(error.response.data);
-            console.warn("error1", error); //TODO: add exception handling
-          });
-        event.stopPropagation();
-      }
+      addItemToShoppingList(itemDTO, fridgeId, false)
+        .then(async (response) => {
+          if (response !== undefined) {
+            loadItemsFromCart();
+          } else {
+            console.log("Something went wrong");
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+          }
+        })
+        .catch((error) => {
+          console.warn("error1", error); //TODO: add exception handling
+        });
+      event.stopPropagation();
+    }
 
     function handleSearch() {
       console.log("clicked search");
@@ -204,7 +226,6 @@ export default {
 
     return {
       itemAmount,
-      handleAdd,
       handleSubtract,
       handleDeleteItem,
       submitMessage,
@@ -214,6 +235,7 @@ export default {
       handleSearch,
       addItemToList,
       loadItemsFromCart,
+      inc_dec_CartItemAmount,
     };
   },
 };

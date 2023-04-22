@@ -1,7 +1,7 @@
 <template>
   <div class="item">
     <div class="product-img">
-        <div class="img-container">
+      <div class="img-container">
         <img :src="image" alt="" />
       </div>
     </div>
@@ -29,7 +29,6 @@
       </button>
     </div>
 
-
     <div class="buttons">
       <span class="delete-btn" @click="handleDeleteItem"></span>
     </div>
@@ -47,7 +46,7 @@ export default {
       type: String,
       required: true,
     },
-    date_added:{
+    date_added: {
       type: String,
       required: true,
     },
@@ -57,7 +56,7 @@ export default {
     },
   },
   methods: {
-    handleAdd() {
+    handleAdd(item) {
       this.$emit("add");
     },
     handleSubtract() {
@@ -148,7 +147,7 @@ export default {
 }
 
 .description {
-    position: relative;
+  position: relative;
   display: flex;
   flex-direction: column;
   max-width: 250px;
@@ -205,127 +204,116 @@ input:focus {
   outline: 0;
 }
 
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 @media only screen and (max-width: 800px) {
-    .product-img {
-  width: 100px; /* set a fixed width for the containing div */
-  height: 100px; /* set a fixed height for the containing div */
-}
+  .product-img {
+    width: 100px; /* set a fixed width for the containing div */
+    height: 100px; /* set a fixed height for the containing div */
+  }
 
-.img-container {
-  max-width: 100%; /* ensure the image does not exceed the container width */
-  max-height: 100%; /* ensure the image does not exceed the container height */
-  overflow: hidden; /* hide any overflow beyond the container */
-}
+  .img-container {
+    max-width: 100%; /* ensure the image does not exceed the container width */
+    max-height: 100%; /* ensure the image does not exceed the container height */
+    overflow: hidden; /* hide any overflow beyond the container */
+  }
 
-.img-container img {
-  width: auto; /* allow the image to maintain its aspect ratio */
-  height: auto; /* allow the image to maintain its aspect ratio */
-  max-width: 100%; /* ensure the image does not exceed the container width */
-  max-height: 100%; /* ensure the image does not exceed the container height */
-}
+  .img-container img {
+    width: auto; /* allow the image to maintain its aspect ratio */
+    height: auto; /* allow the image to maintain its aspect ratio */
+    max-width: 100%; /* ensure the image does not exceed the container width */
+    max-height: 100%; /* ensure the image does not exceed the container height */
+  }
 
-.description {
-  padding-top: 10px;
-  margin-right:0px ;
-  width: calc(50%);
-}
+  .description {
+    padding-top: 10px;
+    margin-right: 0px;
+    width: calc(50%);
+  }
 
-.description {
+  .description {
     position: relative;
-  display: flex;
-  flex-direction: column;
-  max-width: 250px;
-}
+    display: flex;
+    flex-direction: column;
+    max-width: 250px;
+  }
 
-.description span:first-child {
-  margin-bottom: 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  .description span:first-child {
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-.description span:last-child {
-  font-weight: 10;
-  margin-top: 8px;
-  color: #86939e;
-  white-space: normal;
-}
-.delete-btn {
-  width: 18px;
-  height: 17px;
-  margin-left: 15px;
-}
-.item {
-  padding: 0px 0px;
-  height: 120px;
-  width: 70%;
-  margin: auto;
-  display: flex;
-  justify-content: space-between !important;
-}
+  .description span:last-child {
+    font-weight: 10;
+    margin-top: 8px;
+    color: #86939e;
+    white-space: normal;
+  }
+  .delete-btn {
+    width: 18px;
+    height: 17px;
+    margin-left: 15px;
+  }
+  .item {
+    padding: 0px 0px;
+    height: 120px;
+    width: 70%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between !important;
+  }
 }
 @media only screen and (min-width: 350px) and (max-width: 480px) {
-    .product-img img {
-  width: 35px; /* set a fixed width for the containing div */
-  height: 50px; /* set a fixed height for the containing div */
-}
+  .product-img img {
+    width: 35px; /* set a fixed width for the containing div */
+    height: 50px; /* set a fixed height for the containing div */
+  }
 
-.item{
+  .item {
     width: 100vw;
-}
+  }
 
+  .img-container {
+    max-width: 150px; /* ensure the image does not exceed the container width */
+    max-height: 150px; /* ensure the image does not exceed the container height */
+  }
 
-
-.img-container {
-  max-width: 150px; /* ensure the image does not exceed the container width */
-  max-height: 150px; /* ensure the image does not exceed the container height */
-}
-
-.img-container img {
- 
-  max-width: 150px; 
-  max-height: 150px; 
-}
-
-
-
-
+  .img-container img {
+    max-width: 150px;
+    max-height: 150px;
+  }
 }
 
 @media only screen and (max-width: 350px) {
-.product-img img {
-        margin-top: 35px;
-  width: 20px; /* set a fixed width for the containing div */
-  height: 30px; /* set a fixed height for the containing div */
-}
+  .product-img img {
+    margin-top: 35px;
+    width: 20px; /* set a fixed width for the containing div */
+    height: 30px; /* set a fixed height for the containing div */
+  }
 
-.img-container {
-  max-width: 100px; /* ensure the image does not exceed the container width */
-  max-height: 100px; /* ensure the image does not exceed the container height */
-}
+  .img-container {
+    max-width: 100px; /* ensure the image does not exceed the container width */
+    max-height: 100px; /* ensure the image does not exceed the container height */
+  }
 
-.img-container img {
- 
-  max-width: 100px; 
-  max-height: 100px; 
-}
+  .img-container img {
+    max-width: 100px;
+    max-height: 100px;
+  }
 
-.img-container {
-  max-width: 100%; /* ensure the image does not exceed the container width */
-  max-height: 100%; /* ensure the image does not exceed the container height */
-  overflow: hidden; /* hide any overflow beyond the container */
-}
-
-
-
+  .img-container {
+    max-width: 100%; /* ensure the image does not exceed the container width */
+    max-height: 100%; /* ensure the image does not exceed the container height */
+    overflow: hidden; /* hide any overflow beyond the container */
+  }
 }
 </style>
