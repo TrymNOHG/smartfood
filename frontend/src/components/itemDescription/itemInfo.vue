@@ -2,8 +2,8 @@
   <div class="info-window">
     <h2 style="font-weight: bold">Informasjon om varen</h2>
     <div class="text">
-      <h3>Kjøpsdato: {{ price }}</h3>
-      <h3>Utløpsdato: {{ price }}</h3>
+      <h3>Kjøpsdato: {{ Kjøpsdato }}</h3>
+      <h3>Utløpsdato: {{ Utløpsdato }}</h3>
       <h3>Pris: {{ price }}kr</h3>
     </div>
   </div>

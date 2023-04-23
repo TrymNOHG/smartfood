@@ -13,7 +13,7 @@ export default {
 
   props: {
     itemName: null,
-    itemId: null,
+    itemPicture: null,
   }
 }
 </script>

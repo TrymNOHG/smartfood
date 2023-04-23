@@ -1,8 +1,5 @@
 import { defineStore } from 'pinia'
 import { getUser } from "@/services/UserService"
-import {loadAllCategories, loadMainCategories} from "@/services/CategoryService";
-import {filterByFullDesc, loadListingsByCategoryId} from "@/services/ItemService";
-import { ref, computed, watch } from "vue";
 import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
 
@@ -103,7 +100,7 @@ export const useFridgeStore = defineStore('fridgeStore', {
         },
         async setCurrentFridgeById(fridgeId) {
             for(let fridge of this.allFridges) {
-                if(fridge.fridgeId == fridgeId) {
+                if(fridge.fridgeId === fridgeId) {
                     this.currentFridge = fridge;
                     console.log(this.currentFridge);
                     return;
@@ -122,20 +119,17 @@ export const useFridgeStore = defineStore('fridgeStore', {
 });
 
 
-export const useImageStore = defineStore('imageStore', {
+export const useItemStore = defineStore('itemStore', {
     state: () => ({
-        imageToSend: []
+
     }),
 
     getters: {
-        test(){
-            return this.imageToSend.at(0);
-        }
+
     },
 
     actions: {
-        addImage(newImage){
-            this.imageToSend.unshift(newImage)
-        }
-    }
+    },
 });
+
+

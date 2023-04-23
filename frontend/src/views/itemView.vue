@@ -38,14 +38,13 @@ import {useFridgeStore} from "@/store/store";
 export default {
   name: "itemView",
   components: {ItemDelete, ItemInfo, ItemHeader},
+
   setup() {
     const route = useRoute();
     const fridgeStore = useFridgeStore();
     const itemName = route.params.itemName;
     const itemId = route.params.itemId;
-
     const fridge = fridgeStore.currentFridge;
-    console.log(fridgeStore.currentFridge)
 
     return {
       itemName,

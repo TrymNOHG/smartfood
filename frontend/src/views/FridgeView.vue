@@ -49,26 +49,26 @@ export default {
       items: [{
         itemId: 1,
         itemName: "Bananas",
-        itemPrice: "2.50",
+        itemPrice: "25",
         itemBuyDate: "2023-04-19",
         itemExpirationDate: "2023-04-23",
-        itemLeft: "4"
+        itemLeft: 100
       },
         {
           itemId: 2,
           itemName: "Milk",
-          itemPrice: "3.99",
+          itemPrice: "33.99",
           itemBuyDate: "2023-04-21",
           itemExpirationDate: "2023-04-30",
-          itemLeft: "1"
+          itemLeft: 53
         },
         {
           itemId: 3,
           itemName: "Eggs",
-          itemPrice: "1.99",
+          itemPrice: "38",
           itemBuyDate: "2023-04-21",
           itemExpirationDate: "2023-04-26",
-          itemLeft: "1"
+          itemLeft: 78
         }]
     }
   }
