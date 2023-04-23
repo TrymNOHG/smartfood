@@ -1,11 +1,11 @@
 <template>
   <input
-      type="checkbox"
-      :checked="modelValue"
-      @change="$emit('update:modelValue', $event.target.checked)"
-      class="field"
-      :style="{ borderColor: error ? 'red' : ''}"
-      aria-invalid='error ? true : null'
+    type="checkbox"
+    :checked="modelValue"
+    @change="$emit('update:modelValue', { isChecked: $event.target.checked, item })"
+    class="field"
+    :style="{ borderColor: error ? 'red' : '' }"
+    aria-invalid="error ? true : null"
   />
   <p v-if="error" class="errorMessage" aria-live="assertive">{{ error }}</p>
 </template>
@@ -15,16 +15,25 @@ export default {
   props: {
     label: {
       type: String,
-      default: ''
+      default: "",
     },
     modelValue: {
       type: Boolean,
-      default: false
+      default: false,
     },
     error: {
       type: String,
-      default: ''
-    }
-  }
-}
+      default: "",
+    },
+    item: {
+      type: Object,
+      default: null,
+    },
+  },
+};
 </script>
+<style scoped>
+.field:hover {
+  cursor: pointer;
+}
+</style>

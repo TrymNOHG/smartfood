@@ -12,15 +12,17 @@
   </template>
   
   <script>
+import { boolean } from 'yup';
+
   export default {
     props: {
     },
     methods: {
       handleMarkAll() {
-        this.$emit("add");
+        this.$emit("check-all");
       },
       handleBuy() {
-        this.$emit("subtract");
+        this.$emit("buy");
       },
     },
   };

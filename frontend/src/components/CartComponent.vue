@@ -10,7 +10,7 @@
       <button id="searchbtn" @click="handleSearch">Search</button>
 
       <div class="dropper">
-        <vue-collapsible-panel-group accordion>
+        <vue-collapsible-panel-group>
           <vue-collapsible-panel :expanded="isExpanded.value">
             <template #title> Search results </template>
             <template #content>
@@ -23,11 +23,14 @@
                 :price="item.current_price"
                 style="text-align: center"
                 @click="addItemToList(item)"
+                @item-checked="handleItemChecked"
               />
             </template>
           </vue-collapsible-panel>
         </vue-collapsible-panel-group>
       </div>
+
+      <CartControl @check-all="handleMarkAll"></CartControl>
     </div>
 
     <div class="cart-items">
@@ -39,10 +42,15 @@
         :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
         :weight="item.weight"
         :quantity="item.quantity"
+        :is_checked="checkAll_b"
         @add="inc_dec_CartItemAmount(item, 1)"
         @subtract="inc_dec_CartItemAmount(item, -1)"
         @delete-item="handleDeleteItem(item)"
-      />
+        @handle-checked="handleChecked(item)"
+        
+      >
+       
+      </CartItem>
     </div>
   </div>
 </template>
@@ -63,6 +71,7 @@ import BasicButton from "../components/basic-components/BasicButton.vue";
 import SearchInput from "../components/basic-components/SearchInput.vue";
 import CartItem from "@/components/basic-components/CartItem.vue";
 import CartControl from "@/components/basic-components/CartControl.vue";
+import BasicCheckBox from "../components/basic-components/BasicCheckbox.vue";
 import { useLoggedInStore, useFridgeStore } from "@/store/store";
 import { ref, onMounted, computed, watch } from "vue";
 export default {
@@ -76,6 +85,7 @@ export default {
     VueCollapsiblePanel,
     CartItem,
     CartControl,
+    BasicCheckBox,
   },
   setup() {
     console.log(useFridgeStore().getCurrentFridge);
@@ -86,6 +96,25 @@ export default {
     const searchItems = ref([]);
     const isExpanded = ref(true);
     const currentFridge = useFridgeStore().getCurrentFridge;
+    let checkAll_b = ref(false);
+
+    function handleMarkAll() {
+      checkAll_b.value = !checkAll_b.value;
+      loadItemsFromCart();
+
+    }
+    function handleBuy() {
+      const selectedItems = [];
+  items.value.forEach(item => {
+    if (item.isChecked) {
+      selectedItems.push(item);
+    }
+  });
+    }
+
+    function handleChecked(item) {
+      item["isChecked"] = true;
+    }
 
     onMounted(() => {
       loadItemsFromCart();
@@ -101,7 +130,10 @@ export default {
       try {
         const response = await getItemsFromShoppingList(currentFridge.fridgeId); // replace with your API call to fetch the items from the backend
         items.value = response.data;
-        console.log(response.data);
+        items.value.forEach((obj) => {
+          obj.isChecked = checkAll_b;
+        });
+        console.log(items.value);
       } catch (error) {
         console.error(error);
       }
@@ -246,6 +278,10 @@ export default {
       loadItemsFromCart,
       inc_dec_CartItemAmount,
       isExpanded,
+      handleBuy,
+      handleMarkAll,
+      handleChecked,
+      checkAll_b,
     };
   },
 };

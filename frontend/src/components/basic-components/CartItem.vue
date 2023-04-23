@@ -31,11 +31,15 @@
 
     <div class="buttons">
       <span class="delete-btn" @click="handleDeleteItem"></span>
+      <input type="checkbox" @click="handleChecked" :checked="is_checked"/>
     </div>
   </div>
 </template>
 
 <script>
+import { reactive, watch } from "vue";
+import BasicCheckbox from "./BasicCheckbox.vue";
+
 export default {
   props: {
     image: {
@@ -54,6 +58,10 @@ export default {
       type: Number,
       required: true,
     },
+    is_checked: {
+      type: Boolean,
+      required: true,
+    },
   },
   methods: {
     handleAdd(item) {
@@ -65,7 +73,11 @@ export default {
     handleDeleteItem() {
       this.$emit("delete-item");
     },
+    handleChecked() {
+      this.$emit("handle-checked");
+    },
   },
+  components: { BasicCheckbox },
 };
 </script>
 <style>
