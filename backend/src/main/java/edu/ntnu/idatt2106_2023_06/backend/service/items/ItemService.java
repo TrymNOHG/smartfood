@@ -38,6 +38,7 @@ public class ItemService implements IItemService {
      */
     @Override
     public Long addItem(ItemDTO itemDTO) {
+        if (itemDTO.quantity() <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
         Store store = storeRepository.findByStoreName(itemDTO.store()).orElse(null);
         if (store == null){
             store = Store.builder()
@@ -69,6 +70,7 @@ public class ItemService implements IItemService {
      */
     @Override
     public void addToFridge(Long itemId, Long fridgeId, int quantity) {
+        if (quantity <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
         Item item = itemRepository.findByItemId(itemId).orElseThrow(() -> new ItemNotFoundException(itemId));
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new FridgeNotFoundException(fridgeId));
         FridgeItems fridgeItem = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElse(null);
@@ -116,6 +118,7 @@ public class ItemService implements IItemService {
      */
     @Override
     public void deleteItemFromFridge(ItemRemoveDTO itemRemoveDTO) {
+        if (itemRemoveDTO.quantity() <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
         Store store = storeRepository.findByStoreName(itemRemoveDTO.store()).orElseThrow(() -> new StoreNotFoundException(itemRemoveDTO.store()));
         Item item = itemRepository.findByProductNameAndStore(itemRemoveDTO.itemName(), store).orElseThrow(() -> new ItemNotFoundException(itemRemoveDTO.itemName()));
         Fridge fridge = fridgeRepository.findByFridgeId(itemRemoveDTO.fridgeId()).orElseThrow(() -> new FridgeNotFoundException(itemRemoveDTO.fridgeId()));
@@ -141,6 +144,7 @@ public class ItemService implements IItemService {
      */
     @Override
     public void addToShoppingList(Long itemName, Long fridgeId, int quantity, boolean suggestion) {
+        if (quantity <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
         Item item = itemRepository.findByItemId(itemName).orElseThrow(() -> new ItemNotFoundException(itemName));
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new FridgeNotFoundException(fridgeId));
         ShoppingItems shoppingItem = shoppingItemsRepository.findByItemAndFridgeAndSuggestion(item, fridge, suggestion).orElse(null);
@@ -190,6 +194,7 @@ public class ItemService implements IItemService {
      */
     @Override
     public void deleteItemFromShoppingList(ItemRemoveDTO itemRemoveDTO, boolean suggestion) {
+        if (itemRemoveDTO.quantity() <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
         Store store = storeRepository.findByStoreName(itemRemoveDTO.store()).orElseThrow(() -> new StoreNotFoundException(itemRemoveDTO.store()));
         Item item = itemRepository.findByProductNameAndStore(itemRemoveDTO.itemName(), store).orElseThrow(() -> new ItemNotFoundException(itemRemoveDTO.itemName()));
         Fridge fridge = fridgeRepository.findByFridgeId(itemRemoveDTO.fridgeId()).orElseThrow(() -> new FridgeNotFoundException(itemRemoveDTO.fridgeId()));
@@ -216,6 +221,7 @@ public class ItemService implements IItemService {
     @Override
     public void buyItemsFromShoppingList(List<ItemRemoveDTO> itemDTOList) {
         for(ItemRemoveDTO i: itemDTOList){
+            if (i.quantity() <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
             Store store = storeRepository.findByStoreName(i.store()).orElseThrow(() -> new StoreNotFoundException(i.store()));
             Long itemId = itemRepository.findByProductNameAndStore(i.itemName(), store).orElseThrow(() -> new ItemNotFoundException(i.itemName())).getItemId();
             addToFridge(itemId, i.fridgeId(), i.quantity());
@@ -235,6 +241,7 @@ public class ItemService implements IItemService {
      */
     @Override
     public void acceptSuggestion(ItemRemoveDTO itemDTO) {
+        if (itemDTO.quantity() <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
         Store store = storeRepository.findByStoreName(itemDTO.store()).orElseThrow(() -> new StoreNotFoundException(itemDTO.store()));
         Item item = itemRepository.findByProductNameAndStore(itemDTO.itemName(), store).orElseThrow(() -> new ItemNotFoundException(itemDTO.itemName()));
         Fridge fridge = fridgeRepository.findByFridgeId(itemDTO.fridgeId()).orElseThrow(() -> new FridgeNotFoundException(itemDTO.fridgeId()));
