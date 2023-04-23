@@ -1,12 +1,20 @@
 <template>
     <div class="container">
-        <member-list :members-list="memberList"  class="listing" @update-item="onUpdateItem" @delete-item="onDeleteItem" />
+        <member-list
+            :members-list="memberList"
+            :is-editable="true"
+            :is-addable="false"
+            class="listing"
+            @update-item="onUpdateItem"
+            @delete-member="onDeleteMember"
+        />
         <div @click="changeModal()" class="container_button">+</div>
     </div>
 
     <div v-if="showModal" class="modal">
         <div class="modal-content">
             <h3>{{ $t('searchMembersTitle') }}</h3>
+
             <div class="search-input">
                 <input type="text" v-model="searchText" placeholder="Enter username" />
                 <basic-button
@@ -19,6 +27,9 @@
                 v-if="searchResults.length > 0"
                 :members-list="searchResults"
                 class="listing"
+                :is-editable="false"
+                :is-addable="true"
+                @add-member="onAddMember"
             />
             <span class="close" @click="changeModal()">X</span>
         </div>
@@ -32,7 +43,7 @@ import BasicButton from "@/components/basic-components/BasicButton.vue";
 import {useFridgeStore, useLoggedInStore} from "@/store/store";
 import {onMounted, ref} from "vue";
 import MemberList from "@/components/FridgeList/MemberListingComponent.vue";
-import {loadUsersByFridgeId} from "@/services/FridgeServices";
+import {addUserToFridge, deleteUserFromFridge, loadUsersByFridgeId} from "@/services/FridgeServices";
 import {searchUserByUsername} from "@/services/UserService";
 
 export default {
@@ -75,6 +86,7 @@ export default {
             memberList,
             searchText,
             searchResults,
+            fetchUsers,
         };
     },
 
@@ -90,9 +102,39 @@ export default {
 
         },
 
-        async onDeleteItem(index) {
-
+        async onDeleteMember(username, isSuperUser) {
+            console.log("hello")
+            const fridgeId = this.fridgeId; // Replace this with the actual fridgeId
+            const fridgeUserDTO = {
+                fridgeId,
+                username,
+                isSuperUser
+            };
+            console.log("fridgeUserDTO:", fridgeUserDTO);
+            try {
+                await deleteUserFromFridge(fridgeUserDTO);
+                await this.fetchUsers()
+            } catch (error) {
+                // Handle error, e.g., show an error message
+            }
         },
+
+        async onAddMember(username, isSuperUser) {
+            const fridgeId = this.fridgeId; // Replace this with the actual fridgeId
+            const fridgeUserDTO = {
+                fridgeId,
+                username,
+                isSuperUser
+            };
+            console.log("fridgeUserDTO:", fridgeUserDTO);
+            try {
+                await addUserToFridge(fridgeUserDTO);
+                this.changeModal()
+                await this.fetchUsers()
+            } catch (error) {
+            }
+        },
+
 
         changeModal() {
             this.showModal = this.showModal === false;
@@ -166,7 +208,7 @@ h3 {
 
 .close {
     position: absolute;
-    top: -25px;
+    top: 2px;
     right: 2px;
     font-size: 1.5em;
     font-weight: bold;

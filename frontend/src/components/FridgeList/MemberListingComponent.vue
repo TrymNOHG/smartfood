@@ -7,8 +7,24 @@
                 class="member-profile-picture"
             />
             <span class="item-text">{{ member.username }}</span>
-            <span v-if="member.isSuperUser">Super User</span>
-            <div v-if="member.email" >
+
+            <div v-if="!isAddable">
+                <span>{{ member.isSuperUser ? 'Super user ' : 'Limited user ' }}</span>
+                <font-awesome-icon
+                    v-if="member.isSuperUser"
+                    icon="fa-solid fa-crown"
+                    class="icon crown-conf-icon"
+                />
+            </div>
+
+
+            <font-awesome-icon
+                v-if="isAddable"
+                icon="fa-solid fa-plus"
+                @click="onAddClick(index)"
+                class="icon plus-conf-icon"
+            />
+            <div v-if="isEditable" >
                 <font-awesome-icon
                     v-if="!isEditing[index]"
                     icon="fa-solid fa-pen-to-square"
@@ -27,6 +43,8 @@
                     class="icon delete-icon"
                 />
             </div>
+
+
         </div>
     </div>
 </template>
@@ -49,6 +67,8 @@ export default {
             type: Array,
             required: true,
         },
+        isEditable: Boolean,
+        isAddable: Boolean
     },
     data() {
         return{
@@ -78,7 +98,7 @@ export default {
             immediate: true
         }
     },
-
+//todo issearched, can edit , crown ,trenger id i stor for self delete, kan superuser sette seg selv til begrenset, redigere seg selv? if id=ownid set alt til false?? HOVER HVIS IS ADABLE TRYKK PÅ FOR Å ADDE DA
 
     methods: {
         async fetchMemberPictures() {
@@ -108,6 +128,35 @@ export default {
                 this.$emit("update-item", index, editedFridge.fridgeName);
             }
         },
+        async onAddClick(index) {
+            const username = this.membersList[index].username;
+            const { value: role } = await swal.fire({
+                title: this.$t('select_role_title'),
+                input: 'radio',
+                inputValue: 'normal', // Set the default selected option to "normal"
+                inputOptions: {
+                    normal: this.$t('normal_user'),
+                    super: this.$t('super_user')
+                },
+                inputValidator: (value) => {
+                    if (!value) {
+                        return this.$t('role_selection_error');
+                    }
+                },
+                showCancelButton: true,
+                confirmButtonColor: '#4dce38',
+                cancelButtonColor: '#d33',
+                confirmButtonText: this.$t('confirm_button'),
+                cancelButtonText: this.$t('cancel_button'),
+                customClass: {
+                    container: 'my-swal-dialog-container'
+                }
+            });
+            if (role) {
+                const isSuperUser = role === 'super';
+                this.$emit("add-member", username, isSuperUser);
+            }
+        },
 
 
         onDeleteClick(index) {
@@ -125,7 +174,9 @@ export default {
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.$emit('delete-item', index);
+                    const username = this.membersList[index].username;
+                    const isSuperUser = this.membersList[index].isSuperUser;
+                    this.$emit('delete-member',  username, isSuperUser );
                     swal.fire(
                         this.$t('success_message'),
                         '',
@@ -161,7 +212,6 @@ export default {
     border-radius: 5px;
     margin: 10px 5px;
     padding: 10px;
-    cursor: pointer;
     transition: all 0.2s ease-in-out;
     position: relative;
     display: flex;
