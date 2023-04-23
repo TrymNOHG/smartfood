@@ -31,7 +31,7 @@
 
     <div class="buttons">
       <span class="delete-btn" @click="handleDeleteItem"></span>
-      <input type="checkbox" :checked="is_checked" @change="$emit('update:isChecked', $event.target.checked, item)"/>
+      <input type="checkbox"  @change="$emit('update:isChecked', $event.target.checked, item)"/>
     </div>
   </div>
 </template>
@@ -60,10 +60,6 @@ export default {
     },
     quantity: {
       type: Number,
-      required: true,
-    },
-    is_checked: {
-      type: Boolean,
       required: true,
     },
   },

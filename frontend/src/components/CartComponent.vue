@@ -42,14 +42,13 @@
         :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
         :weight="item.weight"
         :quantity="item.quantity"
-        :is_checked="item.isChecked"
         :item="item"
         @add="inc_dec_CartItemAmount(item, 1)"
         @subtract="inc_dec_CartItemAmount(item, -1)"
         @delete-item="handleDeleteItem(item)"
         @handle-checked="handleChecked(item)"
         @buy="handleBuy(item)"
-        @update:isChecked="(isChecked, item) => item.isChecked = isChecked"
+        @update:isChecked="(isChecked, item) => item.isChecked = !item.isChecked"
       >
       </CartItem>
     </div>
@@ -126,7 +125,7 @@ export default {
     }
 
     function handleChecked(item) {
-      //item["isChecked"] != item["isChecked"];
+      item["isChecked"] != item["isChecked"];
     }
 
     onMounted(() => {
