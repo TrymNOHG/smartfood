@@ -35,6 +35,14 @@ export const addUserToFridge = async (fridgeUserDTO) => {
     });
 };
 
+export const updateUserInFridge = async (fridgeUserDTO) => {
+    await axios.put(`${BASE_LISTING_URL}/update/user`, fridgeUserDTO, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
+
 export const deleteUserFromFridge = async (fridgeUserDTO) => {
     console.log(fridgeUserDTO);
     await axios.delete(`${BASE_LISTING_URL}/delete/user`, {

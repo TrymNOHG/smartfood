@@ -1,52 +1,47 @@
 <template>
-    <div class="list">
-        <div v-for="(member, index) in membersList" :key="index" class="member">
-            <img
-                :src="memberPictures[index]"
-                alt="Member Profile Picture"
-                class="member-profile-picture"
-            />
-            <span class="item-text">{{ member.username }}</span>
+  <div class="list">
+    <div v-for="(member, index) in membersList" :key="index" class="member">
+      <div class="member-info">
+        <img
+            :src="memberPictures[index]"
+            alt="Member Profile Picture"
+            class="member-profile-picture"
+        />
+        <span class="item-text">{{ member.username }}</span>
+      </div>
 
-            <div v-if="!isAddable">
-                <span>{{ member.isSuperUser ? 'Super user ' : 'Limited user ' }}</span>
-                <font-awesome-icon
-                    v-if="member.isSuperUser"
-                    icon="fa-solid fa-crown"
-                    class="icon crown-conf-icon"
-                />
-            </div>
+      <div v-if="!isAddable" class="user-role">
+        <span>{{ member.isSuperUser ? 'Super user ' : 'Limited user ' }}</span>
+        <font-awesome-icon
+            v-if="member.isSuperUser"
+            icon="fa-solid fa-crown"
+            class="icon crown-conf-icon"
+        />
+      </div>
 
-
-            <font-awesome-icon
-                v-if="isAddable"
-                icon="fa-solid fa-plus"
-                @click="onAddClick(index)"
-                class="icon plus-conf-icon"
-            />
-            <div v-if="isEditable" >
-                <font-awesome-icon
-                    v-if="!isEditing[index]"
-                    icon="fa-solid fa-pen-to-square"
-                    @click="onEditClick(index)"
-                    class="icon edit-conf-icon"
-                />
-                <font-awesome-icon
-                    v-else
-                    icon="fa-solid fa-circle-check"
-                    @click="confirmEdit(index)"
-                    class="icon edit-conf-icon conf"
-                />
-                <font-awesome-icon
-                    icon="fa-solid fa-trash"
-                    @click="onDeleteClick(index)"
-                    class="icon delete-icon"
-                />
-            </div>
-
-
+      <div class="actions">
+        <font-awesome-icon
+            v-if="isAddable"
+            icon="fa-solid fa-plus"
+            @click="onAddClick(index)"
+            class="icon plus-conf-icon"
+        />
+        <div v-if="isEditable">
+          <font-awesome-icon
+              v-if="member.username !== loggedInUser"
+              icon="fa-solid fa-pen-to-square"
+              @click="onEditClick(index)"
+              class="icon edit-conf-icon"
+          />
+          <font-awesome-icon
+              icon="fa-solid fa-trash"
+              @click="onDeleteClick(index)"
+              class="icon delete-icon"
+          />
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
 
@@ -57,6 +52,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import swal from 'sweetalert2';
 import defaultProfilePicture from '@/assets/images/profiledefualt.svg';
 import {getProfilePictureById} from "@/services/UserService";
+import {string} from "yup";
 
 
 export default {
@@ -68,17 +64,13 @@ export default {
             required: true,
         },
         isEditable: Boolean,
-        isAddable: Boolean
+        isAddable: Boolean,
+        loggedInUser: string
     },
     data() {
         return{
             profilePictures: [],
             defaultProfilePicture,
-            isEditing: false,
-            editingFridge: {
-                editingIndex: null,
-                fridgeName: "",
-            }
         }
     },
     computed: {
@@ -114,20 +106,37 @@ export default {
             }
         },
 
-        onEditClick(index) {
-            this.editingFridge.editingIndex = index;
-            this.editingFridge.fridgeName = this.fridgeList[index].fridgeName;
-            this.isEditing = Array(this.fridgeList.length).fill(false);
-            this.isEditing[index] = true;
+        async onEditClick(index) {
+          const username = this.membersList[index].username;
+          const {value: role} = await swal.fire({
+            title: this.$t('select_role_title'),
+            input: 'radio',
+            inputValue: 'normal', // Set the default selected option to "normal"
+            inputOptions: {
+              normal: this.$t('normal_user'),
+              super: this.$t('super_user')
+            },
+            inputValidator: (value) => {
+              if (!value) {
+                return this.$t('role_selection_error');
+              }
+            },
+            showCancelButton: true,
+            confirmButtonColor: '#4dce38',
+            cancelButtonColor: '#d33',
+            confirmButtonText: this.$t('confirm_button'),
+            cancelButtonText: this.$t('cancel_button'),
+            customClass: {
+              container: 'my-swal-dialog-container'
+            }
+          });
+          if (role) {
+            const isSuperUser = role === 'super';
+            this.$emit("edit-member", username, isSuperUser);
+          }
         },
 
-        confirmEdit(index) {
-            this.isEditing[index] = false;
-            const editedFridge = this.editingFridge;
-            if (editedFridge.fridgeName !== this.fridgeList[index].fridgeName) {
-                this.$emit("update-item", index, editedFridge.fridgeName);
-            }
-        },
+
         async onAddClick(index) {
             const username = this.membersList[index].username;
             const { value: role } = await swal.fire({
@@ -191,14 +200,7 @@ export default {
 
 <style scoped>
 
-.link {
-    text-decoration: none;
-    color: inherit;
-}
 
-.link:hover {
-    text-decoration: underline;
-}
 
 .list {
     display: flex;
@@ -217,6 +219,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
 }
 
 .member:hover {
@@ -224,21 +227,13 @@ export default {
     transform: scale(1.02);
 }
 
-.link-text {
-    flex-grow: 1;
-    color: #039be5;
-    text-decoration: underline;
-    cursor: pointer;
+.member-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 150px
 }
 
-.link-text:hover {
-    color: #0277bd;
-}
-
-.icons {
-    display: flex;
-    align-items: center;
-}
 
 .edit-conf-icon {
     font-size: 1.2rem;
@@ -248,17 +243,55 @@ export default {
     transition: color 0.2s ease-in-out;
 }
 
-.edit-input {
-    border: none;
-    outline: none;
-    font-size: 16px;
-    font-weight: 400;
-    color: #333;
-    background-color: #fff;
-    border-radius: 3px;
-    padding: 5px 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+.user-role {
+  display: flex;
+  align-items: center;
+  width: 150px
 }
+
+.crown-conf-icon{
+  pointer-events: none;
+}
+
+.user-role span {
+  margin-right: 5px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  width: 60px;
+  flex-direction: row-reverse;
+}
+
+.icon {
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-right: 10px;
+  color: #888;
+  transition: color 0.2s ease-in-out;
+}
+
+.icon:hover {
+  color: #000;
+}
+
+.conf:hover {
+  color: #4dce38;
+}
+
+.delete-icon {
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s ease-in-out;
+}
+
+.delete-icon:hover {
+  color: #f00;
+}
+
 
 
 .edit-conf-icon:hover {
@@ -279,26 +312,11 @@ export default {
 .delete-icon:hover {
     color: #f00;
 }
-.swal2-modal {
-    background-color: white;
-    flex-direction: column;
-    position: fixed;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    border-radius: 5px;
-    z-index: 100;
-    display: flex;
-    width: 60%;
-    max-width: 500px;
-}
 
-.swal2-title {
-    background-color: white;
-    margin-top: 5%;
-}
 
 .member-profile-picture {
     height: 55px;
+    width: 55px;
     border-radius: 50%;
     object-fit: cover;
     object-position: center;
@@ -325,25 +343,14 @@ export default {
         font-size: 1.2rem;
     }
 
-    .edit-input {
-        font-size: 1.2rem;
-    }
 
-    .icons {
-        margin-top: 5px;
-        justify-content: flex-end;
-    }
 
     .delete-icon {
         font-size: 1.5rem;
         margin-left: 10px;
     }
 
-    .swal2-modal {
-        width: 80%;
-        height: 50%;
-        max-width: none;
-    }
+
 }
 
 @media only screen and (max-width: 600px) {

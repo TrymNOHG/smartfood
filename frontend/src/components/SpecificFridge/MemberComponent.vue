@@ -2,13 +2,15 @@
     <div class="container">
         <member-list
             :members-list="memberList"
-            :is-editable="true"
+            :is-editable="isCurrentUserSuperUser"
             :is-addable="false"
+            :loggedInUser="loggedInUser"
             class="listing"
-            @update-item="onUpdateItem"
+            @edit-member="onUpdateMember"
             @delete-member="onDeleteMember"
+
         />
-        <div @click="changeModal()" class="container_button">+</div>
+        <div v-if="isCurrentUserSuperUser" @click="changeModal()" class="container_button">+</div>
     </div>
 
     <div v-if="showModal" class="modal">
@@ -26,7 +28,7 @@
             <member-list
                 v-if="searchResults.length > 0"
                 :members-list="searchResults"
-                class="listing"
+                class="search-listing"
                 :is-editable="false"
                 :is-addable="true"
                 @add-member="onAddMember"
@@ -45,6 +47,8 @@ import {onMounted, ref} from "vue";
 import MemberList from "@/components/FridgeList/MemberListingComponent.vue";
 import {addUserToFridge, deleteUserFromFridge, loadUsersByFridgeId} from "@/services/FridgeServices";
 import {searchUserByUsername} from "@/services/UserService";
+import {updateUserInFridge} from "../../services/FridgeServices";
+
 
 export default {
     components: {MemberList, BasicButton, BasicInput, List },
@@ -55,26 +59,35 @@ export default {
         const memberList = ref([]);
         const searchText = ref("");
         const searchResults = ref([]);
+        const userStore = useLoggedInStore();
+        userStore.fetchUser();
+
+        const loggedInUser = userStore.getUser.data.username
+
 
 
         async function fetchUsers() {
             try {
                 const response = await loadUsersByFridgeId(props.fridgeId);
                 memberList.value = response.data.memberInfo;
-                console.log(response.data)
             } catch (error) {
                 console.error("Error fetching users:", error);
             }
         }
 
         async function searchMembers() {
-            try {
-                const response = await searchUserByUsername(searchText.value);
-                searchResults.value = response.data;
-            } catch (error) {
-                console.error("Error searching members:", error);
-            }
-            console.log(searchResults)
+          try {
+            const response = await searchUserByUsername(searchText.value);
+            searchResults.value = response.data.filter(
+                (searchResult) =>
+                    !memberList.value.some(
+                        (member) => member.username === searchResult.username
+                    )
+            );
+          } catch (error) {
+            console.error("Error searching members:", error);
+          }
+          console.log(searchResults);
         }
 
         onMounted(fetchUsers);
@@ -87,7 +100,15 @@ export default {
             searchText,
             searchResults,
             fetchUsers,
+            loggedInUser
         };
+    },
+
+    computed: {
+         isCurrentUserSuperUser() {
+             const currentUser = this.memberList.find(member => member.username === this.loggedInUser);
+             return currentUser && currentUser.isSuperUser;
+        }
     },
 
     data() {
@@ -98,12 +119,24 @@ export default {
     },
     methods: {
 
-        async onUpdateItem(index, name) {
+        async onUpdateMember(username, isSuperUser) {
+          const fridgeId = this.fridgeId; // Replace this with the actual fridgeId
+          const fridgeUserDTO = {
+            fridgeId,
+            username,
+            isSuperUser
+          };
+          console.log("fridgeUserDTO:", fridgeUserDTO);
+          try {
+            await updateUserInFridge(fridgeUserDTO);
+            await this.fetchUsers()
+          } catch (error) {
+            // Handle error, e.g., show an error message
+          }
 
         },
 
         async onDeleteMember(username, isSuperUser) {
-            console.log("hello")
             const fridgeId = this.fridgeId; // Replace this with the actual fridgeId
             const fridgeUserDTO = {
                 fridgeId,
@@ -113,6 +146,9 @@ export default {
             console.log("fridgeUserDTO:", fridgeUserDTO);
             try {
                 await deleteUserFromFridge(fridgeUserDTO);
+                if (username === this.loggedInUser) {
+                    this.$router.push('/fridges')
+                }
                 await this.fetchUsers()
             } catch (error) {
                 // Handle error, e.g., show an error message
@@ -153,12 +189,19 @@ export default {
     margin-top: 5%;
 }
 
+
 .list li {
     margin: 5px;
     padding: 5px;
     list-style: none;
     background-color: #f0f0f0;
 }
+
+.container {
+    width: 50%;
+    margin: 0 auto;
+}
+
 
 .container_button {
     text-align: center;
@@ -200,10 +243,29 @@ h3 {
     width: 60%;
     max-width: 500px;
 }
-.modal-content {
-    flex-grow: 1;
-    overflow-y: auto;
+
+
+
+.search-input {
+  display: flex;
+  flex-direction: column;
+
+  padding-top: 15px;
 }
+
+.search-input input {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.search-listing {
+  margin-top: 10px;
+  max-height: 62vh;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+
 
 
 .close {
@@ -245,6 +307,12 @@ input, textarea {
 
 .modal button {
     align-self: center;
+}
+
+@media only screen and (max-width: 860px) {
+  .container {
+    width: 95%;
+  }
 }
 
 </style>
