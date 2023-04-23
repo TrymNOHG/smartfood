@@ -31,7 +31,7 @@
 
     <div class="buttons">
       <span class="delete-btn" @click="handleDeleteItem"></span>
-      <input type="checkbox" @click="handleChecked" :checked="is_checked"/>
+      <input type="checkbox" :checked="is_checked" @change="$emit('update:isChecked', $event.target.checked, item)"/>
     </div>
   </div>
 </template>
@@ -44,6 +44,10 @@ export default {
   props: {
     image: {
       type: String,
+      required: true,
+    },
+    item: {
+      type: Object,
       required: true,
     },
     name: {
@@ -63,8 +67,13 @@ export default {
       required: true,
     },
   },
+  data(){
+    return{
+    checkedProducts:[],
+   }
+  },
   methods: {
-    handleAdd(item) {
+    handleAdd() {
       this.$emit("add");
     },
     handleSubtract() {
@@ -74,6 +83,7 @@ export default {
       this.$emit("delete-item");
     },
     handleChecked() {
+      console.log(this.checkedProducts);
       this.$emit("handle-checked");
     },
   },

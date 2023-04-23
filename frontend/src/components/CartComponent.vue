@@ -30,7 +30,7 @@
         </vue-collapsible-panel-group>
       </div>
 
-      <CartControl @check-all="handleMarkAll"></CartControl>
+      <CartControl @check-all="handleMarkAll" @buy="handleBuy"></CartControl>
     </div>
 
     <div class="cart-items">
@@ -42,14 +42,15 @@
         :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
         :weight="item.weight"
         :quantity="item.quantity"
-        :is_checked="checkAll_b"
+        :is_checked="item.isChecked"
+        :item="item"
         @add="inc_dec_CartItemAmount(item, 1)"
         @subtract="inc_dec_CartItemAmount(item, -1)"
         @delete-item="handleDeleteItem(item)"
         @handle-checked="handleChecked(item)"
-        
+        @buy="handleBuy(item)"
+        @update:isChecked="(isChecked, item) => item.isChecked = isChecked"
       >
-       
       </CartItem>
     </div>
   </div>
@@ -65,6 +66,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { deleteItemFromShoppingList } from "../services/ItemService";
 import { addItemToShoppingList } from "../services/ItemService";
 import { getItemsFromShoppingList } from "../services/ItemService";
+import { buyItemsFromShoppingList } from "../services/ItemService";
 import { getItems } from "../services/ApiService";
 import SearchItem from "../components/basic-components/SearchItem.vue";
 import BasicButton from "../components/basic-components/BasicButton.vue";
@@ -101,19 +103,30 @@ export default {
     function handleMarkAll() {
       checkAll_b.value = !checkAll_b.value;
       loadItemsFromCart();
-
     }
     function handleBuy() {
       const selectedItems = [];
-  items.value.forEach(item => {
-    if (item.isChecked) {
-      selectedItems.push(item);
-    }
-  });
+      items.value.forEach((item) => {
+        if (item.isChecked) {
+          selectedItems.push(item);
+        }
+      });
+
+      selectedItems.forEach((item) => {
+        try{
+          console.log(item.isChecked);
+          delete item.isChecked;
+          
+          buyItemsFromShoppingList(item)
+          console.log(item.isChecked);
+        }catch(error){
+          console.error(error)
+        }
+      });
     }
 
     function handleChecked(item) {
-      item["isChecked"] = true;
+      //item["isChecked"] != item["isChecked"];
     }
 
     onMounted(() => {
