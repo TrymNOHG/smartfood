@@ -3,7 +3,7 @@
   <div class="name-display">
     <h1 class="fridge-name">
       <router-link to="/fridges" class="link-name">
-        {{ fridgeName }}
+        {{ fridge.fridgeName }}
       </router-link>
     </h1>
     <div class="change-button">

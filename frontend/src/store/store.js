@@ -68,7 +68,10 @@ export const useLoggedInStore = defineStore('user', {
 export const useFridgeStore = defineStore('fridgeStore', {
     state: () => ({
         allFridges: [],
-        currentFridge: null,
+        currentFridge: {
+            "fridgeId": 1,
+            "fridgeName": "Kjøleskap"
+        },
     }),
 
     getters: {
