@@ -1,7 +1,7 @@
-package edu.ntnu.idatt2106_2023_06.backend.repo;
+package edu.ntnu.idatt2106_2023_06.backend.repo.Recipie;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.Recipe;
-import edu.ntnu.idatt2106_2023_06.backend.model.User;
+import edu.ntnu.idatt2106_2023_06.backend.model.RecipeItemId;
+import edu.ntnu.idatt2106_2023_06.backend.model.RecipeItems;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 /**
 
- This repository provides CRUD operations for the Recipe entity.
+ This repository provides CRUD operations for the RecipeItem entity.
 
  It extends JpaRepository and JpaSpecificationExecutor interfaces.
 
@@ -18,6 +18,6 @@ import java.util.Optional;
  search functionality using specifications.
  */
 @Repository
-public interface RecipeRepository extends JpaRepository<Recipe, Long>, JpaSpecificationExecutor<Recipe> {
+public interface RecipeItemsRepository extends JpaRepository<RecipeItems, RecipeItemId>, JpaSpecificationExecutor<RecipeItems> {
 
 }

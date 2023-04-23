@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106_2023_06.backend.repo;
+package edu.ntnu.idatt2106_2023_06.backend.repo.fridge;
 
 import edu.ntnu.idatt2106_2023_06.backend.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;

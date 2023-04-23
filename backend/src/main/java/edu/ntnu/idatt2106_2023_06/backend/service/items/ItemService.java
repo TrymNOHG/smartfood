@@ -5,7 +5,11 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.*;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.ItemMapper;
 import edu.ntnu.idatt2106_2023_06.backend.model.*;
-import edu.ntnu.idatt2106_2023_06.backend.repo.*;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.item.ShoppingItemsRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.store.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

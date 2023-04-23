@@ -9,7 +9,11 @@ import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.ItemNotFoundExcept
 import edu.ntnu.idatt2106_2023_06.backend.model.Fridge;
 import edu.ntnu.idatt2106_2023_06.backend.model.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.Store;
-import edu.ntnu.idatt2106_2023_06.backend.repo.*;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.item.ShoppingItemsRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.store.StoreRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
