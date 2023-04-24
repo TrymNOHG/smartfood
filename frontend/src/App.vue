@@ -5,27 +5,11 @@
     <nav>
       <ul v-if="!isOnAuthPage">
         <li>
-          <RouterLink to="/dinner">
-            <span class="icon">
-              <font-awesome-icon icon="fa-solid fa-utensils" />
-            </span>
-            <span class="text">{{ $t('dinner') }}</span>
-          </RouterLink>
-        </li>
-        <li>
           <RouterLink to="/fridges">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-kitchen-set" />
             </span>
             <span class="text">{{ $t('fridge') }}</span>
-          </RouterLink>
-        </li>
-        <li>
-          <RouterLink to="/statistics">
-            <span class="icon">
-              <font-awesome-icon icon="fa-solid fa-chart-pie" />
-            </span>
-            <span class="text">{{ $t('statistics') }}</span>
           </RouterLink>
         </li>
         <li>
@@ -37,6 +21,22 @@
           </RouterLink>
         </li>
         <li>
+          <RouterLink to="/dinner">
+            <span class="icon">
+              <font-awesome-icon icon="fa-solid fa-utensils" />
+            </span>
+            <span class="text">{{ $t('dinner') }}</span>
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/statistics">
+            <span class="icon">
+              <font-awesome-icon icon="fa-solid fa-chart-pie" />
+            </span>
+            <span class="text">{{ $t('statistics') }}</span>
+          </RouterLink>
+        </li>
+        <li>
           <RouterLink to="/profile">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-circle-user" />
@@ -44,6 +44,7 @@
             <span class="text">{{ $t('profile') }}</span>
           </RouterLink>
         </li>
+
       </ul>
       <div class="language" @click="changeLanguage()">{{language}}</div>
     </nav>

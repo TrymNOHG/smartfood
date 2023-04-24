@@ -2,13 +2,14 @@
   <div>
     <h1>Cart</h1>
     <div id="myDropdown" class="dropdown-content">
+      <div id="searchbar">
       <SearchInput
         v-model="searchQuery"
         @input="handleSearch"
         label="Search product"
       ></SearchInput>
       <button id="searchbtn" @click="handleSearch">Search</button>
-
+      </div>
       <div class="dropper">
         <vue-collapsible-panel-group>
           <vue-collapsible-panel :expanded="isExpanded.value">
@@ -663,9 +664,41 @@ input:focus {
     margin-right: 0;
   }
 
-  .dropper {
-    width: 100vw;
+  #searchbar{
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-evenly;
+    position: fixed;
+    bottom: 70px;
+    width: 100%;
+    background-color: transparent;
   }
+
+
+  #searchbtn{
+    display: none;
+  }
+
+  .dropper {
+
+    display: flex;
+    width: 100vw;
+    align-items: flex-end;
+    justify-content: space-evenly;
+    position: fixed;
+    bottom: 120px;
+    z-index: -1;
+
+
+  }
+
+  .vcpg {
+    --bg-color-header: transparent!important;
+
+    width: 95%;
+
+  }
+
   .item {
     width: 100vw;
   }
