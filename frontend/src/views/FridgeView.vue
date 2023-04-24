@@ -30,6 +30,7 @@
 import {useRoute} from "vue-router";
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicFridgeItem.vue";
+import {useFridgeStore} from "@/store/store"
 import {ref} from "vue";
 
 export default {
@@ -43,6 +44,7 @@ export default {
       "fridgeId": route.params.id,
       "fridgeName": route.params.name
     }
+    useFridgeStore().setCurrentFridgeById(route.params.id)
 
     return {
       fridge,
@@ -141,6 +143,20 @@ export default {
     margin-top: 5px;
 }
 
+#member {
+  width: 150px;
+  margin-top: 5px;
+  margin-right: 50px;
+}
+
+#member:hover {
+  color: #3b3b3b;
+  height: 25px;
+  border-radius: 5px;
+  background-color: #fff;
+  transition: all 0.2s ease-in-out;
+}
+
 .members-fridge {
   background-color: #6C6C6C;
   height: 35px;
@@ -204,7 +220,7 @@ export default {
     width: 100%;
   }
 
-  .fridge-wrapper {
+  .wrapper {
     margin-left: 2.5%;
     height: 100%;
     grid-template-rows: repeat(auto-fill, minmax(95px, 95px));
