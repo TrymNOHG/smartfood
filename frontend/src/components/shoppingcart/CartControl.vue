@@ -2,11 +2,11 @@
 
       <div class="cart-control">
         <button class="control-buttons" type="button" @click="handleMarkAll">
-          Mark all
+          Merk alle
         </button>
   
         <button class="control-buttons" type="button" @click="handleBuy">
-          Buy
+          Kjøp
         </button>
     </div>
   </template>
@@ -33,11 +33,9 @@ import { boolean } from 'yup';
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 16px;
-    background-color: #f8f8f8;
-    border: 1px solid #ddd;
+    padding: 5px 16px;
+    background-color: white;
     border-radius: 4px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .control-buttons {
@@ -71,7 +69,7 @@ import { boolean } from 'yup';
     
   }
   @media only screen and (min-width: 350px) and (max-width: 480px) {
-    
+
   }
   
   @media only screen and (max-width: 350px) {

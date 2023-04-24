@@ -31,7 +31,7 @@
 
     <div class="buttons">
       <span class="delete-btn" @click="handleDeleteItem"></span>
-      <input type="checkbox"  @change="$emit('update:isChecked', $event.target.checked, item)"/>
+      <input id="check" type="checkbox"  @change="$emit('update:isChecked', $event.target.checked, item)"/>
     </div>
   </div>
 </template>
@@ -111,7 +111,7 @@ export default {
   width: 70%;
   margin: auto;
   display: flex;
-  justify-content: space-between !important;
+  justify-content: space-between;
 }
 
 .item:nth-child(3) {
@@ -277,9 +277,7 @@ input[type="number"] {
     white-space: normal;
   }
   .delete-btn {
-    width: 18px;
-    height: 17px;
-    margin-left: 15px;
+    display: none;
   }
   .item {
     padding: 0px 0px;
@@ -287,7 +285,7 @@ input[type="number"] {
     width: 70%;
     margin: auto;
     display: flex;
-    justify-content: space-between !important;
+    justify-content: space-between;
   }
 }
 @media only screen and (min-width: 350px) and (max-width: 480px) {
@@ -297,9 +295,38 @@ input[type="number"] {
   }
 
   .item {
-    width: 100vw;
+    display: flex !important;
+    width: 100px;
+
+
+
+  }
+  .buttons{
+    padding-left: 10px;
+    padding-right: 5px;
+    width: 40px;
+
   }
 
+  #check{
+    scale: 1.5;
+  }
+
+  .product-img{
+    padding-top: 10px;
+  }
+  .quantity{
+    padding: 5px;
+  }
+
+  .number-input{
+    background-color: transparent;
+    margin-top: 10px;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+  }
   .img-container {
     max-width: 150px; /* ensure the image does not exceed the container width */
     max-height: 150px; /* ensure the image does not exceed the container height */

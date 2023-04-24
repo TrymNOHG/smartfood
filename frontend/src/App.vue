@@ -49,7 +49,7 @@
       <div class="language" @click="changeLanguage()">{{language}}</div>
     </nav>
   </header>
-  <RouterView/>
+  <RouterView id="hm"/>
 </template>
 
 
@@ -102,6 +102,9 @@ export default {
   box-sizing: border-box;
 }
 
+#hm{
+  z-index: 0;
+}
 :root {
   color: white;
 }
@@ -151,6 +154,7 @@ nav {
   max-width: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
+  z-index: 1;
 }
 
 nav ul {
@@ -233,6 +237,7 @@ nav ul li:hover a .text {
     height: 70px;
     background-color: #31c48d;
     box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+
   }
 
   nav ul {

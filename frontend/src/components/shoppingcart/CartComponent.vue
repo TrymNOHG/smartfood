@@ -1,6 +1,9 @@
 <template>
   <div>
-    <h1>Cart</h1>
+    <figure id="backBlack"></figure>
+    <div id="backGreen">
+    <h1>Handlekurv</h1>
+    </div>
     <div id="myDropdown" class="dropdown-content">
       <div id="searchbar">
       <SearchInput
@@ -10,11 +13,11 @@
       ></SearchInput>
       <button id="searchbtn" @click="handleSearch">Search</button>
       </div>
-      <div class="dropper">
+      <div class="dropper" v-if="search">
         <vue-collapsible-panel-group>
           <vue-collapsible-panel :expanded="isExpanded.value">
             <template #title> Search results </template>
-            <template #content>
+            <template  #content>
               <SearchItem
                 v-for="(item, index) in searchItems"
                 :key="index"
@@ -97,6 +100,7 @@ export default {
     const searchQuery = ref(""); // search query entered by the user
     const searchItems = ref([]);
     const isExpanded = ref(true);
+    const search = ref(false);
     const currentFridge = useFridgeStore().getCurrentFridge;
     let checkAll_b = ref(false);
 
@@ -287,6 +291,7 @@ export default {
 
     function handleSearch() {
       console.log("clicked search");
+      search.value= true;
       // filter the list of items based on the search query
       var items = async () => {
         return await getItems(searchQuery.value);
@@ -315,6 +320,7 @@ export default {
       loadItemsFromCart,
       inc_dec_CartItemAmount,
       isExpanded,
+      search,
       handleBuy,
       handleMarkAll,
       handleChecked,
@@ -664,6 +670,27 @@ input:focus {
     margin-right: 0;
   }
 
+  #backBlack{
+    height: 10px;
+    background-color: black;
+  }
+
+  #backGreen{
+    background-color: #31c48d;
+    width: 100%;
+    padding: 10px 60px 0px 60px;
+  }
+
+  h1{
+    z-index: 1;
+    background-color: white;
+    border-radius: 20px 20px 0px 0px;
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+
+  }
+
   #searchbar{
     display: flex;
     align-items: flex-end;
@@ -672,6 +699,10 @@ input:focus {
     bottom: 70px;
     width: 100%;
     background-color: transparent;
+    z-index: 1;
+  }
+  nav{
+    z-index: 1;
   }
 
 
@@ -683,21 +714,30 @@ input:focus {
 
     display: flex;
     width: 100vw;
-    align-items: flex-end;
     justify-content: space-evenly;
     position: fixed;
-    bottom: 120px;
-    z-index: -1;
+    top: 140px;
+    overflow-y: scroll;
 
 
   }
 
   .vcpg {
     --bg-color-header: transparent!important;
-
+    border: transparent;
     width: 95%;
+    overflow-y: scroll;
+    max-height: 150vw;
 
   }
+
+
+
+
+
+
+
+
 
   .item {
     width: 100vw;
