@@ -177,9 +177,4 @@ public class ItemController {
         logger.info("Suggestion has been accepted");
         return ResponseEntity.ok().build();
     }
-
-
-
-
-
 }

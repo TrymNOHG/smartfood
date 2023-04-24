@@ -111,7 +111,7 @@ img {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: whitesmoke;
+  background-color: white;
   backface-visibility: hidden;
   transform: rotateY(0deg);
   transition: 1s;
