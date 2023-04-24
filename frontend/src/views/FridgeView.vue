@@ -13,38 +13,40 @@
     </div>
   </div>
   <div class="members-fridge">
-    <router-link id="member" class="link" to="/members">Members</router-link>
-    <router-link id="fridge" class="link" to="/fridges">Fridge</router-link>
+      <div id="toggle-button" class="link" @click="selectedTab = 'members'" :class="{ active: selectedTab === 'members' }">Members</div>
+      <div id="toggle-button" class="link" @click="selectedTab = 'fridge'" :class="{ active: selectedTab === 'fridge' }">Fridge</div>
   </div>
+  <!--TODO: add infinite scroller or pagination-->
+    <div class="fridge-wrapper" v-show="selectedTab === 'fridge'">
+      <div class="dropdown">
+        <SearchInput v-model="searchQuery" label="Search product" class="search-input" />
+        <button class="search-btn" @click="handleSearch()">Search</button>
+      </div>
 
-  <div class="dropdown">
-    <SearchInput v-model="searchQuery" label="Search product" class="search-input" />
-    <button class="search-btn" @click="handleSearch()">Search</button>
+      <div class="search-results">
+        <vue-collapsible-panel-group accordion>
+          <vue-collapsible-panel :expanded="isExpanded">
+            <template #title>Search results</template>
+            <template #content>
+              <div class="search-item-list">
+                <SearchItem
+                    v-for="(item, index) in searchItems"
+                    :key="index"
+                    :image="item.image"
+                    :text="item.name"
+                    :store="item.store.name"
+                    :price="item.current_price"
+                    @click="addItemToList(item)"
+                />
+              </div>
+            </template>
+          </vue-collapsible-panel>
+        </vue-collapsible-panel-group>
+      </div>
+        <basic-fridge-item v-for="(item, index) in items" :key="index" :item="item" :currenFridge="fridge" />
   </div>
-
-  <div class="search-results">
-    <vue-collapsible-panel-group accordion>
-      <vue-collapsible-panel :expanded="isExpanded">
-        <template #title>Search results</template>
-        <template #content>
-          <div class="search-item-list">
-            <SearchItem
-                v-for="(item, index) in searchItems"
-                :key="index"
-                :image="item.image"
-                :text="item.name"
-                :store="item.store.name"
-                :price="item.current_price"
-                @click="addItemToList(item)"
-            />
-          </div>
-        </template>
-      </vue-collapsible-panel>
-    </vue-collapsible-panel-group>
-  </div>
-
-  <div class="wrapper">
-    <basic-fridge-item v-for="(item, index) in items" :key="index" :item="item" :currenFridge="fridge" />
+    <div class="members-wrapper" v-show="selectedTab === 'members'">
+        <member-component/>
   </div>
 
 </template>
@@ -57,6 +59,8 @@ import {
 import {useRoute} from "vue-router";
 import MemberComponent from "@/components/FridgeList/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicFridgeItem.vue";
+import {useFridgeStore} from "@/store/store"
+import {ref} from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import {ref} from "vue";
@@ -92,11 +96,13 @@ export default {
   },
 
   setup() {
+    const selectedTab = ref("fridge");
     const route = useRoute()
     const fridge = {
       "fridgeId": route.params.id,
       "fridgeName": route.params.name
     }
+    useFridgeStore().setCurrentFridgeById(route.params.id)
 
     const itemAmount = ref(1);
     const submitMessage = ref("norvegia");
@@ -104,6 +110,8 @@ export default {
     const searchQuery = ref('');
 
     return {
+      fridge,
+      selectedTab
       fridge,
       itemAmount,
       submitMessage,
@@ -164,7 +172,7 @@ export default {
 
 <style scoped>
 
-.wrapper {
+.fridge-wrapper {
   margin-top: 5%;
   margin-left: 5%;
   display: grid;
@@ -264,20 +272,38 @@ input[type="text"]:not(:focus) + .search-results {
   color: black;
 }
 
+
+
+
+#toggle-button {
+  width: 150px;
+  margin-top: 5px;
+  margin-right: 50px;
+}
+
+#toggle-button:hover {
+  color: #3b3b3b;
 .search-results {
   color: white;
 }
 
 #fridge {
   height: 25px;
-  width: 150px;
-  background-color: #b1b1b1;
   border-radius: 5px;
-  font-weight: bold;
-  text-decoration: black;
-  text-shadow: black 0 0 2px;
-  margin-left: 50px;
-  margin-top: 5px;
+  background-color: #fff;
+  transition: all 0.2s ease-in-out;
+}
+
+.active {
+    height: 25px;
+    width: 150px;
+    background-color: #b1b1b1;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: black;
+    text-shadow: black 0 0 2px;
+    margin-left: 50px;
+    margin-top: 5px;
 }
 
 #member {

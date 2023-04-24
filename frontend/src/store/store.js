@@ -28,7 +28,6 @@ export const useLoggedInStore = defineStore('user', {
             return this.user;
         },
         getSessionToken() {
-            if (this.sessionToken === null) return localStorage.getItem("sessionToken")
             return this.sessionToken;
         }
     },
@@ -36,7 +35,6 @@ export const useLoggedInStore = defineStore('user', {
     actions: {
         setSessionToken(sessionToken) {
             this.sessionToken = sessionToken;
-            if (localStorage.getItem("sessionToken") === null) localStorage.setItem("sessionToken", sessionToken)
         },
         async fetchUser() {
             await getUser()
@@ -66,7 +64,7 @@ export const useFridgeStore = defineStore('fridgeStore', {
     state: () => ({
         allFridges: [],
         currentFridge: {
-            "fridgeId": 1,
+            "fridgeId": null,
             "fridgeName": "Kjøleskap"
         },
     }),
@@ -100,7 +98,7 @@ export const useFridgeStore = defineStore('fridgeStore', {
         },
         async setCurrentFridgeById(fridgeId) {
             for(let fridge of this.allFridges) {
-                if(fridge.fridgeId === fridgeId) {
+                if(fridge.fridgeId == fridgeId) {
                     this.currentFridge = fridge;
                     console.log(this.currentFridge);
                     return;

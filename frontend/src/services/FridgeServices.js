@@ -27,6 +27,22 @@ export const updateFridge = async (fridgeDTO) => {
     });
 }
 
+export const addUserToFridge = async (fridgeUserDTO) => {
+    await axios.post(`${BASE_LISTING_URL}/add/user`, fridgeUserDTO, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
+
+export const updateUserInFridge = async (fridgeUserDTO) => {
+    await axios.put(`${BASE_LISTING_URL}/update/user`, fridgeUserDTO, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
+
 export const deleteUserFromFridge = async (fridgeUserDTO) => {
     console.log(fridgeUserDTO);
     await axios.delete(`${BASE_LISTING_URL}/delete/user`, {
@@ -34,6 +50,15 @@ export const deleteUserFromFridge = async (fridgeUserDTO) => {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         }
+    });
+}
+
+export const loadUsersByFridgeId = async (fridgeId) => {
+    const token = await SessionToken();
+    return await axios.get(`${BASE_LISTING_URL}/loadAllUsers?fridgeId=${fridgeId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
     });
 }
 

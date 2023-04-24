@@ -31,7 +31,7 @@
   "password_length": "Password must be at least 8 characters",
   "confirm_title": "Are you sure?",
   "confirm_text": "You won't be able to revert this!",
-  "confirm_button": "Yes, delete it!",
+  "confirm_button": "Confirm",
   "success_message": "Your item has been deleted.",
   "cancel_button": "Cancel",
   "addNewFridgeTitle": "Add New Fridge",
@@ -47,5 +47,14 @@
   "new_password": "New Password",
   "confirm_password": "Confirm Password",
   "save_changes": "Save Changes",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "select_role_title": "Select Role",
+  "limited_user": "Limited User",
+  "super_user": "Super User",
+  "role_selection_error": "You need to choose a role",
+  "success_message_deleted_user": "User has been deleted",
+  "my-swal-dialog-container": "My SweetAlert Dialog Container",
+  "search_Members_Title": "Search For Members",
+  "enter_username": "Enter Username",
+  "search_MembersButton_Text": "Search"
 }
