@@ -35,11 +35,10 @@ public class EmailService implements IEmailService {
         String token = UUID.randomUUID().toString();
         tokenService.saveToken(token, user);
         try {
-           sendEmail("Activate your SmartMat account", user.getEmail(), createEmailBody(String.format("""
-                   In order to activate you account, open the link provided. The link will expire
-                   in 24 hours and an additional link will then need to be sent. Here is the link:
-                   http://localhost:5173/user/activate?token=%s
-                   """, token)));
+            sendEmail("Activate your SmartMat account", user.getEmail(), createEmailBodyWithLink(String.format("""
+                   In order to activate you account, click the button below. The link will expire
+                   in 24 hours and an additional link will then need to be sent.
+                   """), String.format("http://localhost:5173/user/activate?token=%s", token)));
         } catch (MessagingException e) {
             logger.error("Send of email was unsuccessful", e);
             throw new MessagingException("Activation Email was unsuccessful");
@@ -50,7 +49,7 @@ public class EmailService implements IEmailService {
     @Override
     public void sendResetPassword(String receiver, String message) throws MessagingException {
         try {
-            sendEmail("Reset Password", receiver, createEmailBody(message));
+            sendEmail("Reset Password", receiver, createEmailBodyWithLink(message, "http://localhost:5173/user/reset-password"));
         } catch (MessagingException e) {
             logger.error("Send of email was unsuccessful", e);
             throw new MessagingException("Reset Password Email was unsuccessful");
@@ -68,15 +67,33 @@ public class EmailService implements IEmailService {
     }
 
     /**
-     * This method includes a generic email body.
+     * This method creates an HTML button that links to the provided URL.
+     * @param link  The URL that the button should link to.
+     * @return      The HTML button, represented as a String.
+     */
+    private String createLinkButton(String link) {
+        StringBuilder button = new StringBuilder();
+        button.append("<a href=\"").append(link).append("\" style=\"display: inline-block; padding: 10px; background-color: #007bff; color: #fff; text-decoration: none;\">")
+                .append("Click here to proceed")
+                .append("</a>");
+        return button.toString();
+    }
+
+    /**
+     * This method includes a generic email body with an embedded link.
      * @param message The message to be sent, represented as a String.
+     * @param link    The link to the page, represented as a String.
      * @return        The actual HTML, represented as a String.
      */
-    private String createEmailBody(String message) {
+    private String createEmailBodyWithLink(String message, String link) {
         StringBuilder body = new StringBuilder();
         body.append("<html><body>");
         body.append("<h2>Thank you for using SmartFood!</h2>");
         body.append("<p>").append(message).append("</p>");
+        if (link != null && !link.isEmpty()) {
+            String linkButton = createLinkButton(link);
+            body.append("<p>").append(linkButton).append("</p>");
+        }
         body.append("</body></html>");
         return body.toString();
     }
