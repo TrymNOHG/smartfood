@@ -321,7 +321,6 @@ export default {
     object-fit: cover;
     object-position: center;
 }
-
 @media only screen and (max-width: 860px) {
     .list {
         margin: 0;

@@ -1,35 +1,37 @@
 <template>
   <header v-if="!isOnRootPage">
-    <img src="@/assets/images/smartmat.png" alt="Logo">
+    <router-link to="/fridges">
+      <img :src="'@/assets/images/smartmat.png'" alt="Logo">
+    </router-link>
     <h1 class="matprat-title" :class="{ 'centered': isOnAuthPage }">{{ $t('matsmart') }}</h1>
-    <nav>
+    <nav :class="{ 'center-profile': !hasCurrentFridge }">
       <ul v-if="!isOnAuthPage">
-        <li>
-          <RouterLink to="/dinner">
+        <li v-if="hasCurrentFridge">
+          <RouterLink to="/dinner" >
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-utensils" />
             </span>
             <span class="text">{{ $t('dinner') }}</span>
           </RouterLink>
         </li>
-        <li>
-          <RouterLink to="/fridges">
+        <li v-if="hasCurrentFridge">
+          <RouterLink to="/fridge" >
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-kitchen-set" />
             </span>
             <span class="text">{{ $t('fridge') }}</span>
           </RouterLink>
         </li>
-        <li>
-          <RouterLink to="/statistics">
+        <li v-if="hasCurrentFridge">
+          <RouterLink to="/statistics" v-if="hasCurrentFridge">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-chart-pie" />
             </span>
             <span class="text">{{ $t('statistics') }}</span>
           </RouterLink>
         </li>
-        <li>
-          <RouterLink to="/cart">
+        <li v-if="hasCurrentFridge">
+          <RouterLink to="/cart" v-if="hasCurrentFridge">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-cart-shopping" />
             </span>
@@ -47,19 +49,44 @@
       </ul>
       <div class="language" @click="changeLanguage()">{{language}}</div>
     </nav>
+
   </header>
-  <RouterView/>
+  <div class="current-fringe" v-if="!isOnAuthPage && !isOnRootPage">
+    <div class="break-line"/>
+    <div class="name-display" >
+      <h1 class="fridge-name">
+        <router-link to="/fridge" class="link-name" v-if="hasCurrentFridge">
+          {{ currentFridge.fridgeName }}
+        </router-link>
+        <router-link to="/fridges" class="link-name" v-else>
+          {{ $t('select_fridge') }}
+        </router-link>
+      </h1>
+      
+      <router-link class="change-button" to="/fridges" >
+        <img src="@/assets/images/exit_change_fridge.png" style="max-height: 100%" v-if="hasCurrentFridge">
+        <img src="@/assets/images/enter_choose_fridge.png" style="max-height: 100%" v-else>
+
+      </router-link>
+    </div>
+  </div>
+  <RouterView class="router-view-container"/>
 </template>
 
 
 <script>
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import i18n from "@/locales/i18n";
+import {useFridgeStore} from "./store/store";
 
 export default {
   setup() {
     const route = useRoute();
+
+    const fridgeStore = useFridgeStore();
+    const currentFridge = computed(() => fridgeStore.getCurrentFridge);
+    const hasCurrentFridge = computed(() => fridgeStore.hasCurrentFridge);
 
     const isOnRootPage = computed(() => {
       return route.path === "/";
@@ -87,6 +114,9 @@ export default {
       language,
       changeLanguage,
       isOnRootPage,
+      hasCurrentFridge,
+      currentFridge,
+
     };
   },
 };
@@ -95,6 +125,49 @@ export default {
 
 
 <style scoped>
+.break-line {
+  height: 7px;
+  background-color: black;
+}
+
+.name-display {
+  text-align: start;
+  background-color: #31c48d;
+  color: white;
+  width: 100%;
+  height: 50px;
+  text-shadow: black 1px 1px 2px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.fridge-name {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 50px;
+  margin-left: 28%;
+}
+
+.link-name{
+  text-decoration: none;
+  color: white;
+}
+
+
+
+.change-button {
+  text-align: center;
+  color: black;
+  height: 35px;
+  margin-top: 0.5%;
+  margin-right: 5%;
+  text-shadow: white 0 0 0;
+  font-weight: 500;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -213,6 +286,20 @@ nav ul li:hover a .text {
     height: 80px;
   }
 
+  .fridge-name {
+    margin-left: 30%;
+    font-size: 18px;
+  }
+
+  .change-button {
+    top: 10%;
+    font-size: 0.7rem;
+  }
+
+  .router-view-container {
+    padding-bottom: 80px;
+  }
+
   header img {
     display: none;
   }
@@ -220,6 +307,14 @@ nav ul li:hover a .text {
   h1 {
     font-size: 1rem;
     letter-spacing: 2px;
+  }
+
+  nav.center-profile ul {
+    justify-content: center;
+  }
+
+  nav.center-profile ul li {
+    flex-grow: 0;
   }
 
   nav {
@@ -247,6 +342,10 @@ nav ul li:hover a .text {
     justify-content: center;
     width: 50px;
     height: 50px;
+  }
+
+  .language {
+    display: none;
   }
 
   nav ul li a {

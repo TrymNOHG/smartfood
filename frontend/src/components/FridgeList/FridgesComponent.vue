@@ -30,6 +30,7 @@ export default {
     const fridgeList = ref([]);
     const userStore = useLoggedInStore();
     const fridgeStore = useFridgeStore();
+    fridgeStore.removeCurrentFridge();
 
     userStore.fetchUser();
     const user = userStore.getUser.data;

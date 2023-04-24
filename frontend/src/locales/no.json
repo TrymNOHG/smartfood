@@ -58,5 +58,6 @@
   "my-swal-dialog-container": "Slett bruker",
   "search_Members_Title": "Søk etter brukere",
   "enter_username": "Skriv inn brukernavn",
-  "search_MembersButton_Text": "Søk"
+  "search_MembersButton_Text": "Søk",
+  "select_fridge": "Velg kjøleskap"
 }
