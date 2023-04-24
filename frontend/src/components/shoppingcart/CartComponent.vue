@@ -95,8 +95,6 @@ export default {
       isExpanded.value = !searchQuery.value.length;
     });
 
-    
-
     const loadItemsFromCart = async () => {
       try {
         const response = await getItemsFromShoppingList(currentFridge.fridgeId); // replace with your API call to fetch the items from the backend
@@ -177,8 +175,6 @@ export default {
           }
         })
         .catch((error) => {
-          //submitMessage.value = error.response.data["Message:"];
-          //console.log(error.response.data);
           console.warn("error1", error); //TODO: add exception handling
         });
     };
@@ -219,14 +215,15 @@ export default {
 
     function handleSearch() {
       console.log("clicked search");
-      var items = async () => {
+      const items = async () => {
         return await getItems(searchQuery.value);
       };
+
       items()
         .then((response) => {
           searchItems.value = response;
           console.log(response);
-          console.log(searchQuery.value);
+          console.log("searchQuery: " + searchQuery.value);
         })
         .catch((error) => {
           console.error(error);

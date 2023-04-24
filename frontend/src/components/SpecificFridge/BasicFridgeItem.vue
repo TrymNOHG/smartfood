@@ -1,6 +1,6 @@
 <template>
-  <body>
-  <router-link :to="{ name: 'itemView', params: { itemName: item.itemName, itemId: item.itemId}}">
+  <div class="cards-container">
+    <router-link :to="{ name: 'itemView', params: { itemName: item.itemName, itemId: item.itemId}}">
       <div class="card" :style="{ 'border-color': borderColor }">
         <div class="front-side">
           <img src="@/assets/images/Large.jpg" alt="item picture">
@@ -25,7 +25,7 @@
         </div>
       </div>
     </router-link>
-  </body>
+  </div>
 </template>
 
 <script>
@@ -80,9 +80,12 @@ export default {
 
 <style scoped>
 
-body {
-  margin: 0;
-  padding: 0;
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-content: stretch;
+  justify-content: space-evenly;
 }
 
 img {
@@ -93,7 +96,6 @@ img {
 }
 
 .card {
-  position: absolute;
   border: 4px solid;
   border-radius: 23px;
   text-align: center;
