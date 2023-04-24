@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106_2023_06.backend.exception;
 import edu.ntnu.idatt2106_2023_06.backend.exception.exists.ExistsException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.NotFoundException;
 import io.jsonwebtoken.JwtException;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.io.IOException;
-import java.security.SignatureException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -129,9 +129,34 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
+    /**
+     * This method handles RuntimeExceptions in the application and returns a response with a
+     * 500 Internal Server Error status code.
+     *
+     * @param e          The RuntimeException that was thrown
+     * @param webRequest The current web request
+     * @return           ResponseEntity with a JSON body containing the error message and a 500 Internal Server Error status code
+     */
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<Object> runtimeExceptionAction(RuntimeException e, WebRequest webRequest) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("Time of error: ", LocalDateTime.now());
+        body.put("Message: ", e.getMessage());
+        return ResponseEntity.badRequest().body(body);
+    }
+
+    /**
+     * This method handles MessagingException in the application and returns a response with a
+     * 500 Internal Server Error status code.
+     *
+     * @param e          The MessagingException that was thrown
+     * @param webRequest The current web request
+     * @return           ResponseEntity with a JSON body containing the error message and a 500 Internal Server Error status code
+     */
+    @ExceptionHandler(MessagingException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<Object> messagingExceptionAction(RuntimeException e, WebRequest webRequest) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("Time of error: ", LocalDateTime.now());
         body.put("Message: ", e.getMessage());

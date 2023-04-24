@@ -17,3 +17,23 @@ kassal:
 spring:
   profiles:
     active: dev
+
+  mail:
+#    TODO: need to change the host when deploying.
+    host: localhost
+    port: 1025
+#    Add the options below when authentication is needed
+#    username: idatt2106
+#    password: password
+
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          timeout: 3000
+          connectiontimeout: 5000
+          writetimeout: 5000
