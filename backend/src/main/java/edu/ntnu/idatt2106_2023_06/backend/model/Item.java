@@ -105,5 +105,4 @@ public class Item {
     @ToString.Exclude
     private List<FridgeItems> itemsInFridge = new ArrayList<>();
 
-
 }
