@@ -32,7 +32,7 @@
         <div class="buttons">
             <span class="delete-btn" @click="handleDeleteItem"></span>
 
-            <input type="checkbox" :checked="isChecked || false" @change="handleChange"/>
+            <input type="checkbox" :checked="!isChecked" @change="handleChange"/>
         </div>
     </div>
 </template>
@@ -70,7 +70,6 @@ export default {
     },
     data() {
         return {
-            checkedProducts: [],
             inputValue: "",
         };
     },
@@ -87,8 +86,7 @@ export default {
         handleDeleteItem() {
             this.$emit("delete-item");
         },
-        handleChange() {
-            console.log(this.checkedProducts);
+        handleChange(event) {
             this.$emit("handle-checked", this.item, event.target.checked);
         },
     },

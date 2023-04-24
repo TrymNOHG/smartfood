@@ -44,12 +44,12 @@
                     :weight="item.weight"
                     :quantity="item.quantity"
                     :item="item"
-                    :isChecked="item.isChecked || false"
+                    :isChecked="item.isChecked"
                     @add="inc_dec_CartItemAmount(item, 1)"
                     @subtract="inc_dec_CartItemAmount(item, -1)"
                     @delete-item="handleDeleteItem(item)"
-                    @handle-checked="handleCheckedItem(item, item.isChecked)"
-                    @buy="handleBuy(item)"
+                    @handle-checked="handleCheckedItem"
+                    @buy="handleBuy"
             >
             </CartItem>
         </div>
@@ -126,15 +126,18 @@ export default {
             loadItemsFromCart();
         }
 
-        function handleCheckedItem(item, isChecked) {
-            item.isChecked = !isChecked;
-        }
 
         function handleCheckedItem(item, isChecked) {
-            item.isChecked = !isChecked;
+            item.isChecked = isChecked;
+            console.log("item" + item.isChecked)
+            console.log(item.name)
+            console.log(isChecked)
+            // console.log(item.isChecked)
         }
+
         async function handleDelete() {
             const selectedItems = [];
+            console.log(items);
             items.value.forEach((item) => {
                 if (item.isChecked) {
                     selectedItems.push(item);
@@ -196,7 +199,6 @@ export default {
         }
 
 
-
         onMounted(() => {
             loadItemsFromCart();
         });
@@ -208,8 +210,9 @@ export default {
 
         const loadItemsFromCart = async () => {
             try {
-                const response = await getItemsFromShoppingList(currentFridge.fridgeId); // replace with your API call to fetch the items from the backend
+                const response = await getItemsFromShoppingList(currentFridge.fridgeId);
                 items.value = response.data;
+
                 items.value.forEach((obj) => {
                     obj.isChecked = checkAll_b;
                 });

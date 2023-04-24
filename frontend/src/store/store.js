@@ -71,6 +71,10 @@ export const useFridgeStore = defineStore('fridgeStore', {
         },
     }),
 
+    persist: {
+        storage: sessionStorage,
+    },
+
     getters: {
         getCurrentFridge(){
             return this.currentFridge
