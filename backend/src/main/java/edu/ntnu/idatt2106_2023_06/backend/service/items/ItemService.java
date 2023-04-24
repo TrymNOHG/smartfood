@@ -38,6 +38,7 @@ public class ItemService implements IItemService {
      */
     @Override
     public Long addItem(ItemDTO itemDTO) {
+        if (itemDTO.price() < 0) throw  new IllegalArgumentException("Cannot have negative price");
         if (itemDTO.quantity() <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
         Store store = storeRepository.findByStoreName(itemDTO.store()).orElse(null);
         if (store == null){
@@ -50,7 +51,11 @@ public class ItemService implements IItemService {
 
         store = storeRepository.findByStoreName(itemDTO.store()).orElseThrow(() -> new StoreNotFoundException(itemDTO.store()));
         Item item = itemRepository.findByProductNameAndStore(itemDTO.name(), store).orElse(null);
-        if (item != null) return item.getItemId();
+        if (item != null) {
+            item.setPrice(itemDTO.price());
+            itemRepository.save(item);
+            return item.getItemId();
+        };
 
         Item i = ItemMapper.toItem(itemDTO, store);
         itemRepository.save(i);
