@@ -71,19 +71,13 @@ export default {
     data() {
         return {
             checkedProducts: [],
-            checkMe: true,
             inputValue: "",
         };
     },
     watch: {
-        checkMe(newValue) {
-            this.whenChecked(newValue);
-        },
+
     },
     methods: {
-        whenChecked(newValue) {
-            console.log(newValue.value);
-        },
         handleAdd() {
             this.$emit("add");
         },

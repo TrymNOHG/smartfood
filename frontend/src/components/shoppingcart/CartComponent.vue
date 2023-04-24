@@ -31,7 +31,7 @@
                 </vue-collapsible-panel-group>
             </div>
 
-            <CartControl @check-all="handleMarkAll" @buy="handleBuy"></CartControl>
+            <CartControl @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
         </div>
 
         <div class="cart-items">
@@ -48,7 +48,7 @@
                     @add="inc_dec_CartItemAmount(item, 1)"
                     @subtract="inc_dec_CartItemAmount(item, -1)"
                     @delete-item="handleDeleteItem(item)"
-                    @handle-checked="handleCheckedItem"
+                    @handle-checked="handleCheckedItem(item, item.isChecked)"
                     @buy="handleBuy(item)"
             >
             </CartItem>
@@ -67,6 +67,7 @@ import {deleteItemFromShoppingList} from "@/services/ItemService";
 import {addItemToShoppingList} from "@/services/ItemService";
 import {getItemsFromShoppingList} from "@/services/ItemService";
 import {buyItemsFromShoppingList} from "@/services/ItemService";
+import {deleteItemsFromShoppingList} from "@/services/ItemService";
 import {getItems} from "@/services/ApiService";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
@@ -76,7 +77,7 @@ import CartControl from "@/components/shoppingcart/CartControl.vue";
 import BasicCheckBox from "@/components/basic-components/BasicCheckbox.vue";
 import {useLoggedInStore, useFridgeStore} from "@/store/store";
 import {ref, onMounted, computed, watch} from "vue";
-import router from "@/router/router";
+
 
 export default {
     name: "Cart",
@@ -126,9 +127,44 @@ export default {
         }
 
         function handleCheckedItem(item, isChecked) {
-            item.isChecked = isChecked;
+            item.isChecked = !isChecked;
         }
-        function handleBuy() {
+
+        function handleCheckedItem(item, isChecked) {
+            item.isChecked = !isChecked;
+        }
+        async function handleDelete() {
+            const selectedItems = [];
+            items.value.forEach((item) => {
+                if (item.isChecked) {
+                    selectedItems.push(item);
+                }
+            });
+            console.log("SELECTED ITEMS")
+            console.log(selectedItems);
+            const itemRemoveDTOList = [{}];
+            selectedItems.forEach((item) => {
+                const ItemRemoveDTO = {
+                    itemName: item.name,
+                    store: item.store,
+                    fridgeId: currentFridge.fridgeId,
+                    quantity: item.quantity,
+                };
+                itemRemoveDTOList.push(ItemRemoveDTO);
+                console.log("ITEM REMOVE DTO")
+                console.log(itemRemoveDTOList);
+            });
+            try {
+                itemRemoveDTOList.shift();
+                deleteItemsFromShoppingList(itemRemoveDTOList);
+            } catch (error) {
+                loadItemsFromCart()
+                console.error(error);
+            }
+            loadItemsFromCart()
+        }
+
+        async function handleBuy() {
             const selectedItems = [];
             items.value.forEach((item) => {
                 if (item.isChecked) {
@@ -153,19 +189,17 @@ export default {
                 itemRemoveDTOList.shift();
                 buyItemsFromShoppingList(itemRemoveDTOList);
             } catch (error) {
+                loadItemsFromCart()
                 console.error(error);
             }
             location.reload();
         }
 
-        function handleChecked(item) {
-            item["isChecked"] != item["isChecked"];
-        }
+
 
         onMounted(() => {
             loadItemsFromCart();
         });
-
         // Watch the searchItems array for changes and update the isExpanded ref accordingly
         watch(searchItems, () => {
             console.log("searchQuery: " + !searchQuery.value.length);
@@ -328,6 +362,7 @@ export default {
             handleMarkAll,
             handleCheckedItem,
             checkAll_b,
+            handleDelete,
         };
     },
 };
