@@ -1,20 +1,8 @@
 <template>
-  <div class="break-line"/>
-  <div class="name-display">
-    <h1 class="fridge-name">
-      <router-link to="/fridges" class="link-name">
-        {{ fridge.fridgeName }}
-      </router-link>
-    </h1>
-    <div class="change-button">
-      <router-link class="link-button" to="/fridges">
-        Endre Kjøleskap
-      </router-link>
-    </div>
-  </div>
+
   <div class="members-fridge">
     <router-link id="member" class="link" to="/members">Members</router-link>
-    <router-link id="fridge" class="link" to="/fridges">Fridge</router-link>
+    <router-link id="fridge" class="link" to="/fridge">Fridge</router-link>
   </div>
   <div class="item-wrapper">
     <div class="item">

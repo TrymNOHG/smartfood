@@ -84,7 +84,7 @@ const router = createRouter({
       meta:
           {
             requiresAuth: true,
-            requiresCurrentFridge: false
+            requiresCurrentFridge: true
           }
       },
     {

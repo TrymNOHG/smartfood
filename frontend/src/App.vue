@@ -1,7 +1,7 @@
 <template>
   <header v-if="!isOnRootPage">
     <router-link to="/fridges">
-      <img src="@/assets/images/smartmat.png" alt="Logo">
+      <img :src="'@/assets/images/smartmat.png'" alt="Logo">
     </router-link>
     <h1 class="matprat-title" :class="{ 'centered': isOnAuthPage }">{{ $t('matsmart') }}</h1>
     <nav :class="{ 'center-profile': !hasCurrentFridge }">
@@ -64,7 +64,9 @@
       </h1>
       
       <router-link class="change-button" to="/fridges" >
-        <img src="@/assets/images/exit_change_fridge.png" style="max-height: 100%">
+        <img src="@/assets/images/exit_change_fridge.png" style="max-height: 100%" v-if="hasCurrentFridge">
+        <img src="@/assets/images/enter_choose_fridge.png" style="max-height: 100%" v-else>
+
       </router-link>
     </div>
   </div>
