@@ -136,7 +136,6 @@ export const useItemStore = defineStore('itemStore', {
             await getItemsFromFridge(fridgeId).then(response => {
                 this.allItems = []
                 this.allItems = response.data;
-                console.log(this.allItems)
             })
             return this.allItems;
         }

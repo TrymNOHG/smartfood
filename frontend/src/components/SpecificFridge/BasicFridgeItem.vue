@@ -9,12 +9,15 @@
           <div class="item-detail">
             <div class="item-name">
               <h2>{{item.name}}</h2>
-              <h3>Expiration date: {{ item.expirationDate }}</h3>
+              <h3>Expiration date: {{new Date(item.expirationDate)
+                  .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
               <br>
             </div>
             <h4>Price: {{ item.price }}; kr</h4>
-            <h4>Buy date: {{ item.purchaseDate }}</h4>
-            <h4>Expiration date: {{ item.expirationDate }}</h4>
+            <h4>Buy date: {{ new Date(item.purchaseDate)
+                .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
+            <h4>Expiration date: {{ new Date(item.expirationDate)
+                .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
             <h4>How much is Left: {{ item.quantity }}L</h4>
             <button class="delete-btn" @click="deleteCard">
             <span>
@@ -55,20 +58,25 @@ export default {
   setup(props) {
     function calculateExpirationDate(itemBuyDate, itemExpirationDate) {
       let borderColor = '';
-      const daysUntilExpiration = (new Date(itemExpirationDate) - new Date()) / (1000 * 60 * 60 * 24);
-      console.log(daysUntilExpiration);
-      if (daysUntilExpiration <= 3) {
+      const today = new Date();
+      const itemExpDate = new Date(itemExpirationDate);
+
+      if (itemExpDate.getFullYear() < today.getFullYear() ||
+          itemExpDate.getMonth() < today.getMonth() ||
+          (itemExpDate.getMonth() === today.getMonth() && itemExpDate.getDate() < today.getDate())) {
         borderColor = 'red';
-      } else if (daysUntilExpiration <= 8) {
-        borderColor = 'orange'
+      } else if (itemExpDate.getFullYear() === today.getFullYear() &&
+          itemExpDate.getMonth() === today.getMonth() &&
+          itemExpDate.getDate() - today.getDate() <= 3) {
+        borderColor = 'orange';
       } else {
-        borderColor = 'green'
+        borderColor = 'green';
       }
+
       return borderColor;
     }
 
-    const borderColor = calculateExpirationDate(props.item.itemBuyDate, props.item.itemExpirationDate);
-
+    const borderColor = calculateExpirationDate(props.item.purchaseDate, props.item.expirationDate);
     function deleteCard() {
     }
 

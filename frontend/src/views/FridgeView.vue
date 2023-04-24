@@ -18,7 +18,7 @@
   </div>
   <!--TODO: add infinite scroller or pagination-->
   <div class="fridge-wrapper" v-show="selectedTab === 'fridge'">
-    <div class="search-container">r
+    <div class="search-container">
       <div class="dropdown">
         <SearchInput @input="handleSearch()" v-model="searchQuery" label="Search product" class="search-input" />
         <button class="search-btn" @click="handleSearch()">Search</button>
@@ -45,7 +45,7 @@
         </vue-collapsible-panel-group>
       </div>
     </div>
-    <div class="wrapper" :style="{ marginTop: marginTopStyle}">
+    <div class="wrapper" :style="{marginTop: marginTopStyle}">
       <basic-fridge-item v-for="(item, index) in fridgeItems" :key="index" :item="item" :currenFridge="fridge" />
     </div>
   </div>
@@ -81,21 +81,16 @@ export default {
 
   computed: {
     marginTopStyle(){
-      console.log("brussan")
-      return this.isExpanded ? '5%' : '0'
+      return this.isExpanded ? "5%" : "0"
     }
   },
 
   methods: {
     handleSearch() {
-      console.log("clicked search");
-      console.log('searching for:', this.searchQuery);
-
       getItems(this.searchQuery).then((response) => {
+        console.log(response)
             this.searchItems = response;
-            console.log(this.searchItems);
             this.isExpanded = true;
-        console.log(this.isExpanded)
       })
           .catch((error) => {
             console.error(error);
@@ -108,13 +103,18 @@ export default {
         "name": item.name,
         "description": item.description,
         "store": item.store.name,
+        "price": item.current_price,
         "purchaseDate": new Date(),
-        "expirationDate": new Date().getDate() + 5,
+        "expirationDate": new Date(),
         "image": item.image,
+        "quantity": 100
       }
 
-      await this.fridgeStore.addItemToFridgeById(this.fridge.fridgeId, itemDTO);
-
+      await this.itemStore.addItemToFridgeById(this.fridge.fridgeId, itemDTO);
+      await this.itemStore.fetchItemsFromFridgeById(this.fridge.fridgeId).then((items) => {
+        this.fridgeItems = items;
+        console.log(this.fridgeItems)
+      });
     }
   },
 

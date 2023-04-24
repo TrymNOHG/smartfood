@@ -48,6 +48,8 @@ public class ItemController {
     public ResponseEntity<Object> addToFridge(@ParameterObject @RequestBody ItemDTO itemDTO,
                                               @ParameterObject @RequestParam(name = "fridgeId") Long fridgeId){
 
+        logger.info("item to add: " + itemDTO);
+        logger.info("fridge to be added in: " + fridgeId);
         logger.info("User wants to add a new items to fridge");
         Long itemId = itemService.addItem(itemDTO);
         itemService.addToFridge(itemId, fridgeId, itemDTO.quantity());
