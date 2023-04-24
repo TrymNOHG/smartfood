@@ -11,7 +11,7 @@
       </div>
 
       <div v-if="!isAddable" class="user-role">
-        <span>{{ member.isSuperUser ? 'Super user ' : 'Limited user ' }}</span>
+        <span>{{ member.isSuperUser ? $t('super_user')  : $t('limited_user') }}</span>
         <font-awesome-icon
             v-if="member.isSuperUser"
             icon="fa-solid fa-crown"
@@ -90,10 +90,10 @@ export default {
             immediate: true
         }
     },
-//todo issearched, can edit , crown ,trenger id i stor for self delete, kan superuser sette seg selv til begrenset, redigere seg selv? if id=ownid set alt til false?? HOVER HVIS IS ADABLE TRYKK PÅ FOR Å ADDE DA
 
     methods: {
         async fetchMemberPictures() {
+          this.profilePictures = [];
             for (const member of this.membersList) {
                 try {
                     const response = await getProfilePictureById(member.userId);
@@ -111,9 +111,9 @@ export default {
           const {value: role} = await swal.fire({
             title: this.$t('select_role_title'),
             input: 'radio',
-            inputValue: 'normal', // Set the default selected option to "normal"
+            inputValue: this.membersList[index].isSuperUser ? 'super' : 'normal',
             inputOptions: {
-              normal: this.$t('normal_user'),
+              normal: this.$t('limited_user'),
               super: this.$t('super_user')
             },
             inputValidator: (value) => {
@@ -144,7 +144,7 @@ export default {
                 input: 'radio',
                 inputValue: 'normal', // Set the default selected option to "normal"
                 inputOptions: {
-                    normal: this.$t('normal_user'),
+                    normal: this.$t('limited_user'),
                     super: this.$t('super_user')
                 },
                 inputValidator: (value) => {
@@ -187,7 +187,7 @@ export default {
                     const isSuperUser = this.membersList[index].isSuperUser;
                     this.$emit('delete-member',  username, isSuperUser );
                     swal.fire(
-                        this.$t('success_message'),
+                        this.$t('success_message_deleted_user'),
                         '',
                         'success'
                     )

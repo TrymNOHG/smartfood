@@ -15,12 +15,12 @@
 
     <div v-if="showModal" class="modal">
         <div class="modal-content">
-            <h3>{{ $t('searchMembersTitle') }}</h3>
+            <h3>{{ $t('search_Members_Title') }}</h3>
 
             <div class="search-input">
-                <input type="text" v-model="searchText" placeholder="Enter username" />
+                <input type="text" v-model="searchText" :placeholder="$t('enter_username')" />
                 <basic-button
-                    :button-text="$t('searchMembersButtonText')"
+                    :button-text="$t('search_MembersButton_Text')"
                     type="submit"
                     @click="searchMembers"
                 />
@@ -313,6 +313,9 @@ input, textarea {
 
 @media only screen and (max-width: 860px) {
   .container {
+    width: 95%;
+  }
+  .modal {
     width: 95%;
   }
 }
