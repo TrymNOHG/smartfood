@@ -1,9 +1,12 @@
-package edu.ntnu.idatt2106_2023_06.backend.model;
+package edu.ntnu.idatt2106_2023_06.backend.model.stats;
 
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * This class represents a statistical entry. A stat entry contains the relevant fridge, user, statistic type,
@@ -81,6 +84,6 @@ public class Statistics {
      */
     @Column(name = "timestamp", nullable = false)
     @NonNull
-    private Timestamp timestamp;
+    private LocalDateTime timestamp;
 
 }

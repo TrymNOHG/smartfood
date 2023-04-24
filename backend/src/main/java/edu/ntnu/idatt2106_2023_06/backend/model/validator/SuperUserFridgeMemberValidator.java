@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.model.validator;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.Fridge;
-import edu.ntnu.idatt2106_2023_06.backend.model.FridgeMember;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeMember;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

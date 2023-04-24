@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.repo.fridge;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.Fridge;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.repo.fridge;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.*;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeMember;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeMemberId;
 import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,12 +1,9 @@
 package edu.ntnu.idatt2106_2023_06.backend.repo.Recipie;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.Recipe;
-import edu.ntnu.idatt2106_2023_06.backend.model.User;
+import edu.ntnu.idatt2106_2023_06.backend.model.items.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 /**
 

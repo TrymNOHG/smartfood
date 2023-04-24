@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106_2023_06.backend.model;
+package edu.ntnu.idatt2106_2023_06.backend.model.fridge;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
