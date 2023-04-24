@@ -1,6 +1,6 @@
 <template>
   <header v-if="!isOnRootPage">
-    <img src="@/assets/smartmat.png" alt="Logo">
+    <img src="@/assets/images/smartmat.png" alt="Logo">
     <h1 class="matprat-title" :class="{ 'centered': isOnAuthPage }">{{ $t('matsmart') }}</h1>
     <nav>
       <ul v-if="!isOnAuthPage">
@@ -91,6 +91,8 @@ export default {
   },
 };
 </script>
+
+
 
 <style scoped>
 * {

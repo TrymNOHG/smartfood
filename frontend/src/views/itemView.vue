@@ -16,115 +16,84 @@
     <router-link id="member" class="link" to="/members">Members</router-link>
     <router-link id="fridge" class="link" to="/fridges">Fridge</router-link>
   </div>
-  <!--TODO: add infinite scroller or pagination-->
-  <div class="wrapper">
-    <basic-fridge-item v-for="(item, index) in items" :key="index" :item="item" :currenFridge="fridge" />
+  <div class="item-wrapper">
+    <div class="item">
+      <item-header :itemid="itemId" :itemName="itemName"/>
+      <div class="info-delete-wrapper">
+        <item-info :itemid="itemId" class="info-delete"/>
+        <div></div>
+        <item-delete :itemid="itemId" class="info-delete"/>
+      </div>
+    </div>
   </div>
-
 </template>
 
 <script>
-import {useRoute} from "vue-router";
-import MemberComponent from "@/components/FridgeList/MemberComponent.vue";
-import BasicFridgeItem from "@/components/SpecificFridge/BasicFridgeItem.vue";
+import { useRoute } from 'vue-router';
+import ItemHeader from "@/components/itemDescription/itemHeader.vue";
+import ItemInfo from "@/components/itemDescription/itemInfo.vue";
+import ItemDelete from "@/components/itemDescription/itemDelete.vue";
+import {useFridgeStore} from "@/store/store";
 
 export default {
-  name: "FridgeView",
-  components: {BasicFridgeItem, MemberComponent},
+  name: "itemView",
+  components: {ItemDelete, ItemInfo, ItemHeader},
 
   setup() {
-    const route = useRoute()
-    const fridge = {
-      "fridgeId": route.params.id,
-      "fridgeName": route.params.name
-    }
+    const route = useRoute();
+    const fridgeStore = useFridgeStore();
+    const itemName = route.params.itemName;
+    const itemId = route.params.itemId;
+    const fridge = fridgeStore.currentFridge;
 
     return {
-      fridge
-    }
-  },
-
-  data() {
-    return {
-      items: [{
-        itemId: 1,
-        itemName: "Bananas",
-        itemPrice: "25",
-        itemBuyDate: "2023-04-19",
-        itemExpirationDate: "2023-04-23",
-        itemLeft: 100
-      },
-        {
-          itemId: 2,
-          itemName: "Milk",
-          itemPrice: "33.99",
-          itemBuyDate: "2023-04-21",
-          itemExpirationDate: "2023-04-30",
-          itemLeft: 53
-        },
-        {
-          itemId: 3,
-          itemName: "Eggs",
-          itemPrice: "38",
-          itemBuyDate: "2023-04-21",
-          itemExpirationDate: "2023-04-26",
-          itemLeft: 78
-        }]
-    }
+      itemName,
+      fridge,
+      itemId
+    };
   }
 }
-
 </script>
 
 <style scoped>
 
-.wrapper {
-  margin-top: 2%;
-  margin-left: 5%;
+.item {
+  margin-top: 5%;
+  grid-column: 2;
+}
+
+.item-wrapper {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(345px, 300px));
-  grid-template-rows: repeat(auto-fill, minmax(250px, 225px));
+  grid-template-columns: 10% 80% 10%;
 }
 
-
-.break-line {
-  height: 7px;
-  background-color: black;
+.info-delete-wrapper{
+  display: grid;
+  grid-template-columns: 45% 5% 45%;
 }
 
-.link {
-  text-decoration: none;
-  color: white;
-}
-.link-name{
-  text-decoration: none;
-  color: white;
-}
-
-.link-button{
-  text-decoration: none;
-  color: black;
-}
 
 #fridge {
-  height: 25px;
-  width: 150px;
-  background-color: #b1b1b1;
-  border-radius: 5px;
-  font-weight: bold;
-  text-decoration: black;
-  text-shadow: black 0 0 2px;
-  margin-left: 50px;
-  margin-top: 5px;
-}
-
-#member {
   width: 150px;
   margin-top: 5px;
   margin-right: 50px;
 }
 
+#member {
+  width: 150px;
+  margin-top: 5px;
+  margin-: 50px;
+}
+
 #member:hover {
+  color: #3b3b3b;
+  height: 25px;
+  border-radius: 5px;
+  background-color: #fff;
+  transition: all 0.2s ease-in-out;
+}
+
+#fridge:hover {
   color: #3b3b3b;
   height: 25px;
   border-radius: 5px;
@@ -188,6 +157,25 @@ export default {
   cursor: pointer;
 }
 
+.link {
+  text-decoration: none;
+  color: white;
+}
+.link-name{
+  text-decoration: none;
+  color: white;
+}
+
+.link-button{
+  text-decoration: none;
+  color: black;
+}
+
+.break-line {
+  height: 7px;
+  background-color: black;
+}
+
 @media (max-width: 650px) {
 
   body {
@@ -195,10 +183,12 @@ export default {
     width: 100%;
   }
 
-  .wrapper {
-    margin-left: 2.5%;
-    height: 100%;
-    grid-template-rows: repeat(auto-fill, minmax(95px, 95px));
+  .info-delete-wrapper{
+    margin-top: 15%;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 45% 5% 45%;
+    align-items: center;
   }
 
   .fridge-name {
@@ -211,6 +201,12 @@ export default {
     top: 20%;
     font-size: 0.7rem;
   }
+
+  .name-display {
+    font-size: 1.2rem;
+  }
+
 }
+
 
 </style>

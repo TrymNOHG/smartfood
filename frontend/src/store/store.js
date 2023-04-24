@@ -1,8 +1,5 @@
 import { defineStore } from 'pinia'
 import { getUser } from "@/services/UserService"
-import {loadAllCategories, loadMainCategories} from "@/services/CategoryService";
-import {filterByFullDesc, loadListingsByCategoryId} from "@/services/ItemService";
-import { ref, computed, watch } from "vue";
 import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
 
@@ -68,14 +65,17 @@ export const useLoggedInStore = defineStore('user', {
 export const useFridgeStore = defineStore('fridgeStore', {
     state: () => ({
         allFridges: [],
-        currentFridge: null,
+        currentFridge: {
+            "fridgeId": 1,
+            "fridgeName": "Kjøleskap"
+        },
     }),
 
     getters: {
         getCurrentFridge(){
             return this.currentFridge
         },
-        
+
     },
 
     actions: {
@@ -98,10 +98,9 @@ export const useFridgeStore = defineStore('fridgeStore', {
         async updateFridgeNameByDTO(fridgeDTO){
             await updateFridge(fridgeDTO)
         },
-        // Define a mutation to update the value of currentFridge
         async setCurrentFridgeById(fridgeId) {
             for(let fridge of this.allFridges) {
-                if(fridge.fridgeId == fridgeId) {
+                if(fridge.fridgeId === fridgeId) {
                     this.currentFridge = fridge;
                     console.log(this.currentFridge);
                     return;
@@ -111,25 +110,26 @@ export const useFridgeStore = defineStore('fridgeStore', {
         async setCurrentFridgeByFridge(state, fridge) {
             const { fridgeId, fridgeName } = fridge
             state.currentFridge = { fridgeId, fridgeName }
-        }
-    }   
+        },
+
+        setCurrentFridge(state, fridge) {
+            state.currentFridge = fridge
+        },
+    }
 });
 
 
-export const useImageStore = defineStore('imageStore', {
+export const useItemStore = defineStore('itemStore', {
     state: () => ({
-        imageToSend: []
+
     }),
 
     getters: {
-        test(){
-            return this.imageToSend.at(0);
-        }
+
     },
 
     actions: {
-        addImage(newImage){
-            this.imageToSend.unshift(newImage)
-        }
-    }
+    },
 });
+
+

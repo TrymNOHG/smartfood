@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import List from "@/components/basic-components/listingComponent.vue";
+import List from "@/components/FridgeList/listingComponent.vue";
 import BasicInput from "@/components/basic-components/BasicInput.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
 import {useFridgeStore, useLoggedInStore} from "@/store/store";

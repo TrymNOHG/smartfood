@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import RegisterComponent from "@/components/RegisterComponent.vue";
+import RegisterComponent from "@/components/Authentication/RegisterComponent.vue";
 
 export default {
   name: "RegisterView",

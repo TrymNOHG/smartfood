@@ -9,7 +9,7 @@
   </template>
 
 <script>
-import FridgeComponent from "../components/FridgeComponent.vue";
+import FridgeComponent from "../components/FridgeList/FridgesComponent.vue";
 export default {
   name: "FridgesView",
   components: {FridgeComponent}
