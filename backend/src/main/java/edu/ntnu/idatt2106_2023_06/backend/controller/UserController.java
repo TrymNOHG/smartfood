@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +70,7 @@ public class UserController {
                     examples = @ExampleObject(value = "{\"message\":\"Username already exists!\"}")
             ))
     })
-    public ResponseEntity<Object> register(@ParameterObject @RequestBody UserRegisterDTO user) {
+    public ResponseEntity<Object> register(@ParameterObject @RequestBody UserRegisterDTO user) throws MessagingException {
         logger.info("User " + user.username() + " is being registered!");
         AuthenticationResponseDTO authenticationResponseDTO =  authenticationService.register(user);
 

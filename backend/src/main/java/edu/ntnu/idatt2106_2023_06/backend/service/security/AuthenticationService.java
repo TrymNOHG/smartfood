@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -59,14 +58,15 @@ public class AuthenticationService implements IAuthenticationService {
             throw new UserExistsException("email", userRegisterDTO.email());
         if (userRepository.findByUsername(userRegisterDTO.username()).isPresent())
             throw new UserExistsException("username", userRegisterDTO.username());
-        userRepository.save(user);
+
+        user = userRepository.save(user);
 
         logger.info(String.format("User %s has been saved in the DB!", user.getUsername()));
 
         String jwtToken = jwtService.generateToken(user);
         logger.info("Their JWT is: " + jwtToken);
 
-        emailService.sendActivationEmail(user.getEmail(), UUID.randomUUID().toString());
+        emailService.sendActivationEmail(user);
 
         return AuthenticationResponseDTO
                 .builder()

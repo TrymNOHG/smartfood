@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.model.users;
 
+import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -58,11 +59,10 @@ public class Token {
     private LocalDateTime timeConfirmed;
 
     /**
-     * The user of the fridge.
+     * The user of the token.
      */
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @MapsId("user")
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     @NonNull
     @ToString.Exclude
     private User user;

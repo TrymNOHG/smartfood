@@ -1,5 +1,8 @@
 package edu.ntnu.idatt2106_2023_06.backend.config;
 
+import jakarta.mail.Authenticator;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,11 +36,13 @@ public class MailConfig {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(host);
         mailSender.setPort(port);
-//        mailSender.setUsername(username);
-//        mailSender.setPassword(password);
+        mailSender.setUsername(username);
+        mailSender.setPassword(password);
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.smtp.starttls.enable", starttlsEnabled);
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.port", port);
 
         return mailSender;
     }

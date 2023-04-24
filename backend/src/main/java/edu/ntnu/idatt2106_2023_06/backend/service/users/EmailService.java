@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.users;
 
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -10,6 +11,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.MessagingException;
+
+import java.util.UUID;
 
 /**
  * This class allows for emails to be sent to users regarding issues such as registration and password resetting.
@@ -22,14 +25,17 @@ public class EmailService implements IEmailService {
 
     private final Logger logger = LoggerFactory.getLogger(EmailService.class);
     private final static String GROUP_EMAIL = "IDATT2106_2023_06@stud.ntnu.no";
+    private final TokenService tokenService;
 
     private final JavaMailSender mailSender;
 
     @Async
     @Override
-    public void sendActivationEmail(String receiver, String token) throws MessagingException {
+    public void sendActivationEmail(User user) throws MessagingException {
+        String token = UUID.randomUUID().toString();
+        tokenService.saveToken(token, user);
         try {
-           sendEmail("Activate your SmartMat account", receiver, createEmailBody(String.format("""
+           sendEmail("Activate your SmartMat account", user.getEmail(), createEmailBody(String.format("""
                    In order to activate you account, open the link provided. The link will expire
                    in 24 hours and an additional link will then need to be sent. Here is the link:
                    http://localhost:5173/user/activate?token=%s

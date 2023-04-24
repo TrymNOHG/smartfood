@@ -20,12 +20,12 @@ spring:
 
   mail:
 #    TODO: need to change the host when deploying.
-    host: localhost
+    host: "localhost"
     port: 1025
 #    Add the options below when authentication is needed
-#    username: idatt2106
-#    password: password
-
+    username: "hello"
+    password: "hello"
+#    TODO: REMEMBER TO DELETE PERSONAL PASSWORD
     properties:
       mail:
         smtp:
@@ -37,3 +37,4 @@ spring:
           timeout: 3000
           connectiontimeout: 5000
           writetimeout: 5000
+    protocol: "smtp"
