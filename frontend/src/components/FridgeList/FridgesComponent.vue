@@ -149,6 +149,7 @@ transform: translate(-50%, -50%);
 width: 60%;
 max-width: 500px;
 }
+
 .modal-content {
 flex-grow: 1;
 overflow-y: auto;

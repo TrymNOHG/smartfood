@@ -1,6 +1,6 @@
 <template>
   <div class="list">
-    <router-link v-for="(fridge, index) in fridgeList" :key="index" :to="{name: 'fridgeView', params: {id: fridge.fridgeId.toString(), name: fridge.fridgeName}}" class="link" >
+    <router-link v-for="(fridge, index) in fridgeList" :key="index" :to="'/fridge'" @click="addToStore(fridge)" class="link" >
       <div class="item">
         <span v-if="!isEditing[index]" class="item-text">{{ fridge.fridgeName }}</span>
         <input v-else type="text" v-model="editingFridge.fridgeName" @keyup.enter="confirmEdit(index)" class="edit-input" @click.prevent />
@@ -20,6 +20,7 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import 'sweetalert2/dist/sweetalert2.min.css';
 import swal from 'sweetalert2';
+import {useFridgeStore} from "@/store/store";
 
 
 export default {
@@ -31,6 +32,15 @@ export default {
       required: true,
     },
   },
+
+  setup(){
+    const fridgeStore = useFridgeStore();
+
+    return {
+      fridgeStore,
+    }
+  },
+
   data() {
     return{
       isEditing: false,
@@ -47,6 +57,10 @@ export default {
       this.editingFridge.fridgeName = this.fridgeList[index].fridgeName;
       this.isEditing = Array(this.fridgeList.length).fill(false);
       this.isEditing[index] = true;
+    },
+
+    addToStore(fridge){
+      this.fridgeStore.setCurrentFridgeById(fridge.fridgeId);
     },
 
     confirmEdit(index) {

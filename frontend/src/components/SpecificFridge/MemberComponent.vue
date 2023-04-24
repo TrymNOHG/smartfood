@@ -200,7 +200,8 @@ export default {
 }
 
 .container {
-    width: 50%;
+  cursor: pointer;
+  width: 50%;
     margin: 0 auto;
 }
 
@@ -222,8 +223,8 @@ export default {
 }
 
 .container_button:hover {
-    box-shadow: 0 0 5px #ccc;
-    transform: scale(1.02);
+  box-shadow: 0 0 5px #ccc;
+  transform: scale(1.02);
 }
 
 h3 {
@@ -246,8 +247,6 @@ h3 {
     max-width: 500px;
 }
 
-
-
 .search-input {
   display: flex;
   flex-direction: column;
@@ -266,9 +265,6 @@ h3 {
   overflow-y: auto;
   padding-right: 10px;
 }
-
-
-
 
 .close {
     position: absolute;

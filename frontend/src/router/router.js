@@ -78,7 +78,7 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/fridges/:name/fridge?id=:id',
+      path: '/fridge',
       name: 'fridgeView',
       component: FridgeView,
       meta:
