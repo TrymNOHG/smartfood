@@ -1,21 +1,21 @@
 <template>
   <div class="cards-container">
-    <router-link :to="{ name: 'itemView', params: { itemName: item.itemName, itemId: item.itemId}}">
+    <router-link :to="{ name: 'itemView', params: { itemName: item.name, itemId: item.name}}">
       <div class="card" :style="{ 'border-color': borderColor }">
         <div class="front-side">
-          <img src="@/assets/images/Large.jpg" alt="item picture">
+          <img :src="item.image" alt="item picture">
         </div>
         <div class="back-side">
           <div class="item-detail">
             <div class="item-name">
-              <h2>{{item.itemName}}</h2>
-              <h3>Expiration date: {{ item.itemExpirationDate }}</h3>
+              <h2>{{item.name}}</h2>
+              <h3>Expiration date: {{ item.expirationDate }}</h3>
               <br>
             </div>
-            <h4>Price: {{ item.itemPrice }}; kr</h4>
-            <h4>Buy date: {{ item.itemBuyDate }}</h4>
-            <h4>Expiration date: {{ item.itemExpirationDate }}</h4>
-            <h4>How much is Left: {{ item.itemLeft }}L</h4>
+            <h4>Price: {{ item.price }}; kr</h4>
+            <h4>Buy date: {{ item.purchaseDate }}</h4>
+            <h4>Expiration date: {{ item.expirationDate }}</h4>
+            <h4>How much is Left: {{ item.quantity }}L</h4>
             <button class="delete-btn" @click="deleteCard">
             <span>
               <font-awesome-icon icon="fa-solid fa-trash" @click="deleteCard()" class="icon delete-icon" />
@@ -30,6 +30,7 @@
 
 <script>
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {number} from "yup";
 
 export default {
   name: "BasicFridgeItem",
@@ -39,13 +40,14 @@ export default {
     item: {
       type: Object,
       default: () => ({
-        itemId: "",
-        itemName: "",
-        itemPicture: null,
-        itemPrice: "",
-        itemBuyDate: "2023-04-15",
-        itemExpirationDate: "2023-04-16",
-        itemLeft: ""
+        description: String,
+        expirationDate: String,
+        image: String,
+        name: String,
+        price: String,
+        purchaseDate: String,
+        quantity: number,
+        store: String
       })
     },
   },
@@ -90,7 +92,7 @@ export default {
 
 img {
   border-radius: 25px;
-  object-fit: cover;
+  object-fit: contain;
   width: 100%;
   height: 100%;
 }
@@ -99,7 +101,7 @@ img {
   border: 4px solid;
   border-radius: 23px;
   text-align: center;
-  width: 325px;
+  width: 320px;
   height: 225px;
   perspective: 600px;
   transition: .5s;

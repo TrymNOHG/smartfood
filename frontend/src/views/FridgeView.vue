@@ -17,18 +17,19 @@
       <div id="toggle-button" class="link" @click="selectedTab = 'fridge'" :class="{ active: selectedTab === 'fridge' }">Fridge</div>
   </div>
   <!--TODO: add infinite scroller or pagination-->
-    <div class="fridge-wrapper" v-show="selectedTab === 'fridge'">
+  <div class="fridge-wrapper" v-show="selectedTab === 'fridge'">
+    <div class="search-container">r
       <div class="dropdown">
-        <SearchInput v-model="searchQuery" label="Search product" class="search-input" />
+        <SearchInput @input="handleSearch()" v-model="searchQuery" label="Search product" class="search-input" />
         <button class="search-btn" @click="handleSearch()">Search</button>
       </div>
-
-      <div class="search-results">
-        <vue-collapsible-panel-group accordion>
+      <div class="search-overlay" v-show="isExpanded" @click="isExpanded = false"></div>
+      <div class="search-results" v-show="isExpanded">
+        <vue-collapsible-panel-group>
           <vue-collapsible-panel :expanded="isExpanded">
             <template #title>Search results</template>
-            <template #content>
-              <div class="search-item-list">
+            <template #content style="overflow-y: auto;">
+              <div class="search-item-list" style="overflow-y: auto; max-height: 250px">
                 <SearchItem
                     v-for="(item, index) in searchItems"
                     :key="index"
@@ -36,19 +37,21 @@
                     :text="item.name"
                     :store="item.store.name"
                     :price="item.current_price"
-                    @click="addItemToList(item)"
+                    @click="addItemToFridge(this.fridge.fridgeId, item)"
                 />
               </div>
             </template>
           </vue-collapsible-panel>
         </vue-collapsible-panel-group>
       </div>
-        <basic-fridge-item v-for="(item, index) in items" :key="index" :item="item" :currenFridge="fridge" />
+    </div>
+    <div class="wrapper" :style="{ marginTop: marginTopStyle}">
+      <basic-fridge-item v-for="(item, index) in fridgeItems" :key="index" :item="item" :currenFridge="fridge" />
+    </div>
   </div>
-    <div class="members-wrapper" v-show="selectedTab === 'members'">
-        <member-component/>
+  <div class="members-wrapper" v-show="selectedTab === 'members'">
+    <member-component/>
   </div>
-
 </template>
 
 <script>
@@ -57,13 +60,12 @@ import {
   VueCollapsiblePanel,
 } from "@dafcoe/vue-collapsible-panel";
 import {useRoute} from "vue-router";
-import MemberComponent from "@/components/FridgeList/MemberComponent.vue";
+import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicFridgeItem.vue";
-import {useFridgeStore} from "@/store/store"
+import {useFridgeStore, useItemStore} from "@/store/store"
 import {ref} from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
-import {ref} from "vue";
 import {getItems} from "@/services/ApiService";
 
 export default {
@@ -74,7 +76,14 @@ export default {
     BasicFridgeItem,
     MemberComponent,
     VueCollapsiblePanelGroup,
-    VueCollapsiblePanel
+    VueCollapsiblePanel,
+  },
+
+  computed: {
+    marginTopStyle(){
+      console.log("brussan")
+      return this.isExpanded ? '5%' : '0'
+    }
   },
 
   methods: {
@@ -93,88 +102,69 @@ export default {
           });
 
     },
+
+    async addItemToFridge(fridgeId, item) {
+      const itemDTO = {
+        "name": item.name,
+        "description": item.description,
+        "store": item.store.name,
+        "purchaseDate": new Date(),
+        "expirationDate": new Date().getDate() + 5,
+        "image": item.image,
+      }
+
+      await this.fridgeStore.addItemToFridgeById(this.fridge.fridgeId, itemDTO);
+
+    }
   },
 
   setup() {
+    const fridgeStore = useFridgeStore();
+    const itemStore = useItemStore();
     const selectedTab = ref("fridge");
-    const route = useRoute()
+    const searchItems = ref([]);
+    const fridgeItems = ref([]);
+
+    const route = useRoute();
+
     const fridge = {
       "fridgeId": route.params.id,
       "fridgeName": route.params.name
     }
-    useFridgeStore().setCurrentFridgeById(route.params.id)
+
+    fridgeStore.setCurrentFridgeById(route.params.id);
+    itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
+      fridgeItems.value = items;
+    });
 
     const itemAmount = ref(1);
     const submitMessage = ref("norvegia");
-    const items = ref([]);
     const searchQuery = ref('');
 
     return {
       fridge,
-      selectedTab
-      fridge,
+      searchItems,
+      fridgeItems,
+      selectedTab,
       itemAmount,
       submitMessage,
-      items,
       searchQuery,
+      fridgeStore,
+      itemStore,
     }
   },
 
   data() {
     return {
-      searchItems: [],
       isExpanded: false,
-      items: [{
-        itemId: 1,
-        itemName: "Bananas",
-        itemPrice: "25",
-        itemBuyDate: "2023-04-19",
-        itemExpirationDate: "2023-04-23",
-        itemLeft: 100
-      },
-        {
-          itemId: 2,
-          itemName: "Milk",
-          itemPrice: "33.99",
-          itemBuyDate: "2023-04-21",
-          itemExpirationDate: "2023-04-30",
-          itemLeft: 53
-        },
-        {
-          itemId: 2,
-          itemName: "Milk",
-          itemPrice: "33.99",
-          itemBuyDate: "2023-04-21",
-          itemExpirationDate: "2023-04-30",
-          itemLeft: 53
-        },
-        {
-          itemId: 2,
-          itemName: "Milk",
-          itemPrice: "33.99",
-          itemBuyDate: "2023-04-21",
-          itemExpirationDate: "2023-04-30",
-          itemLeft: 53
-        },
-        {
-          itemId: 3,
-          itemName: "Eggs",
-          itemPrice: "38",
-          itemBuyDate: "2023-04-21",
-          itemExpirationDate: "2023-04-26",
-          itemLeft: 78
-        }]
     }
   }
 }
-
 </script>
 
 <style scoped>
 
 .fridge-wrapper {
-  margin-top: 5%;
-  margin-left: 5%;
   display: grid;
 }
 
@@ -206,13 +196,8 @@ export default {
 }
 
 .dropdown {
-  top: 100%;
+  width: 100%;
   position: relative;
-  background-color: #f6f6f6;
-  min-width: 230px;
-  overflow: auto;
-  border: 1px solid #ddd;
-  z-index: 2;
   text-align: center;
 }
 
@@ -223,10 +208,8 @@ export default {
   display: block;
 }
 
-
 .search-results {
   left: 0;
-  z-index: 1;
   background-color: white;
   border: 1px solid gray;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -234,7 +217,7 @@ export default {
   margin-left: 10%;
   list-style: none;
   width: 80%;
-  position: absolute;
+  z-index: 2;
 }
 
 .search-results li {
@@ -259,6 +242,7 @@ input[type="text"]:not(:focus) + .search-results {
 }
 
 .link {
+  cursor: pointer;
   text-decoration: none;
   color: white;
 }
@@ -272,9 +256,6 @@ input[type="text"]:not(:focus) + .search-results {
   color: black;
 }
 
-
-
-
 #toggle-button {
   width: 150px;
   margin-top: 5px;
@@ -283,15 +264,26 @@ input[type="text"]:not(:focus) + .search-results {
 
 #toggle-button:hover {
   color: #3b3b3b;
+}
+
 .search-results {
+  position: absolute;
+  top: 95%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  background-color: white;
   color: white;
 }
 
-#fridge {
-  height: 25px;
-  border-radius: 5px;
-  background-color: #fff;
-  transition: all 0.2s ease-in-out;
+.wrapper {
+  z-index: 0;
+  margin-left: 2%;
+  margin-right: 2%;
+  grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(250px, 1fr));
+  transition: 0.5s;
 }
 
 .active {
@@ -304,20 +296,6 @@ input[type="text"]:not(:focus) + .search-results {
     text-shadow: black 0 0 2px;
     margin-left: 50px;
     margin-top: 5px;
-}
-
-#member {
-  width: 150px;
-  margin-top: 5px;
-  margin-right: 50px;
-}
-
-#member:hover {
-  color: #3b3b3b;
-  height: 25px;
-  border-radius: 5px;
-  background-color: #fff;
-  transition: all 0.2s ease-in-out;
 }
 
 .members-fridge {
@@ -376,18 +354,10 @@ input[type="text"]:not(:focus) + .search-results {
   cursor: pointer;
 }
 
-
 @media (max-width: 650px) {
 
-  body {
-    height: 95px;
-    width: 100%;
-  }
-
-  .wrapper {
-    margin-left: 2.5%;
+  .fridge-wrapper {
     height: 100%;
-    grid-template-rows: repeat(auto-fill, minmax(95px, 95px));
   }
 
   .fridge-name {
@@ -399,6 +369,17 @@ input[type="text"]:not(:focus) + .search-results {
     width: 20%;
     top: 20%;
     font-size: 0.7rem;
+  }
+
+  .link {
+    margin: 10px 0;
+  }
+
+  .wrapper {
+    margin-top: 15%;
+    grid-template-columns: repeat(auto-fill, minmax(355px, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(95px, 95px));
+
   }
 }
 

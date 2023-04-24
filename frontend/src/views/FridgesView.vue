@@ -33,6 +33,7 @@ template {
 .wrapper {
   display: grid;
   grid-template-columns: 25% 50% 25%;
+  z-index: 0;
 }
 
 .fridgeList {

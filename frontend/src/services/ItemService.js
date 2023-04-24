@@ -71,25 +71,3 @@ export const buyItemsFromShoppingList = async (itemRemoveDTO) => {
     },
   });
 };
-
-
-export const loadAllListings = async () => {
-    return await axios.get(`${BASE_LISTING_URL}/load`)
-}
-
-export const loadListingsByCategoryId = async (categoryId) => {
-    return await axios.get(`${BASE_LISTING_URL}/category/${categoryId}/load`)
-}
-
-export const loadListingByItemId = async(itemId) => {
-    return await axios.get(`${BASE_LISTING_URL}/load/${itemId}`)
-}
-
-
-export const loadImagesByItemId = async(itemId) => {
-    return await axios.get(`${BASE_LISTING_URL}/load/pictures/${itemId}`)
-}
-
-export const filterByFullDesc = async(searchTerm, categoryId) => {
-    return await axios.get(`${BASE_LISTING_URL}/load/filter?term=${searchTerm}&categoryId=${categoryId}`)
-}

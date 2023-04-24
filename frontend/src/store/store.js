@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { getUser } from "@/services/UserService"
 import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
+import {addItemToFridge, getItemsFromFridge} from "@/services/ItemService";
 
 const storeUUID = UniqueId();
 
@@ -23,7 +24,7 @@ export const useLoggedInStore = defineStore('user', {
 
     getters: {
         isLoggedIn(){
-            return this.sessionToken !== null || localStorage.getItem("sessionToken") !== null;        },
+            return this.sessionToken !== null},
         getUser() {
             return this.user;
         },
@@ -119,7 +120,7 @@ export const useFridgeStore = defineStore('fridgeStore', {
 
 export const useItemStore = defineStore('itemStore', {
     state: () => ({
-
+        allItems: [],
     }),
 
     getters: {
@@ -127,6 +128,18 @@ export const useItemStore = defineStore('itemStore', {
     },
 
     actions: {
+        async addItemToFridgeById(fridgeId, itemDTO) {
+            await addItemToFridge(itemDTO, fridgeId);
+        },
+
+        async fetchItemsFromFridgeById(fridgeId) {
+            await getItemsFromFridge(fridgeId).then(response => {
+                this.allItems = []
+                this.allItems = response.data;
+                console.log(this.allItems)
+            })
+            return this.allItems;
+        }
     },
 });
 
