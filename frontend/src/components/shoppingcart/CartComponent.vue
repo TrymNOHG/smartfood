@@ -44,10 +44,11 @@
                     :weight="item.weight"
                     :quantity="item.quantity"
                     :item="item"
+                    :isChecked="item.isChecked || false"
                     @add="inc_dec_CartItemAmount(item, 1)"
                     @subtract="inc_dec_CartItemAmount(item, -1)"
                     @delete-item="handleDeleteItem(item)"
-                    @handle-checked="handleChecked(item)"
+                    @handle-checked="handleCheckedItem"
                     @buy="handleBuy(item)"
             >
             </CartItem>
@@ -124,6 +125,9 @@ export default {
             loadItemsFromCart();
         }
 
+        function handleCheckedItem(item, isChecked) {
+            item.isChecked = isChecked;
+        }
         function handleBuy() {
             const selectedItems = [];
             items.value.forEach((item) => {
@@ -322,7 +326,7 @@ export default {
             isExpanded,
             handleBuy,
             handleMarkAll,
-            handleChecked,
+            handleCheckedItem,
             checkAll_b,
         };
     },
@@ -355,7 +359,6 @@ input[type="number"] {
     --bg-color-header: #6c6c6c !important;
     --bg-color-header-hover: #6c6c6c !important;
     --bg-color-header-active: #6c6c6c !important;
-    border-radius: 10px 10px 10px 10px;
 }
 
 #searchbtn {
