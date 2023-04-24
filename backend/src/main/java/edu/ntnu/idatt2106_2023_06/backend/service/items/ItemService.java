@@ -204,6 +204,18 @@ public class ItemService implements IItemService {
     }
 
     /**
+     * Deletes the specified quantity of many items from the shopping list for the specified fridge.
+     *
+     * @param itemRemoveDTOList A DTO object containing the details of the items to remove as a list.
+     */
+    @Override
+    public void deleteAllItemsFromShoppingList(List<ItemRemoveDTO> itemRemoveDTOList) {
+        for(ItemRemoveDTO i: itemRemoveDTOList){
+            deleteItemFromShoppingList(i, false);
+        }
+    }
+
+    /**
      * Buys the specified list of items from the shopping list.
      *
      * @param itemDTOList A list of DTO objects containing the details of the items to buy.

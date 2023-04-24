@@ -154,6 +154,21 @@ public class ItemController {
      * @param itemDTOList  the list of items to buy
      * @return             a response entity indicating success
      */
+    @PostMapping(value="/shopping/delete/all", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Buy items from shopping list")
+    public ResponseEntity<Object> deleteAllItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList){
+        logger.info("User wants to buy item from shopping list");
+        itemService.deleteAllItemsFromShoppingList(itemDTOList);
+        logger.info("Items have been bought!");
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Buys the items on the shopping list for a given fridge.
+     *
+     * @param itemDTOList  the list of items to buy
+     * @return             a response entity indicating success
+     */
     @PostMapping(value="/shopping/buy", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Buy items from shopping list")
     public ResponseEntity<Object> buyItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList){
