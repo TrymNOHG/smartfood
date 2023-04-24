@@ -30,8 +30,8 @@ export const getItemsFromShoppingList = async (fridgeId) => {
   });
 };
 
-export const buyItemsFromShoppingList = async (itemDTO) => {
-  return await axios.post(`${BASE_LISTING_URL}/shopping/buy`, itemDTO, {
+export const buyItemsFromShoppingList = async (itemRemoveDTO) => {
+  return await axios.post(`${BASE_LISTING_URL}/shopping/buy`, itemRemoveDTO, {
     headers: {
       Authorization: `Bearer ${await SessionToken()}`,
     },

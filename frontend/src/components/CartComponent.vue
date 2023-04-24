@@ -48,7 +48,7 @@
         @delete-item="handleDeleteItem(item)"
         @handle-checked="handleChecked(item)"
         @buy="handleBuy(item)"
-        @update:isChecked="(isChecked, item) => item.isChecked = !item.isChecked"
+        @update:isChecked="(item) => (item.isChecked = !item.isChecked)"
       >
       </CartItem>
     </div>
@@ -99,8 +99,27 @@ export default {
     const currentFridge = useFridgeStore().getCurrentFridge;
     let checkAll_b = ref(false);
 
+
+    function callEveryThreeSeconds() {
+      console.log(items.value);
+    }
+
+    setInterval(callEveryThreeSeconds, 3000);
+
+
     function handleMarkAll() {
       checkAll_b.value = !checkAll_b.value;
+      /**if(checkAll_b){
+        items.value.forEach((item) => {
+        item.isChecked.value = true;
+      });
+      }else{
+        items.value.forEach((item) => {
+        item.isChecked.value = false;
+      });
+      }
+      */
+
       loadItemsFromCart();
     }
     function handleBuy() {
@@ -110,16 +129,21 @@ export default {
           selectedItems.push(item);
         }
       });
+      console.log(selectedItems);
 
       selectedItems.forEach((item) => {
-        try{
-          console.log(item.isChecked);
+        const ItemRemoveDTO = {
+          itemName: item.name,
+          store: item.store,
+          fridgeId: currentFridge.fridgeId,
+          quantity: item.quantity,
+        };
+        try {
           delete item.isChecked;
-          
-          buyItemsFromShoppingList(item)
-          console.log(item.isChecked);
-        }catch(error){
-          console.error(error)
+          console.log(item);
+          buyItemsFromShoppingList(ItemRemoveDTO);
+        } catch (error) {
+          console.error(error);
         }
       });
     }
