@@ -3,7 +3,7 @@
   <div class="name-display">
     <h1 class="fridge-name">
       <router-link to="/fridges" class="link-name">
-        {{ fridgeName }}
+        {{ fridge.fridgeName }}
       </router-link>
     </h1>
     <div class="change-button">
@@ -27,6 +27,7 @@
 import {useRoute} from "vue-router";
 import MemberComponent from "@/components/FridgeList/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicFridgeItem.vue";
+import {useFridgeStore} from "@/store/store"
 
 export default {
   name: "FridgeView",
@@ -38,6 +39,7 @@ export default {
       "fridgeId": route.params.id,
       "fridgeName": route.params.name
     }
+    useFridgeStore().setCurrentFridgeById(route.params.id)
 
     return {
       fridge
@@ -49,26 +51,26 @@ export default {
       items: [{
         itemId: 1,
         itemName: "Bananas",
-        itemPrice: "2.50",
+        itemPrice: "25",
         itemBuyDate: "2023-04-19",
         itemExpirationDate: "2023-04-23",
-        itemLeft: "4"
+        itemLeft: 100
       },
         {
           itemId: 2,
           itemName: "Milk",
-          itemPrice: "3.99",
+          itemPrice: "33.99",
           itemBuyDate: "2023-04-21",
           itemExpirationDate: "2023-04-30",
-          itemLeft: "1"
+          itemLeft: 53
         },
         {
           itemId: 3,
           itemName: "Eggs",
-          itemPrice: "1.99",
+          itemPrice: "38",
           itemBuyDate: "2023-04-21",
           itemExpirationDate: "2023-04-26",
-          itemLeft: "1"
+          itemLeft: 78
         }]
     }
   }
