@@ -144,7 +144,6 @@
         profileData.value = { ...user };
       });
 
-      profileData.value.picture = defaultPicture;
 
 
 
@@ -183,6 +182,7 @@
         } catch (error) {
           console.error('Error fetching profile picture:', error);
           // Handle the error (e.g., display an error message)
+            profileData.value.picture = defaultPicture;
         }
       };
 

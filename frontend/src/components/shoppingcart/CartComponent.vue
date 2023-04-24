@@ -459,7 +459,7 @@ body {
   font-weight: 400;
 }
 
-.item {
+.member {
   padding: 20px 30px;
   height: 120px;
   width: 70%;
