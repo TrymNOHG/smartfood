@@ -25,6 +25,13 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
     Optional<Token> findTokenByTokenId(Long id);
 
     /**
+     * This method retrieves the token object attached to the token value.
+     * @param token Value of the token, given as a String.
+     * @return      Token object
+     */
+    Optional<Token> findTokenByToken(String token);
+
+    /**
      * This method retrieves the token attached to the given user id.
      * @param userId    ID of the user, given as a Long object.
      * @return          Token object

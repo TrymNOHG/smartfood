@@ -27,21 +27,13 @@ public class EmailService implements IEmailService {
 
     @Async
     @Override
-    public void sendEmail(String subject, String receiver, String emailBody) throws MessagingException {
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-        helper.setText(emailBody, true);
-        helper.setTo(receiver);
-        helper.setSubject(subject);
-        helper.setFrom(GROUP_EMAIL);
-        mailSender.send(mimeMessage);
-    }
-
-    @Async
-    @Override
-    public void sendActivationEmail(String receiver, String message) throws MessagingException {
+    public void sendActivationEmail(String receiver, String token) throws MessagingException {
         try {
-           sendEmail("Activate your account", receiver, createEmailBody(message));
+           sendEmail("Activate your SmartMat account", receiver, createEmailBody(String.format("""
+                   In order to activate you account, open the link provided. The link will expire
+                   in 24 hours and an additional link will then need to be sent. Here is the link:
+                   http://localhost:5173/user/activate?token=%s
+                   """, token)));
         } catch (MessagingException e) {
             logger.error("Send of email was unsuccessful", e);
             throw new MessagingException("Activation Email was unsuccessful");
@@ -59,12 +51,22 @@ public class EmailService implements IEmailService {
         }
     }
 
+    private void sendEmail(String subject, String receiver, String emailBody) throws MessagingException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+        helper.setText(emailBody, true);
+        helper.setTo(receiver);
+        helper.setSubject(subject);
+        helper.setFrom(GROUP_EMAIL);
+        mailSender.send(mimeMessage);
+    }
+
     /**
      * This method includes a generic email body.
      * @param message The message to be sent, represented as a String.
      * @return        The actual HTML, represented as a String.
      */
-    public String createEmailBody(String message) {
+    private String createEmailBody(String message) {
         StringBuilder body = new StringBuilder();
         body.append("<html><body>");
         body.append("<h2>Thank you for using SmartFood!</h2>");

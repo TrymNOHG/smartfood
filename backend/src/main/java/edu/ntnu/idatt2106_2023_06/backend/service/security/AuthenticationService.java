@@ -7,6 +7,8 @@ import edu.ntnu.idatt2106_2023_06.backend.exception.exists.UserExistsException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
+import edu.ntnu.idatt2106_2023_06.backend.service.users.EmailService;
+import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -30,6 +33,7 @@ public class AuthenticationService implements IAuthenticationService {
     private final PasswordEncoder passwordEncoder;
 
     private final JwtService jwtService;
+    private final EmailService emailService;
 
     private final AuthenticationManager authenticationManager;
     private final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
@@ -41,7 +45,7 @@ public class AuthenticationService implements IAuthenticationService {
      * @return an AuthenticationResponse containing the JWT token of the user.
      */
     @Transactional
-    public AuthenticationResponseDTO register(UserRegisterDTO userRegisterDTO) {
+    public AuthenticationResponseDTO register(UserRegisterDTO userRegisterDTO) throws MessagingException {
         User user = User
                 .builder()
                 .username(userRegisterDTO.username())
@@ -61,6 +65,8 @@ public class AuthenticationService implements IAuthenticationService {
 
         String jwtToken = jwtService.generateToken(user);
         logger.info("Their JWT is: " + jwtToken);
+
+        emailService.sendActivationEmail(user.getEmail(), UUID.randomUUID().toString());
 
         return AuthenticationResponseDTO
                 .builder()
