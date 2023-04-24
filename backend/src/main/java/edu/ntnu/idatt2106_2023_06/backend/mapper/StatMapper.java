@@ -13,6 +13,7 @@ import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.stat.StatTypeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,23 +22,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StatMapper {
 
-    private final UserRepository userRepository;
-    private final FridgeRepository fridgeRepository;
-    private final StatTypeRepository statTypeRepository;
+    public static List<Statistics> toStatistics(StatDeleteFromFridgeDTO statDeleteFromFridgeDTO, User user, Fridge fridge, StatType statType1, StatType statType2) {
 
-    public List<Statistics> toStatistics(StatDeleteFromFridgeDTO statDeleteFromFridgeDTO) {
-        User user = userRepository.findById(statDeleteFromFridgeDTO.userId()).orElseThrow(
-                () -> new UserNotFoundException(statDeleteFromFridgeDTO.userId())
-        );
-        Fridge fridge = fridgeRepository.findById(statDeleteFromFridgeDTO.fridgeId()).orElseThrow(
-                () -> new FridgeNotFoundException(statDeleteFromFridgeDTO.fridgeId())
-        );
-        StatType statType1 = statTypeRepository.findById(1L).orElseThrow(
-                () -> new StatNotFoundException(1L)
-        );
-        StatType statType2 = statTypeRepository.findById(2L).orElseThrow(
-                () -> new StatNotFoundException(2L)
-        );
         List<Statistics> statistics = new ArrayList<>();
 
         // Add statistics for percentage thrown
@@ -69,16 +55,8 @@ public class StatMapper {
         return statistics;
     }
 
-    public List<Statistics> toStatistics(StatAddItemToFridgeDTO statAddItemToFridgeDTO) {
-        User user = userRepository.findById(statAddItemToFridgeDTO.userId()).orElseThrow(
-                () -> new UserNotFoundException(statAddItemToFridgeDTO.userId())
-        );
-        Fridge fridge = fridgeRepository.findById(statAddItemToFridgeDTO.fridgeId()).orElseThrow(
-                () -> new FridgeNotFoundException(statAddItemToFridgeDTO.fridgeId())
-        );
-        StatType statType = statTypeRepository.findById(3L).orElseThrow(
-                () -> new StatNotFoundException(3L)
-        );
+    public static List<Statistics> toStatistics(StatAddItemToFridgeDTO statAddItemToFridgeDTO, User user, Fridge fridge, StatType statType) {
+
         List<Statistics> statistics = new ArrayList<>();
 
         // Add statistics for item price
