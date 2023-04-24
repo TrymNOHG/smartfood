@@ -56,5 +56,6 @@
   "my-swal-dialog-container": "My SweetAlert Dialog Container",
   "search_Members_Title": "Search For Members",
   "enter_username": "Enter Username",
-  "search_MembersButton_Text": "Search"
+  "search_MembersButton_Text": "Search",
+  "select_fridge": "Select Fridge"
 }

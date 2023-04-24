@@ -23,7 +23,9 @@ export const useLoggedInStore = defineStore('user', {
 
     getters: {
         isLoggedIn(){
-            return this.sessionToken !== null || localStorage.getItem("sessionToken") !== null;        },
+            return this.sessionToken !== null;
+        },
+
         getUser() {
             return this.user;
         },
@@ -56,6 +58,7 @@ export const useLoggedInStore = defineStore('user', {
                 lastname: null,
                 username: null,
             };
+            useFridgeStore().removeCurrentFridge()
         }
     }
 });
@@ -65,15 +68,21 @@ export const useFridgeStore = defineStore('fridgeStore', {
         allFridges: [],
         currentFridge: {
             "fridgeId": null,
-            "fridgeName": "Kjøleskap"
+            "fridgeName": "kjøleskap",
         },
     }),
+
+    persist: {
+        storage: sessionStorage,
+    },
 
     getters: {
         getCurrentFridge(){
             return this.currentFridge
         },
-
+        hasCurrentFridge() {
+            return this.currentFridge.fridgeId !== null;
+        },
     },
 
     actions: {
@@ -105,6 +114,14 @@ export const useFridgeStore = defineStore('fridgeStore', {
                 }
             }
         },
+
+        removeCurrentFridge() {
+            this.currentFridge = {
+                "fridgeId": null,
+                "fridgeName": "kjøleskap",
+            }
+        },
+
         async setCurrentFridgeByFridge(state, fridge) {
             const { fridgeId, fridgeName } = fridge
             state.currentFridge = { fridgeId, fridgeName }
