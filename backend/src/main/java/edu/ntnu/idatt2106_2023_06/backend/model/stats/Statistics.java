@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * This class represents a statistical entry. A stat entry contains the relevant fridge, user, statistic type,
@@ -83,6 +84,6 @@ public class Statistics {
      */
     @Column(name = "timestamp", nullable = false)
     @NonNull
-    private Timestamp timestamp;
+    private LocalDateTime timestamp;
 
 }

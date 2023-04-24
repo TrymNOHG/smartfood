@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -33,7 +34,7 @@ class StatisticsTest {
         void all_arg_constructor_can_be_made() {
             try {
                 Statistics statistics = new Statistics(1L, new User(), new Fridge(),
-                        new StatType(), 1, "Meny", "Melk", new Timestamp(new Date().getTime()));
+                        new StatType(), 1, "Meny", "Melk", LocalDateTime.now());
             } catch (Exception e) {
                 fail();
             }
@@ -42,7 +43,7 @@ class StatisticsTest {
         @Test
         void required_arg_constructor_can_be_made() {
             try {
-                Statistics statistics = new Statistics(new StatType(), 1, "Meny", "Melk",  new Timestamp(new Date().getTime()));
+                Statistics statistics = new Statistics(new StatType(), 1, "Meny", "Melk",  LocalDateTime.now());
             } catch (Exception e) {
                 fail();
             }
@@ -60,7 +61,7 @@ class StatisticsTest {
                         .statValue(1)
                         .storeName("Meny")
                         .itemName("Melk")
-                        .timestamp(new Timestamp(new Date().getTime()))
+                        .timestamp(LocalDateTime.now())
                         .build();
             } catch (Exception e) {
                 fail();
@@ -76,7 +77,7 @@ class StatisticsTest {
         void stat_type_cannot_be_null(){
             assertThrows(NullPointerException.class, () -> {
                 Statistics statistics = new Statistics(1L, new User(), new Fridge(),
-                        null, 1, "Meny", "Melk", new Timestamp(new Date().getTime()));
+                        null, 1, "Meny", "Melk", LocalDateTime.now());
             });
         }
 
@@ -97,7 +98,7 @@ class StatisticsTest {
         @Test
         void user_can_be_set_to_null(){
             Statistics statistics = new Statistics(1L, new User(), new Fridge(),
-                    new StatType(), 1,"Meny", "Melk", new Timestamp(new Date().getTime()));
+                    new StatType(), 1,"Meny", "Melk", LocalDateTime.now());
             statistics.setUser(null);
 
             assertNull(statistics.getUser());
@@ -106,7 +107,7 @@ class StatisticsTest {
         @Test
         void fridge_can_be_set_to_null(){
             Statistics statistics = new Statistics(1L, new User(), new Fridge(),
-                    new StatType(), 1,"Meny", "Melk", new Timestamp(new Date().getTime()));
+                    new StatType(), 1,"Meny", "Melk", LocalDateTime.now());
 
             statistics.setFridge(null);
 
@@ -116,7 +117,7 @@ class StatisticsTest {
         @Test
         void stat_type_cannot_be_set_to_null() {
             Statistics statistics = new Statistics(1L, new User(), new Fridge(),
-                    new StatType(), 1,"Meny", "Melk", new Timestamp(new Date().getTime()));
+                    new StatType(), 1,"Meny", "Melk", LocalDateTime.now());
             assertThrows(NullPointerException.class, () -> {
                statistics.setStatType(null);
             });
@@ -125,7 +126,7 @@ class StatisticsTest {
         @Test
         void store_name_cannot_be_set_to_null() {
             Statistics statistics = new Statistics(1L, new User(), new Fridge(),
-                    new StatType(), 1,"Meny", "Melk", new Timestamp(new Date().getTime()));
+                    new StatType(), 1,"Meny", "Melk", LocalDateTime.now());
             assertThrows(NullPointerException.class, () -> {
                 statistics.setStoreName(null);
             });
@@ -134,7 +135,7 @@ class StatisticsTest {
         @Test
         void item_name_cannot_be_set_to_null() {
             Statistics statistics = new Statistics(1L, new User(), new Fridge(),
-                    new StatType(), 1,"Meny", "Melk", new Timestamp(new Date().getTime()));
+                    new StatType(), 1,"Meny", "Melk", LocalDateTime.now());
             assertThrows(NullPointerException.class, () -> {
                 statistics.setItemName(null);
             });
@@ -143,7 +144,7 @@ class StatisticsTest {
         @Test
         void timestamp_cannot_be_set_to_null() {
             Statistics statistics = new Statistics(1L, new User(), new Fridge(),
-                    new StatType(), 1,"Meny", "Melk", new Timestamp(new Date().getTime()));
+                    new StatType(), 1,"Meny", "Melk", LocalDateTime.now());
             assertThrows(NullPointerException.class, () -> {
                 statistics.setTimestamp(null);
             });
@@ -163,7 +164,7 @@ class StatisticsTest {
             StatType statType = new StatType(1L, "Waste",
                     "This entry contains the amount of times food was thrown",new ArrayList<>());
             Statistics statistics = new Statistics(1L, user, fridge,
-                    statType, 1,"Meny", "Melk", new Timestamp(new Date().getTime()));
+                    statType, 1,"Meny", "Melk", LocalDateTime.now());
             assertEquals(1L, statistics.getStatId());
         }
 
@@ -175,7 +176,7 @@ class StatisticsTest {
             User user = new User(null, "Ole123", "Ole", "Norman",
                     "password","Ole@gmail.com", new HashSet<>(), new HashSet<>());
             Statistics statistics = new Statistics(1L, user, fridge,
-                    new StatType(), 1,"Meny", "Melk", new Timestamp(new Date().getTime()));
+                    new StatType(), 1,"Meny", "Melk", LocalDateTime.now());
             assertEquals(user, statistics.getUser());
         }
 
@@ -186,7 +187,7 @@ class StatisticsTest {
             User user = new User(null, "Ole123", "Ole", "Norman",
                     "password","Ole@gmail.com", new HashSet<>(), new HashSet<>());
             Statistics statistics = new Statistics(1L, user, fridge,
-                    new StatType(), 1,"Meny", "Melk", new Timestamp(new Date().getTime()));
+                    new StatType(), 1,"Meny", "Melk", LocalDateTime.now());
             assertEquals(fridge, statistics.getFridge());
         }
 
@@ -199,7 +200,7 @@ class StatisticsTest {
             StatType statType = new StatType(1L, "Waste",
                     "This entry contains the amount of times food was thrown",new ArrayList<>());
             Statistics statistics = new Statistics(1L, user, fridge,
-                    statType, 1,"Meny", "Melk", new Timestamp(new Date().getTime()));
+                    statType, 1,"Meny", "Melk", LocalDateTime.now());
             assertEquals(statType, statistics.getStatType());
         }
 
@@ -212,7 +213,7 @@ class StatisticsTest {
             StatType statType = new StatType(1L, "Waste",
                     "This entry contains the amount of times food was thrown",new ArrayList<>());
             Statistics statistics = new Statistics(1L, user, fridge,
-                    statType, 1,"Meny", "Melk", new Timestamp(new Date().getTime()));
+                    statType, 1,"Meny", "Melk", LocalDateTime.now());
             assertEquals(1, statistics.getStatValue());
         }
 
@@ -225,7 +226,7 @@ class StatisticsTest {
             StatType statType = new StatType(1L, "Waste",
                     "This entry contains the amount of times food was thrown",new ArrayList<>());
             Statistics statistics = new Statistics(1L, user, fridge,
-                    statType, 1,"Meny", "Melk", new Timestamp(new Date().getTime()));
+                    statType, 1,"Meny", "Melk", LocalDateTime.now());
             assertEquals("Meny", statistics.getStoreName());
         }
 
@@ -238,7 +239,7 @@ class StatisticsTest {
             StatType statType = new StatType(1L, "Waste",
                     "This entry contains the amount of times food was thrown",new ArrayList<>());
             Statistics statistics = new Statistics(1L, user, fridge,
-                    statType, 1,"Meny", "Melk", new Timestamp(new Date().getTime()));
+                    statType, 1,"Meny", "Melk", LocalDateTime.now());
             assertEquals("Melk", statistics.getItemName());
         }
 
@@ -250,7 +251,7 @@ class StatisticsTest {
                     "password","Ole@gmail.com", new HashSet<>(), new HashSet<>());
             StatType statType = new StatType(1L, "Waste",
                     "This entry contains the amount of times food was thrown",new ArrayList<>());
-            Timestamp timestamp = new Timestamp(new Date().getTime());
+            LocalDateTime timestamp = LocalDateTime.now();
             Statistics statistics = new Statistics(1L, user, fridge,
                     statType, 1,"Meny", "Melk", timestamp);
             assertEquals(timestamp, statistics.getTimestamp());
