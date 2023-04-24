@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.controller;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.stat.StatAddItemToFridgeDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.stat.StatBoughtItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.stat.StatDeleteFromFridgeDTO;
 import edu.ntnu.idatt2106_2023_06.backend.service.stat.StatService;
 import io.swagger.v3.oas.annotations.Operation;
