@@ -1,10 +1,8 @@
 import { defineStore } from 'pinia'
 import { getUser } from "@/services/UserService"
-import {loadAllCategories, loadMainCategories} from "@/services/CategoryService";
-import {filterByFullDesc, loadListingsByCategoryId} from "@/services/ItemService";
-import { ref, computed, watch } from "vue";
 import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
+import {addItemToFridge, getItemsFromFridge, deleteItemFromFridge} from "@/services/ItemService";
 
 const storeUUID = UniqueId();
 
@@ -26,12 +24,11 @@ export const useLoggedInStore = defineStore('user', {
 
     getters: {
         isLoggedIn(){
-            return this.sessionToken !== null || localStorage.getItem("sessionToken") !== null;        },
+            return this.sessionToken !== null},
         getUser() {
             return this.user;
         },
         getSessionToken() {
-            if (this.sessionToken === null) return localStorage.getItem("sessionToken")
             return this.sessionToken;
         }
     },
@@ -39,7 +36,6 @@ export const useLoggedInStore = defineStore('user', {
     actions: {
         setSessionToken(sessionToken) {
             this.sessionToken = sessionToken;
-            if (localStorage.getItem("sessionToken") === null) localStorage.setItem("sessionToken", sessionToken)
         },
         async fetchUser() {
             await getUser()
@@ -61,26 +57,31 @@ export const useLoggedInStore = defineStore('user', {
                 lastname: null,
                 username: null,
             };
+            useFridgeStore().removeCurrentFridge()
         }
     }
 });
 
 export const useFridgeStore = defineStore('fridgeStore', {
     state: () => ({
-        allFridges: [{
+        allFridges: [],
+        currentFridge: {
             "fridgeId": null,
-            "fridgeName": null
-        }],
-        currentFridge: [{
-            "fridgeId": null,
-            "fridgeName": null,
-        }]
+            "fridgeName": "kjøleskap",
+        },
     }),
 
+    persist: {
+        storage: sessionStorage,
+    },
+
     getters: {
-        getCurrentFridge: (state) => {
-            return state.currentFridge
-        }
+        getCurrentFridge(){
+            return this.currentFridge
+        },
+        hasCurrentFridge() {
+            return this.currentFridge.fridgeId !== null;
+        },
     },
 
     actions: {
@@ -103,28 +104,61 @@ export const useFridgeStore = defineStore('fridgeStore', {
         async updateFridgeNameByDTO(fridgeDTO){
             await updateFridge(fridgeDTO)
         },
-        // Define a mutation to update the value of currentFridge
+        async setCurrentFridgeById(fridgeId) {
+            for(let fridge of this.allFridges) {
+                if(fridge.fridgeId == fridgeId) {
+                    this.currentFridge = fridge;
+                    console.log(this.currentFridge);
+                    return;
+                }
+            }
+        },
+
+        removeCurrentFridge() {
+            this.currentFridge = {
+                "fridgeId": null,
+                "fridgeName": "kjøleskap",
+            }
+        },
+
+        async setCurrentFridgeByFridge(state, fridge) {
+            const { fridgeId, fridgeName } = fridge
+            state.currentFridge = { fridgeId, fridgeName }
+        },
+
         setCurrentFridge(state, fridge) {
             state.currentFridge = fridge
-        }
-    }   
+        },
+    }
 });
 
 
-export const useImageStore = defineStore('imageStore', {
+export const useItemStore = defineStore('itemStore', {
     state: () => ({
-        imageToSend: []
+        allItems: [],
     }),
 
     getters: {
-        test(){
-            return this.imageToSend.at(0);
-        }
+
     },
 
     actions: {
-        addImage(newImage){
-            this.imageToSend.unshift(newImage)
+        async addItemToFridgeById(fridgeId, itemDTO) {
+            await addItemToFridge(itemDTO, fridgeId);
+        },
+
+        async deleteItemByNameIdStoreQuantity(itemRemoveDTO){
+            await deleteItemFromFridge(itemRemoveDTO);
+        },
+
+        async fetchItemsFromFridgeById(fridgeId) {
+            await getItemsFromFridge(fridgeId).then(response => {
+                this.allItems = []
+                this.allItems = response.data;
+            })
+            return this.allItems;
         }
-    }
+    },
 });
+
+

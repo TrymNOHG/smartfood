@@ -103,7 +103,7 @@ public class FridgeService implements IFridgeService{
      */
     @Transactional
     public void addUserToFridge(FridgeUserDTO fridgeUserDTO, String userTryingToAdd) {
-
+        if (userTryingToAdd.equals(fridgeUserDTO.username())) throw new UnauthorizedException(userTryingToAdd, "Cannot update your own status");
         authorizeFridgeMemberAction(fridgeUserDTO.fridgeId(), userTryingToAdd, "add");
 
         User userToBeAdded = userRepository.findByUsername(fridgeUserDTO.username())
@@ -148,7 +148,7 @@ public class FridgeService implements IFridgeService{
      */
     @Transactional
     public void updateUserFromFridge(FridgeUserDTO fridgeUserDTO, String userTryingToUpdate) {
-
+        if (userTryingToUpdate.equals(fridgeUserDTO.username())) throw new UnauthorizedException(userTryingToUpdate, "Cannot update your own status");
         authorizeFridgeMemberAction(fridgeUserDTO.fridgeId(), userTryingToUpdate, "update");
 
         FridgeMember fridgeMemberToBeUpdated = fridgeMemberRepository

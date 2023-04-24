@@ -8,7 +8,7 @@
   </template>
 
 <script>
-import MemberComponent from "../components/MemberComponent.vue";
+import MemberComponent from "../components/SpecificFridge/MemberComponent.vue";
 export default {
   name: "DinnerView",
   components: {MemberComponent}

@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import LoginView from "@/views/LoginView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import DinnerView from "@/views/DinnerView.vue";
@@ -8,7 +7,9 @@ import CartView from "@/views/CartView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import StatisticsView from "@/views/StatisticsView.vue";
 import FridgeView from "@/views/FridgeView.vue";
-import { useLoggedInStore } from '@/store/store';
+import { useLoggedInStore, useFridgeStore } from '@/store/store';
+import itemView from "@/views/itemView.vue";
+import WelcomeComponent from "@/components/WelcomeComponent.vue";
 
 
 const router = createRouter({
@@ -16,8 +17,8 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
+      name: 'FrontPage',
+      component: WelcomeComponent,
       meta: { requiresAuth: false }
     },
     {
@@ -36,32 +37,71 @@ const router = createRouter({
       path: '/dinner',
       name: 'dinner',
       component: DinnerView,
+      meta:
+        {
+          requiresAuth: true,
+          requiresCurrentFridge: true
+        }
+
     },
     {
       path: '/fridges',
       name: 'fridges',
       component: FridgesView,
+      meta: { requiresAuth: true }
+
     },
     {
       path: '/cart',
       name: 'cart',
       component: CartView,
+      meta:
+          {
+            requiresAuth: true,
+            requiresCurrentFridge: true
+          }
     },
     {
       path: '/statistics',
       name: 'statistics',
       component: StatisticsView,
+      meta:
+          {
+            requiresAuth: true,
+            requiresCurrentFridge: true
+          }
     },
     {
       path: '/profile',
       name: 'profile',
       component: ProfileView,
+      meta: { requiresAuth: true }
     },
     {
-      path: '/fridges/:name/fridge?id=:id',
+      path: '/fridge',
       name: 'fridgeView',
       component: FridgeView,
+      meta:
+          {
+            requiresAuth: true,
+            requiresCurrentFridge: true
+          }
+      },
+    {
+      path: '/fridge/:itemName/item?id=:itemId',
+      name: 'itemView',
+      component: itemView,
+      props: true,
+      meta:
+          {
+            requiresAuth: true,
+            requiresCurrentFridge: true
+          }
+
     },
+    {
+
+    }
 
   ]
 })
@@ -73,8 +113,11 @@ router.beforeEach((to, from, next) => {
   const userStore = useLoggedInStore();
   const isAuthenticated = userStore.isLoggedIn;
 
-  const notRequiresAuth = to.matched.some(record => record.meta.requiresAuth === false);
+  const fridgeStore = useFridgeStore();
+  const hasCurrentFridge = fridgeStore.hasCurrentFridge;
 
+  const notRequiresAuth = to.matched.some(record => record.meta.requiresAuth === false);
+  const requiresCurrentFridge = to.matched.some(record => record.meta.requiresCurrentFridge === true);
 
   if (notRequiresAuth) {
     if (['/', '/register', '/login'].includes(to.path) && isAuthenticated) {
@@ -86,7 +129,11 @@ router.beforeEach((to, from, next) => {
     if (!isAuthenticated) {
       next({ path: '/' });
     } else {
-      next();
+      if (requiresCurrentFridge && !hasCurrentFridge) {
+        next({ path: '/fridges' });
+      } else {
+        next();
+      }
     }
   }
 });

@@ -1,4 +1,3 @@
-/* create multi language component */
 import { createI18n } from 'vue-i18n'
 import en from "./en.json"
 import no from "./no.json"

@@ -29,6 +29,15 @@ export const getProfilePicture = async () => {
     });
 };
 
+export const getProfilePictureById = async (id) => {
+    return axios.get(`${BASE_USER_URL}/get/picture/${id}`, {
+        responseType: 'arraybuffer', // To receive the image as binary data
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
+
 export const updateProfilePicture = async (pictureFile) => {
     const formData = new FormData();
     formData.append('picture', pictureFile);
@@ -81,3 +90,8 @@ export const updateUserPassword = async (userPasswordUpdateDTO) => {
         },
     });
 }
+
+export const searchUserByUsername = async (username) => {
+    return axios.get(`${BASE_USER_URL}/search/${username}`)
+}
+

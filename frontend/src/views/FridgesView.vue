@@ -9,7 +9,7 @@
   </template>
 
 <script>
-import FridgeComponent from "../components/FridgeComponent.vue";
+import FridgeComponent from "../components/FridgeList/FridgesComponent.vue";
 export default {
   name: "FridgesView",
   components: {FridgeComponent}
@@ -33,6 +33,7 @@ template {
 .wrapper {
   display: grid;
   grid-template-columns: 25% 50% 25%;
+  z-index: 0;
 }
 
 .fridgeList {
