@@ -62,17 +62,23 @@ import {
 } from "@dafcoe/vue-collapsible-panel";
 import "@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { deleteItemFromShoppingList } from "@/services/ItemService";
-import { addItemToShoppingList } from "@/services/ItemService";
-import { getItemsFromShoppingList } from "@/services/ItemService";
-import { buyItemsFromShoppingList } from "@/services/ItemService";
-import { getItems } from "@/services/ApiService";
-import SearchItem from "@/components/searchFromApi/SearchItem.vue";
-import BasicButton from "@/components/basic-components/BasicButton.vue";
-import SearchInput from "@/components/searchFromApi/SearchInput.vue";
+/**import { deleteItemFromShoppingList } from "../services/ItemService";
+import { addItemToShoppingList } from "../services/ItemService";
+import { getItemsFromShoppingList } from "../services/ItemService";
+import { buyItemsFromShoppingList } from "../services/ItemService";
+import { addItemToShoppingList } from "../services/ItemService";
+*/
+import { deleteItemFromShoppingList, addItemToShoppingList, getItemsFromShoppingList,buyItemsFromShoppingList, getItems } from "@/services/ItemService";
+
+import { getItems } from "../services/ApiService";
+
+
+import SearchItem from "../components/searchFromApi/SearchItem.vue";
+import BasicButton from "../components/basic-components/BasicButton.vue";
+import SearchInput from "../components/searchFromApi/SearchInput.vue";
 import CartItem from "@/components/shoppingcart/CartItem.vue";
 import CartControl from "@/components/shoppingcart/CartControl.vue";
-import BasicCheckBox from "@/components/basic-components/BasicCheckbox.vue";
+import BasicCheckBox from "../components/basic-components/BasicCheckbox.vue";
 import { useLoggedInStore, useFridgeStore } from "@/store/store";
 import { ref, onMounted, computed, watch } from "vue";
 export default {

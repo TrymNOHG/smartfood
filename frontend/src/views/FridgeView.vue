@@ -27,6 +27,7 @@
 import {useRoute} from "vue-router";
 import MemberComponent from "@/components/FridgeList/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicFridgeItem.vue";
+import {useFridgeStore} from "@/store/store"
 
 export default {
   name: "FridgeView",
@@ -38,6 +39,7 @@ export default {
       "fridgeId": route.params.id,
       "fridgeName": route.params.name
     }
+    useFridgeStore().setCurrentFridgeById(route.params.id)
 
     return {
       fridge
