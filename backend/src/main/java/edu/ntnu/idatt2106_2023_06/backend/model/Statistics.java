@@ -63,6 +63,20 @@ public class Statistics {
     private int statValue;
 
     /**
+     * The name of the store of the statistics.
+     */
+    @Column(name = "store_name", nullable = false)
+    @NonNull
+    private String storeName;
+
+    /**
+     * The name of the store of the statistics.
+     */
+    @Column(name = "item_name", nullable = false)
+    @NonNull
+    private String itemName;
+
+    /**
      * The time the entry was created.
      */
     @Column(name = "timestamp", nullable = false)
