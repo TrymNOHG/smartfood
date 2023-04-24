@@ -46,7 +46,8 @@
       </div>
     </div>
     <div class="wrapper" :style="{marginTop: marginTopStyle}">
-      <basic-fridge-item v-for="(item, index) in fridgeItems" :key="index" :item="item" :currenFridge="fridge" />
+      <basic-fridge-item v-for="(item, index) in fridgeItems" :key="index" :item="item" :currenFridge="fridge"
+                         @delete-item="deleteItem"/>
     </div>
   </div>
   <div class="members-wrapper" v-show="selectedTab === 'members'">
@@ -98,14 +99,37 @@ export default {
 
     },
 
+    async deleteItem(itemToDelete) {
+      console.log(itemToDelete)
+
+      const itemRemoveDTO = {
+        "itemName": itemToDelete.name,
+        "store": itemToDelete.store,
+        "fridgeId": this.fridge.fridgeId,
+        "quantity": itemToDelete.quantity
+      }
+
+      console.log(itemRemoveDTO)
+
+      await this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO);
+      await this.itemStore.fetchItemsFromFridgeById(this.fridge.fridgeId).then((items) => {
+        this.fridgeItems = items;
+        console.log(this.fridgeItems)
+      });
+    },
+
     async addItemToFridge(fridgeId, item) {
+      const date = new Date();
+      const expirationDate = new Date(date);
+      expirationDate.setDate(date.getDate() + 7);
+
       const itemDTO = {
         "name": item.name,
         "description": item.description,
         "store": item.store.name,
         "price": item.current_price,
-        "purchaseDate": new Date(),
-        "expirationDate": new Date(),
+        "purchaseDate": date,
+        "expirationDate": expirationDate,
         "image": item.image,
         "quantity": 100
       }
@@ -127,12 +151,8 @@ export default {
 
     const route = useRoute();
 
-    const fridge = {
-      "fridgeId": route.params.id,
-      "fridgeName": route.params.name
-    }
+    const fridge = fridgeStore.getCurrentFridge
 
-    fridgeStore.setCurrentFridgeById(route.params.id);
     itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
       fridgeItems.value = items;
     });

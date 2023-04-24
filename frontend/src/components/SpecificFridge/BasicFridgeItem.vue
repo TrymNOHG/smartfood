@@ -19,10 +19,10 @@
             <h4>Expiration date: {{ new Date(item.expirationDate)
                 .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
             <h4>How much is Left: {{ item.quantity }}L</h4>
-            <button class="delete-btn" @click="deleteCard">
-            <span>
-              <font-awesome-icon icon="fa-solid fa-trash" @click="deleteCard()" class="icon delete-icon" />
-            </span>
+            <button class="delete-btn" @click.prevent="deleteCard(item)">
+              <span>
+                <font-awesome-icon icon="fa-solid fa-trash" class="icon delete-icon" />
+              </span>
             </button>
           </div>
         </div>
@@ -55,6 +55,12 @@ export default {
     },
   },
 
+  methods: {
+    deleteCard(item) {
+      this.$emit('delete-item', item);
+    }
+  },
+
   setup(props) {
     function calculateExpirationDate(itemBuyDate, itemExpirationDate) {
       let borderColor = '';
@@ -77,12 +83,9 @@ export default {
     }
 
     const borderColor = calculateExpirationDate(props.item.purchaseDate, props.item.expirationDate);
-    function deleteCard() {
-    }
 
     return {
       borderColor,
-      deleteCard
     }
   },
 }
@@ -172,11 +175,15 @@ img {
 
 .delete-btn:hover {
   transform: scale(1.2);
-  background-color: white;
+  background-color: red;
 }
 
 .icon {
   color: black;
+}
+
+.icon:hover {
+  color: white;
 }
 
 @media (max-width: 650px) {

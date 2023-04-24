@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { getUser } from "@/services/UserService"
 import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
-import {addItemToFridge, getItemsFromFridge} from "@/services/ItemService";
+import {addItemToFridge, getItemsFromFridge, deleteItemFromFridge} from "@/services/ItemService";
 
 const storeUUID = UniqueId();
 
@@ -130,6 +130,10 @@ export const useItemStore = defineStore('itemStore', {
     actions: {
         async addItemToFridgeById(fridgeId, itemDTO) {
             await addItemToFridge(itemDTO, fridgeId);
+        },
+
+        async deleteItemByNameIdStoreQuantity(itemRemoveDTO){
+            await deleteItemFromFridge(itemRemoveDTO);
         },
 
         async fetchItemsFromFridgeById(fridgeId) {

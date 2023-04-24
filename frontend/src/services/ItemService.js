@@ -21,7 +21,6 @@ export const getItemsFromFridge = async (fridgeId) => {
 
 export const deleteItemFromFridge = async (itemRemoveDTO) => {
     return await axios.delete(`${BASE_LISTING_URL}/fridge/delete`, {
-
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         },
