@@ -35,10 +35,9 @@ public class EmailService implements IEmailService {
         String token = UUID.randomUUID().toString();
         tokenService.saveToken(token, user);
         try {
-            sendEmail("Activate your SmartMat account", user.getEmail(), createEmailBodyWithLink(String.format("""
-                   In order to activate you account, click the button below. The link will expire
-                   in 24 hours and an additional link will then need to be sent.
-                   """), String.format("http://localhost:5173/user/activate?token=%s", token)));
+            sendEmail("Activate your SmartMat account", user.getEmail(), createEmailBody(user.getUsername(), String.format("""
+                To activate your account, click on the button below. The link will expire in 24 hours and an additional link will then need to be sent.
+                """), createLinkButton("Activate Account", "http://localhost:5173/user/activate?token=" + token)));
         } catch (MessagingException e) {
             logger.error("Send of email was unsuccessful", e);
             throw new MessagingException("Activation Email was unsuccessful");
@@ -47,9 +46,12 @@ public class EmailService implements IEmailService {
 
     @Async
     @Override
-    public void sendResetPassword(String receiver, String message) throws MessagingException {
+    public void sendResetPassword(User user) throws MessagingException {
+        String token = UUID.randomUUID().toString();
+        tokenService.saveToken(token, user);
         try {
-            sendEmail("Reset Password", receiver, createEmailBodyWithLink(message, "http://localhost:5173/user/reset-password"));
+            sendEmail("Reset Password", user.getEmail(), createEmailBody(user.getUsername(),
+                    "Reset password message...", createLinkButton("Reset Password", "http://localhost:5173/user/reset-password?=%s" + token)));
         } catch (MessagingException e) {
             logger.error("Send of email was unsuccessful", e);
             throw new MessagingException("Reset Password Email was unsuccessful");
@@ -71,29 +73,30 @@ public class EmailService implements IEmailService {
      * @param link  The URL that the button should link to.
      * @return      The HTML button, represented as a String.
      */
-    private String createLinkButton(String link) {
-        StringBuilder button = new StringBuilder();
-        button.append("<a href=\"").append(link).append("\" style=\"display: inline-block; padding: 10px; background-color: #007bff; color: #fff; text-decoration: none;\">")
-                .append("Click here to proceed")
-                .append("</a>");
-        return button.toString();
+    private String createLinkButton(String buttonText, String link) {
+        return "<a href=\"" + link + "\" style=\"background-color: #008CBA; color: white; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block; border-radius: 5px; font-size: 16px; font-weight: bold;\">" + buttonText + "</a>";
     }
 
     /**
      * This method includes a generic email body with an embedded link.
+     * @param name    The username of the person, represented as a String.
      * @param message The message to be sent, represented as a String.
-     * @param link    The link to the page, represented as a String.
+     * @param button  The button link to the page, represented as a String.
      * @return        The actual HTML, represented as a String.
      */
-    private String createEmailBodyWithLink(String message, String link) {
+    private String createEmailBody(String name, String message, String button) {
         StringBuilder body = new StringBuilder();
         body.append("<html><body>");
-        body.append("<h2>Thank you for using SmartFood!</h2>");
-        body.append("<p>").append(message).append("</p>");
-        if (link != null && !link.isEmpty()) {
-            String linkButton = createLinkButton(link);
-            body.append("<p>").append(linkButton).append("</p>");
-        }
+        body.append("<h1>Activate Your SmartMat Account</h1>");
+        body.append("<hr>");
+        body.append("<br>");
+        body.append("<div style=\"font-family: Arial, Helvetica, sans-serif; font-size: 16px; color: #333;\">");
+        body.append("<p>Dear " + name + ",</p>");
+        body.append("<br>");
+        body.append("<p>" + message + "</p>");
+        body.append("<br><br>");
+        body.append("<p style=\"text-align:center\">" + button + "</p>");
+        body.append("</div>");
         body.append("</body></html>");
         return body.toString();
     }

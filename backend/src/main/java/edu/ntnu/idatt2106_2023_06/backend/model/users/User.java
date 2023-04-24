@@ -93,6 +93,7 @@ public class User implements UserDetails {
      * The tokens of the user.
      */
     @OneToMany(mappedBy = "user")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Set<Token> tokens = new HashSet<>();
 

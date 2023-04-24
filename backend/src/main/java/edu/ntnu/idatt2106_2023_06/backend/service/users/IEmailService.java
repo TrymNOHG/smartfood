@@ -11,5 +11,5 @@ public interface IEmailService {
     void sendActivationEmail(User user) throws MessagingException;
 
     @Async
-    void sendResetPassword(String receiver, String token) throws MessagingException;
+    void sendResetPassword(User user) throws MessagingException;
 }
