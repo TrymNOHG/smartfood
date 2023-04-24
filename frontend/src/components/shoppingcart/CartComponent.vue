@@ -189,7 +189,7 @@ export default {
                 itemRemoveDTOList.shift();
                 buyItemsFromShoppingList(itemRemoveDTOList);
             } catch (error) {
-                loadItemsFromCart()
+                loadItemsFromCart();
                 console.error(error);
             }
             location.reload();

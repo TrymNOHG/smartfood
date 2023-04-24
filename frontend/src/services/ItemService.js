@@ -40,7 +40,7 @@ export const deleteItemFromShoppingList = async (listingDeletionDTO, suggestion)
   };
 
 export const deleteItemsFromShoppingList = async (listingDeletionDTO) => {
-    return await axios.delete(`${BASE_LISTING_URL}/shopping/delete/all`, listingDeletionDTO, {
+    return await axios.post(`${BASE_LISTING_URL}/shopping/delete/all`, listingDeletionDTO, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         },
