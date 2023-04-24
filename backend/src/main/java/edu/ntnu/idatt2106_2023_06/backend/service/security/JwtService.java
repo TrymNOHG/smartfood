@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.security;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.User;
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -10,7 +10,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

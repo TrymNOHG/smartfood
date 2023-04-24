@@ -1,5 +1,7 @@
-package edu.ntnu.idatt2106_2023_06.backend.model;
+package edu.ntnu.idatt2106_2023_06.backend.model.stats;
 
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -4,16 +4,13 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoadAllDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserRegisterDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserSearchDTO;
-import edu.ntnu.idatt2106_2023_06.backend.model.User;
-import org.aspectj.bridge.MessageUtil;
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**

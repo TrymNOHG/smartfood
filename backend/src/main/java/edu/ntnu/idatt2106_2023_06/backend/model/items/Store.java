@@ -1,5 +1,6 @@
-package edu.ntnu.idatt2106_2023_06.backend.model;
+package edu.ntnu.idatt2106_2023_06.backend.model.items;
 
+import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,6 +1,9 @@
 package edu.ntnu.idatt2106_2023_06.backend.repo;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.*;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
+import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

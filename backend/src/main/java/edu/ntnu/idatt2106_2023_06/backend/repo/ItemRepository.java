@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.repo;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.Store;
-import edu.ntnu.idatt2106_2023_06.backend.model.Item;
+import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
+import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.model;
 
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 

@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -39,7 +40,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Tag(name = "User Controller", description = "Handles user management and authentication")
 public class UserController {
-    Logger logger = org.slf4j.LoggerFactory.getLogger(UserController.class);
+    Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final AuthenticationService authenticationService;
     private final FridgeService fridgeService;

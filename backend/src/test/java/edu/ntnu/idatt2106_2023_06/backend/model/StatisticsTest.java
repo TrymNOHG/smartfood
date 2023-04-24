@@ -1,5 +1,9 @@
 package edu.ntnu.idatt2106_2023_06.backend.model;
 
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
+import edu.ntnu.idatt2106_2023_06.backend.model.stats.StatType;
+import edu.ntnu.idatt2106_2023_06.backend.model.stats.Statistics;
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
