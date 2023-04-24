@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import LoginView from "@/views/LoginView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import DinnerView from "@/views/DinnerView.vue";
@@ -10,6 +9,7 @@ import StatisticsView from "@/views/StatisticsView.vue";
 import FridgeView from "@/views/FridgeView.vue";
 import { useLoggedInStore } from '@/store/store';
 import itemView from "@/views/itemView.vue";
+import WelcomeComponent from "@/components/WelcomeComponent.vue";
 
 
 const router = createRouter({
@@ -17,8 +17,8 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
+      name: 'FrontPage',
+      component: WelcomeComponent,
       meta: { requiresAuth: false }
     },
     {
@@ -37,26 +37,35 @@ const router = createRouter({
       path: '/dinner',
       name: 'dinner',
       component: DinnerView,
+      meta: { requiresAuth: true }
+
     },
     {
       path: '/fridges',
       name: 'fridges',
       component: FridgesView,
+      meta: { requiresAuth: true }
+
     },
     {
       path: '/cart',
       name: 'cart',
       component: CartView,
+      meta: { requiresAuth: true }
+
     },
     {
       path: '/statistics',
       name: 'statistics',
       component: StatisticsView,
+      meta: { requiresAuth: true }
+
     },
     {
       path: '/profile',
       name: 'profile',
       component: ProfileView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/fridges/:name/fridge?id=:id',
@@ -68,6 +77,9 @@ const router = createRouter({
       path: '/fridge/:itemName/item?id=:itemId',
       name: 'itemView',
       component: itemView,
+      props: true,
+      meta: { requiresAuth: true }
+
     },
     {
 

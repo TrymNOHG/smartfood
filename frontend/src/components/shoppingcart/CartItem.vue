@@ -68,7 +68,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .product-img {
   width: 100px; /* set a fixed width for the containing div */
   height: 100px; /* set a fixed height for the containing div */
