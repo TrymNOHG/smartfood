@@ -21,7 +21,7 @@ public class ApiKeyController {
     private final JwtService jwtService;
 
     @GetMapping(value="/get")
-    @Operation(summary = "Add user to fridge")
+    @Operation(summary = "Get Kassal API key")
     public ResponseEntity<Object> getApiKey() {
         if(jwtService.isAuthenticated())
             return ResponseEntity.ok(apiKey);

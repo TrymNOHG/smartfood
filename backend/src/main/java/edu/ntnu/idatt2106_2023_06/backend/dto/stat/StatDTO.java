@@ -4,6 +4,12 @@ import lombok.NonNull;
 
 import java.util.Date;
 
-public record StatDTO(@NonNull Long statId, @NonNull Integer statValue, @NonNull Date timestamp,
-                      @NonNull Long fridgeId, @NonNull Long statTypeId, @NonNull Long userId) {
+public record StatDTO(@NonNull Long statId,
+                      @NonNull Integer statValue,
+                      @NonNull Date timestamp,
+                      @NonNull Long fridgeId,
+                      @NonNull Long statTypeId,
+                      @NonNull Long userId,
+                      @NonNull String itemName,
+                      @NonNull String storeName) {
 }
