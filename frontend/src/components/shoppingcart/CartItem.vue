@@ -38,7 +38,7 @@
 
 <script>
 import { reactive, watch } from "vue";
-import BasicCheckbox from "./BasicCheckbox.vue";
+import BasicCheckbox from "@/components/basic-components/BasicCheckbox.vue";
 
 export default {
   props: {

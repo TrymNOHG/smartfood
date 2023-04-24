@@ -56,14 +56,6 @@ export const getItemsFromShoppingList = async (fridgeId) => {
   });
 };
 
-export const buyItemsFromShoppingList = async (itemRemoveDTOList) => {
-    return await axios.post(`${BASE_LISTING_URL}/shopping/buy`,itemRemoveDTOList, {
-        headers: {
-            Authorization: `Bearer ${await SessionToken()}`,
-        },
-    });
-};
-
 export const acceptSuggestionFromShoppingList = async (itemRemoveDTO) => {
     return await axios.post(`${BASE_LISTING_URL}/shopping/suggestion`,itemRemoveDTO, {
         headers: {

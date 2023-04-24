@@ -66,7 +66,7 @@ export const useFridgeStore = defineStore('fridgeStore', {
     state: () => ({
         allFridges: [],
         currentFridge: {
-            "fridgeId": 1,
+            "fridgeId": null,
             "fridgeName": "Kjøleskap"
         },
     }),
@@ -100,7 +100,7 @@ export const useFridgeStore = defineStore('fridgeStore', {
         },
         async setCurrentFridgeById(fridgeId) {
             for(let fridge of this.allFridges) {
-                if(fridge.fridgeId === fridgeId) {
+                if(fridge.fridgeId == fridgeId) {
                     this.currentFridge = fridge;
                     console.log(this.currentFridge);
                     return;
