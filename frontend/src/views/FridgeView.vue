@@ -21,7 +21,7 @@
         <basic-fridge-item v-for="(item, index) in items" :key="index" :item="item" :currenFridge="fridge" />
   </div>
     <div class="members-wrapper" v-show="selectedTab === 'members'">
-        <member-component :fridgeId="fridge.fridgeId"/>
+        <member-component/>
   </div>
 
 </template>

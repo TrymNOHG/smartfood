@@ -50,16 +50,17 @@ import {searchUserByUsername} from "@/services/UserService";
 import {updateUserInFridge} from "../../services/FridgeServices";
 
 
+
 export default {
+
     components: {MemberList, BasicButton, BasicInput, List },
-    props: {
-        fridgeId: String
-    },
-    setup(props) {
+    setup() {
         const memberList = ref([]);
         const searchText = ref("");
         const searchResults = ref([]);
         const userStore = useLoggedInStore();
+        const fridgeStore = useFridgeStore();
+        const fridgeId = fridgeStore.getCurrentFridge.fridgeId;
         userStore.fetchUser();
 
         const loggedInUser = userStore.getUser.data.username
@@ -68,7 +69,7 @@ export default {
 
         async function fetchUsers() {
             try {
-                const response = await loadUsersByFridgeId(props.fridgeId);
+                const response = await loadUsersByFridgeId(fridgeId);
                 memberList.value = response.data.memberInfo;
             } catch (error) {
                 console.error("Error fetching users:", error);
@@ -100,7 +101,8 @@ export default {
             searchText,
             searchResults,
             fetchUsers,
-            loggedInUser
+            loggedInUser,
+            fridgeId
         };
     },
 
