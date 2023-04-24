@@ -11,14 +11,13 @@ import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFoundExce
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.FridgeMapper;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.FridgeMemberMapper;
-import edu.ntnu.idatt2106_2023_06.backend.model.*;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeMemberRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeMember;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
-import edu.ntnu.idatt2106_2023_06.backend.repo.FridgeMemberRepository;
-import edu.ntnu.idatt2106_2023_06.backend.repo.FridgeRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeMemberRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

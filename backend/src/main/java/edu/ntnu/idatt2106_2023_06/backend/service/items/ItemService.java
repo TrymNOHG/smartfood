@@ -10,7 +10,11 @@ import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
-import edu.ntnu.idatt2106_2023_06.backend.repo.*;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.item.ShoppingItemsRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.store.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
