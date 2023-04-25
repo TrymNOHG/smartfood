@@ -12,7 +12,6 @@
         <li v-if="hasCurrentFridge">
           <RouterLink to="/fridge" >
             <img id="fridgeIcon" class="icon" src="@/assets/images/fridge.svg" alt="Logo">
-            <span class="text">{{ $t('fridge') }}</span>
           </RouterLink>
         </li>
         <li v-if="hasCurrentFridge">
@@ -20,7 +19,6 @@
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-cart-shopping" />
             </span>
-            <span class="text">{{ $t('shopping_cart') }}</span>
           </RouterLink>
         </li>
         <li v-if="hasCurrentFridge">
@@ -28,7 +26,6 @@
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-utensils" />
             </span>
-            <span class="text">{{ $t('dinner') }}</span>
           </RouterLink>
         </li>
         <li v-if="hasCurrentFridge">
@@ -36,7 +33,6 @@
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-chart-pie" />
             </span>
-            <span class="text">{{ $t('statistics') }}</span>
           </RouterLink>
         </li>
         <li>
@@ -44,7 +40,6 @@
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-circle-user" />
             </span>
-            <span class="text">{{ $t('profile') }}</span>
           </RouterLink>
         </li>
       </ul>
@@ -239,6 +234,8 @@ nav ul li {
   width: 80px;
   height: 70px;
   z-index: 1;
+  background-color: white;
+  border-radius: 10px;
 }
 
 nav ul li a {
@@ -247,7 +244,7 @@ nav ul li a {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 100px;
+  width: 50px;
   text-align: center;
   font-weight: 500;
 }
@@ -259,11 +256,19 @@ nav ul li a .icon {
   font-size: 1.5em;
   text-align: center;
   transition: 0.5s;
-  color: white;
+  color: #444444;
 }
 
 nav ul li:hover a .icon {
-  transform: translateY(-5px);
+  color: white;
+}
+
+nav ul li:hover  {
+  background-color: #444444;
+}
+
+nav ul li:hover img {
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(203%) contrast(103%);
 }
 
 nav ul li a .text {
@@ -413,7 +418,13 @@ nav ul li:hover a .text {
     display: flex;
     width: 20px;
   }
+  nav ul li {
+    width: 60px;
+    height: 60px;
+
+  }
   nav ul li a {
+    padding-top: 5px;
     height: 40px;
   }
   header{
@@ -446,6 +457,7 @@ nav ul li:hover a .text {
   .router-view-container{
     z-index: 0;
   }
+
 }
 </style>
 
