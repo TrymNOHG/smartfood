@@ -59,7 +59,7 @@
     </div>
         <div class="cart-items">
                     <CartSuggestion
-                        v-for="(item, index) in items"
+                        v-for="(item, index) in suggestedItems"
                         :key="index"
                         :image="item.image"
                         :name="item.name"
@@ -70,9 +70,9 @@
                         @add="inc_dec_CartItemAmount(item, 1)"
                         @subtract="inc_dec_CartItemAmount(item, -1)"
                         @delete-item="handleDeleteItem(item)"
-                        @buy-item="handleBuyItem(item)"
                         @handle-checked="handleCheckedItem"
-                        @buy="handleBuy"
+                        @accept-suggestion="handleAcceptSuggestion(item)"
+                        @delete-suggestion="handleDeleteSuggestion(item)"
                     >
                     </CartSuggestion>
                 </div>
@@ -88,7 +88,7 @@ import {
 } from "@dafcoe/vue-collapsible-panel";
 import "@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {deleteItemFromShoppingList} from "@/services/ItemService";
+import {acceptSuggestion, deleteItemFromShoppingList} from "@/services/ItemService";
 import {addItemToShoppingList} from "@/services/ItemService";
 import {getItemsFromShoppingList} from "@/services/ItemService";
 import {buyItemsFromShoppingList} from "@/services/ItemService";
@@ -136,6 +136,7 @@ export default {
     const search = ref(false);
     const currentFridge = useFridgeStore().getCurrentFridge;
     let checkAll_b = ref(false);
+    const suggestedItems = ref([]);
 
         //console log items every 3 seconds
         /**function callEveryThreeSeconds() {
@@ -143,7 +144,38 @@ export default {
         }
          setInterval(callEveryThreeSeconds, 3000);*/
 
+        async function handleAcceptSuggestion(item){
+            const ItemRemoveDTO = {
+                itemName: item.name,
+                store: item.store,
+                fridgeId: currentFridge.fridgeId,
+                quantity: item.quantity,
+            };
+            try{
+                await acceptSuggestion(ItemRemoveDTO);
+                await loadItemsFromCart();
+            }catch(error){
+                console.error(error)
+            }
+        }
 
+
+        async function handleDeleteSuggestion(item){
+            const ItemRemoveDTO = {
+                itemName: item.name,
+                store: item.store,
+                fridgeId: currentFridge.fridgeId,
+                quantity: item.quantity,
+            };
+            try{
+                console.log(ItemRemoveDTO)
+                await deleteItemFromShoppingList(ItemRemoveDTO, true);
+                await loadItemsFromCart();
+            }catch(error){
+                console.error(error)
+                console.log(error.response.data["Message: "])
+            }
+        }
         function handleMarkAll() {
             checkAll_b.value = !checkAll_b.value;
             items.value.forEach((obj) => {
@@ -279,7 +311,17 @@ export default {
             try {
                 const response = await getItemsFromShoppingList(currentFridge.fridgeId);
                 items.value = response.data;
-                console.log(items.value);
+
+                suggestedItems.value = []
+                items.value = []
+                response.data.forEach((item) => {
+                    if (item.suggestion) {
+                        suggestedItems.value.push(item);
+                        return;
+                    }
+                    items.value.push(item)
+                });
+                console.log(response.data);
             } catch (error) {
                 console.error(error);
             }
@@ -301,7 +343,7 @@ export default {
 
           console.log(itemDTO);
           event.stopPropagation();
-          addItemToShoppingList(itemDTO, fridgeId, false)
+          addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
               .then(async (response) => {
                 if (response !== undefined) {
                   await loadItemsFromCart();
@@ -407,7 +449,7 @@ export default {
 
             console.log(itemDTO);
 
-            addItemToShoppingList(itemDTO, fridgeId, false)
+            addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
                 .then(async (response) => {
                     if (response !== undefined) {
                         loadItemsFromCart();
@@ -462,7 +504,10 @@ export default {
       checkAll_b,
       handleDelete,
       handleBuyItem,
-      currentFridge
+      currentFridge,
+      suggestedItems,
+      handleAcceptSuggestion,
+      handleDeleteSuggestion,
     };
   },
 };
