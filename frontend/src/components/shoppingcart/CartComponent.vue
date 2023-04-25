@@ -69,9 +69,9 @@
                         @add="inc_dec_CartItemAmount(item, 1)"
                         @subtract="inc_dec_CartItemAmount(item, -1)"
                         @delete-item="handleDeleteItem(item)"
-                        @buy-item="handleBuyItem(item)"
                         @handle-checked="handleCheckedItem"
-                        @buy="handleBuy"
+                        @accept-suggestion="handleAcceptSuggestion(item)"
+                        @delete-suggestion="handleDeleteSuggestion(item)"
                     >
                     </CartSuggestion>
                 </template>
@@ -89,7 +89,7 @@ import {
 } from "@dafcoe/vue-collapsible-panel";
 import "@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {deleteItemFromShoppingList} from "@/services/ItemService";
+import {acceptSuggestion, deleteItemFromShoppingList} from "@/services/ItemService";
 import {addItemToShoppingList} from "@/services/ItemService";
 import {getItemsFromShoppingList} from "@/services/ItemService";
 import {buyItemsFromShoppingList} from "@/services/ItemService";
@@ -145,15 +145,44 @@ export default {
         }
          setInterval(callEveryThreeSeconds, 3000);*/
 
+        async function handleAcceptSuggestion(item){
+            const ItemRemoveDTO = {
+                itemName: item.name,
+                store: item.store,
+                fridgeId: currentFridge.fridgeId,
+                quantity: item.quantity,
+            };
+            try{
+                await acceptSuggestion(ItemRemoveDTO);
+                await loadItemsFromCart();
+            }catch(error){
+                console.error(error)
+            }
+        }
 
+
+        async function handleDeleteSuggestion(item){
+            const ItemRemoveDTO = {
+                itemName: item.name,
+                store: item.store,
+                fridgeId: currentFridge.fridgeId,
+                quantity: item.quantity,
+            };
+            try{
+                console.log(ItemRemoveDTO)
+                await deleteItemFromShoppingList(ItemRemoveDTO, true);
+                await loadItemsFromCart();
+            }catch(error){
+                console.error(error)
+                console.log(error.response.data["Message: "])
+            }
+        }
         function handleMarkAll() {
             checkAll_b.value = !checkAll_b.value;
             items.value.forEach((obj) => {
                 obj.isChecked = checkAll_b.value;
             });
         }
-
-
         async function handleCheckedItem(item, isChecked) {
             item.isChecked = isChecked;
             console.log(item.name)
@@ -475,6 +504,8 @@ export default {
             handleBuyItem,
             currentFridge,
             suggestedItems,
+            handleAcceptSuggestion,
+            handleDeleteSuggestion,
         };
     },
 };

@@ -24,8 +24,8 @@
         </div>
 
         <div class="buttons">
-            <font-awesome-icon v-if="isSuperUser" icon="fa-solid fa-check" class="modify check-mark" @click="handleBuyItem"/>
-            <font-awesome-icon v-if="isSuperUser" icon="fa-solid fa-trash" class="modify trash-mark" @click="handleDeleteItem"/>
+            <font-awesome-icon v-if="isSuperUser" icon="fa-solid fa-check" class="modify check-mark" @click="handleAcceptSuggestion"/>
+            <font-awesome-icon icon="fa-solid fa-trash" class="modify trash-mark" @click="handleDeleteSuggestion"/>
         </div>
     </div>
 </template>
@@ -81,8 +81,11 @@ export default {
         handleDeleteItem() {
             this.$emit("delete-item");
         },
-        handleBuyItem() {
-            this.$emit("buy-item");
+        handleAcceptSuggestion() {
+            this.$emit("accept-suggestion");
+        },
+        handleDeleteSuggestion() {
+            this.$emit("delete-suggestion");
         },
         handleChange(event) {
             //event.target.checked
