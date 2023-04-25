@@ -10,25 +10,22 @@ import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.exists.UserExistsException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.UserMapper;
+import edu.ntnu.idatt2106_2023_06.backend.model.FridgeMember;
 import edu.ntnu.idatt2106_2023_06.backend.model.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
-import edu.ntnu.idatt2106_2023_06.backend.service.files.FileStorageService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  This service class handles the business logic for user-related operations.
@@ -46,8 +43,6 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationProvider authenticationProvider;
-    private final UserDetailsService userDetailsService;
-    private final FileStorageService fileStorageService;
     private final JwtService jwtService;
 
 
@@ -173,5 +168,29 @@ public class UserService implements IUserService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error converting users to JSON", e);
         }
+    }
+
+    /**
+     * This method checks the isSuperUser status for a user and a given fridge.
+     *
+     * @param fridgeId The id of the fridge the user is, given as a Long object.
+     * @param username The username to search for.
+     * @return         Boolean representing the superuser status of the user.
+     */
+    public boolean isSuperUser(Long fridgeId, String username) {
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
+
+        logger.info("Checking the fridge's the user is a part of.");
+        for(FridgeMember membership : user.getMemberships()) {
+            if(Objects.equals(membership.getFridge().getFridgeId(), fridgeId)) {
+                logger.info("User was a part of the given fridge.");
+                return membership.isSuperUser();
+            }
+        }
+
+        logger.info("The user was not part of a fridge with id: " + fridgeId);
+        throw new UnauthorizedException(username);
     }
 }
