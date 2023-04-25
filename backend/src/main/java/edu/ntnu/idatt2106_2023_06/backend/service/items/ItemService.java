@@ -104,7 +104,7 @@ public class ItemService implements IItemService {
         List<FridgeItems> fridgeItems = fridgeItemsRepository.findByFridge(fridge).orElseThrow(() -> new FridgeItemsNotFoundException(fridgeId));
         List<ItemDTO> itemDTOList = new ArrayList<>();
         for (FridgeItems item : fridgeItems){
-            itemDTOList.add(ItemMapper.toItemDTO(item.getItem(), item.getQuantity()));
+            itemDTOList.add(ItemMapper.toItemDTO(item.getItem(), item.getQuantity(), null));
         }
         return itemDTOList;
     }
@@ -179,7 +179,7 @@ public class ItemService implements IItemService {
         List<ShoppingItems> shoppingItems = shoppingItemsRepository.findByFridge(fridge).orElseThrow(() -> new ShoppingItemsNotFoundException(fridgeId));
         List<ItemDTO> itemDTOList = new ArrayList<>();
         for (ShoppingItems item : shoppingItems){
-            itemDTOList.add(ItemMapper.toItemDTO(item.getItem(), item.getQuantity()));
+            itemDTOList.add(ItemMapper.toItemDTO(item.getItem(), item.getQuantity(), item.isSuggestion()));
         }
         return itemDTOList;
     }

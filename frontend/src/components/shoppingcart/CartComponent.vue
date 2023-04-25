@@ -268,7 +268,7 @@ export default {
                   console.warn("error1", error); //TODO: add exception handling
                 });
 
-
+            //TODO: fix so that items do not need to be loaded again continuously........
             await loadItemsFromCart();
         }
 

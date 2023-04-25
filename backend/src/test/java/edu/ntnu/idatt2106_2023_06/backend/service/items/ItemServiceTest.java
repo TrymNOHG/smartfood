@@ -54,7 +54,7 @@ public class ItemServiceTest {
 
             ItemDTO itemDTO = new ItemDTO( "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     "Kiwi", 200000, new Date(), new Date(),
-                    null, 1);
+                    null, 1, null);
             itemService.addItem(itemDTO);
             assertDoesNotThrow(() -> {
                 itemRepository.findByItemId(1L).orElseThrow();
