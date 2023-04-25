@@ -96,7 +96,7 @@ public class StatService implements IStatService {
                 () -> new StatNotFoundException(3L)
         );
 
-        statRepository.saveAll(StatMapper.toStatistics(statAddItemToFridgeDTO, user, fridge, statType));
+        statRepository.save(StatMapper.toStatistics(statAddItemToFridgeDTO, user, fridge, statType));
     }
 
 
