@@ -31,7 +31,7 @@
                 </vue-collapsible-panel-group>
             </div>
 
-            <CartControl @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
+            <CartControl v-if="isCurrentUserSuperUser" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
         </div>
 
         <div class="cart-items">
@@ -41,9 +41,9 @@
                     :image="item.image"
                     :name="item.name"
                     :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
-                    :weight="item.weight"
                     :quantity="item.quantity"
                     :item="item"
+                    :isSuperUser="isCurrentUserSuperUser"
                     @add="inc_CartItemAmount(item)"
                     @subtract="dec_CartItemAmount(item)"
                     @delete-item="handleDeleteItem(item)"
@@ -52,6 +52,33 @@
             >
             </CartItem>
         </div>
+
+        <vue-collapsible-panel-group>
+            <vue-collapsible-panel :expanded="true">
+                <template #title> Suggested items </template>
+                <template #content>
+                    <CartSuggestion
+                        v-for="(item, index) in items"
+                        :key="index"
+                        :image="item.image"
+                        :name="item.name"
+                        :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
+                        :quantity="item.quantity"
+                        :item="item"
+                        :isSuperUser="isCurrentUserSuperUser"
+                        @add="inc_dec_CartItemAmount(item, 1)"
+                        @subtract="inc_dec_CartItemAmount(item, -1)"
+                        @delete-item="handleDeleteItem(item)"
+                        @buy-item="handleBuyItem(item)"
+                        @handle-checked="handleCheckedItem"
+                        @buy="handleBuy"
+                    >
+                    </CartSuggestion>
+                </template>
+            </vue-collapsible-panel>
+        </vue-collapsible-panel-group>
+
+
     </div>
 </template>
 
@@ -72,6 +99,7 @@ import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import CartItem from "@/components/shoppingcart/CartItem.vue";
+import CartSuggestion from "@/components/shoppingcart/CartSuggestion.vue";
 import CartControl from "@/components/shoppingcart/CartControl.vue";
 import BasicCheckBox from "@/components/basic-components/BasicCheckbox.vue";
 import {useLoggedInStore, useFridgeStore} from "@/store/store";
@@ -91,7 +119,14 @@ export default {
         CartItem,
         CartControl,
         BasicCheckBox,
+        CartSuggestion,
     },
+    computed: {
+        isCurrentUserSuperUser() {
+            return useFridgeStore().getIsSuperUser;
+        },
+    },
+
     setup() {
         console.log(useFridgeStore().getCurrentFridge);
         var itemAmount = ref(1);
@@ -159,7 +194,37 @@ export default {
                 )
             } catch (error) {
                 console.error(error);
+                swal.fire(
+                    error.response.data["Message:"],
+                    '',
+                    'error'
+                )
             }
+        }
+        async function handleBuyItem(item) {
+            const selectedItems = [];
+            selectedItems.push(item);
+            console.log("SELECTED ITEMS")
+            console.log(selectedItems);
+            const itemRemoveDTOList = [{}];
+            selectedItems.forEach((item) => {
+                const ItemRemoveDTO = {
+                    itemName: item.name,
+                    store: item.store,
+                    fridgeId: currentFridge.fridgeId,
+                    quantity: item.quantity,
+                };
+                itemRemoveDTOList.push(ItemRemoveDTO);
+                console.log("ITEM REMOVE DTO")
+                console.log(itemRemoveDTOList);
+            });
+            try {
+                itemRemoveDTOList.shift();
+                await buyItemsFromShoppingList(itemRemoveDTOList);
+            } catch (error) {
+                console.error(error);
+            }
+            location.reload();
         }
 
         async function handleBuy() {
@@ -395,6 +460,8 @@ export default {
             handleCheckedItem,
             checkAll_b,
             handleDelete,
+            handleBuyItem,
+            currentFridge
         };
     },
 };
