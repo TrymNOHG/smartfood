@@ -1,11 +1,10 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.users;
 
+import edu.ntnu.idatt2106_2023_06.backend.exception.InvalidTokenException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.TokenNotFoundException;
-import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.Token;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.TokenRepository;
-import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -25,7 +24,6 @@ import java.util.Objects;
 public class TokenService implements ITokenService{
 
     private final TokenRepository tokenRepository;
-    private final UserRepository userRepository;
     private final Logger logger = LoggerFactory.getLogger(TokenService.class);
 
     @Transactional
@@ -49,6 +47,25 @@ public class TokenService implements ITokenService{
 
         tokenRepository.save(token);
         logger.info("Token has been saved for " + user.getUsername());
+    }
+
+    @Transactional
+    @Override
+    public void confirmToken(String tokenValue) {
+        logger.info("Checking if token exists");
+        Token token = tokenRepository.findTokenByToken(tokenValue)
+                        .orElseThrow(() -> new TokenNotFoundException(tokenValue));
+        logger.info("Token exists!");
+
+        logger.info("Checking if token has expired");
+        if(token.getTimeExpires().isBefore(LocalDateTime.now())) throw new InvalidTokenException(tokenValue);
+        logger.info("Token was still valid.");
+
+        token.setTimeConfirmed(LocalDateTime.now());
+        tokenRepository.save(token);
+
+        //TODO: change the user's activated boolean on their account to true!
+
     }
 
 }
