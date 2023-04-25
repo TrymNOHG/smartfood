@@ -44,7 +44,6 @@
                     :weight="item.weight"
                     :quantity="item.quantity"
                     :item="item"
-                    :isChecked="item.isChecked"
                     @add="inc_dec_CartItemAmount(item, 1)"
                     @subtract="inc_dec_CartItemAmount(item, -1)"
                     @delete-item="handleDeleteItem(item)"
@@ -112,26 +111,17 @@ export default {
 
         function handleMarkAll() {
             checkAll_b.value = !checkAll_b.value;
-            /**if(checkAll_b){
-        items.value.forEach((item) => {
-        item.isChecked.value = true;
-      });
-      }else{
-        items.value.forEach((item) => {
-        item.isChecked.value = false;
-      });
-      }
-             */
-
-            loadItemsFromCart();
+            items.value.forEach((obj) => {
+                obj.isChecked = checkAll_b.value;
+            });
         }
 
 
-        function handleCheckedItem(item, isChecked) {
+        async function handleCheckedItem(item, isChecked) {
             item.isChecked = isChecked;
-            console.log("item" + item.isChecked)
             console.log(item.name)
-            console.log(isChecked)
+            console.log("item ischecked: " + item.isChecked)
+            console.log("is-checked: "+isChecked)
             // console.log(item.isChecked)
         }
 
@@ -159,12 +149,11 @@ export default {
             });
             try {
                 itemRemoveDTOList.shift();
-                deleteItemsFromShoppingList(itemRemoveDTOList);
+                await deleteItemsFromShoppingList(itemRemoveDTOList);
             } catch (error) {
-                loadItemsFromCart()
                 console.error(error);
             }
-            loadItemsFromCart()
+            location.reload();
         }
 
         async function handleBuy() {
@@ -190,17 +179,20 @@ export default {
             });
             try {
                 itemRemoveDTOList.shift();
-                buyItemsFromShoppingList(itemRemoveDTOList);
+                await buyItemsFromShoppingList(itemRemoveDTOList);
             } catch (error) {
-                loadItemsFromCart();
                 console.error(error);
             }
             location.reload();
         }
 
 
-        onMounted(() => {
-            loadItemsFromCart();
+        onMounted(async () => {
+            await loadItemsFromCart();
+            /**items.value.forEach((obj) => {
+                obj.isChecked = checkAll_b;
+            });*/
+            console.log(items.value)
         });
         // Watch the searchItems array for changes and update the isExpanded ref accordingly
         watch(searchItems, () => {
@@ -212,10 +204,6 @@ export default {
             try {
                 const response = await getItemsFromShoppingList(currentFridge.fridgeId);
                 items.value = response.data;
-
-                items.value.forEach((obj) => {
-                    obj.isChecked = checkAll_b;
-                });
                 console.log(items.value);
             } catch (error) {
                 console.error(error);
