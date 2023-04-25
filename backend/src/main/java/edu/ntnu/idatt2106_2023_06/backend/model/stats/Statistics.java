@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.model.stats;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import jakarta.persistence.*;
@@ -31,6 +32,7 @@ public class Statistics {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stat_id")
+    @JsonIgnore
     private Long statId;
 
     /**
@@ -39,6 +41,7 @@ public class Statistics {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
+    @JsonIgnore
     private User user;
 
     /**
@@ -47,6 +50,7 @@ public class Statistics {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fridge_id")
     @ToString.Exclude
+    @JsonIgnore
     private Fridge fridge;
 
     /**
@@ -63,7 +67,7 @@ public class Statistics {
      */
     @Column(name = "stat_value", nullable = false)
     @NonNull
-    private double statValue;
+    private Double statValue;
 
     /**
      * The name of the store of the statistics.
@@ -85,5 +89,12 @@ public class Statistics {
     @Column(name = "timestamp", nullable = false)
     @NonNull
     private LocalDateTime timestamp;
+
+    /**
+     * The number of items in the statistics.
+     */
+    @Column(name = "quantity", nullable = false)
+    @NonNull
+    private Integer quantity;
 
 }
