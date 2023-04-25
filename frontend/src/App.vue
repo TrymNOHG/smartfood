@@ -1,19 +1,11 @@
 <template>
   <header v-if="!isOnRootPage">
-    <router-link to="/fridges">
+    <router-link class="matprat-title" to="/fridges">
       <img :src="'@/assets/images/smartmat.png'" alt="Logo">
     </router-link>
     <h1 class="matprat-title" :class="{ 'centered': isOnAuthPage }">{{ $t('matsmart') }}</h1>
     <nav :class="{ 'center-profile': !hasCurrentFridge }">
       <ul v-if="!isOnAuthPage">
-        <li v-if="hasCurrentFridge">
-          <RouterLink to="/dinner" >
-            <span class="icon">
-              <font-awesome-icon icon="fa-solid fa-utensils" />
-            </span>
-            <span class="text">{{ $t('dinner') }}</span>
-          </RouterLink>
-        </li>
         <li v-if="hasCurrentFridge">
           <RouterLink to="/fridge" >
             <span class="icon">
@@ -23,19 +15,27 @@
           </RouterLink>
         </li>
         <li v-if="hasCurrentFridge">
-          <RouterLink to="/statistics" v-if="hasCurrentFridge">
-            <span class="icon">
-              <font-awesome-icon icon="fa-solid fa-chart-pie" />
-            </span>
-            <span class="text">{{ $t('statistics') }}</span>
-          </RouterLink>
-        </li>
-        <li v-if="hasCurrentFridge">
           <RouterLink to="/cart" v-if="hasCurrentFridge">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-cart-shopping" />
             </span>
             <span class="text">{{ $t('shopping_cart') }}</span>
+          </RouterLink>
+        </li>
+        <li v-if="hasCurrentFridge">
+          <RouterLink to="/dinner" >
+            <span class="icon">
+              <font-awesome-icon icon="fa-solid fa-utensils" />
+            </span>
+            <span class="text">{{ $t('dinner') }}</span>
+          </RouterLink>
+        </li>
+        <li v-if="hasCurrentFridge">
+          <RouterLink to="/statistics" v-if="hasCurrentFridge">
+            <span class="icon">
+              <font-awesome-icon icon="fa-solid fa-chart-pie" />
+            </span>
+            <span class="text">{{ $t('statistics') }}</span>
           </RouterLink>
         </li>
         <li>
@@ -71,6 +71,7 @@
     </div>
   </div>
   <RouterView class="router-view-container"/>
+
 </template>
 
 
@@ -376,6 +377,8 @@ nav ul li:hover a .text {
     height: 40px;
   }
 
+
+
   h1 {
     font-size: 2rem;
   }
@@ -394,6 +397,43 @@ nav ul li:hover a .text {
     font-size: 0.6em;
   }
 
+}
+
+@media only screen and (min-width: 350px) and (max-width: 480px) {
+  .matprat-title{
+    display: none;
+  }
+
+  header{
+    height: 0;
+  }
+  .link-name{
+    font-family: "Roboto", sans-serif;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    text-shadow: 0 0 black;
+    font-size: 20px;
+  }
+
+  .break-line{
+    height: 6px;
+    background-color: white;
+  }
+
+  .current-fringe{
+    background-color: white;
+    border-radius: 0;
+  }
+
+  .name-display {
+    border-radius: 50px 50px 50px 50px;
+    width: 99.9%;
+  }
+
+  .router-view-container{
+    z-index: 0;
+  }
 }
 </style>
 

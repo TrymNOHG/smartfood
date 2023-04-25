@@ -231,6 +231,7 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
 @media only screen and (max-width: 800px) {
   .product-img {
     width: 100px; /* set a fixed width for the containing div */
@@ -288,23 +289,34 @@ input[type="number"] {
     justify-content: space-between;
   }
 }
+
 @media only screen and (min-width: 350px) and (max-width: 480px) {
   .product-img img {
-    width: 35px; /* set a fixed width for the containing div */
-    height: 50px; /* set a fixed height for the containing div */
+    width: 45px; /* set a fixed width for the containing div */
+    height: 50px;
+    object-fit: contain/* set a fixed height for the containing div */
   }
 
   .item {
     display: flex !important;
-    width: 100px;
+    height: 80px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 10px;
 
 
+
+  }
+
+  .description{
+    width: 175px;
 
   }
   .buttons{
     padding-left: 10px;
     padding-right: 5px;
     width: 40px;
+    padding-top: 28px;
 
   }
 
@@ -313,7 +325,7 @@ input[type="number"] {
   }
 
   .product-img{
-    padding-top: 10px;
+    padding-top: 15px;
   }
   .quantity{
     padding: 5px;

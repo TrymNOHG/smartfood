@@ -3,6 +3,7 @@
     <figure id="backBlack"></figure>
     <div id="backGreen">
     <h1>Handlekurv</h1>
+      <CartControl @check-all="handleMarkAll" @buy="handleBuy"></CartControl>
     </div>
     <div id="myDropdown" class="dropdown-content">
       <div id="searchbar">
@@ -16,7 +17,6 @@
       <div class="dropper" v-if="search">
         <vue-collapsible-panel-group>
           <vue-collapsible-panel :expanded="isExpanded.value">
-            <template #title> Search results </template>
             <template  #content>
               <SearchItem
                 v-for="(item, index) in searchItems"
@@ -33,8 +33,6 @@
           </vue-collapsible-panel>
         </vue-collapsible-panel-group>
       </div>
-
-      <CartControl @check-all="handleMarkAll" @buy="handleBuy"></CartControl>
     </div>
 
     <div class="cart-items">
@@ -258,7 +256,7 @@ export default {
     //buy item from search
     function addItemToList(item) {
       console.log(item.name + " " + item.store.name);
-
+      search.value = false;
       const itemDTO = {
         name: item.name,
         description: item.description,
@@ -671,14 +669,16 @@ input:focus {
   }
 
   #backBlack{
-    height: 10px;
-    background-color: black;
+    height: 6px;
+    background-color: white;
   }
 
   #backGreen{
     background-color: #31c48d;
+
     width: 100%;
-    padding: 10px 60px 0px 60px;
+    padding: 10px 10px 10px 10px;
+    border-radius: 20px 20px 20px 20px;
   }
 
   h1{
@@ -690,6 +690,7 @@ input:focus {
     font-weight: bold;
 
   }
+
 
   #searchbar{
     display: flex;
@@ -716,18 +717,29 @@ input:focus {
     width: 100vw;
     justify-content: space-evenly;
     position: fixed;
-    top: 140px;
+    top: 160px;
     overflow-y: scroll;
 
 
   }
 
+  .cart-control{
+    border-radius: 0px 0px 20px 20px;
+  }
+
+  #myDropdown{
+    border: 0;
+  }
+
   .vcpg {
     --bg-color-header: transparent!important;
     border: transparent;
-    width: 95%;
+    width: 100%;
     overflow-y: scroll;
     max-height: 150vw;
+    color: black;
+    background-color: white;
+
 
   }
 

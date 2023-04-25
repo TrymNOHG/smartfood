@@ -1,12 +1,11 @@
 <template>
     <div class="search-item">
-      <div class="item-info">
-        <img class="search-image" :src="image" />
-        <div class="text">product: <br>{{ text }}</div>
-        <div class="store">store: <br>{{ store }}</div>
-        <div class="price">price: <br>{{ price + " KR"}}</div>
-        <font-awesome-icon icon="fa-solid fa-cart-shopping" class="cart-icon" />
-      </div>
+
+        <img class="item-var" id="search-image" :src="image" />
+        <div class="item-var" id="text">{{ text }}</div>
+        <div class="item-var" id="store">{{ store }}</div>
+        <div class="item-var" id="price">{{ price + " KR"}}</div>
+        <font-awesome-icon icon="fa-solid fa-cart-shopping" class="item-var" id="cart-icon" />
     </div>
   </template>
 <script>
@@ -39,25 +38,20 @@ export default {
   cursor: pointer;
   transition: all 0.3s ease;
 }
-.cart-icon{
-    margin-left: 5%;
-    margin-top: 20px;
+#cart-icon{
+
 }
 
 .search-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;  
+  justify-content: center;
+  align-items: flex-start;
   padding: 15px;
+  width: 100%;
   color: #444444 !important;
 }
 
-.item-info {
-  display: flex;
-  align-items:flex-start;
-  width: 70vw;
 
-}
 
 .item-action {
   margin-left: 1rem;
@@ -68,18 +62,51 @@ export default {
   height: 9%;
   max-height: 120px;
   max-width: 200px;
-  margin-right: 16px;
 }
 
 
-.search-item .text {
+.search-item #text {
   flex: 1;
   font-weight: bold;
   
 }
 
-.search-item .price {
+.search-item #price {
   font-weight: bold;
-  margin-left: 2vw;
+}
+
+@media only screen and (min-width: 350px) and (max-width: 480px) {
+  .search-item{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    height: 80px;
+    margin-bottom: 10px;
+  }
+
+  .item-var{
+    padding-right: 7px;
+    padding-left: 7px;
+  }
+
+  #text{
+    line-height: 1.5;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+  }
+
+  .search-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain
+
+  }
+
+  #cart-icon{
+    height: 25px;
+  }
 }
 </style>
