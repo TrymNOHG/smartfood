@@ -20,7 +20,7 @@
   "notFound": "The page you are looking for doesn't exist!\n",
   "trythispage": "Try this page instead",
   "pictures": "Pictures",
-  "price": "Price in Kr;",
+  "price": "Price",
   "category": "Category",
   "full_name_error": "Fullname is required",
   "user_error": "Username is required",
@@ -57,5 +57,17 @@
   "search_Members_Title": "Search For Members",
   "enter_username": "Enter Username",
   "search_MembersButton_Text": "Search",
-  "select_fridge": "Select Fridge"
+  "select_fridge": "Select Fridge",
+  "toggle_members": "Members",
+  "toggle_fridge": "Fridge",
+  "search_product": "Search product",
+  "search_results": "Search results",
+  "search": "Search",
+  "quantity": "Remaining",
+  "add_item_to_fridge": "Add item to fridge",
+  "delete_item": "Delete item",
+  "how_much_left": "How much is left of this product",
+  "item-info": "Item information",
+  "purchase_date": "Purchase date",
+  "expiration_date": "Expiration date"
 }

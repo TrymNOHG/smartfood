@@ -1,21 +1,20 @@
 <template>
-
   <div class="members-fridge">
-      <div id="toggle-button" class="link" @click="selectedTab = 'members'" :class="{ active: selectedTab === 'members' }">Members</div>
-      <div id="toggle-button" class="link" @click="selectedTab = 'fridge'" :class="{ active: selectedTab === 'fridge' }">Fridge</div>
+    <div id="toggle-button" class="link" @click="selectedTab = 'members'" :class="{ active: selectedTab === 'members' }">{{ $t('toggle_members') }}</div>
+    <div id="toggle-button" class="link" @click="selectedTab = 'fridge'" :class="{ active: selectedTab === 'fridge' }">{{ $t('toggle_fridge') }}</div>
   </div>
   <!--TODO: add infinite scroller or pagination-->
   <div class="fridge-wrapper" v-show="selectedTab === 'fridge'">
     <div class="search-container">
       <div class="dropdown">
-        <SearchInput @input="handleSearch()" v-model="searchQuery" label="Search product" class="search-input" />
-        <button class="search-btn" @click="handleSearch()">Search</button>
+        <SearchInput @input="handleSearch()" v-model="searchQuery" :label="$t('search_product')" class="search-input" />
+        <button class="search-btn" @click="handleSearch()">{{ $t('search') }}</button>
       </div>
       <div class="search-overlay" v-show="isExpanded" @click="isExpanded = false"></div>
       <div class="search-results" v-show="isExpanded">
         <vue-collapsible-panel-group>
           <vue-collapsible-panel :expanded="isExpanded">
-            <template #title>Search results</template>
+            <template #title>{{ $t('search_results') }}</template>
             <template #content style="overflow-y: auto;">
               <div class="search-item-list" style="overflow-y: auto; max-height: 250px">
                 <SearchItem

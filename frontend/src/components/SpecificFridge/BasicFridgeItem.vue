@@ -9,16 +9,16 @@
           <div class="item-detail">
             <div class="item-name">
               <h2>{{item.name}}</h2>
-              <h3>Expiration date: {{new Date(item.expirationDate)
+              <h3>{{ $t('expiration_date') }}: {{new Date(item.expirationDate)
                   .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
               <br>
             </div>
-            <h4>Price: {{ item.price }}; kr</h4>
-            <h4>Buy date: {{ new Date(item.purchaseDate)
+            <h4>{{ $t('price') }}: {{ item.price }}; kr</h4>
+            <h4>{{ $t('purchase_date') }}: {{ new Date(item.purchaseDate)
                 .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
-            <h4>Expiration date: {{ new Date(item.expirationDate)
+            <h4>{{ $t('expiration_date') }}: {{ new Date(item.expirationDate)
                 .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
-            <h4>How much is Left: {{ item.quantity }}L</h4>
+            <h4>{{ $t('quantity') }}: {{ item.quantity }}</h4>
             <button class="delete-btn" @click.prevent="deleteCard(item)">
               <span>
                 <font-awesome-icon icon="fa-solid fa-trash" class="icon delete-icon" />

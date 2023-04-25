@@ -7,7 +7,7 @@
         <div class="slider-bar"></div>
         <div class="slider-value" id="rangeValue">{{sliderValue}}%</div>
       </div>
-      <basic-button :button-text="'Slett vare'" class="basic-button" @click="deleteItem(item)"/>
+      <basic-button :button-text="$t('delete_item')" class="basic-button" @click="deleteItem(item)"/>
     </div>
   </div>
 </template>

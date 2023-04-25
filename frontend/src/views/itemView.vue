@@ -1,8 +1,8 @@
 <template>
 
   <div class="members-fridge">
-    <router-link id="member" class="link" to="/members">Members</router-link>
-    <router-link id="fridge" class="link" to="/fridge">Fridge</router-link>
+    <router-link id="member" class="link" to="/members">{{ $t('toggle_members') }}</router-link>
+    <router-link id="fridge" class="link" to="/fridge">{{ $t('toggle_fridge') }}</router-link>
   </div>
   <div class="item-wrapper">
     <div class="item">
