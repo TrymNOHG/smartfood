@@ -22,14 +22,14 @@ public class StatController {
      * @param statDeleteFromFridgeDTO   The stat to add to the database.
      * @return                          A response entity with status code 200 if the stat was added successfully.
      */
-    @PostMapping(value="/delete-item")
+    @PostMapping(value="/add/delete-item")
     @Operation(summary = "Adds a new stat to the database")
     public ResponseEntity<Object> statDeleteItem(@ParameterObject @RequestBody StatDeleteFromFridgeDTO statDeleteFromFridgeDTO) {
         statService.statDeleteItemFromFridge(statDeleteFromFridgeDTO);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value="/bought-item")
+    @PostMapping(value="/add/bought-item")
     @Operation(summary = "Adds a new stat to the database")
     public ResponseEntity<Object> statBoughtItem(@ParameterObject @RequestBody StatAddItemToFridgeDTO statAddItemToFridgeDTO) {
         statService.statAddItemToFridge(statAddItemToFridgeDTO);
