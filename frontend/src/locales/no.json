@@ -64,6 +64,7 @@
   "toggle_fridge": "Kjøleskap",
   "search_product": "Søk etter produkt",
   "search_results": "Søkeresultater",
+  "suggest_items": "Foreslåtte varer",
   "search": "Søk",
   "quantity": "Antall igjen",
   "add_item_to_fridge": "Legg til produkt i kjøleskapet",
@@ -71,5 +72,10 @@
   "item-info": "Informasjon om varen",
   "how_much_left": "Hvor mye er det igjen av produktet",
   "purchase_date": "Kjøpsdato",
-  "expiration_date": "Utløpsdato"
+  "expiration_date": "Utløpsdato",
+  "product": "produkt",
+  "store": "butikk",
+  "mark_all": "Marker Alle",
+  "buy": "Kjøp",
+  "delete": "Slett"
 }

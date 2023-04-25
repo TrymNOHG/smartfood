@@ -82,14 +82,13 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           Swal.fire({
-            html: `
-          <div class="swal2-content">
-            <div class="swal2-text">
-              ${this.$t('how_much_left')}
-            </div>
-            <div id="range-value-text" class="swal2-text"></div>
-          </div>
-        `,
+            html:
+                `<div class="swal2-content">
+                  <div class="swal2-text"> ${this.$t('how_much_left')}
+                  </div>
+                  <div id="range-value-text" class="swal2-text">
+                  </div>
+                </div> `,
             input: 'range',
             inputAttributes: {
               min: 0,

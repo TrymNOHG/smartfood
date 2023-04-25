@@ -1,18 +1,16 @@
 <template>
     <div>
-        <h1>Cart</h1>
         <div id="myDropdown" class="dropdown-content">
             <SearchInput
                     v-model="searchQuery"
                     @input="handleSearch"
-                    label="Search product"
+                    :label="$t('search_product')"
             ></SearchInput>
-            <button id="searchbtn" @click="handleSearch">Search</button>
-
+            <button id="searchbtn" @click="handleSearch">{{ $t('search') }}</button>
             <div class="dropper">
                 <vue-collapsible-panel-group>
                     <vue-collapsible-panel :expanded="isExpanded.value">
-                        <template #title> Search results</template>
+                        <template #title>{{ $t('search_results') }}</template>
                         <template #content>
                             <SearchItem
                                     v-for="(item, index) in searchItems"
@@ -31,7 +29,7 @@
                 </vue-collapsible-panel-group>
             </div>
 
-            <CartControl v-if="isCurrentUserSuperUser" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
+            <CartControl v-if="isCurrentUserSuperUser" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"/>
         </div>
 
         <div class="cart-items">
@@ -55,7 +53,7 @@
 
         <vue-collapsible-panel-group>
             <vue-collapsible-panel :expanded="true">
-                <template #title> Suggested items </template>
+                <template #title>{{ $t('suggest_items') }}</template>
                 <template #content>
                     <CartSuggestion
                         v-for="(item, index) in suggestedItems"
@@ -102,7 +100,7 @@ import CartItem from "@/components/shoppingcart/CartItem.vue";
 import CartSuggestion from "@/components/shoppingcart/CartSuggestion.vue";
 import CartControl from "@/components/shoppingcart/CartControl.vue";
 import BasicCheckBox from "@/components/basic-components/BasicCheckbox.vue";
-import {useLoggedInStore, useFridgeStore} from "@/store/store";
+import {useLoggedInStore, useFridgeStore, useItemStore} from "@/store/store";
 import {ref, onMounted, computed, watch} from "vue";
 import 'sweetalert2/dist/sweetalert2.min.css';
 import swal from 'sweetalert2';
@@ -138,6 +136,7 @@ export default {
         const currentFridge = useFridgeStore().getCurrentFridge;
         let checkAll_b = ref(false);
         const suggestedItems = ref([]);
+        const itemStore = useItemStore();
 
         //console log items every 3 seconds
         /**function callEveryThreeSeconds() {
@@ -204,24 +203,39 @@ export default {
         }
         async function handleBuyItem(item) {
             const selectedItems = [];
+            const selectedItemsStat = [];
             selectedItems.push(item);
+            selectedItemsStat.push(item);
             console.log("SELECTED ITEMS")
             console.log(selectedItems);
             const itemRemoveDTOList = [{}];
-            selectedItems.forEach((item) => {
+            const itemAddStatDTOList = [{}];
+          selectedItems.forEach((item) => {
                 const ItemRemoveDTO = {
                     itemName: item.name,
                     store: item.store,
                     fridgeId: currentFridge.fridgeId,
                     quantity: item.quantity,
                 };
+
+                const statAddItemToFridgeDTO = {
+                  "price": item.current_price,
+                  "quantity": 1,
+                  "itemName": item.name,
+                  "storeName": item.store.name,
+                  "fridgeId": this.fridge.fridgeId
+                }
+
+                itemAddStatDTOList.push(statAddItemToFridgeDTO)
                 itemRemoveDTOList.push(ItemRemoveDTO);
                 console.log("ITEM REMOVE DTO")
                 console.log(itemRemoveDTOList);
             });
             try {
                 itemRemoveDTOList.shift();
-                await buyItemsFromShoppingList(itemRemoveDTOList);
+                itemAddStatDTOList.shift();
+              await itemStore.addItemsToStat(itemAddStatDTOList);
+              await buyItemsFromShoppingList(itemRemoveDTOList);
             } catch (error) {
                 console.error(error);
             }
@@ -252,11 +266,11 @@ export default {
             try {
                 itemRemoveDTOList.shift();
                 await buyItemsFromShoppingList(itemRemoveDTOList);
-                loadItemsFromCart();
-                swal.fire(
-                  'added to fridge',
-                  '',
-                  'success'
+                await loadItemsFromCart();
+                await swal.fire(
+                    'added to fridge',
+                    '',
+                    'success'
                 )
             } catch (error) {
                 console.error(error);
