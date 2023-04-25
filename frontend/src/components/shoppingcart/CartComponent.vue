@@ -842,9 +842,11 @@ input:focus {
 
   #shopList{
     border-radius: 20px 20px 0px 0px;
+    background-color: #31c48d;
   }
   #sugTitle{
     border-radius: 20px 20px 20px 20px;
+    background-color: #31c48d;
 
   }
   h1{
@@ -889,7 +891,7 @@ input:focus {
   }
 
   .cart-control{
-    border-radius: 0px 0px 20px 20px;
+    border-radius: 20px 20px 20px 20px;
   }
 
   #myDropdown{
