@@ -71,6 +71,10 @@ export default {
   margin-right: 16px;
 }
 
+img {
+  object-fit: contain;
+}
+
 
 .search-item .text {
   flex: 1;

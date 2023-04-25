@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.config;
 
-import edu.ntnu.idatt2106_2023_06.backend.repo.FridgeRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;

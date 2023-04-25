@@ -11,7 +11,11 @@ import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
-import edu.ntnu.idatt2106_2023_06.backend.repo.*;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.item.ShoppingItemsRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.store.StoreRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -56,7 +60,7 @@ public class ItemServiceTest {
 
             ItemDTO itemDTO = new ItemDTO( "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     "Kiwi", 200000, new Date(), new Date(),
-                    null, 1);
+                    null, 1, null);
             itemService.addItem(itemDTO);
             assertDoesNotThrow(() -> {
                 itemRepository.findByItemId(1L).orElseThrow();

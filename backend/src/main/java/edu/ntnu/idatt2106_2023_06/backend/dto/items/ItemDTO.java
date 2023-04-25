@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.dto.items;
 
+import lombok.Builder;
 import lombok.NonNull;
 
 import java.util.Date;
@@ -20,7 +21,8 @@ import java.util.Date;
  *
  * @author Trym Hamer Gudvangen
  */
+@Builder
 public record ItemDTO(@NonNull String name, String description,
                       @NonNull String store, double price, Date purchaseDate,
-                      Date expirationDate, String image, int quantity) {
+                      Date expirationDate, String image, int quantity, Boolean suggestion) {
 }

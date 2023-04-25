@@ -163,5 +163,4 @@ public class FridgeController {
         logger.info("All of the fridge members for fridge with id " + fridgeId + " have been retrieved.");
         return ResponseEntity.ok(fridgeMembers);
     }
-
 }

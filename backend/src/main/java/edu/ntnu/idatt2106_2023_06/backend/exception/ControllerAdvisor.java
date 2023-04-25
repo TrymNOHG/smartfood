@@ -1,9 +1,10 @@
 package edu.ntnu.idatt2106_2023_06.backend.exception;
 
 import edu.ntnu.idatt2106_2023_06.backend.exception.exists.ExistsException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.illegal.IllegalException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.illegal.IllegalStatValueException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.NotFoundException;
 import io.jsonwebtoken.JwtException;
-import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -130,8 +131,8 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * This method handles RuntimeExceptions in the application and returns a response with a
-     * 500 Internal Server Error status code.
+     * This method handles RuntimeExceptions in the application and returns a response with a 500 Internal Server Error
+     * status code.
      *
      * @param e          The RuntimeException that was thrown
      * @param webRequest The current web request
@@ -147,16 +148,16 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * This method handles MessagingException in the application and returns a response with a
-     * 500 Internal Server Error status code.
+     * This method handles ServletExceptions in the application and returns a response with a 500 Internal Server Error
+     * status code.
      *
-     * @param e          The MessagingException that was thrown
+     * @param e          The ServletException that was thrown
      * @param webRequest The current web request
      * @return           ResponseEntity with a JSON body containing the error message and a 500 Internal Server Error status code
      */
-    @ExceptionHandler(MessagingException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<Object> messagingExceptionAction(RuntimeException e, WebRequest webRequest) {
+    @ExceptionHandler(IllegalException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> illegalStatValueExceptionAction(IllegalStatValueException e, WebRequest webRequest) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("Time of error: ", LocalDateTime.now());
         body.put("Message: ", e.getMessage());

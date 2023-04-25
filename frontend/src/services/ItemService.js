@@ -21,6 +21,7 @@ export const getItemsFromFridge = async (fridgeId) => {
 
 export const deleteItemFromFridge = async (itemRemoveDTO) => {
     return await axios.delete(`${BASE_LISTING_URL}/fridge/delete`, {
+
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         },
@@ -38,6 +39,13 @@ export const deleteItemFromShoppingList = async (listingDeletionDTO, suggestion)
     });
   };
 
+export const deleteItemsFromShoppingList = async (listingDeletionDTO) => {
+    return await axios.post(`${BASE_LISTING_URL}/shopping/delete/all`, listingDeletionDTO, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
 
 export const addItemToShoppingList = async (itemDTO, fridgeId, suggestion) => {
   return await axios.post(`${BASE_LISTING_URL}/shopping/add?fridgeId=${fridgeId}&suggestion=${suggestion}`, itemDTO, {
@@ -55,6 +63,14 @@ export const getItemsFromShoppingList = async (fridgeId) => {
   });
 };
 
+export const acceptSuggestion = async (fridgeId) => {
+    return await axios.get(`${BASE_LISTING_URL}/shopping/get?fridgeId=${fridgeId}`, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
+
 export const acceptSuggestionFromShoppingList = async (itemRemoveDTO) => {
     return await axios.post(`${BASE_LISTING_URL}/shopping/suggestion`,itemRemoveDTO, {
         headers: {
@@ -70,3 +86,5 @@ export const buyItemsFromShoppingList = async (itemRemoveDTO) => {
     },
   });
 };
+
+

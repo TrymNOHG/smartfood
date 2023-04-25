@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106_2023_06.backend.repo;
+package edu.ntnu.idatt2106_2023_06.backend.repo.Recipie;
 
 import edu.ntnu.idatt2106_2023_06.backend.model.items.RecipeItemId;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.RecipeItems;
