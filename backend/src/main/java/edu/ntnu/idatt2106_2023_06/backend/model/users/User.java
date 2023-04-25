@@ -89,6 +89,14 @@ public class User implements UserDetails {
     @ToString.Exclude
     private Set<Statistics> stats = new HashSet<>();
 
+    /**
+     * The tokens of the user.
+     */
+    @OneToMany(mappedBy = "user")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    private Set<Token> tokens = new HashSet<>();
+
     @PreRemove
     private void removeStats() {
         for (Statistics s : stats) {

@@ -37,10 +37,18 @@ public class ItemMapper {
      * @param quantity  The quantity to map
      * @return          The mapped item DTO
      */
-    public static ItemDTO toItemDTO(Item item, int quantity){
-        return new ItemDTO(item.getProductName(), item.getDesc(),
-                item.getStore().getStoreName(), item.getPrice(),
-                item.getPurchaseDate(), item.getExpirationDate(),
-                item.getPictureLink(), quantity);
+    public static ItemDTO toItemDTO(Item item, int quantity, Boolean suggestion){
+        return ItemDTO
+                .builder()
+                .name(item.getProductName())
+                .description(item.getDesc())
+                .store(item.getStore().getStoreName())
+                .price(item.getPrice())
+                .purchaseDate(item.getPurchaseDate())
+                .expirationDate(item.getExpirationDate())
+                .image(item.getPictureLink())
+                .quantity(quantity)
+                .suggestion(suggestion)
+                .build();
     }
 }

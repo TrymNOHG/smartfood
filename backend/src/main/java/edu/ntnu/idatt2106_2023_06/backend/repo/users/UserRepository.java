@@ -58,15 +58,35 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     void dropUserStatTrigger();
 
     /**
-     Retrieves an Optional User instance based on the provided username.
-     @param username the username to search for
-     @return an Optional User instance
+     * Retrieves an Optional User instance based on the provided username.
+     * @param username the username to search for
+     * @return an Optional User instance
      */
     Optional<User> findByUsername(String username);
 
+    /**
+     * Retrieves an Optional User instance based on the provided email.
+     * @param email   The email to search for
+     * @return An Optional User instance
+     */
     Optional<User> findByEmail(String email);
+
+    /**
+     * Retrieves an Optional User instance based on the provided user id.
+     * @param userId   The user ID to search for
+     * @return         An Optional User instance
+     */
+    Optional<User> findUserByUserId(Long userId);
+
 
     @Query("SELECT u FROM User u WHERE LOWER(u.username) LIKE %:inputString%")
     List<User> findByUsernameContaining(@Param("inputString") String inputString);
+
+    /**
+     * This method checks whether a user exists, given the user id.
+     * @param userId    ID of the user, given as a Long object.
+     * @return          Status of whether user exists.
+     */
+    boolean existsByUserIdIs(Long userId);
 
 }

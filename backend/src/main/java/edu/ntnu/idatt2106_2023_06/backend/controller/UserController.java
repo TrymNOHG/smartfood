@@ -2,6 +2,7 @@ package edu.ntnu.idatt2106_2023_06.backend.controller;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.security.AuthenticationResponseDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.*;
+import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.service.files.FileStorageService;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.AuthenticationService;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +71,7 @@ public class UserController {
                     examples = @ExampleObject(value = "{\"message\":\"Username already exists!\"}")
             ))
     })
-    public ResponseEntity<Object> register(@ParameterObject @RequestBody UserRegisterDTO user) {
+    public ResponseEntity<Object> register(@ParameterObject @RequestBody UserRegisterDTO user) throws MessagingException {
         logger.info("User " + user.username() + " is being registered!");
         AuthenticationResponseDTO authenticationResponseDTO =  authenticationService.register(user);
 
@@ -244,5 +246,26 @@ public class UserController {
     public ResponseEntity<Object> search(@PathVariable String username) {
         logger.info(String.format("Searching for %s", username));
         return ResponseEntity.ok(userService.searchUser(username.toLowerCase()));
+    }
+
+    /**
+     * This method checks whether a user with the given fridge id.
+     *
+     * @param fridgeId          The id of the fridge to be checked
+     * @param authentication    The authentication of the user.
+     * @return                  ResponseEntity containing the user's superuser status.
+     */
+    @GetMapping("/superuser")
+    @Operation(summary = "Search for a user's superuser status in a given fridge by fridgeId")
+    @ApiResponse(responseCode = "200", description = "User superuser status retrieved successfully.", content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = Boolean.class),
+            examples = @ExampleObject(value = "{\"isSuperUser\":\"true\"}")))
+    public ResponseEntity<Boolean> search(@ParameterObject @RequestParam(name="fridgeId") Long fridgeId,
+                                          Authentication authentication) {
+        if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
+
+        logger.info(String.format("Check the super user status for %s", authentication.getName()));
+        return ResponseEntity.ok(userService.isSuperUser(fridgeId, authentication.getName()));
     }
 }
