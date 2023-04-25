@@ -71,6 +71,7 @@
                         @delete-item="handleDeleteItem(item)"
                         @handle-checked="handleCheckedItem"
                         @accept-suggestion="handleAcceptSuggestion(item)"
+                        @delete-suggestion="handleDeleteSuggestion(item)"
                     >
                     </CartSuggestion>
                 </template>
@@ -157,8 +158,24 @@ export default {
             }catch(error){
                 console.error(error)
             }
+        }
 
 
+        async function handleDeleteSuggestion(item){
+            const ItemRemoveDTO = {
+                itemName: item.name,
+                store: item.store,
+                fridgeId: currentFridge.fridgeId,
+                quantity: item.quantity,
+            };
+            try{
+                console.log(ItemRemoveDTO)
+                await deleteItemFromShoppingList(ItemRemoveDTO, true);
+                await loadItemsFromCart();
+            }catch(error){
+                console.error(error)
+                console.log(error.response.data["Message: "])
+            }
         }
         function handleMarkAll() {
             checkAll_b.value = !checkAll_b.value;
@@ -488,6 +505,7 @@ export default {
             currentFridge,
             suggestedItems,
             handleAcceptSuggestion,
+            handleDeleteSuggestion,
         };
     },
 };

@@ -29,15 +29,15 @@ export const deleteItemFromFridge = async (itemRemoveDTO) => {
     });
 };
 
-export const deleteItemFromShoppingList = async (listingDeletionDTO, suggestion) => {
-    return await axios.delete(`${BASE_LISTING_URL}/shopping/delete?suggestion=${suggestion}`, {
-
-      headers: {
-        Authorization: `Bearer ${await SessionToken()}`,
-      },
-      data: listingDeletionDTO
-    });
-  };
+export const deleteItemFromShoppingList = async (ItemRemoveDTO, suggestion) => {
+    return await axios.delete(`${BASE_LISTING_URL}/shopping/delete?suggestion=${suggestion}`,
+        {
+            data: ItemRemoveDTO,
+            headers: {
+                Authorization: `Bearer ${await SessionToken()}`,
+            },
+        });
+};
 
 export const deleteItemsFromShoppingList = async (listingDeletionDTO) => {
     return await axios.post(`${BASE_LISTING_URL}/shopping/delete/all`, listingDeletionDTO, {
@@ -48,11 +48,11 @@ export const deleteItemsFromShoppingList = async (listingDeletionDTO) => {
 };
 
 export const addItemToShoppingList = async (itemDTO, fridgeId, suggestion) => {
-  return await axios.post(`${BASE_LISTING_URL}/shopping/add?fridgeId=${fridgeId}&suggestion=${suggestion}`, itemDTO, {
-    headers: {
-      Authorization: `Bearer ${await SessionToken()}`,
-    },
-  });
+    return await axios.post(`${BASE_LISTING_URL}/shopping/add?fridgeId=${fridgeId}&suggestion=${suggestion}`, itemDTO, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
 };
 
 
@@ -74,11 +74,11 @@ export const acceptSuggestion = async (itemRemoveDTO) => {
 };
 
 export const buyItemsFromShoppingList = async (itemRemoveDTO) => {
-  return await axios.post(`${BASE_LISTING_URL}/shopping/buy`, itemRemoveDTO, {
-    headers: {
-      Authorization: `Bearer ${await SessionToken()}`,
-    },
-  });
+    return await axios.post(`${BASE_LISTING_URL}/shopping/buy`, itemRemoveDTO, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
 };
 
 
