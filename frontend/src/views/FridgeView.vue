@@ -88,7 +88,16 @@ export default {
 
     },
 
-    async deleteItem(itemToDelete) {
+    async deleteItem(itemToDelete, deletePercentage) {
+
+      const statDeleteFromFridgeDTO = {
+        "percentageThrown": parseFloat(deletePercentage),
+        "price": itemToDelete.price,
+        "quantity": parseFloat(itemToDelete.quantity),
+        "itemName": itemToDelete.name,
+        "storeName": itemToDelete.store,
+        "fridgeId": this.fridge.fridgeId
+      }
 
       const itemRemoveDTO = {
         "itemName": itemToDelete.name,
@@ -97,6 +106,8 @@ export default {
         "quantity": itemToDelete.quantity
       }
 
+      console.log(statDeleteFromFridgeDTO)
+      await this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO);
       await this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO);
       await this.itemStore.fetchItemsFromFridgeById(this.fridge.fridgeId).then((items) => {
         this.fridgeItems = items;
@@ -120,6 +131,14 @@ export default {
       const expirationDate = new Date(date);
       expirationDate.setDate(date.getDate() + 7);
 
+      const statAddItemToFridgeDTO = {
+        "price": item.current_price,
+        "quantity": 1,
+        "itemName": item.name,
+        "storeName": item.store.name,
+        "fridgeId": this.fridge.fridgeId
+      }
+
       const itemDTO = {
         "name": item.name,
         "description": item.description,
@@ -128,9 +147,10 @@ export default {
         "purchaseDate": date,
         "expirationDate": expirationDate,
         "image": item.image,
-        "quantity": 100
+        "quantity": 1
       }
 
+      await this.itemStore.statAddItemToFridge(statAddItemToFridgeDTO)
       await this.itemStore.addItemToFridgeById(this.fridge.fridgeId, itemDTO);
       await this.itemStore.fetchItemsFromFridgeById(this.fridge.fridgeId).then((items) => {
         this.fridgeItems = items;
@@ -172,7 +192,7 @@ export default {
     return {
       isExpanded: false,
     }
-  }
+  },
 }
 </script>
 
@@ -252,16 +272,10 @@ input[type="text"]:not(:focus) + .search-results {
   background-color: #ddd;
 }
 
-
-
 .link {
   text-decoration: none;
   color: white;
 }
-
-
-
-
 
 #toggle-button {
   width: 150px;
@@ -305,20 +319,6 @@ input[type="text"]:not(:focus) + .search-results {
     margin-top: 5px;
 }
 
-#member {
-  width: 150px;
-  margin-top: 5px;
-  margin-right: 50px;
-}
-
-#member:hover {
-  color: #3b3b3b;
-  height: 25px;
-  border-radius: 5px;
-  background-color: #fff;
-  transition: all 0.2s ease-in-out;
-}
-
 .members-fridge {
   background-color: #6C6C6C;
   height: 35px;
@@ -328,27 +328,6 @@ input[type="text"]:not(:focus) + .search-results {
   justify-content: center;
 }
 
-
-
-
-.members-fridge:hover .fridge-name {
-  color: #3b3b3b;
-  height: 25px;
-  border-radius: 5px;
-  background-color: #fff;
-  transition: all 0.2s ease-in-out;
-}
-
-
-
-.change-button:hover {
-  color: white;
-  border-radius: 5px;
-  background-color: #b1b1b1;
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
-}
-
 @media (max-width: 650px) {
 
   .fridge-wrapper {
@@ -356,19 +335,13 @@ input[type="text"]:not(:focus) + .search-results {
     grid-template-rows: repeat(auto-fill, minmax(95px, 95px));
   }
 
-
-  .change-button {
-    width: 20%;
-    top: 20%;
-    font-size: 0.7rem;
-  }
-
   .link {
     margin: 10px 0;
   }
 
   .wrapper {
-    margin-top: 50%;
+    margin-bottom: 80px;
+    overflow-y: auto;
     grid-template-columns: repeat(auto-fill, minmax(355px, 1fr));
     grid-template-rows: repeat(auto-fill, minmax(95px, 95px));
 
