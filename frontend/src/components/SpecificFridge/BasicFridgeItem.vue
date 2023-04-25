@@ -36,6 +36,7 @@ import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {number} from "yup";
 import swal from "sweetalert2";
 import {useItemStore} from "@/store/store";
+import Swal from "sweetalert2";
 
 export default {
   name: "BasicFridgeItem",
@@ -64,6 +65,8 @@ export default {
     },
 
     deleteCard(item) {
+      let deletePercentage = null;
+
       swal.fire({
         title: this.$t('confirm_title'),
         text: this.$t('confirm_text'),
@@ -78,12 +81,50 @@ export default {
         }
       }).then((result) => {
         if (result.isConfirmed) {
-          this.$emit('delete-item', item);
-          swal.fire(
-              this.$t('success_message'),
-              '',
-              'success'
-          )
+          Swal.fire({
+            html: `
+          <div class="swal2-content">
+            <div class="swal2-text">
+              ${this.$t('how_much_left')}
+            </div>
+            <div id="range-value-text" class="swal2-text"></div>
+          </div>
+        `,
+            input: 'range',
+            inputAttributes: {
+              min: 0,
+              max: 100,
+              step: 1
+            },
+            didOpen: () => {
+              deletePercentage = Swal.getInput()
+              const inputNumber = Swal.getHtmlContainer().querySelector('#range-value')
+              const rangeValueText = Swal.getHtmlContainer().querySelector('#range-value-text')
+
+              deletePercentage.nextElementSibling.style.display = 'none'
+              deletePercentage.style.width = '100%'
+
+              deletePercentage.addEventListener('input', () => {
+                inputNumber.value = deletePercentage.value
+                rangeValueText.innerText = `${deletePercentage.value}%`
+              })
+            },
+            showCancelButton: true,
+            confirmButtonText: this.$t('confirm_button'),
+            cancelButtonText: this.$t('cancel_button'),
+            customClass: {
+              container: 'my-swal-dialog-container'
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.$emit('delete-item', item, deletePercentage.value);
+              swal.fire(
+                  this.$t('success_message'),
+                  '',
+                  'success'
+              )
+            }
+          })
         }
       })
     }

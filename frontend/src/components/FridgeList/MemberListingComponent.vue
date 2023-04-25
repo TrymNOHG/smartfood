@@ -321,57 +321,31 @@ export default {
     object-fit: cover;
     object-position: center;
 }
-@media only screen and (max-width: 860px) {
-    .list {
-        margin: 0;
-    }
-
-    .member {
-        height: auto;
-        padding: 10px;
-        margin: 5px 0;
-    }
-
-    .member:hover {
-        box-shadow: none;
-        transform: none;
-    }
-
-    .item-text {
-        margin-bottom: 5px;
-        font-size: 1.2rem;
-    }
 
 
+@media only screen and (max-width: 390px) {
+  .member {
+    flex-wrap: wrap;
+    height: auto;
+  }
 
-    .delete-icon {
-        font-size: 1.5rem;
-        margin-left: 10px;
-    }
+  .member-info {
+    width: calc(100% - 60px);
+  }
 
+  .user-role {
+    width: calc(100% - 60px);
+  }
 
+  .actions {
+    width: 60px;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+  }
 }
 
-@media only screen and (max-width: 600px) {
-    .icons {
-        flex-wrap: wrap;
-        justify-content: space-between;
-        margin-top: 10px;
-    }
-
-    .edit-input {
-        width: 100%;
-    }
-
-    .edit-conf-icon {
-        margin-right: 0;
-        margin-bottom: 10px;
-    }
-
-    .delete-icon {
-        margin-left: 0;
-    }
-}
 
 
 </style>

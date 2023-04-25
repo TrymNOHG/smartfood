@@ -5,6 +5,7 @@ import UniqueId from '../features/UniqueId';
 import {addItemToFridge, getItemsFromFridge, deleteItemFromFridge} from "@/services/ItemService";
 import {ref} from "vue";
 import {checkSuperUserStatus} from "../services/UserService";
+import {addItemStats, deleteItemStats} from "@/services/StatsService";
 
 const storeUUID = UniqueId();
 
@@ -160,8 +161,16 @@ export const useItemStore = defineStore('itemStore', {
             await addItemToFridge(itemDTO, fridgeId);
         },
 
+        async statAddItemToFridge(statAddItemToFridgeDTO) {
+            await addItemStats(statAddItemToFridgeDTO);
+        },
+
         setCurrentItem(item) {
             this.currentItem = item;
+        },
+
+        async deleteItemByStats(statDeleteFromFridgeDTO) {
+            await deleteItemStats(statDeleteFromFridgeDTO)
         },
 
         async deleteItemByNameIdStoreQuantity(itemRemoveDTO){
