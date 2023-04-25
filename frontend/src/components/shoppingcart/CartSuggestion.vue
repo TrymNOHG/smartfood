@@ -25,7 +25,7 @@
 
         <div class="buttons">
             <font-awesome-icon v-if="isSuperUser" icon="fa-solid fa-check" class="modify check-mark" @click="handleAcceptSuggestion"/>
-            <font-awesome-icon v-if="isSuperUser" icon="fa-solid fa-trash" class="modify trash-mark" @click="handleDeleteSuggestion"/>
+            <font-awesome-icon icon="fa-solid fa-trash" class="modify trash-mark" @click="handleDeleteSuggestion"/>
         </div>
     </div>
 </template>
