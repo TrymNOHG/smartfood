@@ -48,4 +48,28 @@ public class StatController {
         statService.statAddItemToFridge(statAddItemToFridgeDTO);
         return ResponseEntity.ok().build();
     }
+
+    /**
+     * Get the personal statistics of the user.
+     *
+     * @param authentication    The JWT token of the user.
+     */
+    @GetMapping(value="/get/user-stats")
+    @Operation(summary = "Get the personal statistics of the user")
+    public ResponseEntity<Object> getUserStats(Authentication authentication) {
+        return ResponseEntity.ok(statService.getUserStats());
+    }
+
+    /**
+     * Get the statistics of a fridge.
+     *
+     * @param fridgeId          The id of the fridge.
+     * @param authentication    The JWT token of the user.
+     */
+    @GetMapping(value="/get/fridge-stats/{fridgeId}")
+    @Operation(summary = "Get the statistics of a fridge")
+    public ResponseEntity<Object> getFridgeStats(@PathVariable Long fridgeId,
+                                                 Authentication authentication) {
+        return ResponseEntity.ok(statService.getFridgeStats(fridgeId));
+    }
 }
