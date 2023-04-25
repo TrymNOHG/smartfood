@@ -35,9 +35,9 @@ public class EmailService implements IEmailService {
         String token = UUID.randomUUID().toString();
         tokenService.saveToken(token, user);
         try {
-            sendEmail("Activate your SmartMat account", user.getEmail(), createEmailBody(user.getUsername(), String.format("""
+            sendEmail("Activate your SmartMat account", user.getEmail(), createEmailBody(user.getUsername(), """
                 To activate your account, click on the button below. The link will expire in 24 hours and an additional link will then need to be sent.
-                """), createLinkButton("Activate Account", "http://localhost:5173/user/activate?token=" + token)));
+                """, createLinkButton("Activate Account", "http://localhost:5173/user/activate?token=" + token)));
         } catch (MessagingException e) {
             logger.error("Send of email was unsuccessful", e);
             throw new MessagingException("Activation Email was unsuccessful");

@@ -186,7 +186,6 @@ public class ItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("fridgeId", fridgeId.toString()))
                 .andExpect(status().isOk());
-
     }
 
     private static String asJsonString(final Object obj) {
