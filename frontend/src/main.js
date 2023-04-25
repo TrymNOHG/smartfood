@@ -24,6 +24,7 @@ import {
     faCircleCheck,
     faPlus,
     faCrown,
+    faCheck
 } from "@fortawesome/free-solid-svg-icons";
 
 /* Imports fr multiple languages */
@@ -46,7 +47,8 @@ library.add(
     faTrash,
     faCircleCheck,
     faPlus,
-    faCrown
+    faCrown,
+    faCheck
 )
 
 const pinia = createPinia()

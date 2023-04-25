@@ -9,10 +9,9 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
-//@Configuration
+@Configuration
 //@Profile("!test")
 public class MailConfig {
-/*
     @Value("${spring.mail.host}")
     private String host;
 
@@ -33,13 +32,14 @@ public class MailConfig {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(host);
         mailSender.setPort(port);
-//        mailSender.setUsername(username);
-//        mailSender.setPassword(password);
+        mailSender.setUsername(username);
+        mailSender.setPassword(password);
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.smtp.starttls.enable", starttlsEnabled);
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.port", port);
 
         return mailSender;
     }
-*/
 }
