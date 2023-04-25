@@ -76,7 +76,8 @@ import CartControl from "@/components/shoppingcart/CartControl.vue";
 import BasicCheckBox from "@/components/basic-components/BasicCheckbox.vue";
 import {useLoggedInStore, useFridgeStore} from "@/store/store";
 import {ref, onMounted, computed, watch} from "vue";
-
+import 'sweetalert2/dist/sweetalert2.min.css';
+import swal from 'sweetalert2';
 
 export default {
     name: "Cart",
@@ -150,10 +151,15 @@ export default {
             try {
                 itemRemoveDTOList.shift();
                 await deleteItemsFromShoppingList(itemRemoveDTOList);
+                loadItemsFromCart();
+                swal.fire(
+                  'deleted items',
+                  '',
+                  'success'
+                )
             } catch (error) {
                 console.error(error);
             }
-            location.reload();
         }
 
         async function handleBuy() {
@@ -180,10 +186,15 @@ export default {
             try {
                 itemRemoveDTOList.shift();
                 await buyItemsFromShoppingList(itemRemoveDTOList);
+                loadItemsFromCart();
+                swal.fire(
+                  'added to fridge',
+                  '',
+                  'success'
+                )
             } catch (error) {
                 console.error(error);
             }
-            location.reload();
         }
 
 
