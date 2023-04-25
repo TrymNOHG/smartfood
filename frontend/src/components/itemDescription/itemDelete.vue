@@ -7,13 +7,12 @@
         <div class="slider-bar"></div>
         <div class="slider-value" id="rangeValue">{{sliderValue}}%</div>
       </div>
-      <basic-button :button-text="'Slett vare'" class="basic-button"/>
+      <basic-button :button-text="'Slett vare'" class="basic-button" @click="deleteItem(item)"/>
     </div>
   </div>
 </template>
 
 <script>
-import {number} from "yup";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicFridgeItem.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
 export default {
@@ -21,8 +20,15 @@ export default {
   components: {BasicButton, BasicFridgeItem},
 
   props: {
-    itemId: {
-      type: number
+    item: {
+      type: Object
+    }
+  },
+
+  methods: {
+    deleteItem(item){
+
+      this.$emit('delete-item', item);
     }
   },
 
