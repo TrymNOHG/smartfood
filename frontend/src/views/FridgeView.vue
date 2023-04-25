@@ -1,17 +1,5 @@
 <template>
-  <div class="break-line"/>
-  <div class="name-display">
-    <h1 class="fridge-name">
-      <router-link to="/fridges" class="link-name">
-        {{ fridge.fridgeName }}
-      </router-link>
-    </h1>
-    <div class="change-button">
-      <router-link class="link-button" to="/fridges">
-        Endre Kjøleskap
-      </router-link>
-    </div>
-  </div>
+
   <div class="members-fridge">
       <div id="toggle-button" class="link" @click="selectedTab = 'members'" :class="{ active: selectedTab === 'members' }">Members</div>
       <div id="toggle-button" class="link" @click="selectedTab = 'fridge'" :class="{ active: selectedTab === 'fridge' }">Fridge</div>
@@ -264,25 +252,16 @@ input[type="text"]:not(:focus) + .search-results {
   background-color: #ddd;
 }
 
-.break-line {
-  height: 7px;
-  background-color: black;
-}
+
 
 .link {
-  cursor: pointer;
-  text-decoration: none;
-  color: white;
-}
-.link-name{
   text-decoration: none;
   color: white;
 }
 
-.link-button{
-  text-decoration: none;
-  color: black;
-}
+
+
+
 
 #toggle-button {
   width: 150px;
@@ -326,6 +305,20 @@ input[type="text"]:not(:focus) + .search-results {
     margin-top: 5px;
 }
 
+#member {
+  width: 150px;
+  margin-top: 5px;
+  margin-right: 50px;
+}
+
+#member:hover {
+  color: #3b3b3b;
+  height: 25px;
+  border-radius: 5px;
+  background-color: #fff;
+  transition: all 0.2s ease-in-out;
+}
+
 .members-fridge {
   background-color: #6C6C6C;
   height: 35px;
@@ -335,24 +328,9 @@ input[type="text"]:not(:focus) + .search-results {
   justify-content: center;
 }
 
-.name-display {
-  text-align: start;
-  background-color: #31c48d;
-  color: white;
-  width: 100%;
-  height: 50px;
-  text-shadow: black 1px 1px 2px;
-  display: flex;
-  justify-content: space-evenly;
-}
 
-.fridge-name {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 50px;
-  margin-left: 28%;
-}
+
+
 .members-fridge:hover .fridge-name {
   color: #3b3b3b;
   height: 25px;
@@ -361,18 +339,7 @@ input[type="text"]:not(:focus) + .search-results {
   transition: all 0.2s ease-in-out;
 }
 
-.change-button {
-  text-align: center;
-  background-color: white;
-  color: black;
-  height: 35px;
-  width: 20%;
-  margin-top: 0.5%;
-  margin-right: 5%;
-  text-shadow: white 0 0 0;
-  font-weight: 500;
-  border-radius: 5px;
-}
+
 
 .change-button:hover {
   color: white;
@@ -386,12 +353,9 @@ input[type="text"]:not(:focus) + .search-results {
 
   .fridge-wrapper {
     height: 100%;
+    grid-template-rows: repeat(auto-fill, minmax(95px, 95px));
   }
 
-  .fridge-name {
-    margin-left: 30%;
-    font-size: 18px;
-  }
 
   .change-button {
     width: 20%;
