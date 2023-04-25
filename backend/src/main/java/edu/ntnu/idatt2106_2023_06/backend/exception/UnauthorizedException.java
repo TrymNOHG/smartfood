@@ -27,4 +27,12 @@ public class UnauthorizedException extends RuntimeException {
         super(String.format("User, %s, is not authorized", username) + message);
     }
 
+    /**
+     * This method constructs an UnauthorizedException with a default error message indicating that the user
+     * is not authorized.
+     */
+    public UnauthorizedException() {
+        super("User is not authorized");
+    }
+
 }

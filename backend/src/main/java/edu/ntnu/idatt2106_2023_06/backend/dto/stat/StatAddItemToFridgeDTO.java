@@ -4,6 +4,5 @@ public record StatAddItemToFridgeDTO(Double price,
                                      Integer quantity,
                                      String itemName,
                                      String storeName,
-                                     Long fridgeId,
-                                     Long userId) {
+                                     Long fridgeId) {
 }

@@ -5,6 +5,5 @@ public record StatDeleteFromFridgeDTO(Integer percentageThrown,
                                       Integer quantity,
                                       String itemName,
                                       String storeName,
-                                      Long fridgeId,
-                                      Long userId) {
+                                      Long fridgeId) {
 }

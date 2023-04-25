@@ -51,16 +51,17 @@ public class StatService implements IStatService {
 
     @Override
     public void statDeleteItemFromFridge(StatDeleteFromFridgeDTO statDeleteFromFridgeDTO) {
-        Long userId = jwtService.getAuthenticatedUserId();
-        if(!Objects.equals(userId, statDeleteFromFridgeDTO.userId())) {
-            throw new UnauthorizedException(userId.toString());
+        if(!jwtService.isAuthenticated()) {
+            throw new UnauthorizedException();
         }
+
+        Long userId = jwtService.getAuthenticatedUserId();
 
         checkValidStatValue(statDeleteFromFridgeDTO.price(), 2);
         checkValidStatValue(statDeleteFromFridgeDTO.percentageThrown(), 1);
 
-        User user = userRepository.findById(statDeleteFromFridgeDTO.userId()).orElseThrow(
-                () -> new UserNotFoundException(statDeleteFromFridgeDTO.userId())
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFoundException(userId)
         );
         Fridge fridge = fridgeRepository.findById(statDeleteFromFridgeDTO.fridgeId()).orElseThrow(
                 () -> new FridgeNotFoundException(statDeleteFromFridgeDTO.fridgeId())
@@ -77,15 +78,16 @@ public class StatService implements IStatService {
 
     @Override
     public void statAddItemToFridge(StatAddItemToFridgeDTO statAddItemToFridgeDTO) {
-        Long userId = jwtService.getAuthenticatedUserId();
-        if(!Objects.equals(userId, statAddItemToFridgeDTO.userId())) {
-            throw new UnauthorizedException(userId.toString());
+        if(!jwtService.isAuthenticated()) {
+            throw new UnauthorizedException();
         }
+        Long userId = jwtService.getAuthenticatedUserId();
+
 
         checkValidStatValue(statAddItemToFridgeDTO.price(), 3);
 
-        User user = userRepository.findById(statAddItemToFridgeDTO.userId()).orElseThrow(
-                () -> new UserNotFoundException(statAddItemToFridgeDTO.userId())
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFoundException(userId)
         );
         Fridge fridge = fridgeRepository.findById(statAddItemToFridgeDTO.fridgeId()).orElseThrow(
                 () -> new FridgeNotFoundException(statAddItemToFridgeDTO.fridgeId())
