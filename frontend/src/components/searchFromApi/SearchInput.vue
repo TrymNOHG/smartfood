@@ -51,54 +51,14 @@
   font-size: 28px;
   font-weight: 500;
     border: 3px solid #555;
-    -webkit-box-shadow: none;
     box-shadow: none;
-    min-height:60px;
-    height: auto;
-    border-radius: 50px 0  0 50px !important;
-}
-.form-control :focus {
-        -webkit-box-shadow: none;
-        box-shadow: none;
-        border-color: transparent;
+    min-height: 60px;
+    border-radius: 50px 0 0 50px;
+  }
 
-    }
-#shadow{
-  display: none;
-}
-
-  @media only screen and (min-width: 350px) and (max-width: 480px) {
-
-    .form-control {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-evenly;
-      position: fixed;
-      bottom: 62px;
-      width: 95%;
-      height: 60px;
-      font-size: 20px;
-      background-color: white;
-      border: 7px solid #31c48d;
-      border-radius: 50px 50px 50px 50px !important;
-    }
-
-
-
-    #shadow{
-      display: flex;
-      align-items: center;
-      justify-content: space-evenly;
-      position: fixed;
-      bottom: 70px;
-      width: 95%;
-      height: 30px;
-      font-size: 20px;
-      background-color: #31c48d;
-      z-index: -2;
-
-    }
-
+  .form-control:focus {
+    outline: none;
+    border-color: transparent;
   }
 
   </style>
