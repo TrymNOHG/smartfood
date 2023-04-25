@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="fridge-wrapper">
     <div class="form-box login">
       <h2>{{ $t("login") }}</h2>
       <form @submit.prevent="submit" :class="{ 'has-errors': hasErrors }">
@@ -134,7 +134,7 @@ export default {
 </script>
 
 <style scoped>
-.wrapper {
+.fridge-wrapper {
   position: relative;
   width: 100%;
   height: 100%;
@@ -149,7 +149,7 @@ export default {
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
 }
 
-.wrapper .form-box {
+.fridge-wrapper .form-box {
   width: 90%;
   padding: 40px;
 }
@@ -227,7 +227,7 @@ button {
 }
 
 @media screen and (max-width: 800px) {
-  .wrapper .form-box {
+  .fridge-wrapper .form-box {
     padding: 20px;
   }
 

@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { getUser } from "@/services/UserService"
 import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
+import {addItemToFridge, getItemsFromFridge, deleteItemFromFridge} from "@/services/ItemService";
 
 const storeUUID = UniqueId();
 
@@ -23,12 +24,11 @@ export const useLoggedInStore = defineStore('user', {
 
     getters: {
         isLoggedIn(){
-            return this.sessionToken !== null || localStorage.getItem("sessionToken") !== null;        },
+            return this.sessionToken !== null},
         getUser() {
             return this.user;
         },
         getSessionToken() {
-            if (this.sessionToken === null) return localStorage.getItem("sessionToken")
             return this.sessionToken;
         }
     },
@@ -36,7 +36,6 @@ export const useLoggedInStore = defineStore('user', {
     actions: {
         setSessionToken(sessionToken) {
             this.sessionToken = sessionToken;
-            if (localStorage.getItem("sessionToken") === null) localStorage.setItem("sessionToken", sessionToken)
         },
         async fetchUser() {
             await getUser()
@@ -58,6 +57,7 @@ export const useLoggedInStore = defineStore('user', {
                 lastname: null,
                 username: null,
             };
+            useFridgeStore().removeCurrentFridge()
         }
     }
 });
@@ -67,7 +67,7 @@ export const useFridgeStore = defineStore('fridgeStore', {
         allFridges: [],
         currentFridge: {
             "fridgeId": null,
-            "fridgeName": "Kjøleskap"
+            "fridgeName": "kjøleskap",
         },
     }),
 
@@ -79,7 +79,9 @@ export const useFridgeStore = defineStore('fridgeStore', {
         getCurrentFridge(){
             return this.currentFridge
         },
-
+        hasCurrentFridge() {
+            return this.currentFridge.fridgeId !== null;
+        },
     },
 
     actions: {
@@ -111,6 +113,14 @@ export const useFridgeStore = defineStore('fridgeStore', {
                 }
             }
         },
+
+        removeCurrentFridge() {
+            this.currentFridge = {
+                "fridgeId": null,
+                "fridgeName": "kjøleskap",
+            }
+        },
+
         async setCurrentFridgeByFridge(state, fridge) {
             const { fridgeId, fridgeName } = fridge
             state.currentFridge = { fridgeId, fridgeName }
@@ -125,7 +135,7 @@ export const useFridgeStore = defineStore('fridgeStore', {
 
 export const useItemStore = defineStore('itemStore', {
     state: () => ({
-
+        allItems: [],
     }),
 
     getters: {
@@ -133,6 +143,21 @@ export const useItemStore = defineStore('itemStore', {
     },
 
     actions: {
+        async addItemToFridgeById(fridgeId, itemDTO) {
+            await addItemToFridge(itemDTO, fridgeId);
+        },
+
+        async deleteItemByNameIdStoreQuantity(itemRemoveDTO){
+            await deleteItemFromFridge(itemRemoveDTO);
+        },
+
+        async fetchItemsFromFridgeById(fridgeId) {
+            await getItemsFromFridge(fridgeId).then(response => {
+                this.allItems = []
+                this.allItems = response.data;
+            })
+            return this.allItems;
+        }
     },
 });
 
