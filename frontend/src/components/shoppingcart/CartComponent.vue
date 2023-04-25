@@ -2,7 +2,7 @@
   <div>
     <figure id="backBlack"></figure>
     <div id="backGreen">
-    <h1>Handlekurv</h1>
+    <h1 id="shopList">Handlekurv</h1>
       <CartControl v-if="isCurrentUserSuperUser" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
     </div>
     <div id="myDropdown" class="dropdown-content">
@@ -53,11 +53,11 @@
             >
             </CartItem>
         </div>
-
-        <vue-collapsible-panel-group>
-            <vue-collapsible-panel :expanded="true">
-                <template #title> Suggested items </template>
-                <template #content>
+    <figure id="forslagBlack"></figure>
+    <div id="forslagGreen">
+      <h1 id="sugTitle">Forslag</h1>
+    </div>
+        <div class="cart-items">
                     <CartSuggestion
                         v-for="(item, index) in items"
                         :key="index"
@@ -75,9 +75,7 @@
                         @buy="handleBuy"
                     >
                     </CartSuggestion>
-                </template>
-            </vue-collapsible-panel>
-        </vue-collapsible-panel-group>
+                </div>
 
 
     </div>
@@ -829,10 +827,29 @@ input:focus {
     border-radius: 20px 20px 20px 20px;
   }
 
+  #forslagBlack{
+    height: 6px;
+    background-color: white;
+  }
+
+  #forslagGreen{
+    background-color: #31c48d;
+
+    width: 100%;
+    padding: 10px 10px 10px 10px;
+    border-radius: 20px 20px 20px 20px;
+  }
+
+  #shopList{
+    border-radius: 20px 20px 0px 0px;
+  }
+  #sugTitle{
+    border-radius: 20px 20px 20px 20px;
+
+  }
   h1{
     z-index: 1;
     background-color: white;
-    border-radius: 20px 20px 0px 0px;
     color: black;
     font-size: 20px;
     font-weight: bold;

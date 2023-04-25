@@ -323,13 +323,15 @@ input[type="number"] {
     padding-right: 10px !important;
     margin-top: 10px;
 
-
-
   }
 
   .description{
-    width: 175px;
+    width: 175px !important;
 
+  }
+
+  .description span:first-child {
+    width: 175px;
   }
   .buttons{
     padding-left: 10px;

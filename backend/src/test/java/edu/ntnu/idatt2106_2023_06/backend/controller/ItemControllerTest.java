@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.filter.JwtAuthenticationFilter;
-import edu.ntnu.idatt2106_2023_06.backend.model.User;
-import edu.ntnu.idatt2106_2023_06.backend.repo.ItemRepository;
-import edu.ntnu.idatt2106_2023_06.backend.repo.StoreRepository;
+
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
+import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.store.StoreRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemService;

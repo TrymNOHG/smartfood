@@ -1,16 +1,17 @@
 <template>
   <header v-if="!isOnRootPage">
+
     <router-link to="/fridges">
       <img src="@/assets/images/smartmat.png" alt="Logo">
     </router-link>
     <h1 class="matprat-title" :class="{ 'centered': isOnAuthPage }">{{ $t('matsmart') }}</h1>
     <nav :class="{ 'center-profile': !hasCurrentFridge }">
+
       <ul v-if="!isOnAuthPage">
+
         <li v-if="hasCurrentFridge">
           <RouterLink to="/fridge" >
-            <span class="icon">
-              <font-awesome-icon icon="fa-solid fa-kitchen-set" />
-            </span>
+            <img id="fridgeIcon" class="icon" src="@/assets/images/fridge.svg" alt="Logo">
             <span class="text">{{ $t('fridge') }}</span>
           </RouterLink>
         </li>
@@ -131,6 +132,9 @@ export default {
   background-color: black;
 }
 
+#fridgeIcon{
+}
+
 .name-display {
   text-align: start;
   background-color: #31c48d;
@@ -192,7 +196,6 @@ header {
 header img {
   height: 100px;
   width: auto;
-  margin-right: 300px;
 }
 
 .language {
@@ -305,6 +308,10 @@ nav ul li:hover a .text {
     display: none;
   }
 
+  #fridgeIcon{
+    display: flex;
+  }
+
   h1 {
     font-size: 1rem;
     letter-spacing: 2px;
@@ -402,6 +409,13 @@ nav ul li:hover a .text {
     display: none;
   }
 
+  #fridgeIcon{
+    display: flex;
+    width: 20px;
+  }
+  nav ul li a {
+    height: 40px;
+  }
   header{
     height: 0;
   }
