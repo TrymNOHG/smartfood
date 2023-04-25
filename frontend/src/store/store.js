@@ -145,15 +145,23 @@ export const useFridgeStore = defineStore('fridgeStore', {
 export const useItemStore = defineStore('itemStore', {
     state: () => ({
         allItems: [],
+        currentItem: null,
     }),
 
     getters: {
-
+        getCurrentItem(){
+            console.log(this.currentItem)
+            return this.currentItem;
+        }
     },
 
     actions: {
         async addItemToFridgeById(fridgeId, itemDTO) {
             await addItemToFridge(itemDTO, fridgeId);
+        },
+
+        setCurrentItem(item) {
+            this.currentItem = item;
         },
 
         async deleteItemByNameIdStoreQuantity(itemRemoveDTO){

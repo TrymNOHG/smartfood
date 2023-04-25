@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface IItemService {
 
-
     Long addItem(ItemDTO itemDTO);
     void addToFridge(Long itemId, Long fridgeId, int quantity);
     List<ItemDTO> getFridgeItems(Long fridgeId);

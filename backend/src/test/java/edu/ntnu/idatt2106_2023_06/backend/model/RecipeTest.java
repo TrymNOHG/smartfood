@@ -1,10 +1,11 @@
 package edu.ntnu.idatt2106_2023_06.backend.model;
 
+import edu.ntnu.idatt2106_2023_06.backend.model.items.Recipe;
+import edu.ntnu.idatt2106_2023_06.backend.model.items.RecipeItems;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

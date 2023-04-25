@@ -2,11 +2,10 @@ package edu.ntnu.idatt2106_2023_06.backend.mapper;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeMemberLoadAllDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeMemberLoadDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoadAllDTO;
-import edu.ntnu.idatt2106_2023_06.backend.model.Fridge;
-import edu.ntnu.idatt2106_2023_06.backend.model.FridgeMember;
-import edu.ntnu.idatt2106_2023_06.backend.model.FridgeMemberId;
-import edu.ntnu.idatt2106_2023_06.backend.model.User;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeMember;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeMemberId;
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 
 import java.util.List;
 import java.util.stream.Collectors;

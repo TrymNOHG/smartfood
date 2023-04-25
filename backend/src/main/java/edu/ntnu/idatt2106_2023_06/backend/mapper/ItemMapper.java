@@ -1,8 +1,8 @@
 package edu.ntnu.idatt2106_2023_06.backend.mapper;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
-import edu.ntnu.idatt2106_2023_06.backend.model.Item;
-import edu.ntnu.idatt2106_2023_06.backend.model.Store;
+import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
+import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
 
 /**
  * This class is a mapper that maps between the Item model and the Item DTOs.

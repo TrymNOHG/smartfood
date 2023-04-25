@@ -5,7 +5,7 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserLoginDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.UserRegisterDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.exists.UserExistsException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
-import edu.ntnu.idatt2106_2023_06.backend.model.User;
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
