@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.filter.JwtAuthenticationFilter;
-import edu.ntnu.idatt2106_2023_06.backend.model.User;
-import edu.ntnu.idatt2106_2023_06.backend.repo.ItemRepository;
-import edu.ntnu.idatt2106_2023_06.backend.repo.StoreRepository;
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
+import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.store.StoreRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemService;
@@ -159,7 +159,7 @@ public class ItemControllerTest {
         Long fridgeId = 1L;
         boolean suggestion = false;
 
-        when(userService.isUserInFridge(fridgeId, user.getUsername())).thenReturn(true);
+        when(userService.isSuperUser(fridgeId, user.getUsername())).thenReturn(true);
         when(itemService.addItem(itemDTO)).thenReturn(1L);
 
 
@@ -219,6 +219,9 @@ public class ItemControllerTest {
         ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
         List<ItemRemoveDTO> itemDTOList = List.of(itemRemoveDTO);
 
+        when(userService.isSuperUser(itemRemoveDTO.fridgeId(), user.getUsername())).thenReturn(true);
+
+
         mockMvc.perform(MockMvcRequestBuilders.post("/item/shopping/buy")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -237,6 +240,9 @@ public class ItemControllerTest {
     @Test
     public void testAcceptSuggestion() throws Exception {
         ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
+
+        when(userService.isSuperUser(itemRemoveDTO.fridgeId(), user.getUsername())).thenReturn(true);
+
 
         mockMvc.perform(MockMvcRequestBuilders.post("/item/shopping/suggestion")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
