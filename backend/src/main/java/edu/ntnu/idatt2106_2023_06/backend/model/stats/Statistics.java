@@ -63,7 +63,7 @@ public class Statistics {
      */
     @Column(name = "stat_value", nullable = false)
     @NonNull
-    private double statValue;
+    private Double statValue;
 
     /**
      * The name of the store of the statistics.
@@ -85,5 +85,12 @@ public class Statistics {
     @Column(name = "timestamp", nullable = false)
     @NonNull
     private LocalDateTime timestamp;
+
+    /**
+     * The number of items in the statistics.
+     */
+    @Column(name = "quantity", nullable = false)
+    @NonNull
+    private Integer quantity;
 
 }

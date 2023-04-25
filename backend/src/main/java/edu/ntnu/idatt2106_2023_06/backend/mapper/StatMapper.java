@@ -20,51 +20,49 @@ public class StatMapper {
         List<Statistics> statistics = new ArrayList<>();
 
         // Add statistics for percentage thrown
-        for(int i = 0; i < statDeleteFromFridgeDTO.quantity(); i++) {
-            statistics.add(Statistics.builder()
-                    .user(user)
-                    .fridge(fridge)
-                    .timestamp(LocalDateTime.now())
-                    .statValue(statDeleteFromFridgeDTO.percentageThrown())
-                    .statType(statType1)
-                    .storeName(statDeleteFromFridgeDTO.storeName())
-                    .itemName(statDeleteFromFridgeDTO.itemName())
-                    .build());
-        }
+        statistics.add(Statistics.builder()
+                .user(user)
+                .fridge(fridge)
+                .timestamp(LocalDateTime.now())
+                .statValue(statDeleteFromFridgeDTO.percentageThrown().doubleValue())
+                .statType(statType1)
+                .storeName(statDeleteFromFridgeDTO.storeName())
+                .itemName(statDeleteFromFridgeDTO.itemName())
+                .quantity(statDeleteFromFridgeDTO.quantity())
+                .build());
+
 
         // Add statistics for item price
-        for(int i = 0; i < statDeleteFromFridgeDTO.quantity(); i++) {
-            statistics.add(Statistics.builder()
-                    .user(user)
-                    .fridge(fridge)
-                    .timestamp(LocalDateTime.now())
-                    .statValue(statDeleteFromFridgeDTO.price())
-                    .statType(statType2)
-                    .storeName(statDeleteFromFridgeDTO.storeName())
-                    .itemName(statDeleteFromFridgeDTO.itemName())
-                    .build());
-        }
+        statistics.add(Statistics.builder()
+                .user(user)
+                .fridge(fridge)
+                .timestamp(LocalDateTime.now())
+                .statValue(statDeleteFromFridgeDTO.price())
+                .statType(statType2)
+                .storeName(statDeleteFromFridgeDTO.storeName())
+                .itemName(statDeleteFromFridgeDTO.itemName())
+                .quantity(statDeleteFromFridgeDTO.quantity())
+                .build());
+
 
         return statistics;
     }
 
-    public static List<Statistics> toStatistics(StatAddItemToFridgeDTO statAddItemToFridgeDTO, User user, Fridge fridge, StatType statType) {
-
-        List<Statistics> statistics = new ArrayList<>();
+    public static Statistics toStatistics(StatAddItemToFridgeDTO statAddItemToFridgeDTO, User user, Fridge fridge, StatType statType) {
 
         // Add statistics for item price
-        for(int i = 0; i < statAddItemToFridgeDTO.quantity(); i++) {
-            statistics.add(Statistics.builder()
-                    .user(user)
-                    .fridge(fridge)
-                    .timestamp(LocalDateTime.now())
-                    .statValue(statAddItemToFridgeDTO.price())
-                    .statType(statType)
-                    .storeName(statAddItemToFridgeDTO.storeName())
-                    .itemName(statAddItemToFridgeDTO.itemName())
-                    .build());
-        }
-        return statistics;
+
+
+        return Statistics.builder()
+                .user(user)
+                .fridge(fridge)
+                .timestamp(LocalDateTime.now())
+                .statValue(statAddItemToFridgeDTO.price())
+                .statType(statType)
+                .storeName(statAddItemToFridgeDTO.storeName())
+                .itemName(statAddItemToFridgeDTO.itemName())
+                .quantity(statAddItemToFridgeDTO.quantity())
+                .build();
     }
 
 
