@@ -840,5 +840,6 @@ input:focus {
         color: #43484d;
         font-weight: 300;
     }
+
 }
 </style>

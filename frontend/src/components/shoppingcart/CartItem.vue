@@ -314,8 +314,8 @@ input[type="number"] {
   .item {
     display: flex !important;
     height: 80px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
     margin-top: 10px;
 
 

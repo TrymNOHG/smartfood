@@ -10,7 +10,7 @@
         </button>
 
         <button class="control-buttons" type="button" @click="handleDelete">
-            Delete
+            Slett
         </button>
     </div>
 </template>
@@ -63,8 +63,12 @@ export default {
     background-color: #0061b5;
 }
 
+.control-buttons:nth-child(2){
+  background-color: #34c759;
+}
+
 .control-buttons:last-child {
-    background-color: #34c759;
+    background-color: darkred;
 }
 
 .control-buttons:last-child:hover {
