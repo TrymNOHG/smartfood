@@ -113,13 +113,21 @@ public class ItemController {
                                                     Authentication authentication){
         authenticate(authentication);
 
-        userService.isUserInFridge(fridgeId, authentication.getName());
-        logger.info("lol");
-        logger.info("User wants to add a new item to shopping list");
-        Long itemId = itemService.addItem(itemDTO);
-        itemService.addToShoppingList(itemId, fridgeId, itemDTO.quantity(), suggestion);
-        logger.info("New item has been added!");
+        boolean isSuperUser = userService.isSuperUser(fridgeId, authentication.getName());
+
+        logger.info("Checking whether item is suggestion");
+        if(!suggestion && !isSuperUser) {
+            logger.info("User is not a superuser and can therefore not add a non-suggestion item");
+            throw new UnauthorizedException(authentication.getName(), "Regular user cannot add a non-suggestion item");
+        } else {
+            logger.info("User wants to add a new item to shopping list");
+            Long itemId = itemService.addItem(itemDTO);
+            itemService.addToShoppingList(itemId, fridgeId, itemDTO.quantity(), suggestion);
+            logger.info("New item has been added!");
+        }
+
         return ResponseEntity.ok().build();
+
     }
 
     /**
@@ -209,14 +217,22 @@ public class ItemController {
      */
     @PostMapping(value="/shopping/buy", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Buy items from shopping list")
-    public ResponseEntity<Object> buyItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList){
+    public ResponseEntity<Object> buyItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList,
+                                                           Authentication authentication){
+
+        if(itemDTOList.isEmpty()) return ResponseEntity.ok().build();
+        authenticate(authentication);
+
+        boolean isSuperUser = userService.isSuperUser(itemDTOList.get(0).fridgeId(), authentication.getName());
+
+        if(!isSuperUser) throw new UnauthorizedException(authentication.getName(), "User must be super user");
+
         logger.info("User wants to buy item from shopping list");
         itemService.buyItemsFromShoppingList(itemDTOList);
         logger.info("Items have been bought!");
         return ResponseEntity.ok().build();
     }
 
-    //TODO: check whether user is superuser or not.
     /**
      * Accepts a suggested item on the shopping list for a given fridge.
      *
@@ -225,7 +241,13 @@ public class ItemController {
      */
     @PostMapping(value="/shopping/suggestion")
     @Operation(summary = "Accept suggestion in shopping list")
-    public ResponseEntity<Object> acceptSuggestion(@ParameterObject @RequestBody ItemRemoveDTO itemDTO){
+    public ResponseEntity<Object> acceptSuggestion(@ParameterObject @RequestBody ItemRemoveDTO itemDTO,
+                                                   Authentication authentication){
+        authenticate(authentication);
+
+        boolean isSuperUser = userService.isSuperUser(itemDTO.fridgeId(), authentication.getName());
+        if(!isSuperUser) throw new UnauthorizedException(authentication.getName(), "User must be super user");
+
         logger.info("User wants to accept suggestion");
         itemService.acceptSuggestion(itemDTO);
         logger.info("Suggestion has been accepted");
