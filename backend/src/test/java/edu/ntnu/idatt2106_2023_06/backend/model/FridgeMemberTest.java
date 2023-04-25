@@ -1,10 +1,12 @@
 package edu.ntnu.idatt2106_2023_06.backend.model;
 
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeMember;
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -2,7 +2,7 @@ package edu.ntnu.idatt2106_2023_06.backend.mapper;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.fridge.FridgeLoadAllDTO;
-import edu.ntnu.idatt2106_2023_06.backend.model.Fridge;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
 
 import java.util.List;
 import java.util.stream.Collectors;

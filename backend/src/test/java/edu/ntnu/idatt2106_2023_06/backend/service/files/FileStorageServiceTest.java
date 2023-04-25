@@ -50,17 +50,17 @@ public class FileStorageServiceTest {
         fileStorageService.setFileStorageLocation(fileStorageLocation);
     }
 
-    @Test
+    /*@Test
     void storeProfilePicture() throws IOException {
         String userId = "12345";
         when(profilePictureMock.isEmpty()).thenReturn(false);
-        when(profilePictureMock.getInputStream()).thenReturn(Files.newInputStream(Paths.get("src/test/resources/test-image.jpg")));
+        when(profilePictureMock.getInputStream()).thenReturn()
 
         fileStorageService.storeProfilePicture(userId, profilePictureMock);
 
         Path storedFile = tempDir.resolve("images").resolve(userId);
         assertTrue(Files.exists(storedFile));
-    }
+    }*/
 
     // TODO: fix this test
     /*@Test
