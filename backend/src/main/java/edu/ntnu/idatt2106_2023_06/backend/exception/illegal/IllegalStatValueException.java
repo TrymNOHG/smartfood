@@ -1,6 +1,6 @@
-package edu.ntnu.idatt2106_2023_06.backend.exception;
+package edu.ntnu.idatt2106_2023_06.backend.exception.illegal;
 
-public class IllegalStatValueException extends RuntimeException {
+public class IllegalStatValueException extends IllegalException {
 
     public IllegalStatValueException(int lowerBounds, int upperBounds) {
         super(String.format("Stat value must be between %d and %d", lowerBounds, upperBounds));

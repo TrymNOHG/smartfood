@@ -2,18 +2,11 @@ package edu.ntnu.idatt2106_2023_06.backend.mapper;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.stat.StatAddItemToFridgeDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.stat.StatDeleteFromFridgeDTO;
-import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFoundException;
-import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.StatNotFoundException;
-import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
 import edu.ntnu.idatt2106_2023_06.backend.model.stats.StatType;
 import edu.ntnu.idatt2106_2023_06.backend.model.stats.Statistics;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
-import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
-import edu.ntnu.idatt2106_2023_06.backend.repo.stat.StatTypeRepository;
-import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

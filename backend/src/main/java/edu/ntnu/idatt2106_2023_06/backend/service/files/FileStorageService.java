@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.files;
 
+import edu.ntnu.idatt2106_2023_06.backend.exception.illegal.IllegalFileTypeException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.ImageNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -49,10 +50,16 @@ public class FileStorageService implements IFileStorageService {
     @Override
     public void storeProfilePicture(String userId, MultipartFile profilePicture) throws IOException {
         if (profilePicture != null && !profilePicture.isEmpty()) {
-            Path targetLocation = fileStorageLocation.resolve(userId);
-            Files.copy(profilePicture.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            String contentType = profilePicture.getContentType();
+            if (contentType != null && contentType.startsWith("image/")) {
+                Path targetLocation = fileStorageLocation.resolve(userId);
+                Files.copy(profilePicture.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                throw new IllegalFileTypeException("Profile picture must be an image.");
+            }
         }
     }
+
 
     @Override
     public void deleteProfilePicture() throws IOException {

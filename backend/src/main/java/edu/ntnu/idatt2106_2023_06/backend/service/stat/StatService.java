@@ -2,8 +2,8 @@ package edu.ntnu.idatt2106_2023_06.backend.service.stat;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.stat.StatAddItemToFridgeDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.stat.StatDeleteFromFridgeDTO;
-import edu.ntnu.idatt2106_2023_06.backend.exception.IllegalStatTypeException;
-import edu.ntnu.idatt2106_2023_06.backend.exception.IllegalStatValueException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.illegal.IllegalStatTypeException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.illegal.IllegalStatValueException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.StatNotFoundException;
