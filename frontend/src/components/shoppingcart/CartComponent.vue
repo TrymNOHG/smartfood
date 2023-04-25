@@ -58,7 +58,7 @@
                 <template #title> Suggested items </template>
                 <template #content>
                     <CartSuggestion
-                        v-for="(item, index) in items"
+                        v-for="(item, index) in suggestedItems"
                         :key="index"
                         :image="item.image"
                         :name="item.name"
@@ -137,6 +137,7 @@ export default {
         const isExpanded = ref(true);
         const currentFridge = useFridgeStore().getCurrentFridge;
         let checkAll_b = ref(false);
+        const suggestedItems = ref([]);
 
         //console log items every 3 seconds
         /**function callEveryThreeSeconds() {
@@ -280,11 +281,22 @@ export default {
             try {
                 const response = await getItemsFromShoppingList(currentFridge.fridgeId);
                 items.value = response.data;
-                console.log(items.value);
+
+                suggestedItems.value = []
+                items.value = []
+                response.data.forEach((item) => {
+                    if (item.suggestion) {
+                        suggestedItems.value.push(item);
+                        return;
+                    }
+                    items.value.push(item)
+                });
+                console.log(response.data);
             } catch (error) {
                 console.error(error);
             }
         };
+
 
         async function inc_CartItemAmount(item) {
           console.log(item);
@@ -302,7 +314,7 @@ export default {
 
           console.log(itemDTO);
           event.stopPropagation();
-          addItemToShoppingList(itemDTO, fridgeId, false)
+          addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
               .then(async (response) => {
                 if (response !== undefined) {
                   await loadItemsFromCart();
@@ -408,7 +420,7 @@ export default {
 
             console.log(itemDTO);
 
-            addItemToShoppingList(itemDTO, fridgeId, false)
+            addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
                 .then(async (response) => {
                     if (response !== undefined) {
                         loadItemsFromCart();
@@ -461,7 +473,8 @@ export default {
             checkAll_b,
             handleDelete,
             handleBuyItem,
-            currentFridge
+            currentFridge,
+            suggestedItems,
         };
     },
 };
