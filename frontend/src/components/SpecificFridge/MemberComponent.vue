@@ -47,7 +47,7 @@ import {onMounted, ref} from "vue";
 import MemberList from "@/components/FridgeList/MemberListingComponent.vue";
 import {addUserToFridge, deleteUserFromFridge, loadUsersByFridgeId} from "@/services/FridgeServices";
 import {searchUserByUsername} from "@/services/UserService";
-import {updateUserInFridge} from "../../services/FridgeServices";
+import {updateUserInFridge} from "@/services/FridgeServices";
 
 
 
