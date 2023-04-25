@@ -1,19 +1,32 @@
 <template>
   <div class="item-header">
     <div class="item-image">
-      <img src="@/assets/images/large.jpg" alt="item picture">
+      <img :src="item.image" alt="item picture">
     </div>
-    <h1 class="item-name">{{ itemName }}</h1>
+    <h1 class="item-name">{{ item.name }}</h1>
   </div>
 </template>
 
 <script>
+import {number} from "yup";
+
 export default {
   name: "itemHeader",
 
   props: {
-    itemName: null,
-    itemPicture: null,
+    item: {
+      type: Object,
+      default: () => ({
+        description: String,
+        expirationDate: String,
+        image: String,
+        name: String,
+        price: String,
+        purchaseDate: String,
+        quantity: number,
+        store: String
+      })
+    },
   }
 }
 </script>
@@ -24,6 +37,7 @@ export default {
   align-items: center;
   margin-bottom: 20px;
 }
+
 
 .item-image {
   width: 200px;
@@ -37,7 +51,7 @@ export default {
 .item-image img {
   width: 95%;
   height: 95%;
-  object-fit: cover;
+  object-fit: contain;
   position: absolute;
   bottom: 0;
   right: 0;

@@ -6,11 +6,11 @@
   </div>
   <div class="item-wrapper">
     <div class="item">
-      <item-header :itemid="itemId" :itemName="itemName"/>
+      <item-header :item="item"/>
       <div class="info-delete-wrapper">
-        <item-info :itemid="itemId" class="info-delete"/>
+        <item-info :item="item" class="info-delete"/>
         <div></div>
-        <item-delete :itemid="itemId" class="info-delete"/>
+        <item-delete :item="item" class="info-delete"/>
       </div>
     </div>
   </div>
@@ -21,23 +21,22 @@ import { useRoute } from 'vue-router';
 import ItemHeader from "@/components/itemDescription/itemHeader.vue";
 import ItemInfo from "@/components/itemDescription/itemInfo.vue";
 import ItemDelete from "@/components/itemDescription/itemDelete.vue";
-import {useFridgeStore} from "@/store/store";
+import {useFridgeStore, useItemStore} from "@/store/store";
 
 export default {
   name: "itemView",
   components: {ItemDelete, ItemInfo, ItemHeader},
 
   setup() {
-    const route = useRoute();
+    const itemStore = useItemStore();
     const fridgeStore = useFridgeStore();
-    const itemName = route.params.itemName;
-    const itemId = route.params.itemId;
     const fridge = fridgeStore.currentFridge;
 
+    const item = itemStore.getCurrentItem;
+
     return {
-      itemName,
+      item,
       fridge,
-      itemId
     };
   }
 }

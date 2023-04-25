@@ -22,8 +22,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Configuration
 @RequiredArgsConstructor
-@ImportAutoConfiguration(DatabaseConfig.class)
-@Import(ApiKeyConfig.class)
+@ImportAutoConfiguration({
+        DatabaseConfig.class,
+        ApiKeyConfig.class,
+        MailConfig.class
+})
 public class ApplicationConfig {
 
     private final UserRepository userRepository;

@@ -1,7 +1,7 @@
 <template>
   <header v-if="!isOnRootPage">
-    <router-link class="matprat-title" to="/fridges">
-      <img :src="'@/assets/images/smartmat.png'" alt="Logo">
+    <router-link to="/fridges">
+      <img src="@/assets/images/smartmat.png" alt="Logo">
     </router-link>
     <h1 class="matprat-title" :class="{ 'centered': isOnAuthPage }">{{ $t('matsmart') }}</h1>
     <nav :class="{ 'center-profile': !hasCurrentFridge }">
@@ -376,8 +376,6 @@ nav ul li:hover a .text {
   header img {
     height: 40px;
   }
-
-
 
   h1 {
     font-size: 2rem;

@@ -1,6 +1,8 @@
 package edu.ntnu.idatt2106_2023_06.backend.exception;
 
 import edu.ntnu.idatt2106_2023_06.backend.exception.exists.ExistsException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.illegal.IllegalException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.illegal.IllegalStatValueException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.NotFoundException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.ServletException;
@@ -13,7 +15,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.io.IOException;
-import java.security.SignatureException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -132,6 +133,15 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<Object> runtimeExceptionAction(RuntimeException e, WebRequest webRequest) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("Time of error: ", LocalDateTime.now());
+        body.put("Message: ", e.getMessage());
+        return ResponseEntity.badRequest().body(body);
+    }
+
+    @ExceptionHandler(IllegalException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> illegalStatValueExceptionAction(IllegalStatValueException e, WebRequest webRequest) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("Time of error: ", LocalDateTime.now());
         body.put("Message: ", e.getMessage());

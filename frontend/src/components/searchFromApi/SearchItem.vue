@@ -64,6 +64,10 @@ export default {
   max-width: 200px;
 }
 
+img {
+  object-fit: contain;
+}
+
 
 .search-item #text {
   flex: 1;

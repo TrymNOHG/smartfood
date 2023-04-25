@@ -4,8 +4,17 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.*;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.ItemMapper;
-import edu.ntnu.idatt2106_2023_06.backend.model.*;
-import edu.ntnu.idatt2106_2023_06.backend.repo.*;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
+import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
+import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.item.ShoppingItemsRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.store.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -210,6 +219,18 @@ public class ItemService implements IItemService {
         else {
             shoppingItem.setQuantity(shoppingItem.getQuantity() - itemRemoveDTO.quantity());
             shoppingItemsRepository.save(shoppingItem);
+        }
+    }
+
+    /**
+     * Deletes the specified quantity of many items from the shopping list for the specified fridge.
+     *
+     * @param itemRemoveDTOList A DTO object containing the details of the items to remove as a list.
+     */
+    @Override
+    public void deleteAllItemsFromShoppingList(List<ItemRemoveDTO> itemRemoveDTOList) {
+        for(ItemRemoveDTO i: itemRemoveDTOList){
+            deleteItemFromShoppingList(i, false);
         }
     }
 
