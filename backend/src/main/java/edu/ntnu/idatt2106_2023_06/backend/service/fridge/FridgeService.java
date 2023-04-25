@@ -241,7 +241,7 @@ public class FridgeService implements IFridgeService{
      * @param username  The username of the user the action is being performed on, given as a String.
      * @return          Status of whether user exists in fridge, {@code true}, or not, {@code false}
      */
-    private boolean userExistsInFridge(Long fridgeId, String username) {
+    public boolean userExistsInFridge(Long fridgeId, String username) {
         logger.info("Checking whether the soon-to-be effected user is a part of the fridge");
         if(fridgeMemberRepository.existsFridgeMemberByFridge_FridgeIdAndUser_Username(fridgeId, username)) {
             logger.info("User exists!!!");
