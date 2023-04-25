@@ -33,7 +33,7 @@ public class StatService implements IStatService {
     private final FridgeRepository fridgeRepository;
     private final StatTypeRepository statTypeRepository;
 
-    private void checkValidStatValue(int statValue, int statType) {
+    private void checkValidStatValue(double statValue, int statType) {
         switch (statType) {
             case 1 -> {
                 if (statValue < 0 || statValue > 100) {

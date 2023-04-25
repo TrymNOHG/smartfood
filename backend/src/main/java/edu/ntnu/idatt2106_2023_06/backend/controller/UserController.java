@@ -109,7 +109,8 @@ public class UserController {
     @PutMapping(value = "/update/info")
     @Operation(summary = "Update user text information")
     @ApiResponse(responseCode = "200", description = "User text information updated successfully.")
-    public ResponseEntity<Object> update(@RequestBody UserUpdateDTO userUpdateDTO) {
+    public ResponseEntity<Object> update(@RequestBody UserUpdateDTO userUpdateDTO,
+                                         Authentication authentication) {
         logger.info(String.format("User %s wants to be updated!", userUpdateDTO.username()));
         userService.updateUser(userUpdateDTO);
         logger.info(String.format("User %s has been updated!", userUpdateDTO.username()));

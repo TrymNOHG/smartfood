@@ -8,7 +8,7 @@ import lombok.NonNull;
 public record StatAddDTO(@NonNull Long fridgeId,
                          @NonNull Long statTypeId,
                          @NonNull Long userId,
-                         @NonNull Integer statValue,
+                         @NonNull Double statValue,
                          @NonNull Integer quantity,
                          @NonNull String itemName,
                          @NonNull String storeName) {

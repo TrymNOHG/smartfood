@@ -5,7 +5,7 @@ import lombok.NonNull;
 import java.util.Date;
 
 public record StatDTO(@NonNull Long statId,
-                      @NonNull Integer statValue,
+                      @NonNull Double statValue,
                       @NonNull Date timestamp,
                       @NonNull Long fridgeId,
                       @NonNull Long statTypeId,
