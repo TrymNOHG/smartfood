@@ -193,4 +193,24 @@ public class UserService implements IUserService {
         logger.info("The user was not part of a fridge with id: " + fridgeId);
         throw new UnauthorizedException(username);
     }
+
+    /**
+     * This method checks if a given user is in a fridge, given fridge id.
+     *
+     * @param fridgeId The id of the fridge the user is, given as a Long object.
+     * @param username The username to search for.
+     * @return         Boolean representing whether user is in fridge.
+     */
+    public boolean isUserInFridge(Long fridgeId, String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
+
+        logger.info("Checking the fridge's the user is a part of.");
+        for(FridgeMember membership : user.getMemberships()) {
+            if(Objects.equals(membership.getFridge().getFridgeId(), fridgeId)) return true;
+        }
+
+        logger.info("The user was not part of a fridge with id: " + fridgeId);
+        throw new UnauthorizedException(username);
+    }
 }

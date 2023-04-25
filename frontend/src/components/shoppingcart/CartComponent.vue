@@ -44,8 +44,8 @@
                     :weight="item.weight"
                     :quantity="item.quantity"
                     :item="item"
-                    @add="inc_dec_CartItemAmount(item, 1)"
-                    @subtract="inc_dec_CartItemAmount(item, -1)"
+                    @add="inc_CartItemAmount(item)"
+                    @subtract="dec_CartItemAmount(item)"
                     @delete-item="handleDeleteItem(item)"
                     @handle-checked="handleCheckedItem"
                     @buy="handleBuy"
@@ -210,41 +210,70 @@ export default {
             }
         };
 
-        async function inc_dec_CartItemAmount(item, amount) {
-            console.log(item);
-            const itemDTO = {
-                name: item.name,
-                description: item.description,
-                store: item.store,
-                price: item.price,
-                purchaseDate: item.purhchaseDate,
-                expirationDate: item.expirationDate,
-                image: item.image,
-                quantity: amount,
-            };
-            const fridgeId = currentFridge.fridgeId;
+        async function inc_CartItemAmount(item) {
+          console.log(item);
+          const itemDTO = {
+            name: item.name,
+            description: item.description,
+            store: item.store,
+            price: item.price,
+            purchaseDate: item.purhchaseDate,
+            expirationDate: item.expirationDate,
+            image: item.image,
+            quantity: 1,
+          };
+          const fridgeId = currentFridge.fridgeId;
 
-            console.log(itemDTO);
+          console.log(itemDTO);
+          event.stopPropagation();
+          addItemToShoppingList(itemDTO, fridgeId, false)
+              .then(async (response) => {
+                if (response !== undefined) {
+                  await loadItemsFromCart();
+                } else {
+                  console.log("Something went wrong");
+                  submitMessage.value =
+                      "Something went wrong. Please try again later.";
+                }
+              })
+              .catch((error) => {
+                console.warn("error1", error); //TODO: add exception handling
+              });
+
+
+          await loadItemsFromCart();
+        }
+
+        async function dec_CartItemAmount(item) {
+            console.log(item);
+            const itemRemoveDTO = {
+                itemName: item.name,
+                store: item.store,
+                fridgeId: currentFridge.fridgeId,
+                quantity: 1,
+            };
+
             event.stopPropagation();
-            addItemToShoppingList(itemDTO, fridgeId, false)
+            deleteItemFromShoppingList(itemRemoveDTO, false)
                 .then(async (response) => {
-                    if (response !== undefined) {
-                        loadItemsFromCart();
-                    } else {
-                        console.log("Something went wrong");
-                        submitMessage.value =
-                            "Something went wrong. Please try again later.";
-                    }
+                  if (response !== undefined) {
+                    await loadItemsFromCart();
+                  } else {
+                    console.log("Something went wrong");
+                    submitMessage.value =
+                        "Something went wrong. Please try again later.";
+                  }
                 })
                 .catch((error) => {
-                    console.warn("error1", error); //TODO: add exception handling
+                  console.warn("error1", error); //TODO: add exception handling
                 });
 
-            loadItemsFromCart();
+
+            await loadItemsFromCart();
         }
 
         const handleSubtract = async (item) => {
-            if (itemAmount.value == 1) {
+            if (itemAmount.value === 1) {
                 return;
             }
             itemAmount.value -= 1;
@@ -347,7 +376,8 @@ export default {
             handleSearch,
             addItemToList,
             loadItemsFromCart,
-            inc_dec_CartItemAmount,
+            inc_CartItemAmount,
+            dec_CartItemAmount,
             isExpanded,
             handleBuy,
             handleMarkAll,

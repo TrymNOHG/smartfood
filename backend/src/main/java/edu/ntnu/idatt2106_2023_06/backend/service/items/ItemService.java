@@ -40,22 +40,19 @@ public class ItemService implements IItemService {
     public Long addItem(ItemDTO itemDTO) {
         if (itemDTO.price() < 0) throw  new IllegalArgumentException("Cannot have negative price");
         if (itemDTO.quantity() <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
-        Store store = storeRepository.findByStoreName(itemDTO.store()).orElse(null);
-        if (store == null){
-            store = Store.builder()
-                    .storeName(itemDTO.store())
-                    .itemsInStore(new ArrayList<>())
-                    .build();
-            storeRepository.save(store);
-        }
+        Store store = storeRepository.findByStoreName(itemDTO.store())
+                .orElseGet(() -> storeRepository.save(
+                Store.builder()
+                .storeName(itemDTO.store())
+                .itemsInStore(new ArrayList<>())
+                .build()));
 
-        store = storeRepository.findByStoreName(itemDTO.store()).orElseThrow(() -> new StoreNotFoundException(itemDTO.store()));
         Item item = itemRepository.findByProductNameAndStore(itemDTO.name(), store).orElse(null);
         if (item != null) {
             item.setPrice(itemDTO.price());
             itemRepository.save(item);
             return item.getItemId();
-        };
+        }
 
         Item i = ItemMapper.toItem(itemDTO, store);
         itemRepository.save(i);
