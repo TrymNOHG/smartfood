@@ -48,6 +48,8 @@ public class ItemController {
     public ResponseEntity<Object> addToFridge(@ParameterObject @RequestBody ItemDTO itemDTO,
                                               @ParameterObject @RequestParam(name = "fridgeId") Long fridgeId){
 
+        logger.info("item to add: " + itemDTO);
+        logger.info("fridge to be added in: " + fridgeId);
         logger.info("User wants to add a new items to fridge");
         Long itemId = itemService.addItem(itemDTO);
         itemService.addToFridge(itemId, fridgeId, itemDTO.quantity());
@@ -84,6 +86,7 @@ public class ItemController {
     @DeleteMapping(value="/fridge/delete")
     @Operation(summary = "Delete item from fridge")
     public ResponseEntity<Object> deleteItemFromFridge(@ParameterObject @RequestBody ItemRemoveDTO itemRemoveDTO){
+        logger.info(String.valueOf(itemRemoveDTO));
         logger.info("User wants to delete item from fridge");
         itemService.deleteItemFromFridge(itemRemoveDTO);
         logger.info("Items have been removed!");
@@ -154,6 +157,21 @@ public class ItemController {
      * @param itemDTOList  the list of items to buy
      * @return             a response entity indicating success
      */
+    @PostMapping(value="/shopping/delete/all", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Buy items from shopping list")
+    public ResponseEntity<Object> deleteAllItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList){
+        logger.info("User wants to buy item from shopping list");
+        itemService.deleteAllItemsFromShoppingList(itemDTOList);
+        logger.info("Items have been bought!");
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Buys the items on the shopping list for a given fridge.
+     *
+     * @param itemDTOList  the list of items to buy
+     * @return             a response entity indicating success
+     */
     @PostMapping(value="/shopping/buy", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Buy items from shopping list")
     public ResponseEntity<Object> buyItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList){
@@ -177,9 +195,4 @@ public class ItemController {
         logger.info("Suggestion has been accepted");
         return ResponseEntity.ok().build();
     }
-
-
-
-
-
 }

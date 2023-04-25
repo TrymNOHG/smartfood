@@ -1,6 +1,6 @@
 <template>
     <div class="search-item">
-      <div class="item-info" @click="$emit('click', item)">
+      <div class="item-info">
         <img class="search-image" :src="image" />
         <div class="text">product: <br>{{ text }}</div>
         <div class="store">store: <br>{{ store }}</div>
@@ -32,7 +32,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .item-info:hover {
   box-shadow: 0 0 5px #ccc;
   transform: scale(1.02);
@@ -48,7 +48,6 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;  
-  justify-content: center;
   padding: 15px;
   color: #444444 !important;
 }
@@ -61,7 +60,7 @@ export default {
 }
 
 .item-action {
-  margin-left: 1rem; /* adjust as needed */
+  margin-left: 1rem;
 }
 
 .search-item img {

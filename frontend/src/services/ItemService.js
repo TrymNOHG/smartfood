@@ -39,6 +39,13 @@ export const deleteItemFromShoppingList = async (listingDeletionDTO, suggestion)
     });
   };
 
+export const deleteItemsFromShoppingList = async (listingDeletionDTO) => {
+    return await axios.post(`${BASE_LISTING_URL}/shopping/delete/all`, listingDeletionDTO, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
 
 export const addItemToShoppingList = async (itemDTO, fridgeId, suggestion) => {
   return await axios.post(`${BASE_LISTING_URL}/shopping/add?fridgeId=${fridgeId}&suggestion=${suggestion}`, itemDTO, {
@@ -56,14 +63,6 @@ export const getItemsFromShoppingList = async (fridgeId) => {
   });
 };
 
-export const buyItemsFromShoppingList = async (itemRemoveDTOList) => {
-    return await axios.post(`${BASE_LISTING_URL}/shopping/buy`,itemRemoveDTOList, {
-        headers: {
-            Authorization: `Bearer ${await SessionToken()}`,
-        },
-    });
-};
-
 export const acceptSuggestionFromShoppingList = async (itemRemoveDTO) => {
     return await axios.post(`${BASE_LISTING_URL}/shopping/suggestion`,itemRemoveDTO, {
         headers: {
@@ -72,24 +71,12 @@ export const acceptSuggestionFromShoppingList = async (itemRemoveDTO) => {
     });
 };
 
-
-export const loadAllListings = async () => {
-    return await axios.get(`${BASE_LISTING_URL}/load`)
-}
-
-export const loadListingsByCategoryId = async (categoryId) => {
-    return await axios.get(`${BASE_LISTING_URL}/category/${categoryId}/load`)
-}
-
-export const loadListingByItemId = async(itemId) => {
-    return await axios.get(`${BASE_LISTING_URL}/load/${itemId}`)
-}
+export const buyItemsFromShoppingList = async (itemRemoveDTO) => {
+  return await axios.post(`${BASE_LISTING_URL}/shopping/buy`, itemRemoveDTO, {
+    headers: {
+      Authorization: `Bearer ${await SessionToken()}`,
+    },
+  });
+};
 
 
-export const loadImagesByItemId = async(itemId) => {
-    return await axios.get(`${BASE_LISTING_URL}/load/pictures/${itemId}`)
-}
-
-export const filterByFullDesc = async(searchTerm, categoryId) => {
-    return await axios.get(`${BASE_LISTING_URL}/load/filter?term=${searchTerm}&categoryId=${categoryId}`)
-}

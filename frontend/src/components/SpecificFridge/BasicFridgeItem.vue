@@ -1,35 +1,39 @@
 <template>
-  <body>
-  <router-link :to="{ name: 'itemView', params: { itemName: item.itemName, itemId: item.itemId}}">
+  <div class="cards-container">
+    <router-link :to="{ name: 'itemView', params: { itemName: item.name, itemId: item.name}}">
       <div class="card" :style="{ 'border-color': borderColor }">
         <div class="front-side">
-          <img src="@/assets/images/Large.jpg" alt="item picture">
+          <img :src="item.image" alt="item picture">
         </div>
         <div class="back-side">
           <div class="item-detail">
             <div class="item-name">
-              <h2>{{item.itemName}}</h2>
-              <h3>Expiration date: {{ item.itemExpirationDate }}</h3>
+              <h2>{{item.name}}</h2>
+              <h3>Expiration date: {{new Date(item.expirationDate)
+                  .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
               <br>
             </div>
-            <h4>Price: {{ item.itemPrice }}; kr</h4>
-            <h4>Buy date: {{ item.itemBuyDate }}</h4>
-            <h4>Expiration date: {{ item.itemExpirationDate }}</h4>
-            <h4>How much is Left: {{ item.itemLeft }}L</h4>
-            <button class="delete-btn" @click="deleteCard">
-            <span>
-              <font-awesome-icon icon="fa-solid fa-trash" @click="deleteCard()" class="icon delete-icon" />
-            </span>
+            <h4>Price: {{ item.price }}; kr</h4>
+            <h4>Buy date: {{ new Date(item.purchaseDate)
+                .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
+            <h4>Expiration date: {{ new Date(item.expirationDate)
+                .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
+            <h4>How much is Left: {{ item.quantity }}L</h4>
+            <button class="delete-btn" @click.prevent="deleteCard(item)">
+              <span>
+                <font-awesome-icon icon="fa-solid fa-trash" class="icon delete-icon" />
+              </span>
             </button>
           </div>
         </div>
       </div>
     </router-link>
-  </body>
+  </div>
 </template>
 
 <script>
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {number} from "yup";
 
 export default {
   name: "BasicFridgeItem",
@@ -39,40 +43,49 @@ export default {
     item: {
       type: Object,
       default: () => ({
-        itemId: "",
-        itemName: "",
-        itemPicture: null,
-        itemPrice: "",
-        itemBuyDate: "2023-04-15",
-        itemExpirationDate: "2023-04-16",
-        itemLeft: ""
+        description: String,
+        expirationDate: String,
+        image: String,
+        name: String,
+        price: String,
+        purchaseDate: String,
+        quantity: number,
+        store: String
       })
     },
+  },
+
+  methods: {
+    deleteCard(item) {
+      this.$emit('delete-item', item);
+    }
   },
 
   setup(props) {
     function calculateExpirationDate(itemBuyDate, itemExpirationDate) {
       let borderColor = '';
-      const daysUntilExpiration = (new Date(itemExpirationDate) - new Date()) / (1000 * 60 * 60 * 24);
-      console.log(daysUntilExpiration);
-      if (daysUntilExpiration <= 3) {
+      const today = new Date();
+      const itemExpDate = new Date(itemExpirationDate);
+
+      if (itemExpDate.getFullYear() < today.getFullYear() ||
+          itemExpDate.getMonth() < today.getMonth() ||
+          (itemExpDate.getMonth() === today.getMonth() && itemExpDate.getDate() < today.getDate())) {
         borderColor = 'red';
-      } else if (daysUntilExpiration <= 8) {
-        borderColor = 'orange'
+      } else if (itemExpDate.getFullYear() === today.getFullYear() &&
+          itemExpDate.getMonth() === today.getMonth() &&
+          itemExpDate.getDate() - today.getDate() <= 3) {
+        borderColor = 'orange';
       } else {
-        borderColor = 'green'
+        borderColor = 'green';
       }
+
       return borderColor;
     }
 
-    const borderColor = calculateExpirationDate(props.item.itemBuyDate, props.item.itemExpirationDate);
-
-    function deleteCard() {
-    }
+    const borderColor = calculateExpirationDate(props.item.purchaseDate, props.item.expirationDate);
 
     return {
       borderColor,
-      deleteCard
     }
   },
 }
@@ -80,24 +93,26 @@ export default {
 
 <style scoped>
 
-body {
-  margin: 0;
-  padding: 0;
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-content: stretch;
+  justify-content: space-evenly;
 }
 
 img {
   border-radius: 25px;
-  object-fit: cover;
+  object-fit: contain;
   width: 100%;
   height: 100%;
 }
 
 .card {
-  position: absolute;
   border: 4px solid;
   border-radius: 23px;
   text-align: center;
-  width: 325px;
+  width: 320px;
   height: 225px;
   perspective: 600px;
   transition: .5s;
@@ -111,7 +126,7 @@ img {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: whitesmoke;
+  background-color: white;
   backface-visibility: hidden;
   transform: rotateY(0deg);
   transition: 1s;
@@ -160,11 +175,15 @@ img {
 
 .delete-btn:hover {
   transform: scale(1.2);
-  background-color: white;
+  background-color: red;
 }
 
 .icon {
   color: black;
+}
+
+.icon:hover {
+  color: white;
 }
 
 @media (max-width: 650px) {
