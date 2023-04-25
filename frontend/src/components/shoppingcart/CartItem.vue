@@ -88,22 +88,24 @@ export default {
 </script>
 <style scoped>
 .product-img {
-  width: 100px; /* set a fixed width for the containing div */
-  height: 100px; /* set a fixed height for the containing div */
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
 }
 
 .img-container {
-  max-width: 100%; /* ensure the image does not exceed the container width */
-  max-height: 100%; /* ensure the image does not exceed the container height */
-  overflow: hidden; /* hide any overflow beyond the container */
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
 }
 
 .img-container img {
-  width: auto; /* allow the image to maintain its aspect ratio */
-  height: auto; /* allow the image to maintain its aspect ratio */
-  max-width: 100%; /* ensure the image does not exceed the container width */
-  max-height: 100%; /* ensure the image does not exceed the container height */
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
   margin-right: 16px;
+  object-fit: contain;
 }
 .item {
   padding: 20px 30px;
@@ -155,9 +157,6 @@ export default {
   }
 }
 
-.image {
-  margin-right: 50px;
-}
 .description {
   padding-top: 10px;
   margin-right: 60px;

@@ -2,21 +2,21 @@
   <div class="info-window">
     <h2 style="font-weight: bold">Informasjon om varen</h2>
     <div class="text">
-      <h3>Kjøpsdato: {{ Kjøpsdato }}</h3>
-      <h3>Utløpsdato: {{ Utløpsdato }}</h3>
-      <h3>Pris: {{ price }}kr</h3>
+      <h3>Kjøpsdato: {{new Date(item.purchaseDate)
+          .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
+      <h3>Utløpsdato: {{new Date(item.expirationDate)
+          .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
+      <h3>Pris: {{ item.price }}kr</h3>
     </div>
   </div>
 </template>
 
 <script>
-import {number} from "yup";
-
 export default {
   name: "itemInfo",
 
   props: {
-    itemId: number
+    item: Object
   },
 };
 </script>

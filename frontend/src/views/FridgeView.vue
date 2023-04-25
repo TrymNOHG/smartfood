@@ -68,6 +68,8 @@ import {ref} from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import {getItems} from "@/services/ApiService";
+import Swal from 'sweetalert2';
+
 
 export default {
   name: "FridgeView",
@@ -89,9 +91,8 @@ export default {
   methods: {
     handleSearch() {
       getItems(this.searchQuery).then((response) => {
-        console.log(response)
-            this.searchItems = response;
-            this.isExpanded = true;
+        this.searchItems = response;
+        this.isExpanded = true;
       })
           .catch((error) => {
             console.error(error);
@@ -100,7 +101,6 @@ export default {
     },
 
     async deleteItem(itemToDelete) {
-      console.log(itemToDelete)
 
       const itemRemoveDTO = {
         "itemName": itemToDelete.name,
@@ -109,16 +109,25 @@ export default {
         "quantity": itemToDelete.quantity
       }
 
-      console.log(itemRemoveDTO)
-
       await this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO);
       await this.itemStore.fetchItemsFromFridgeById(this.fridge.fridgeId).then((items) => {
         this.fridgeItems = items;
-        console.log(this.fridgeItems)
       });
     },
 
     async addItemToFridge(fridgeId, item) {
+      const { value: confirmed } = await Swal.fire({
+        title: 'Add item to fridge?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No'
+      });
+
+      if (!confirmed) {
+        return;
+      }
+
       const date = new Date();
       const expirationDate = new Date(date);
       expirationDate.setDate(date.getDate() + 7);
@@ -137,9 +146,9 @@ export default {
       await this.itemStore.addItemToFridgeById(this.fridge.fridgeId, itemDTO);
       await this.itemStore.fetchItemsFromFridgeById(this.fridge.fridgeId).then((items) => {
         this.fridgeItems = items;
-        console.log(this.fridgeItems)
       });
     }
+
   },
 
   setup() {
@@ -148,9 +157,6 @@ export default {
     const selectedTab = ref("fridge");
     const searchItems = ref([]);
     const fridgeItems = ref([]);
-
-    const route = useRoute();
-
     const fridge = fridgeStore.getCurrentFridge
 
     itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
@@ -183,6 +189,8 @@ export default {
 </script>
 
 <style scoped>
+
+
 
 .fridge-wrapper {
   display: grid;
@@ -396,7 +404,7 @@ input[type="text"]:not(:focus) + .search-results {
   }
 
   .wrapper {
-    margin-top: 15%;
+    margin-top: 50%;
     grid-template-columns: repeat(auto-fill, minmax(355px, 1fr));
     grid-template-rows: repeat(auto-fill, minmax(95px, 95px));
 

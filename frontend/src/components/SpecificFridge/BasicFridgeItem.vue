@@ -1,6 +1,6 @@
 <template>
   <div class="cards-container">
-    <router-link :to="{ name: 'itemView', params: { itemName: item.name, itemId: item.name}}">
+    <router-link to="/fridge/item" @click="storeCurrentItem(item)">
       <div class="card" :style="{ 'border-color': borderColor }">
         <div class="front-side">
           <img :src="item.image" alt="item picture">
@@ -34,6 +34,8 @@
 <script>
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {number} from "yup";
+import swal from "sweetalert2";
+import {useItemStore} from "@/store/store";
 
 export default {
   name: "BasicFridgeItem",
@@ -56,36 +58,70 @@ export default {
   },
 
   methods: {
+
+    storeCurrentItem(item){
+      this.itemStore.setCurrentItem(item);
+    },
+
     deleteCard(item) {
-      this.$emit('delete-item', item);
+      swal.fire({
+        title: this.$t('confirm_title'),
+        text: this.$t('confirm_text'),
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4dce38',
+        cancelButtonColor: '#d33',
+        confirmButtonText: this.$t('confirm_button'),
+        cancelButtonText: this.$t('cancel_button'),
+        customClass: {
+          container: 'my-swal-dialog-container'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$emit('delete-item', item);
+          swal.fire(
+              this.$t('success_message'),
+              '',
+              'success'
+          )
+        }
+      })
     }
   },
 
   setup(props) {
-    function calculateExpirationDate(itemBuyDate, itemExpirationDate) {
-      let borderColor = '';
-      const today = new Date();
-      const itemExpDate = new Date(itemExpirationDate);
+    const itemStore = useItemStore();
 
-      if (itemExpDate.getFullYear() < today.getFullYear() ||
-          itemExpDate.getMonth() < today.getMonth() ||
-          (itemExpDate.getMonth() === today.getMonth() && itemExpDate.getDate() < today.getDate())) {
-        borderColor = 'red';
-      } else if (itemExpDate.getFullYear() === today.getFullYear() &&
-          itemExpDate.getMonth() === today.getMonth() &&
-          itemExpDate.getDate() - today.getDate() <= 3) {
-        borderColor = 'orange';
+    let borderColor = calculateExpirationDate(props.item.purchaseDate, props.item.expirationDate);
+
+    function calculateExpirationDate(purchaseDate, expirationDate) {
+      const currentDate = new Date();
+      const purchase = new Date(purchaseDate);
+      const expiration = new Date(expirationDate);
+
+      const totalTime = expiration.getTime() - purchase.getTime();
+      const remainingTime = expiration.getTime() - currentDate.getTime();
+      const percentageLeft = (remainingTime / totalTime) * 100;
+
+      let borderColor;
+
+      if (percentageLeft >= 75) {
+        borderColor = 'green'; // Green for 75% or more time left
+      } else if (percentageLeft >= 50) {
+        borderColor = 'orange'; // Orange for 50% to 74% time left
+      } else if (percentageLeft >= 25) {
+        borderColor = 'yellow'; // Yellow for 25% to 49% time left
       } else {
-        borderColor = 'green';
+        borderColor = 'red'; // Red for less than 25% time left
       }
 
       return borderColor;
     }
 
-    const borderColor = calculateExpirationDate(props.item.purchaseDate, props.item.expirationDate);
 
     return {
       borderColor,
+      itemStore,
     }
   },
 }
@@ -203,8 +239,9 @@ img {
 
   h3 {
     font-weight: normal;
-    font-size: 15px;
+    font-size: 10px;
   }
+
 
   .front-side {
     display: flex;
@@ -215,8 +252,8 @@ img {
 
   img {
     margin-right: auto;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 5px;
     background-color: #eee;
     color: #eee;
@@ -236,8 +273,7 @@ img {
 
   .item-name {
     display: block;
-    font-size: 18px;
-    margin-top: 10px;
+    font-size: 10px;
   }
 
   .card:hover .front-side {
@@ -260,7 +296,7 @@ img {
   }
 
   h2 {
-    font-size: 18px;
+    font-size: 15px;
     margin: 10px 0;
   }
 
