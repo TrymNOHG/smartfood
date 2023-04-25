@@ -3,6 +3,7 @@ import { getUser } from "@/services/UserService"
 import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
 import {addItemToFridge, getItemsFromFridge, deleteItemFromFridge} from "@/services/ItemService";
+import {deleteItemStats} from "@/services/StatsService";
 
 const storeUUID = UniqueId();
 
@@ -153,6 +154,10 @@ export const useItemStore = defineStore('itemStore', {
 
         setCurrentItem(item) {
             this.currentItem = item;
+        },
+
+        async deleteItemByStats(statDeleteFromFridgeDTO) {
+            await deleteItemStats(statDeleteFromFridgeDTO)
         },
 
         async deleteItemByNameIdStoreQuantity(itemRemoveDTO){
