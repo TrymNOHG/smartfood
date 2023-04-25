@@ -12,28 +12,20 @@
         </div>
 
         <div class="quantity">
-            <button  v-if="isSuperUser" class="minus-btn" type="button" @click="handleSubtract">
-                <img src="@/assets/images/minus.svg" alt=""/>
-            </button>
-
             <input
-                    :disabled="!isSuperUser"
                     class="number-input"
                     type="number"
                     name="name"
                     :value="quantity"
                     @input="$emit('update:quantity', $event.target.value)"
+                    :disabled="true"
             />
 
-            <button v-if="isSuperUser" class="plus-btn" type="button" @click="handleAdd">
-                <img src="@/assets/images/plus.svg" alt=""/>
-            </button>
         </div>
 
-        <div class="buttons" >
-            <span class="delete-btn" v-if="isSuperUser" @click="handleDeleteItem"></span>
-
-            <input type="checkbox" v-if="isSuperUser" :checked="item.isChecked" @change="handleChange"/>
+        <div class="buttons">
+            <font-awesome-icon v-if="isSuperUser" icon="fa-solid fa-check" class="modify check-mark" @click="handleBuyItem"/>
+            <font-awesome-icon v-if="isSuperUser" icon="fa-solid fa-trash" class="modify trash-mark" @click="handleDeleteItem"/>
         </div>
     </div>
 </template>
@@ -67,7 +59,8 @@ export default {
         isSuperUser:{
             type: Boolean,
             required: true,
-        },/**
+        }
+        /**
          isChecked: {
             type: Boolean,
             required: true
@@ -88,43 +81,49 @@ export default {
         handleDeleteItem() {
             this.$emit("delete-item");
         },
+        handleBuyItem() {
+            this.$emit("buy-item");
+        },
         handleChange(event) {
             //event.target.checked
             this.$emit("handle-checked", this.item, event.target.checked);
         },
-    },
-    components: {BasicCheckbox},
-};
+    }
+    ,
+    components: {
+        BasicCheckbox
+    }
+    ,
+}
+;
 </script>
 <style scoped>
 .product-img {
-  width: 100px;
-  height: 100px;
-  object-fit: contain;
+    width: 100px; /* set a fixed width for the containing div */
+    height: 100px; /* set a fixed height for the containing div */
 }
 
 .img-container {
-  max-width: 100%;
-  max-height: 100%;
-  overflow: hidden;
+    max-width: 100%; /* ensure the image does not exceed the container width */
+    max-height: 100%; /* ensure the image does not exceed the container height */
+    overflow: hidden; /* hide any overflow beyond the container */
 }
 
 .img-container img {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  margin-right: 16px;
-  object-fit: contain;
+    width: auto; /* allow the image to maintain its aspect ratio */
+    height: auto; /* allow the image to maintain its aspect ratio */
+    max-width: 100%; /* ensure the image does not exceed the container width */
+    max-height: 100%; /* ensure the image does not exceed the container height */
+    margin-right: 16px;
 }
 
 .item {
-  padding: 20px 30px;
-  height: 120px;
-  width: 70%;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
+    padding: 20px 30px;
+    height: 120px;
+    width: 70%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between !important;
 }
 
 .item:nth-child(3) {
@@ -134,9 +133,17 @@ export default {
 
 .buttons {
     position: relative;
-    padding-top: 30px;
-    margin-right: 60px;
 }
+
+.modify {
+    margin: 35px 15px 15px;
+}
+
+.buttons .trash-mark:hover, .buttons .check-mark:hover {
+    cursor: pointer;
+    scale: 1.2;
+}
+
 
 .delete-btn,
 .like-btn {
@@ -148,14 +155,6 @@ export default {
     width: 18px;
     height: 17px;
     background: url("@/assets/images/delete-icn.svg") no-repeat center;
-}
-
-.is-active {
-    animation-name: animate;
-    animation-duration: 0.8s;
-    animation-iteration-count: 1;
-    animation-timing-function: steps(28);
-    animation-fill-mode: forwards;
 }
 
 @keyframes animate {
@@ -290,78 +289,43 @@ input[type="number"] {
         text-overflow: ellipsis;
     }
 
-  .description span:last-child {
-    font-weight: 10;
-    margin-top: 8px;
-    color: #86939e;
-    white-space: normal;
-  }
-  .delete-btn {
-    display: none;
-  }
-  .item {
-    padding: 0px 0px;
-    height: 120px;
-    width: 70%;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-  }
+    .description span:last-child {
+        font-weight: 10;
+        margin-top: 8px;
+        color: #86939e;
+        white-space: normal;
+    }
+
+    .delete-btn {
+        width: 18px;
+        height: 17px;
+        margin-left: 15px;
+    }
+
+    .item {
+        padding: 0px 0px;
+        height: 120px;
+        width: 70%;
+        margin: auto;
+        display: flex;
+        justify-content: space-between !important;
+    }
 }
 
 @media only screen and (min-width: 350px) and (max-width: 480px) {
-  .product-img img {
-    width: 45px; /* set a fixed width for the containing div */
-    height: 50px;
-    object-fit: contain/* set a fixed height for the containing div */
-  }
+    .product-img img {
+        width: 35px; /* set a fixed width for the containing div */
+        height: 50px; /* set a fixed height for the containing div */
+    }
 
-  .item {
-    display: flex !important;
-    height: 80px;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-    margin-top: 10px;
+    .item {
+        width: 100vw;
+    }
 
-
-
-  }
-
-  .description{
-    width: 175px;
-
-  }
-  .buttons{
-    padding-left: 10px;
-    padding-right: 5px;
-    width: 40px;
-    padding-top: 28px;
-
-  }
-
-  #check{
-    scale: 1.5;
-  }
-
-  .product-img{
-    padding-top: 15px;
-  }
-  .quantity{
-    padding: 5px;
-  }
-
-  .number-input{
-    background-color: transparent;
-    margin-top: 10px;
-    margin-left: 0px;
-    margin-right: 0px;
-    padding-bottom: 5px;
-    padding-right: 5px;
-  }
-  .img-container {
-    max-width: 150px; /* ensure the image does not exceed the container width */
-    max-height: 150px; /* ensure the image does not exceed the container height */
-  }
+    .img-container {
+        max-width: 150px; /* ensure the image does not exceed the container width */
+        max-height: 150px; /* ensure the image does not exceed the container height */
+    }
 
     .img-container img {
         max-width: 150px;

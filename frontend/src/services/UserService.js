@@ -95,3 +95,12 @@ export const searchUserByUsername = async (username) => {
     return axios.get(`${BASE_USER_URL}/search/${username}`)
 }
 
+export const checkSuperUserStatus = async (fridgeId) => {
+    return axios.get(`${BASE_USER_URL}/superuser`, {
+        params: { fridgeId },
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
+

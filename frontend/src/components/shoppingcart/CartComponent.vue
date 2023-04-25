@@ -3,7 +3,7 @@
     <figure id="backBlack"></figure>
     <div id="backGreen">
     <h1>Handlekurv</h1>
-      <CartControl @check-all="handleMarkAll" @buy="handleBuy"></CartControl>
+      <CartControl v-if="isCurrentUserSuperUser" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
     </div>
     <div id="myDropdown" class="dropdown-content">
       <div id="searchbar">
@@ -42,24 +42,51 @@
                     :image="item.image"
                     :name="item.name"
                     :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
-                    :weight="item.weight"
                     :quantity="item.quantity"
                     :item="item"
-                    @add="inc_dec_CartItemAmount(item, 1)"
-                    @subtract="inc_dec_CartItemAmount(item, -1)"
+                    :isSuperUser="isCurrentUserSuperUser"
+                    @add="inc_CartItemAmount(item)"
+                    @subtract="dec_CartItemAmount(item)"
                     @delete-item="handleDeleteItem(item)"
                     @handle-checked="handleCheckedItem"
                     @buy="handleBuy"
             >
             </CartItem>
         </div>
+
+        <vue-collapsible-panel-group>
+            <vue-collapsible-panel :expanded="true">
+                <template #title> Suggested items </template>
+                <template #content>
+                    <CartSuggestion
+                        v-for="(item, index) in items"
+                        :key="index"
+                        :image="item.image"
+                        :name="item.name"
+                        :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
+                        :quantity="item.quantity"
+                        :item="item"
+                        :isSuperUser="isCurrentUserSuperUser"
+                        @add="inc_dec_CartItemAmount(item, 1)"
+                        @subtract="inc_dec_CartItemAmount(item, -1)"
+                        @delete-item="handleDeleteItem(item)"
+                        @buy-item="handleBuyItem(item)"
+                        @handle-checked="handleCheckedItem"
+                        @buy="handleBuy"
+                    >
+                    </CartSuggestion>
+                </template>
+            </vue-collapsible-panel>
+        </vue-collapsible-panel-group>
+
+
     </div>
 </template>
 
 <script>
 import {
-  VueCollapsiblePanelGroup,
-  VueCollapsiblePanel,
+    VueCollapsiblePanelGroup,
+    VueCollapsiblePanel,
 } from "@dafcoe/vue-collapsible-panel";
 import "@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
@@ -73,11 +100,13 @@ import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import CartItem from "@/components/shoppingcart/CartItem.vue";
+import CartSuggestion from "@/components/shoppingcart/CartSuggestion.vue";
 import CartControl from "@/components/shoppingcart/CartControl.vue";
 import BasicCheckBox from "@/components/basic-components/BasicCheckbox.vue";
 import {useLoggedInStore, useFridgeStore} from "@/store/store";
 import {ref, onMounted, computed, watch} from "vue";
-
+import 'sweetalert2/dist/sweetalert2.min.css';
+import swal from 'sweetalert2';
 
 export default {
   name: "Cart",
@@ -91,6 +120,12 @@ export default {
     CartItem,
     CartControl,
     BasicCheckBox,
+    CartSuggestion,
+  },
+  computed: {
+    isCurrentUserSuperUser() {
+      return useFridgeStore().getIsSuperUser;
+    },
   },
   setup() {
     console.log(useFridgeStore().getCurrentFridge);
@@ -152,6 +187,41 @@ export default {
             try {
                 itemRemoveDTOList.shift();
                 await deleteItemsFromShoppingList(itemRemoveDTOList);
+                loadItemsFromCart();
+                swal.fire(
+                  'deleted items',
+                  '',
+                  'success'
+                )
+            } catch (error) {
+                console.error(error);
+                swal.fire(
+                    error.response.data["Message:"],
+                    '',
+                    'error'
+                )
+            }
+        }
+        async function handleBuyItem(item) {
+            const selectedItems = [];
+            selectedItems.push(item);
+            console.log("SELECTED ITEMS")
+            console.log(selectedItems);
+            const itemRemoveDTOList = [{}];
+            selectedItems.forEach((item) => {
+                const ItemRemoveDTO = {
+                    itemName: item.name,
+                    store: item.store,
+                    fridgeId: currentFridge.fridgeId,
+                    quantity: item.quantity,
+                };
+                itemRemoveDTOList.push(ItemRemoveDTO);
+                console.log("ITEM REMOVE DTO")
+                console.log(itemRemoveDTOList);
+            });
+            try {
+                itemRemoveDTOList.shift();
+                await buyItemsFromShoppingList(itemRemoveDTOList);
             } catch (error) {
                 console.error(error);
             }
@@ -182,10 +252,15 @@ export default {
             try {
                 itemRemoveDTOList.shift();
                 await buyItemsFromShoppingList(itemRemoveDTOList);
+                loadItemsFromCart();
+                swal.fire(
+                  'added to fridge',
+                  '',
+                  'success'
+                )
             } catch (error) {
                 console.error(error);
             }
-            location.reload();
         }
 
 
@@ -212,41 +287,70 @@ export default {
             }
         };
 
-        async function inc_dec_CartItemAmount(item, amount) {
-            console.log(item);
-            const itemDTO = {
-                name: item.name,
-                description: item.description,
-                store: item.store,
-                price: item.price,
-                purchaseDate: item.purhchaseDate,
-                expirationDate: item.expirationDate,
-                image: item.image,
-                quantity: amount,
-            };
-            const fridgeId = currentFridge.fridgeId;
+        async function inc_CartItemAmount(item) {
+          console.log(item);
+          const itemDTO = {
+            name: item.name,
+            description: item.description,
+            store: item.store,
+            price: item.price,
+            purchaseDate: item.purhchaseDate,
+            expirationDate: item.expirationDate,
+            image: item.image,
+            quantity: 1,
+          };
+          const fridgeId = currentFridge.fridgeId;
 
-            console.log(itemDTO);
+          console.log(itemDTO);
+          event.stopPropagation();
+          addItemToShoppingList(itemDTO, fridgeId, false)
+              .then(async (response) => {
+                if (response !== undefined) {
+                  await loadItemsFromCart();
+                } else {
+                  console.log("Something went wrong");
+                  submitMessage.value =
+                      "Something went wrong. Please try again later.";
+                }
+              })
+              .catch((error) => {
+                console.warn("error1", error); //TODO: add exception handling
+              });
+
+
+          await loadItemsFromCart();
+        }
+
+        async function dec_CartItemAmount(item) {
+            console.log(item);
+            const itemRemoveDTO = {
+                itemName: item.name,
+                store: item.store,
+                fridgeId: currentFridge.fridgeId,
+                quantity: 1,
+            };
+
             event.stopPropagation();
-            addItemToShoppingList(itemDTO, fridgeId, false)
+            deleteItemFromShoppingList(itemRemoveDTO, false)
                 .then(async (response) => {
-                    if (response !== undefined) {
-                        loadItemsFromCart();
-                    } else {
-                        console.log("Something went wrong");
-                        submitMessage.value =
-                            "Something went wrong. Please try again later.";
-                    }
+                  if (response !== undefined) {
+                    await loadItemsFromCart();
+                  } else {
+                    console.log("Something went wrong");
+                    submitMessage.value =
+                        "Something went wrong. Please try again later.";
+                  }
                 })
                 .catch((error) => {
-                    console.warn("error1", error); //TODO: add exception handling
+                  console.warn("error1", error); //TODO: add exception handling
                 });
 
-            loadItemsFromCart();
+            //TODO: fix so that items do not need to be loaded again continuously........
+            await loadItemsFromCart();
         }
 
         const handleSubtract = async (item) => {
-            if (itemAmount.value == 1) {
+            if (itemAmount.value === 1) {
                 return;
             }
             itemAmount.value -= 1;
@@ -350,7 +454,8 @@ export default {
       handleSearch,
       addItemToList,
       loadItemsFromCart,
-      inc_dec_CartItemAmount,
+      inc_CartItemAmount,
+      dec_CartItemAmount,
       isExpanded,
       search,
       handleBuy,
@@ -358,6 +463,8 @@ export default {
       handleCheckedItem,
       checkAll_b,
       handleDelete,
+      handleBuyItem,
+      currentFridge
     };
   },
 };

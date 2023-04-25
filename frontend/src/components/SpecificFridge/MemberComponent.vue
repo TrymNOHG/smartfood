@@ -102,15 +102,15 @@ export default {
             searchResults,
             fetchUsers,
             loggedInUser,
-            fridgeId
+            fridgeId,
+            fridgeStore
         };
     },
 
     computed: {
          isCurrentUserSuperUser() {
-             const currentUser = this.memberList.find(member => member.username === this.loggedInUser);
-             return currentUser && currentUser.isSuperUser;
-        }
+           return this.fridgeStore.getIsSuperUser;
+          },
     },
 
     data() {
