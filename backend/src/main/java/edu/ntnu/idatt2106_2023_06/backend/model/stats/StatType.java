@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.model.stats;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.ntnu.idatt2106_2023_06.backend.model.stats.Statistics;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,7 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder
@@ -44,6 +45,7 @@ public class StatType {
      * The description of the type of statistics
      */
     @Column(name = "description")
+    @JsonIgnore
     private String desc;
 
     /**
@@ -52,6 +54,7 @@ public class StatType {
     @OneToMany(mappedBy = "statType", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
+    @JsonIgnore
     private List<Statistics> statistics = new ArrayList<>();
 
 }
