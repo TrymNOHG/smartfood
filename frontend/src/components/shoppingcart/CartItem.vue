@@ -23,6 +23,7 @@
                     name="name"
                     :value="quantity"
                     @input="$emit('update:quantity', $event.target.value)"
+                    @blur="$emit('quantity-updated', $event.target.value, item)"
             />
 
             <button v-if="isSuperUser" class="plus-btn" type="button" @click="handleAdd">
@@ -33,7 +34,7 @@
         <div class="buttons" >
             <span class="delete-btn" v-if="isSuperUser" @click="handleDeleteItem"></span>
 
-            <input type="checkbox" v-if="isSuperUser" :checked="item.isChecked" @change="handleChange"/>
+            <input type="checkbox" v-if="isSuperUser" :checked="item.isChecked" @change="handleCheckedChange"/>
         </div>
     </div>
 </template>
@@ -88,7 +89,7 @@ export default {
         handleDeleteItem() {
             this.$emit("delete-item");
         },
-        handleChange(event) {
+        handleCheckedChange(event) {
             //event.target.checked
             this.$emit("handle-checked", this.item, event.target.checked);
         },

@@ -49,6 +49,7 @@
                     @delete-item="handleDeleteItem(item)"
                     @handle-checked="handleCheckedItem"
                     @buy="handleBuy"
+                    @quantity-updated="set_CartItemAmount"
             >
             </CartItem>
         </div>
@@ -66,10 +67,6 @@
                         :quantity="item.quantity"
                         :item="item"
                         :isSuperUser="isCurrentUserSuperUser"
-                        @add="inc_dec_CartItemAmount(item, 1)"
-                        @subtract="inc_dec_CartItemAmount(item, -1)"
-                        @delete-item="handleDeleteItem(item)"
-                        @handle-checked="handleCheckedItem"
                         @accept-suggestion="handleAcceptSuggestion(item)"
                         @delete-suggestion="handleDeleteSuggestion(item)"
                     >
@@ -389,6 +386,47 @@ export default {
             await loadItemsFromCart();
         }
 
+        async function set_CartItemAmount(newQuantity, item){
+            console.log(newQuantity)
+            console.log("woohoo")
+            console.log(item)
+
+            if(newQuantity<item.quantity){
+
+            }
+
+            const itemDTO = {
+                name: item.name,
+                description: item.description,
+                store: item.store,
+                price: item.price,
+                purchaseDate: item.purhchaseDate,
+                expirationDate: item.expirationDate,
+                image: item.image,
+                quantity: newQuantity,
+            };
+            const fridgeId = currentFridge.fridgeId;
+
+            console.log(itemDTO);
+            event.stopPropagation();
+            addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
+                .then(async (response) => {
+                    if (response !== undefined) {
+                        await loadItemsFromCart();
+                    } else {
+                        console.log("Something went wrong");
+                        submitMessage.value =
+                            "Something went wrong. Please try again later.";
+                    }
+                })
+                .catch((error) => {
+                    console.warn("error1", error); //TODO: add exception handling
+                });
+
+
+            await loadItemsFromCart();
+        }
+
         const handleSubtract = async (item) => {
             if (itemAmount.value === 1) {
                 return;
@@ -506,6 +544,7 @@ export default {
             suggestedItems,
             handleAcceptSuggestion,
             handleDeleteSuggestion,
+            set_CartItemAmount,
         };
     },
 };

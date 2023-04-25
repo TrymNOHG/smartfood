@@ -14,7 +14,7 @@
               <br>
             </div>
             <h4>Price: {{ item.price }}; kr</h4>
-            <h4>Buy date: {{ new Date(item.purchaseDate)
+            <h4>Purchase date: {{ new Date(item.purchaseDate)
                 .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
             <h4>Expiration date: {{ new Date(item.expirationDate)
                 .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
