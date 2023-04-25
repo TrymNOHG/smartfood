@@ -4,14 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.security.AuthenticationResponseDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.users.*;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.ImageNotFoundException;
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.service.files.FileStorageService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.AuthenticationService;
+import edu.ntnu.idatt2106_2023_06.backend.service.users.EmailService;
 import edu.ntnu.idatt2106_2023_06.backend.service.users.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -26,6 +29,7 @@ import org.springframework.core.io.Resource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,6 +50,9 @@ public class UserControllerTest {
     @Autowired
     private UserService userService;
 
+    @MockBean
+    private EmailService emailService;
+
     @Autowired
     private AuthenticationService authenticationService;
 
@@ -56,6 +63,8 @@ public class UserControllerTest {
     public void registerNewUser() throws Exception {
         // Arrange
         UserRegisterDTO user = new UserRegisterDTO("username", "password", "Ole", "Brumm", "ole.brumm@gmail.com");
+
+        doNothing().when(emailService).sendActivationEmail(new User());
 
         // Act
         MvcResult mvcResult = mockMvc.perform(post("/user/register")
@@ -75,6 +84,9 @@ public class UserControllerTest {
         // Arrange
         UserRegisterDTO user1 = new UserRegisterDTO("testUsername", "password", "Ola", "Nordmann", "ola.nordmann@gmail.com");
         UserRegisterDTO user2 = new UserRegisterDTO("testUsername", "password", "Geir", "Smith", "geir@gmail.com");
+
+        doNothing().when(emailService).sendActivationEmail(new User());
+
 
         // Act
         MvcResult mvcResult = mockMvc.perform(post("/user/register")
@@ -103,6 +115,9 @@ public class UserControllerTest {
         // Arrange
         UserRegisterDTO user1 = new UserRegisterDTO("testUsername1", "password", "Ola", "Nordmann", "geir@gmail.com");
         UserRegisterDTO user2 = new UserRegisterDTO("testUsername2", "password", "Geir", "Smith", "geir@gmail.com");
+
+        doNothing().when(emailService).sendActivationEmail(new User());
+
 
         // Act
         MvcResult mvcResult = mockMvc.perform(post("/user/register")

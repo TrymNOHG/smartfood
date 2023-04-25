@@ -66,7 +66,8 @@ public class AuthenticationService implements IAuthenticationService {
         String jwtToken = jwtService.generateToken(user);
         logger.info("Their JWT is: " + jwtToken);
 
-        emailService.sendActivationEmail(user);
+        //TODO: uncomment to add activation email
+//        emailService.sendActivationEmail(user);
 
         return AuthenticationResponseDTO
                 .builder()

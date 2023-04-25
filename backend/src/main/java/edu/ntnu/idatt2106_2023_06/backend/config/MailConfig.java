@@ -1,8 +1,5 @@
 package edu.ntnu.idatt2106_2023_06.backend.config;
 
-import jakarta.mail.Authenticator;
-import jakarta.mail.PasswordAuthentication;
-import jakarta.mail.Session;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +9,9 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
-//@Configuration
-//@Profile("!test")
+@Configuration
+@Profile("!test")
 public class MailConfig {
-/*
     @Value("${spring.mail.host}")
     private String host;
 
@@ -46,5 +42,4 @@ public class MailConfig {
 
         return mailSender;
     }
-*/
 }
