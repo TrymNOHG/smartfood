@@ -131,6 +131,14 @@ export default {
       const expirationDate = new Date(date);
       expirationDate.setDate(date.getDate() + 7);
 
+      const statAddItemToFridgeDTO = {
+        "price": item.current_price,
+        "quantity": 1,
+        "itemName": item.name,
+        "storeName": item.store.name,
+        "fridgeId": this.fridge.fridgeId
+      }
+
       const itemDTO = {
         "name": item.name,
         "description": item.description,
@@ -139,9 +147,10 @@ export default {
         "purchaseDate": date,
         "expirationDate": expirationDate,
         "image": item.image,
-        "quantity": 100
+        "quantity": 1
       }
 
+      await this.itemStore.statAddItemToFridge(statAddItemToFridgeDTO)
       await this.itemStore.addItemToFridgeById(this.fridge.fridgeId, itemDTO);
       await this.itemStore.fetchItemsFromFridgeById(this.fridge.fridgeId).then((items) => {
         this.fridgeItems = items;

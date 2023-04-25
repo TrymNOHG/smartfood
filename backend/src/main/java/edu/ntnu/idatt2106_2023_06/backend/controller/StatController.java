@@ -53,7 +53,10 @@ public class StatController {
     @Operation(summary = "Adds a new stat to the database", description = "This endpoint should be used when a user buys an item from a store.")
     public ResponseEntity<Object> statBoughtItem(@ParameterObject @RequestBody StatAddItemToFridgeDTO statAddItemToFridgeDTO,
                                                  Authentication authentication) {
+        logger.info("user trying to buy item and save its stats: ");
+        logger.info("item to be bought: " + statAddItemToFridgeDTO);
         statService.statAddItemToFridge(statAddItemToFridgeDTO);
+        logger.info("item bought and stats saved");
         return ResponseEntity.ok().build();
     }
 

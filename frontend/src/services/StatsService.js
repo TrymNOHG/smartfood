@@ -9,3 +9,11 @@ export const deleteItemStats = async (statDeleteFromFridgeDTO) => {
         },
     });
 };
+
+export const addItemStats = async (statAddItemToFridgeDTO) => {
+    return await axios.post(`${BASE_LISTING_URL}/add/bought-item`, statAddItemToFridgeDTO, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
