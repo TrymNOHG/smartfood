@@ -57,10 +57,6 @@ export default {
             type: String,
             required: true,
         },
-        date_added: {
-            type: String,
-            required: true,
-        },
         quantity: {
             type: Number,
             required: true,

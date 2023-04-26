@@ -113,7 +113,7 @@ public class ShoppingItemsController implements IShoppingItemsController{
     @Override
     public ResponseEntity<Object> deleteAllItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList,
                                                                  Authentication authentication){
-        if(itemDTOList.isEmpty()) return ResponseEntity.ok().build();
+        if(itemDTOList.isEmpty()) throw new IllegalArgumentException();
         validateSuperUser(itemDTOList.get(0).fridgeId(), authentication);
 
         logger.info("User wants to buy item from shopping list");
@@ -155,7 +155,7 @@ public class ShoppingItemsController implements IShoppingItemsController{
     public ResponseEntity<Object> buyItemsFromShoppingList(@ParameterObject @RequestBody List<ItemMoveDTO> itemMoveDTO,
                                                            Authentication authentication){
 
-        if(itemMoveDTO.isEmpty()) return ResponseEntity.ok().build();
+        if(itemMoveDTO.isEmpty()) throw new IllegalArgumentException();
 
         validateSuperUser(itemMoveDTO.get(0).fridgeId(), authentication);
 
