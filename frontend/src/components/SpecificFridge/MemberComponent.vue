@@ -62,11 +62,7 @@ export default {
         const fridgeStore = useFridgeStore();
         const fridgeId = fridgeStore.getCurrentFridge.fridgeId;
         userStore.fetchUser();
-
         const loggedInUser = userStore.getUser.data.username
-
-
-
         async function fetchUsers() {
             try {
                 const response = await loadUsersByFridgeId(fridgeId);

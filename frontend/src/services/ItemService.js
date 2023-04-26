@@ -48,6 +48,7 @@ export const deleteItemsFromShoppingList = async (listingDeletionDTO) => {
 };
 
 export const addItemToShoppingList = async (itemDTO, fridgeId, suggestion) => {
+    console.log(itemDTO.price + " " + fridgeId + " " + suggestion)
     return await axios.post(`${BASE_LISTING_URL}/shopping/add?fridgeId=${fridgeId}&suggestion=${suggestion}`, itemDTO, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
@@ -73,8 +74,8 @@ export const acceptSuggestion = async (itemRemoveDTO) => {
     });
 };
 
-export const buyItemsFromShoppingList = async (itemRemoveDTO) => {
-    return await axios.post(`${BASE_LISTING_URL}/shopping/buy`, itemRemoveDTO, {
+export const buyItemsFromShoppingList = async (itemDTOList) => {
+    return await axios.post(`${BASE_LISTING_URL}/shopping/buy`, itemDTOList, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         },
