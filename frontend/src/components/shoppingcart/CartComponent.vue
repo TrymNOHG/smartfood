@@ -1,18 +1,19 @@
 <template>
   <div>
-    <figure id="backBlack"></figure>
-    <div id="backGreen">
-    <h1 id="shopList">Handlekurv</h1>
-      <CartControl v-if="isCurrentUserSuperUser" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
-    </div>
+
     <div id="myDropdown" class="dropdown-content">
-      <div id="searchbar">
-      <SearchInput
-        v-model="searchQuery"
-        @input="handleSearch"
-        label="Search product"
-      ></SearchInput>
-      <button id="searchbtn" @click="handleSearch">Search</button>
+      <figure id="backBlack"></figure>
+      <div id="backGreen">
+        <h1 id="shopList">Handlekurv</h1>
+        <div id="searchbar">
+          <SearchInput
+              v-model="searchQuery"
+              @input="handleSearch"
+              label="Search product"
+          ></SearchInput>
+          <button id="searchbtn" @click="handleSearch">Search</button>
+        </div>
+        <CartControl v-if="true" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
       </div>
       <div class="dropper" v-if="search">
         <vue-collapsible-panel-group>
@@ -41,7 +42,6 @@
                     :key="index"
                     :image="item.image"
                     :name="item.name"
-                    :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
                     :quantity="item.quantity"
                     :item="item"
                     :isSuperUser="isCurrentUserSuperUser"
@@ -533,27 +533,73 @@ input[type="number"] {
     margin-bottom: 20px;
 }
 
+.dropper {
+
+  display: flex;
+  width: 100vw;
+  justify-content: space-evenly;
+  overflow-y: scroll;
+  margin-bottom: 20px;
+  margin: auto;
+  color: white;
+
+
+}
 .vcpg {
-    --bg-color-header: #6c6c6c !important;
-    --bg-color-header-hover: #6c6c6c !important;
-    --bg-color-header-active: #6c6c6c !important;
+  --bg-color-header: transparent!important;
+  border: transparent;
+  width: 100%;
+  overflow-y: scroll;
+  color: black;
+  background-color: white;
+  border-radius: 0;
 }
 
+#backGreen{
+  background-color: #6C6C6C;
+}
+
+#shopList{
+  color: white;
+  font-size: 25px;
+}
+
+
+#searchbar{
+  display: flex;
+  background-color: #6C6C6C;
+  margin: 0;
+  border: 0;
+  width: 100%;
+
+}
+
+#myDropdown{
+  padding: 0;
+  margin: 0;
+  border: 0;
+
+}
 #searchbtn {
     border: 0;
     padding: 0px 10px;
-    margin-top: 10px;
+    margin-top: 0px;
     color: #fff;
-    background: #6c6c6c;
+    background: #31c48d;
     font-size: 27px;
     font-weight: 500;
-    border: 3px solid #555;
+    border: 0px solid #555;
     border-left: none;
     -webkit-box-shadow: none;
     box-shadow: none;
-    min-height: 60px;
-    height: auto;
+    height: 40px;
+    margin-right: 10px;
     border-radius: 0 50px 50px 0 !important;
+}
+
+#searchbtn:hover{
+  background-color: #1e7655;
+  cursor: pointer;
 }
 #search-button {
     width: 50px !important;
@@ -853,18 +899,35 @@ input:focus {
 }
 
 @media only screen and (min-width: 350px) and (max-width: 480px) {
-    .buttons {
-        position: relative;
-        margin-left: 20px;
-        margin-right: 0;
-    }
+  .buttons {
+    position: relative;
+    margin-left: 20px;
+    margin-right: 0;
+  }
 
-  #backBlack{
+  #backBlack {
     height: 6px;
     background-color: white;
   }
 
-  #backGreen{
+  #backGreen {
+    background-color: #31c48d;
+
+    width: 100%;
+    padding: 10px 10px 10px 10px;
+    border-radius: 20px 20px 20px 20px;
+
+
+    width: 100%;
+    z-index: 1;
+  }
+
+  #forslagBlack {
+    height: 6px;
+    background-color: white;
+  }
+
+  #forslagGreen {
     background-color: #31c48d;
 
     width: 100%;
@@ -872,54 +935,52 @@ input:focus {
     border-radius: 20px 20px 20px 20px;
   }
 
-  #forslagBlack{
-    height: 6px;
-    background-color: white;
-  }
-
-  #forslagGreen{
-    background-color: #31c48d;
-
-    width: 100%;
-    padding: 10px 10px 10px 10px;
-    border-radius: 20px 20px 20px 20px;
-  }
-
-  #shopList{
+  #shopList {
     border-radius: 20px 20px 0px 0px;
     background-color: #31c48d;
+    color: black;
   }
-  #sugTitle{
+
+  #sugTitle {
     border-radius: 20px 20px 20px 20px;
     background-color: #31c48d;
 
   }
-  h1{
+
+  h1 {
     z-index: 1;
     background-color: white;
     color: black;
     font-size: 20px;
     font-weight: bold;
-
+    letter-spacing: 2px;
   }
 
 
-  #searchbar{
+  #searchbar {
     display: flex;
-    align-items: flex-end;
-    justify-content: space-evenly;
     position: fixed;
     bottom: 70px;
     width: 100%;
     background-color: transparent;
     z-index: 1;
   }
-  nav{
+
+  nav {
     z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 70px;
+    background-color: #31c48d;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
   }
 
 
-  #searchbtn{
+  #searchbtn {
     display: none;
   }
 
@@ -931,20 +992,23 @@ input:focus {
     position: fixed;
     top: 160px;
     overflow-y: scroll;
+    margin-bottom: 20px;
+    margin: auto;
+    color: white;
 
 
   }
 
-  .cart-control{
+  .cart-control {
     border-radius: 20px 20px 20px 20px;
   }
 
-  #myDropdown{
+  #myDropdown {
     border: 0;
   }
 
   .vcpg {
-    --bg-color-header: transparent!important;
+    --bg-color-header: transparent !important;
     border: transparent;
     width: 100%;
     overflow-y: scroll;
@@ -955,21 +1019,75 @@ input:focus {
 
   }
 
+  header {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+  }
 
 
+  header img {
+    height: 40px;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
 
 
+  nav ul {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+  }
 
+  nav ul li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+  }
 
+  nav ul li a {
+    font-size: 0.6rem;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  nav ul li a .icon {
+    margin-bottom: 5px;
+    font-size: 2em;
+  }
+
+  nav ul li.active a {
+    color: #fcfbfb;
+    background-color: #218838;
+    border-radius: 50%;
+  }
+
+  nav ul li.active a .icon {
+    color: #fcfbfb;
+  }
+
+  .quantity {
+    padding-top: 25px;
+    margin-left: 0;
+    display: flex;
+  }
 
 
   .item {
     width: 100vw;
-  }
-  .quantity {
-    padding-top: 25px;
+    padding: 20px 30px;
+    height: 120px;
+    margin: auto;
     display: flex;
+    justify-content: space-between;
   }
+
+
   .quantity input {
     -webkit-appearance: none;
     border: none;
@@ -978,6 +1096,199 @@ input:focus {
     font-size: 16px;
     color: #43484d;
     font-weight: 300;
+  }
+
+
+
+
+  * {
+    text-align: center;
+    box-sizing: border-box;
+  }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+
+
+
+
+  .icon {
+    margin-left: 10px;
+  }
+
+
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: #7ec855;
+    font-family: "Roboto", sans-serif;
+  }
+  .search-image {
+    width: 0.1vw;
+  }
+  .image img {
+    width: 50%;
+  }
+
+  #myInput {
+    box-sizing: border-box;
+    background-image: url("searchicon.png");
+    background-position: 14px 12px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    padding: 14px 20px 12px 45px;
+    border: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  #myInput:focus {
+    outline: 3px solid #ddd;
+  }
+
+  .dropdown {
+    position: absolute;
+    display: inline-block;
+  }
+
+  .dropdown-content {
+    top: 100%;
+    position: relative;
+    background-color: #f6f6f6;
+    min-width: 230px;
+    overflow: auto;
+    border: 1px solid #ddd;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+
+  .dropdown a:hover {
+    background-color: #ddd;
+  }
+
+  .show {
+    display: block;
+  }
+
+  .shopping-cart {
+    width: 750px;
+    height: 423px;
+    margin: 80px auto;
+    background: #ffffff;
+    box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  .title {
+    height: 60px;
+    border-bottom: 1px solid #e1e8ee;
+    padding: 20px 30px;
+    color: #5e6977;
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+
+  .item:nth-child(3) {
+    border-top: 1px solid #e1e8ee;
+    border-bottom: 1px solid #e1e8ee;
+  }
+  .delete-btn,
+  .like-btn {
+    display: inline-block;
+    cursor: pointer;
+  }
+  .delete-btn {
+    width: 18px;
+    height: 17px;
+    background: url("../assets/images/delete-icn.svg") no-repeat center;
+  }
+
+  .is-active {
+    animation-name: animate;
+    animation-duration: 0.8s;
+    animation-iteration-count: 1;
+    animation-timing-function: steps(28);
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes animate {
+    0% {
+      background-position: left;
+    }
+    50% {
+      background-position: right;
+    }
+    100% {
+      background-position: right;
+    }
+  }
+
+  .image {
+    margin-right: 50px;
+  }
+
+  .description {
+    padding-top: 10px;
+    margin-right: 60px;
+    width: 115px;
+  }
+
+  .description span {
+    display: block;
+    font-size: 14px;
+    color: #43484d;
+    font-weight: 400;
+  }
+
+  .description span:first-child {
+    margin-bottom: 5px;
+  }
+
+  .description span:last-child {
+    font-weight: 300;
+    margin-top: 8px;
+    color: #86939e;
+  }
+
+  button[class*="btn"] {
+    width: 30px;
+    height: 30px;
+    background-color: #e1e8ee;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .minus-btn img {
+    margin-bottom: 3px;
+  }
+
+  .plus-btn img {
+    margin-top: 2px;
+  }
+
+  button:focus,
+  input:focus {
+    outline: 0;
   }
 }
 
