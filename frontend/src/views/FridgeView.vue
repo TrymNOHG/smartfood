@@ -322,7 +322,6 @@ input[type="text"]:not(:focus) + .search-results {
 }
 
 #toggle-button:hover {
-  /*color: #3b3b3b;*/
   cursor: pointer;
   font-size: x-large;
 }
