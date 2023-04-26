@@ -2,15 +2,6 @@
 const BASE_URL = 'http://localhost:5173'
 
 describe('Cart', () => {
-  beforeEach(() => {
-    cy.request('POST', 'http://localhost:8080/login', {
-      username: 't@t.t',
-      password: '12345678'
-    }).then((response) => {
-      const sessionToken = response.body.sessionToken;
-      window.localStorage.setItem('sessionToken', sessionToken);
-    });
-  });
 
   it('should display the cart items after logging in', () => {
     cy.visit('http://localhost:5173/cart', {
