@@ -58,8 +58,8 @@ e2e-test-frontend-job:
   script:
     - cd frontend
     - npm install
-    - npm run serve & # Add the --root option here
-    - sleep 300
+    - npx serve --single -s dist -l 4173 & # Add the --root option here
+    - sleep 10
     - curl http://localhost:4173
     - npx cypress run --e2e
 
