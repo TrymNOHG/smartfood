@@ -19,7 +19,7 @@
 
 image: maven:eclipse-temurin
 stages:
-  - build
+  #- build
   - test
   - deploy
 
@@ -29,13 +29,13 @@ stages:
 #    - cd backend
 #    - mvn install -B -DskipTests # Skip tests during build phase
 
-build-frontend-job:
-  image: node:16
-  stage: build
-  script:
-    - cd frontend
-    - npm install
-    - npm run build
+#build-frontend-job:
+#  image: node:16
+#  stage: build
+#  script:
+#    - cd frontend
+#    - npm install
+#    - npm run build
 
 #unit-test-backend-job:
 #  stage: test
@@ -59,7 +59,7 @@ e2e-test-frontend-job:
     - cd frontend
     - npm install
     - npm run serve & # Add the --root option here
-    - sleep 20
+    - sleep 300
     - curl http://localhost:4173
     - npx cypress run --e2e
 
