@@ -7,9 +7,9 @@
           <span class="icon"
             ><font-awesome-icon icon="fa-solid fa-envelope"
           /></span>
-          <input type="text" required v-model.trim="email" name="email" />
+          <input type="text" required v-model.trim="email" name="email" id="email-input" />
           <label>{{ $t("email") }}</label>
-          <div v-if="errors['email']" class="error">
+          <div v-if="errors && errors['email']" class="error">
             {{ $t(errors["email"]) }}
           </div>
         </div>
@@ -22,9 +22,10 @@
             required
             v-model.trim="password"
             name="password"
+            id="password-input"
           />
           <label>{{ $t("password") }}</label>
-          <div v-if="errors['password']" class="error">
+          <div v-if="errors && errors['password']" class="error">
             {{ $t(errors["password"]) }}
           </div>
         </div>
@@ -37,7 +38,7 @@
           <a href="#">{{ $t("forgot_password") }}</a>
         </div>
 
-        <button type="submit" @click="submit">{{ $t("login") }}</button>
+        <button type="submit" @click="submit" id="login-btn">{{ $t("login") }}</button>
         <div class="login-register">
           <p>
             {{ $t("dont_have_account") }}
