@@ -80,6 +80,7 @@ export default {
   #info-picture{
     height: 30px;
     width: 30px;
+    cursor: pointer;
   }
 
 </style>
