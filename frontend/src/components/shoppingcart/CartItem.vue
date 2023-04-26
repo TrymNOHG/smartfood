@@ -153,27 +153,29 @@ export default {
 
 
 
+
+
 .description {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    max-width: 250px;
+  position: center;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  max-width: 250px;
+  width: 175px !important;
+  color: black;
 }
 
-.description span:first-child {
-    margin-bottom: 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 
 .description span:last-child {
-    font-weight: 300;
-    margin-top: 8px;
-    color: black;
-    white-space: normal;
+  font-weight: 10;
+  margin-top: 8px;
+  color: black;
+  white-space: normal;
+  margin-bottom: 5px;
 }
-
 .quantity {
     display: flex;
     align-items: center;
@@ -294,26 +296,7 @@ input[type="number"] {
 }
 
 
-.description {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  max-width: 250px;
-}
 
-.description span:first-child {
-  margin-bottom: 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.description span:last-child {
-  font-weight: 300;
-  margin-top: 8px;
-  color: black;
-  white-space: normal;
-}
 
 .quantity {
   display: flex;
@@ -383,31 +366,9 @@ input[type="number"] {
 }
 
 
-.description {
-  position: center;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  max-width: 250px;
-  width: 175px !important;
-}
 
-.description span:first-child {
-  margin-bottom: 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 
-.description span:last-child {
-  font-weight: 10;
-  margin-top: 8px;
-  color: black;
-  white-space: normal;
-}
+
 .delete-btn {
   display: none;
 }
@@ -502,31 +463,7 @@ input[type="number"] {
         max-height: 100%; /* ensure the image does not exceed the container height */
     }
 
-    .description {
-        margin-right: 0px;
-        width: calc(50%);
-    }
 
-    .description {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        max-width: 250px;
-    }
-
-    .description span:first-child {
-        margin-bottom: 5px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-  .description span:last-child {
-    font-weight: 10;
-    margin-top: 8px;
-    color: black;
-    white-space: normal;
-  }
   .delete-btn {
     display: none;
   }
@@ -628,30 +565,18 @@ input[type="number"] {
   }
 
   .description {
-    margin-right: 60px;
-    width: calc(70% - 200px);
-  }
 
-  .description {
     position: relative;
     display: flex;
     flex-direction: column;
     max-width: 250px;
-  }
-
-  .description span:first-child {
-    margin-bottom: 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .description span:last-child {
-    font-weight: 300;
-    margin-top: 8px;
     color: black;
-    white-space: normal;
+    margin-right: 0px;
+    width: calc(50%);
   }
+
+
+
 
   .quantity {
     display: flex;
@@ -721,30 +646,10 @@ input[type="number"] {
   }
 
   .description {
-    margin-right: 0px;
-    width: calc(50%);
+
   }
 
-  .description {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    max-width: 250px;
-  }
 
-  .description span:first-child {
-    margin-bottom: 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .description span:last-child {
-    font-weight: 10;
-    margin-top: 8px;
-    color: black;
-    white-space: normal;
-  }
   .delete-btn {
     display: none;
   }
@@ -776,9 +681,6 @@ input[type="number"] {
 
   }
 
-  .description span:first-child {
-    width: 175px;
-  }
   .buttons{
     display: inline-block;
     padding-left: 10px;
