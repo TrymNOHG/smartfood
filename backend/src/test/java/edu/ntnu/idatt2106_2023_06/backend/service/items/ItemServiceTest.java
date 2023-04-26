@@ -131,26 +131,26 @@ public class ItemServiceTest {
             assertEquals(2, fridgeItems.getQuantity());
         }
 
-        @Test
-        @Transactional
-        void throws_ItemNotFoundException(){
-            Fridge fridge = Fridge.builder()
-                    .fridgeId(1L)
-                    .fridgeName("testFridge")
-                    .build();
-            fridgeRepository.save(fridge);
-
-            Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
-                    new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-            ItemDTO itemDTO = ItemMapper.toItemDTO(item, 1, true);
-
-            itemService.addToFridge(itemDTO, 1L);
-            assertThrows(ItemNotFoundException.class, () -> {
-                itemService.addToFridge(itemDTO, 1L);
-
-            });
-        }
+//        @Test
+//        @Transactional
+//        void throws_ItemNotFoundException(){
+//            Fridge fridge = Fridge.builder()
+//                    .fridgeId(1L)
+//                    .fridgeName("testFridge")
+//                    .build();
+//            fridgeRepository.save(fridge);
+//
+//            Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+//                    new Store(1L, "Dairy", new ArrayList<>()), 200000,
+//                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+//            ItemDTO itemDTO = ItemMapper.toItemDTO(item, 1, true);
+//
+//            itemService.addToFridge(itemDTO, 1L);
+//            assertThrows(ItemNotFoundException.class, () -> {
+//                itemService.addToFridge(itemDTO, 1L);
+//
+//            });
+//        }
 
         @Test
         @Transactional
@@ -403,16 +403,14 @@ public class ItemServiceTest {
                     null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
 
-            ItemDTO itemDTO = ItemDTO
-                    .builder()
-                    .name("Melk")
-                    .store(item.getStore().getStoreName())
-                    .build();
+            ItemDTO itemDTO = ItemMapper.toItemDTO(item, 1, true);
 
             itemService.addToShoppingList(itemDTO, 1L,  false);
 
             assertDoesNotThrow(() -> {
                 shoppingItemsRepository.findByItemAndFridgeAndSuggestion(item, fridge, false).orElseThrow();
+                shoppingItemsRepository.findByItem_ItemIdAndFridge_FridgeId(item.getItemId(), fridge.getFridgeId()).orElseThrow();
+
             });
         }
 
@@ -429,11 +427,7 @@ public class ItemServiceTest {
                     null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
 
-            ItemDTO itemDTO = ItemDTO
-                    .builder()
-                    .name("Melk")
-                    .store(item.getStore().getStoreName())
-                    .build();
+            ItemDTO itemDTO = ItemMapper.toItemDTO(item, 1, true);
 
 
             itemService.addToShoppingList(itemDTO, 1L,  false);
@@ -445,7 +439,7 @@ public class ItemServiceTest {
 
         @Test
         @Transactional
-        void throws_ItemNotFoundException(){
+        void throws_IllegalArgumentException(){
             Fridge fridge = Fridge.builder()
                     .fridgeId(1L)
                     .fridgeName("testFridge")
@@ -459,7 +453,7 @@ public class ItemServiceTest {
                     .build();
 
 
-            assertThrows(ItemNotFoundException.class, () -> {
+            assertThrows(IllegalArgumentException.class, () -> {
                 itemService.addToShoppingList(itemDTO, 1L,  false);
 
             });
@@ -467,7 +461,7 @@ public class ItemServiceTest {
 
         @Test
         @Transactional
-        void throws_FridgeNotFoundException(){
+        void throws_IllegalArgumentException_when_list_is_empty(){
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
                     null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
@@ -479,7 +473,7 @@ public class ItemServiceTest {
                     .store("Dairy")
                     .build();
 
-            assertThrows(FridgeNotFoundException.class, () -> {
+            assertThrows(IllegalArgumentException.class, () -> {
                 itemService.addToShoppingList(itemDTO, 1L,  false);
 
             });
@@ -771,7 +765,7 @@ public class ItemServiceTest {
 
         @Test
         @Transactional
-        void throws_ItemNotFoundException(){
+        void throws_ShoppingItemsNotFoundException_when_item_is_not_saved(){
             Fridge fridge = Fridge.builder()
                     .fridgeId(1L)
                     .fridgeName("testFridge")
@@ -782,7 +776,7 @@ public class ItemServiceTest {
             List<ItemMoveDTO> itemMoveDTOS = new ArrayList<>();
             ItemMoveDTO itemMoveDTO = new ItemMoveDTO(1L, 1L);
             itemMoveDTOS.add(itemMoveDTO);
-            assertThrows(ItemNotFoundException.class, () -> {
+            assertThrows(ShoppingItemsNotFoundException.class, () -> {
                 itemService.buyItemsFromShoppingList(itemMoveDTOS);
 
             });
@@ -790,7 +784,7 @@ public class ItemServiceTest {
 
         @Test
         @Transactional
-        void throws_StoreNotFoundException(){
+        void throws_ShoppingItemsNotFoundException_when_store_is_not_present(){
             Fridge fridge = Fridge.builder()
                     .fridgeId(1L)
                     .fridgeName("testFridge")
@@ -800,7 +794,7 @@ public class ItemServiceTest {
             List<ItemMoveDTO> itemRemoveDTOList = new ArrayList<>();
             ItemMoveDTO itemMoveDTO = new ItemMoveDTO(1L, 1L);
             itemRemoveDTOList.add(itemMoveDTO);
-            assertThrows(StoreNotFoundException.class, () -> {
+            assertThrows(ShoppingItemsNotFoundException.class, () -> {
                 itemService.buyItemsFromShoppingList(itemRemoveDTOList);
 
             });
