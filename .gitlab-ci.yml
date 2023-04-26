@@ -58,9 +58,8 @@ e2e-test-frontend-job:
   script:
     - cd frontend
     - npm install
-    - npx vite --port 4173 & # Add the --root option here
+    - npx vite --port 5173 & # Add the --root option here
     - sleep 10
-    - curl http://localhost:4173
     - npx cypress run --e2e
 
 

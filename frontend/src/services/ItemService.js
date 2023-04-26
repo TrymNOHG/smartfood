@@ -1,7 +1,7 @@
 import axios from "axios";
 import SessionToken from '@/features/SessionToken.js'
 
-const BASE_LISTING_URL = "http://192.168.0.101:8080/item";
+const BASE_LISTING_URL = "http://localhost:8080/item";
 
 export const addItemToFridge = async (itemDTO, fridgeId) => {
     return await axios.post(`${BASE_LISTING_URL}/fridge/add?fridgeId=${fridgeId}`, itemDTO, {
