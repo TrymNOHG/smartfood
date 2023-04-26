@@ -1,5 +1,5 @@
 {
-  "matsmart": "FoodSmart",
+  "matsmart": "SmartMat",
   "dinner": "Dinner",
   "fridge": "Fridge",
   "statistics": "Statistics",
@@ -57,5 +57,7 @@
   "search_Members_Title": "Search For Members",
   "enter_username": "Enter Username",
   "search_MembersButton_Text": "Search",
-  "select_fridge": "Select Fridge"
+  "select_fridge": "Select Fridge",
+  "alt_info_button": "Information about the page",
+  "members": "Members"
 }
