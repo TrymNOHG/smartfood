@@ -27,7 +27,7 @@ build-backend-job:
   stage: build
   script:
     - cd backend
-    - mvn build # Skip tests during build phase
+    - mvn install -B -DskipTests # Skip tests during build phase
 
 build-frontend-job:
   image: node:16
