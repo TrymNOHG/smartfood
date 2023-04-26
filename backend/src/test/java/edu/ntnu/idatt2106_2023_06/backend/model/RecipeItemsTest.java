@@ -97,7 +97,7 @@ class RecipeItemsTest {
             Recipe recipe = new Recipe(1L, 50, new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    new Date(), new Date(), "picture.png", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                     "picture.png", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             RecipeItems recipeItems = new RecipeItems(new RecipeItemId(recipe.getRecipeId(), item.getItemId()), item, recipe);
             assertEquals(item, recipeItems.getItem());
         }
@@ -106,7 +106,7 @@ class RecipeItemsTest {
         void recipe_getter_returns_correct_value(){
             Recipe recipe = new Recipe(1L, 50, new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
-                    new Store(1L, "Dairy", new ArrayList<>()), 200000, new Date(), new Date(),
+                    new Store(1L, "Dairy", new ArrayList<>()), 200000,
                     "picture.png", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             RecipeItems recipeItems = new RecipeItems(new RecipeItemId(recipe.getRecipeId(), item.getItemId()), item, recipe);
             assertEquals(recipe, recipeItems.getRecipe());

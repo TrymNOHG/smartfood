@@ -2,7 +2,9 @@
   <div>
 
     <div id="myDropdown" class="dropdown-content">
+
       <figure id="backBlack"></figure>
+
       <div id="backGreen">
         <div class="grey-bar">
           <h2 id="grey-header" >{{ $t('shopping_cart') }}</h2>
@@ -18,7 +20,7 @@
           ></SearchInput>
           <button id="searchbtn" @click="handleSearch">Search</button>
         </div>
-        <CartControl v-if="true" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
+        <CartControl v-if="isCurrentUserSuperUser" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
       </div>
       <div class="dropper" v-if="search">
         <vue-collapsible-panel-group>
@@ -68,7 +70,6 @@
                         :key="index"
                         :image="item.image"
                         :name="item.name"
-                        :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
                         :quantity="item.quantity"
                         :item="item"
                         :isSuperUser="isCurrentUserSuperUser"
@@ -89,7 +90,7 @@ import {
 } from "@dafcoe/vue-collapsible-panel";
 import "@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {acceptSuggestion, deleteItemFromShoppingList} from "@/services/ItemService";
+import {acceptSuggestion, deleteItemFromShoppingList, updateShoppingListItem} from "@/services/ItemService";
 import {addItemToShoppingList} from "@/services/ItemService";
 import {getItemsFromShoppingList} from "@/services/ItemService";
 import {buyItemsFromShoppingList} from "@/services/ItemService";
@@ -220,7 +221,7 @@ export default {
                 await deleteItemsFromShoppingList(itemRemoveDTOList);
                 loadItemsFromCart();
                 swal.fire(
-                  'deleted items',
+                  'Deleted items',
                   '',
                   'success'
                 )
@@ -241,10 +242,8 @@ export default {
             const itemRemoveDTOList = [{}];
             selectedItems.forEach((item) => {
                 const ItemRemoveDTO = {
-                    itemName: item.name,
-                    store: item.store,
+                    itemId: item.itemId,
                     fridgeId: currentFridge.fridgeId,
-                    quantity: item.quantity,
                 };
                 itemRemoveDTOList.push(ItemRemoveDTO);
                 console.log("ITEM REMOVE DTO")
@@ -254,7 +253,11 @@ export default {
                 itemRemoveDTOList.shift();
                 await buyItemsFromShoppingList(itemRemoveDTOList);
             } catch (error) {
-                console.error(error);
+              swal.fire(
+                  error.response.data["Message:"],
+                  '',
+                  'error'
+              )
             }
             location.reload();
         }
@@ -271,10 +274,8 @@ export default {
             const itemRemoveDTOList = [{}];
             selectedItems.forEach((item) => {
                 const ItemRemoveDTO = {
-                    itemName: item.name,
-                    store: item.store,
+                    itemId: item.itemId,
                     fridgeId: currentFridge.fridgeId,
-                    quantity: item.quantity,
                 };
                 itemRemoveDTOList.push(ItemRemoveDTO);
                 console.log("ITEM REMOVE DTO")
@@ -285,12 +286,16 @@ export default {
                 await buyItemsFromShoppingList(itemRemoveDTOList);
                 loadItemsFromCart();
                 swal.fire(
-                  'added to fridge',
+                  'Added to fridge',
                   '',
                   'success'
                 )
             } catch (error) {
-                console.error(error);
+              swal.fire(
+                  error.response.data["Message:"],
+                  '',
+                  'error'
+              )
             }
         }
 
@@ -335,8 +340,6 @@ export default {
             description: item.description,
             store: item.store,
             price: item.price,
-            purchaseDate: item.purhchaseDate,
-            expirationDate: item.expirationDate,
             image: item.image,
             quantity: 1,
           };
@@ -391,29 +394,23 @@ export default {
         }
 
         async function set_CartItemAmount(newQuantity, item){
+          //TODO: add exception handling.........
+            if(newQuantity < 1) {
+              await loadItemsFromCart();
+              return;
+            }
             console.log(newQuantity)
-            console.log("woohoo")
             console.log(item)
 
-            if(newQuantity<item.quantity){
-
-            }
-
-            const itemDTO = {
-                name: item.name,
-                description: item.description,
-                store: item.store,
-                price: item.price,
-                purchaseDate: item.purhchaseDate,
-                expirationDate: item.expirationDate,
-                image: item.image,
-                quantity: newQuantity,
+            const shoppingItemUpdateDTO = {
+              itemId: item.itemId,
+              fridgeId: currentFridge.fridgeId,
+              suggestion: null,
+              quantity: newQuantity
             };
-            const fridgeId = currentFridge.fridgeId;
 
-            console.log(itemDTO);
             event.stopPropagation();
-            addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
+            updateShoppingListItem(shoppingItemUpdateDTO)
                 .then(async (response) => {
                     if (response !== undefined) {
                         await loadItemsFromCart();
@@ -851,22 +848,8 @@ body {
     width: 115px;
 }
 
-.description span {
-    display: block;
-    font-size: 14px;
-    color: #43484d;
-    font-weight: 400;
-}
 
-.description span:first-child {
-    margin-bottom: 5px;
-}
 
-.description span:last-child {
-    font-weight: 300;
-    margin-top: 8px;
-    color: #86939e;
-}
 
 .quantity {
     padding-top: 20px;
@@ -1001,6 +984,14 @@ input:focus {
     margin-right: 0;
   }
 
+  #searchbtn{
+    display: none !important;
+  }
+
+  .grey-bar{
+    background-color: #31c48d;
+  }
+
   #backBlack {
     height: 6px;
     background-color: white;
@@ -1014,8 +1005,6 @@ input:focus {
     border-radius: 20px 20px 20px 20px;
 
 
-    width: 100%;
-    z-index: 1;
   }
 
   #forslagBlack {
@@ -1058,8 +1047,9 @@ input:focus {
     position: fixed;
     bottom: 70px;
     width: 100%;
-    background-color: transparent;
     z-index: 1;
+    background-color: transparent;
+
   }
 
   nav {
@@ -1329,22 +1319,8 @@ input:focus {
     width: 115px;
   }
 
-  .description span {
-    display: block;
-    font-size: 14px;
-    color: #43484d;
-    font-weight: 400;
-  }
 
-  .description span:first-child {
-    margin-bottom: 5px;
-  }
 
-  .description span:last-child {
-    font-weight: 300;
-    margin-top: 8px;
-    color: #86939e;
-  }
 
   button[class*="btn"] {
     width: 30px;

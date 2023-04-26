@@ -2,13 +2,9 @@ package edu.ntnu.idatt2106_2023_06.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemMoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.ShoppingListLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.filter.JwtAuthenticationFilter;
-import edu.ntnu.idatt2106_2023_06.backend.mapper.FridgeItemMapper;
-import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
@@ -18,7 +14,6 @@ import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
 import edu.ntnu.idatt2106_2023_06.backend.service.users.UserService;
-import lombok.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -42,12 +37,14 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ActiveProfiles("test")
-public class ItemControllerTest {
+public class FridgeItemsControllerTest {
+
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
@@ -157,43 +154,6 @@ public class ItemControllerTest {
         verify(itemService, times(1)).removeItemFromFridge(itemRemoveDTO);
     }
 
-    @Test
-    public void testAddToShoppingList() throws Exception {
-        ItemDTO itemDTO = new ItemDTO( "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
-                "Kiwi", 200000, null, 1, false);
-        Long fridgeId = 1L;
-        boolean suggestion = false;
-
-        Item item = new Item();
-
-        when(userService.isSuperUser(fridgeId, user.getUsername())).thenReturn(true);
-        when(itemService.addItem(itemDTO)).thenReturn(item);
-
-
-        doNothing().when(itemService).addToShoppingList(itemDTO, fridgeId, suggestion);
-        mockMvc.perform(MockMvcRequestBuilders.post("/item/shopping/add")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("fridgeId", fridgeId.toString())
-                        .param("suggestion", Boolean.toString(suggestion))
-                        .content(asJsonString(itemDTO)))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testGetShoppingList() throws Exception {
-        Long fridgeId = 1L;
-        List<ShoppingListLoadDTO> shoppingItems = new ArrayList<>();
-        shoppingItems.add(new ShoppingListLoadDTO(1L, "Tine Melk",
-                "Tine melk kommer fra fri gående, grass matet kuer.", "Kiwi", 200000,
-                null, 1, true));
-        when(itemService.getShoppingListItems(fridgeId)).thenReturn(shoppingItems);
-        mockMvc.perform(MockMvcRequestBuilders.get("/item/shopping/get")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("fridgeId", fridgeId.toString()))
-                .andExpect(status().isOk());
-    }
 
     private static String asJsonString(final Object obj) {
         try {
@@ -203,59 +163,4 @@ public class ItemControllerTest {
         }
     }
 
-    @Test
-    public void testDeleteItemFromShoppingList() throws Exception {
-        ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
-        boolean suggestion = false;
-
-        when(userService.isUserInFridge(itemRemoveDTO.fridgeId(), user.getUsername())).thenReturn(true);
-        doNothing().when(itemService).removeItemFromShoppingList(itemRemoveDTO, suggestion);
-
-
-        mockMvc.perform(MockMvcRequestBuilders.delete("/item/shopping/delete")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("suggestion", Boolean.toString(suggestion))
-                        .content(asJsonString(itemRemoveDTO)))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testBuyItemsFromShoppingList() throws Exception {
-        ItemMoveDTO itemRemoveDTO = new ItemMoveDTO(1L, 1L);
-        List<ItemMoveDTO> itemDTOList = List.of(itemRemoveDTO);
-
-        when(userService.isSuperUser(itemRemoveDTO.fridgeId(), user.getUsername())).thenReturn(true);
-
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/item/shopping/buy")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(itemDTOList)))
-                .andExpect(status().isOk());
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/item/shopping/buy")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(itemDTOList)))
-                .andExpect(status().isOk());
-
-        verify(itemService, times(2)).buyItemsFromShoppingList(itemDTOList);
-    }
-
-    @Test
-    public void testAcceptSuggestion() throws Exception {
-        ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
-
-        when(userService.isSuperUser(itemRemoveDTO.fridgeId(), user.getUsername())).thenReturn(true);
-
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/item/shopping/suggestion")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(itemRemoveDTO)))
-                .andExpect(status().isOk());
-
-        verify(itemService, times(1)).acceptSuggestion(itemRemoveDTO);
-    }
 }
