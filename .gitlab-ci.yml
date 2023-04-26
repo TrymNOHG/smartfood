@@ -58,8 +58,9 @@ e2e-test-frontend-job:
   script:
     - cd frontend
     - npm install
-    - npm run test:e2e
-
+    - npx vite preview --port 4173 &
+    - sleep 10
+    - npx cypress run --e2e
 
 
 
