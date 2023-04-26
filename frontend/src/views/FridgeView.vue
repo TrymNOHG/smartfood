@@ -1,9 +1,14 @@
 <template>
-
-  <div class="members-fridge">
-      <div id="toggle-button" class="link" @click="selectedTab = 'members'" :class="{ active: selectedTab === 'members' }">Members</div>
-      <div id="toggle-button" class="link" @click="selectedTab = 'fridge'" :class="{ active: selectedTab === 'fridge' }">Fridge</div>
+  <div class="grey-bar">
+    <div class="members-fridge">
+        <div id="toggle-button" class="link" @click="selectedTab = 'members'" :class="{ active: selectedTab === 'members' }">{{ $t('members') }}</div>
+        <div id="toggle-button" class="link" @click="selectedTab = 'fridge'" :class="{ active: selectedTab === 'fridge' }">{{ $t('fridge') }}</div>
+    </div>
+    <div class="information-button">
+      <img src="src/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
+    </div>
   </div>
+
   <!--TODO: add infinite scroller or pagination-->
   <div class="fridge-wrapper" v-show="selectedTab === 'fridge'">
     <div class="search-container">
@@ -155,7 +160,17 @@ export default {
       await this.itemStore.fetchItemsFromFridgeById(this.fridge.fridgeId).then((items) => {
         this.fridgeItems = items;
       });
-    }
+    },
+
+    showInformation(){
+
+      if(this.selectedTab === 'fridge'){
+        //TODO: INFORMATION FRIDGE put information API in here
+      }
+      else {
+        //TODO: INFORMATION MEMBERS put information API in here
+      }
+    },
 
   },
 
@@ -198,7 +213,29 @@ export default {
 
 <style scoped>
 
+.grey-bar {
+  background-color: #6C6C6C;
+  max-height : 35px;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
 
+#grey-header{
+  grid-column: 2;
+  color: white;
+}
+
+.information-button{
+  grid-column: 3;
+  text-align: right;
+  padding: 2px 5px;
+}
+
+#info-picture{
+  height: 30px;
+  width: 30px;
+}
 
 .fridge-wrapper {
   display: grid;
@@ -326,6 +363,7 @@ input[type="text"]:not(:focus) + .search-results {
   text-align: center;
   display: flex;
   justify-content: center;
+  grid-column: 2;
 }
 
 @media (max-width: 650px) {

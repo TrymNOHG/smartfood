@@ -92,6 +92,8 @@ export default {
       await this.fridgeStore.addNewFridgeByFridgeNameAndUsername(this.newFridgeName);
       this.fridgeList = await this.fridgeStore.fetchFridgesByUsername(this.user.username);
     },
+
+
   },
 };
 </script>
