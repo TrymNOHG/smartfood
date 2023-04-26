@@ -39,4 +39,13 @@ public interface ShoppingItemsRepository extends JpaRepository<ShoppingItems, Fr
      * @return An Optional containing the ShoppingItem, or an empty Optional if not found
      */
     Optional<List<ShoppingItems>> findByFridge(Fridge fridge);
+
+    /**
+     * Find a ShoppingItem by item ID and fridge ID
+     *
+     * @param itemId The items of product
+     * @param fridgeId the fridge to search in
+     * @return An Optional containing the ShoppingItem, or an empty Optional if not found
+     */
+    Optional<ShoppingItems> findByItem_ItemIdAndFridge_FridgeId(Long itemId, Long fridgeId);
 }

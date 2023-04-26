@@ -1,22 +1,26 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.items;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemMoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.ShoppingListLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 
 import java.util.List;
 
 public interface IItemService {
 
-    Long addItem(ItemDTO itemDTO);
-    void addToFridge(Long itemId, Long fridgeId, int quantity);
-    List<ItemDTO> getFridgeItems(Long fridgeId);
-    void addToShoppingList(Long itemId, Long fridgeId, int quantity, boolean suggestion);
-    List<ItemDTO> getShoppingListItems(Long fridgeId);
-    void deleteItemFromShoppingList(ItemRemoveDTO itemRemoveDTO, boolean suggestion);
+    Item addItem(ItemDTO itemDTO);
+    void addToFridge(ItemDTO itemDTO, Long fridgeId);
+    List<FridgeItemLoadDTO> getFridgeItems(Long fridgeId);
+    void addToShoppingList(ItemDTO item, Long fridgeId, boolean suggestion);
+    List<ShoppingListLoadDTO> getShoppingListItems(Long fridgeId);
+    void removeItemFromShoppingList(ItemRemoveDTO itemRemoveDTO, boolean suggestion);
     void deleteAllItemsFromShoppingList(List<ItemRemoveDTO> itemRemoveDTOList);
-    void buyItemsFromShoppingList(List<ItemRemoveDTO> itemDTOList);
+    void buyItemsFromShoppingList(List<ItemMoveDTO> shoppingItemIds);
     void acceptSuggestion(ItemRemoveDTO itemDTO);
-    void deleteItemFromFridge(ItemRemoveDTO itemRemoveDTO);
+    void removeItemFromFridge(ItemRemoveDTO itemRemoveDTO);
 
 
 }
