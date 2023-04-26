@@ -22,6 +22,7 @@
                     name="name"
                     :value="quantity"
                     @input="$emit('update:quantity', $event.target.value)"
+                    @blur="$emit('quantity-updated', $event.target.value, item)"
             />
 
             <button v-if="isSuperUser" class="plus-btn" type="button" @click="handleAdd">
@@ -30,9 +31,9 @@
         </div>
 
         <div class="buttons" >
-            <span class="delete-btn" v-if="isSuperUser" @click="handleDeleteItem"></span>
-
-            <input type="checkbox" v-if="isSuperUser" :checked="item.isChecked" @change="handleChange"/>
+            <font-awesome-icon class="btn cart" v-if="isSuperUser" icon="fa-solid fa-shopping-cart" @click="handleBuyItem"/>
+            <font-awesome-icon class="btn trash" icon="fa-solid fa-trash" @click="handleDeleteItem"/>
+            <input type="checkbox" class="btn checkbox" v-if="isSuperUser" :checked="item.isChecked" @change="handleCheckedChange"/>
         </div>
     </div>
 </template>
@@ -83,10 +84,13 @@ export default {
         handleDeleteItem() {
             this.$emit("delete-item");
         },
-        handleChange(event) {
+        handleCheckedChange(event) {
             //event.target.checked
             this.$emit("handle-checked", this.item, event.target.checked);
         },
+        handleBuyItem(){
+            this.$emit("handle-buy", this.item)
+        }
     },
     components: {BasicCheckbox},
 };
@@ -133,25 +137,15 @@ export default {
     margin-right: 60px;
 }
 
-.delete-btn,
-.like-btn {
-    display: inline-block;
+.buttons .btn{
+    margin: 0 15px 0 15px;
+}
+
+.btn:hover{
     cursor: pointer;
+    scale: 1.3;
 }
 
-.delete-btn {
-    width: 18px;
-    height: 17px;
-    background: url("@/assets/images/delete-icn.svg") no-repeat center;
-}
-
-.is-active {
-    animation-name: animate;
-    animation-duration: 0.8s;
-    animation-iteration-count: 1;
-    animation-timing-function: steps(28);
-    animation-fill-mode: forwards;
-}
 
 @keyframes animate {
     0% {

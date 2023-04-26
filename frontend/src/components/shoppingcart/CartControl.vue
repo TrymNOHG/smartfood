@@ -1,19 +1,19 @@
 <template>
-
     <div class="cart-control">
         <button class="control-buttons" type="button" @click="handleMarkAll">
-          Merk alle
+            {{ $t("mark_all") }}
         </button>
 
         <button class="control-buttons" type="button" @click="handleBuy">
-          Kjøp
+            {{ $t("buy") }}
         </button>
 
         <button class="control-buttons" type="button" @click="handleDelete">
-            Slett
+            {{ $t("delete") }}
         </button>
     </div>
 </template>
+
 
 <script>
 import {boolean} from 'yup';
@@ -79,9 +79,9 @@ export default {
 .control-buttons:last-child:hover {
     background-color: #570000;
   }
-  
+
   @media only screen and (max-width: 800px) {
-    
+
   }
   @media only screen and (min-width: 350px) and (max-width: 480px) {
     .cart-control {
@@ -124,9 +124,9 @@ export default {
       background-color: #30b34e;
     }
   }
-  
+
   @media only screen and (max-width: 350px) {
-    
+
   }
   </style>
   
