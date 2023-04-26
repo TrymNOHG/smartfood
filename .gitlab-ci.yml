@@ -57,9 +57,9 @@ cypress-test-frontend-job:
   stage: test
   script:
     - cd frontend
-    - npm ci # Install dependencies using package-lock.json
+    - npm install # Install dependencies using package-lock.json
     - npx cypress install # Install Cypress
-    - npx cypress run # Run Cypress tests
+    - npm run test:e2e
 
 
 
