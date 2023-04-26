@@ -2,6 +2,7 @@ package edu.ntnu.idatt2106_2023_06.backend.controller;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemService;
@@ -114,7 +115,7 @@ public class FridgeItemsController implements IFridgeItemsController{
     @Override
     public ResponseEntity<Object> getFridge(@ParameterObject @RequestParam(name = "fridgeId") Long fridgeId){
         logger.info("User wants to get items from fridge");
-        List<ItemDTO> itemList = itemService.getFridgeItems(fridgeId);
+        List<FridgeItemLoadDTO> itemList = itemService.getFridgeItems(fridgeId);
         //TODO: use FridgeItemLoadDTO
         logger.info("Items have been retrieved!");
         return ResponseEntity.ok(itemList);

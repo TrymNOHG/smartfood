@@ -85,7 +85,7 @@ export default {
             html: `
           <div class="swal2-content">
             <div class="swal2-text">
-              ${this.$t('how_much_left')}
+              ${this.$t('Percent-wise, how much was left?')}
             </div>
             <div id="range-value-text" class="swal2-text"></div>
           </div>
@@ -134,7 +134,7 @@ export default {
     const itemStore = useItemStore();
 
     let borderColor = calculateExpirationDate(props.item.purchaseDate, props.item.expirationDate);
-
+    console.log(props.item)
     function calculateExpirationDate(purchaseDate, expirationDate) {
       const currentDate = new Date();
       const purchase = new Date(purchaseDate);

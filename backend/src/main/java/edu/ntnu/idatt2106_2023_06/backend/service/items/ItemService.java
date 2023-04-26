@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.items;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.*;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.ShoppingItemUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.ShoppingListLoadDTO;
@@ -304,12 +305,12 @@ public class ItemService implements IItemService {
      * @throws FridgeItemsNotFoundException if there are no items in the specified fridge.
      */
     @Override
-    public List<ItemDTO> getFridgeItems(Long fridgeId) {
+    public List<FridgeItemLoadDTO> getFridgeItems(Long fridgeId) {
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new FridgeNotFoundException(fridgeId));
         List<FridgeItems> fridgeItems = fridgeItemsRepository.findByFridge(fridge).orElseThrow(() -> new FridgeItemsNotFoundException(fridgeId));
-        List<ItemDTO> itemDTOList = new ArrayList<>();
+        List<FridgeItemLoadDTO> itemDTOList = new ArrayList<>();
         for (FridgeItems item : fridgeItems){
-            itemDTOList.add(ItemMapper.toItemDTO(item.getItem(), item.getQuantity(), null));
+            itemDTOList.add(FridgeItemMapper.toFridgeItemLoadDTO(item));
         }
         return itemDTOList;
     }

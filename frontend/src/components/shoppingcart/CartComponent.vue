@@ -333,8 +333,6 @@ export default {
             description: item.description,
             store: item.store,
             price: item.price,
-            purchaseDate: item.purhchaseDate,
-            expirationDate: item.expirationDate,
             image: item.image,
             quantity: 1,
           };
