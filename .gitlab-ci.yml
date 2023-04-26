@@ -19,15 +19,15 @@
 
 image: maven:eclipse-temurin
 stages:
-  #- build
+  - build
   - test
   - deploy
 
-build-backend-job:
-  stage: build
-  script:
-    - cd backend
-    - mvn install -B -DskipTests # Skip tests during build phase
+#build-backend-job:
+#  stage: build
+#  script:
+#    - cd backend
+#    - mvn install -B -DskipTests # Skip tests during build phase
 
 build-frontend-job:
   image: node:16
@@ -37,11 +37,11 @@ build-frontend-job:
     - npm install
     - npm run build
 
-unit-test-backend-job:
-  #stage: test
-  #script:
-  #  - cd backend
-  # - mvn clean test
+#unit-test-backend-job:
+#  stage: test
+#  script:
+#   - cd backend
+#   - mvn clean test
 
 unit-test-frontend-job:
   image: node:16
