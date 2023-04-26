@@ -60,9 +60,8 @@
       </h1>
       
       <router-link class="change-button" to="/fridges" >
-        <img src="@/assets/images/exit_change_fridge.png" :alt=" $t('exit-fridge') " style="max-height: 100%" v-if="hasCurrentFridge">
-        <img src="@/assets/images/enter_choose_fridge.png" :alt=" $t('enter-fridge') " style="max-height: 100%" v-else>
-
+        <img src="@/assets/images/exit_change_fridge.png" style="max-height: 100%" v-if="hasCurrentFridge">
+        <img src="@/assets/images/enter_choose_fridge.png" style="max-height: 100%" v-else>
       </router-link>
     </div>
   </div>
