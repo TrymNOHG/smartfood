@@ -51,13 +51,16 @@ unit-test-frontend-job:
     - npm install
     - npm run test:unit
 
+
 cypress-test-frontend-job:
-  image: cypress/included:9.5.0 
+  image: node:16 # Use the Node.js image with the desired version
   stage: test
   script:
     - cd frontend
-    - npm ci 
-    - npx cypress run 
+    - npm ci # Install dependencies using package-lock.json
+    - npx cypress install # Install Cypress
+    - npx cypress run # Run Cypress tests
+
 
 generatepdf:
   image: ubuntu:20.04  # vi kjører dette i en docker container, som kjører Ubuntu Linux
