@@ -3,7 +3,7 @@ import SessionToken from '@/features/SessionToken.js'
 
 
 
-const BASE_USER_URL = "http://10.22.58.166:8080/user";
+const BASE_USER_URL = "http://192.168.0.101:8080/user";
 export const registerUser = async (userData) => {
     return await axios.post(`${BASE_USER_URL}/register`, userData);
 }

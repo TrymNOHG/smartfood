@@ -2,8 +2,11 @@
   <div>
 
     <div id="myDropdown" class="dropdown-content">
+
       <figure id="backBlack"></figure>
+
       <div id="backGreen">
+
         <h1 id="shopList">Handlekurv</h1>
         <div id="searchbar">
           <SearchInput
@@ -13,7 +16,7 @@
           ></SearchInput>
           <button id="searchbtn" @click="handleSearch">Search</button>
         </div>
-        <CartControl v-if="true" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
+        <CartControl v-if="isCurrentUserSuperUser" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
       </div>
       <div class="dropper" v-if="search">
         <vue-collapsible-panel-group>
@@ -816,22 +819,8 @@ body {
     width: 115px;
 }
 
-.description span {
-    display: block;
-    font-size: 14px;
-    color: #43484d;
-    font-weight: 400;
-}
 
-.description span:first-child {
-    margin-bottom: 5px;
-}
 
-.description span:last-child {
-    font-weight: 300;
-    margin-top: 8px;
-    color: #86939e;
-}
 
 .quantity {
     padding-top: 20px;
@@ -979,8 +968,6 @@ input:focus {
     border-radius: 20px 20px 20px 20px;
 
 
-    width: 100%;
-    z-index: 1;
   }
 
   #forslagBlack {
@@ -1023,8 +1010,8 @@ input:focus {
     position: fixed;
     bottom: 70px;
     width: 100%;
-    background-color: transparent;
     z-index: 1;
+
   }
 
   nav {
@@ -1313,22 +1300,8 @@ input:focus {
     width: 115px;
   }
 
-  .description span {
-    display: block;
-    font-size: 14px;
-    color: #43484d;
-    font-weight: 400;
-  }
 
-  .description span:first-child {
-    margin-bottom: 5px;
-  }
 
-  .description span:last-child {
-    font-weight: 300;
-    margin-top: 8px;
-    color: #86939e;
-  }
 
   button[class*="btn"] {
     width: 30px;
