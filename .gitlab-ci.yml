@@ -57,9 +57,9 @@ e2e-test-frontend-job:
   stage: test
   script:
     - cd frontend
-    - npm ci
-    - npx vite preview &
-    - npx cypress run --e2e
+    - npm install
+    - npm run test:e2e
+
 
 
 
