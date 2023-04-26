@@ -264,11 +264,13 @@ export default {
   grid-column: 3;
   text-align: right;
   padding: 2px 5px;
+  max-height: 35px;
 }
 
 #info-picture{
   height: 30px;
   width: 30px;
+  cursor: pointer;
 }
 
 .fridge-wrapper {
@@ -349,17 +351,17 @@ input[type="text"]:not(:focus) + .search-results {
 
 .link {
   text-decoration: none;
+  line-height: 25px;
   color: white;
 }
 
 #toggle-button {
   width: 150px;
-  margin-top: 5px;
-  margin-right: 50px;
 }
 
 #toggle-button:hover {
-  color: #3b3b3b;
+  cursor: pointer;
+  font-size: x-large;
 }
 
 .search-results {
@@ -382,25 +384,28 @@ input[type="text"]:not(:focus) + .search-results {
   transition: 0.5s;
 }
 
+.grey-bar .link.active {
+  height: 25px;
+}
+
 .active {
-    height: 25px;
-    width: 150px;
+    background-size: 25px;
     background-color: #b1b1b1;
     border-radius: 5px;
     font-weight: bold;
     text-decoration: black;
     text-shadow: black 0 0 2px;
-    margin-left: 50px;
-    margin-top: 5px;
 }
 
 .members-fridge {
   background-color: #6C6C6C;
   height: 35px;
   color: white;
-  text-align: center;
-  display: flex;
-  justify-content: center;
+  font-size: 1.5em;
+  padding-top: 5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 20px;
   grid-column: 2;
 }
 

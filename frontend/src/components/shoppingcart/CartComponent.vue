@@ -6,8 +6,12 @@
       <figure id="backBlack"></figure>
 
       <div id="backGreen">
-
-        <h1 id="shopList">Handlekurv</h1>
+        <div class="grey-bar">
+          <h2 id="grey-header" >{{ $t('shopping_cart') }}</h2>
+          <div class="information-button">
+            <img src="src/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
+          </div>
+        </div>
         <div id="searchbar">
           <SearchInput
               v-model="searchQuery"
@@ -552,6 +556,12 @@ export default {
       set_CartItemAmount,
     };
   },
+  methods: {
+
+    showInformation(){
+      //TODO: INFORMATION CART put information API in here
+    },
+  },
 };
 </script>
 
@@ -612,6 +622,7 @@ input[type="number"] {
   background-color: #6C6C6C;
   margin: 0;
   border: 0;
+  padding-top: 10px;
   width: 100%;
 
 }
@@ -637,6 +648,35 @@ input[type="number"] {
     height: 40px;
     margin-right: 10px;
     border-radius: 0 50px 50px 0 !important;
+}
+
+.grey-bar {
+  background-color: #6C6C6C;
+  max-height : 35px;
+  min-height: 35px;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+#grey-header{
+  grid-column: 2;
+  color: white;
+  height: 35px;
+}
+
+.information-button{
+  grid-column: 3;
+  text-align: right;
+  padding: 2px 5px;
+  height: 35px;
+}
+
+#info-picture{
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+
 }
 
 #searchbtn:hover{
@@ -672,7 +712,6 @@ body {
 
 #myInput {
     box-sizing: border-box;
-    background-image: url("searchicon.png");
     background-position: 14px 12px;
     background-repeat: no-repeat;
     font-size: 16px;
@@ -760,11 +799,6 @@ body {
 .like-btn {
     display: inline-block;
     cursor: pointer;
-}
-.delete-btn {
-    width: 18px;
-    height: 17px;
-    background: url("../assets/images/delete-icn.svg") no-repeat center;
 }
 
 .is-active {
@@ -1189,7 +1223,6 @@ input:focus {
 
   #myInput {
     box-sizing: border-box;
-    background-image: url("searchicon.png");
     background-position: 14px 12px;
     background-repeat: no-repeat;
     font-size: 16px;
@@ -1258,24 +1291,6 @@ input:focus {
   .item:nth-child(3) {
     border-top: 1px solid #e1e8ee;
     border-bottom: 1px solid #e1e8ee;
-  }
-  .delete-btn,
-  .like-btn {
-    display: inline-block;
-    cursor: pointer;
-  }
-  .delete-btn {
-    width: 18px;
-    height: 17px;
-    background: url("../assets/images/delete-icn.svg") no-repeat center;
-  }
-
-  .is-active {
-    animation-name: animate;
-    animation-duration: 0.8s;
-    animation-iteration-count: 1;
-    animation-timing-function: steps(28);
-    animation-fill-mode: forwards;
   }
 
   @keyframes animate {
