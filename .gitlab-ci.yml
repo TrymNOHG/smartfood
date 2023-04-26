@@ -53,13 +53,14 @@ unit-test-frontend-job:
 
 
 cypress-test-frontend-job:
-  image: node:16 # Use the Node.js image with the desired version
+  image: cypress/base:16.13.0 # Use the Cypress base image with Node 16.13.0
   stage: test
   script:
     - cd frontend
     - npm ci # Install dependencies using package-lock.json
     - npx cypress install # Install Cypress
     - npx cypress run # Run Cypress tests
+
 
 
 generatepdf:
