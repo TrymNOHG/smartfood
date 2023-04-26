@@ -40,8 +40,8 @@ build-frontend-job:
 unit-test-backend-job:
   stage: test
   script:
-    - cd backend
-    - mvn clean test
+   - cd backend
+   - mvn clean test
 
 unit-test-frontend-job:
   image: node:16
@@ -52,15 +52,16 @@ unit-test-frontend-job:
     - npm run test:unit
 
 
-cypress-test-frontend-job:
+e2e-test-frontend-job:
   image: cypress/base:16.13.0 # Use the Cypress base image with Node 16.13.0
   stage: test
   script:
     - cd frontend
-    - npm ci # Install dependencies using package-lock.json
-    - npx cypress install # Install Cypress
-    - npx cypress run # Run Cypress tests
-
+    - npm install
+    - npx vite --port 4173 & # Add the --root option here
+    - sleep 10
+    - curl http://localhost:4173
+    - npx cypress run --e2e
 
 
 generatepdf:

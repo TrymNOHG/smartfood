@@ -8,6 +8,7 @@ import router from "../src/router/router";
 /* Icons imports */
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
 import {
     faHouse,
     faKitchenSet,
@@ -24,7 +25,7 @@ import {
     faCircleCheck,
     faPlus,
     faCrown,
-    faCheck
+    faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
 /* Imports fr multiple languages */
@@ -48,7 +49,7 @@ library.add(
     faCircleCheck,
     faPlus,
     faCrown,
-    faCheck
+    faCheck,
 )
 
 const pinia = createPinia()
