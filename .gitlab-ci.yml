@@ -52,14 +52,14 @@ unit-test-frontend-job:
     - npm run test:unit
 
 
-cypress-test-frontend-job:
+e2e-test-frontend-job:
   image: cypress/base:16.13.0 # Use the Cypress base image with Node 16.13.0
   stage: test
   script:
     - cd frontend
-    - npm install # Install dependencies using package-lock.json
-    - npx cypress install # Install Cypress
-    - npm run test:e2e
+    - npm ci
+    - npx vite preview &
+    - npx cypress run --e2e
 
 
 
