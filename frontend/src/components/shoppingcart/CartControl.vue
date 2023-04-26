@@ -1,19 +1,19 @@
 <template>
-
     <div class="cart-control">
         <button class="control-buttons" type="button" @click="handleMarkAll">
-            Mark all
+            {{ $t("mark_all") }}
         </button>
 
         <button class="control-buttons" type="button" @click="handleBuy">
-            Buy
+            {{ $t("buy") }}
         </button>
 
         <button class="control-buttons" type="button" @click="handleDelete">
-            Delete
+            {{ $t("delete") }}
         </button>
     </div>
 </template>
+
 
 <script>
 import {boolean} from 'yup';
