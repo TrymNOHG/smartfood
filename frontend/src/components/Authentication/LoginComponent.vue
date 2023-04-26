@@ -85,7 +85,6 @@ export default {
     const { value: email } = useField("email");
     const { value: password } = useField("password");
     const submit = handleSubmit(async () => {
-      console.log("Submit clicked");
       const request = {
         email: email.value,
         password: password.value,
