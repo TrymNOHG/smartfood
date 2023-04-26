@@ -57,8 +57,10 @@ e2e-test-frontend-job:
   stage: test
   script:
     - cd frontend
-    - npm ci
-    - npx vite preview &
+    - npm install
+    - npx vite preview --port 4173 &
+    - sleep 20
+    - curl http://localhost:4173 # Add this line to check if the server is running
     - npx cypress run --e2e
 
 
