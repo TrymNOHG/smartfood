@@ -48,7 +48,7 @@
                     @subtract="dec_CartItemAmount(item)"
                     @delete-item="handleDeleteItem(item)"
                     @handle-checked="handleCheckedItem"
-                    @buy="handleBuy"
+                    @handle-buy="handleBuyItem"
                     @quantity-updated="set_CartItemAmount"
             >
             </CartItem>
