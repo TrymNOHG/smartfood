@@ -1,8 +1,8 @@
 <template>
 
   <div class="members-fridge">
-    <router-link id="member" class="link" to="/members">Members</router-link>
-    <router-link id="fridge" class="link" to="/fridge">Fridge</router-link>
+    <router-link id="member" class="link" to="/members">{{ $t('toggle_members') }}</router-link>
+    <router-link id="fridge" class="link" to="/fridge">{{ $t('toggle_fridge') }}</router-link>
   </div>
   <div class="item-wrapper">
     <div class="item">
@@ -10,22 +10,48 @@
       <div class="info-delete-wrapper">
         <item-info :item="item" class="info-delete"/>
         <div></div>
-        <item-delete :item="item" class="info-delete"/>
+        <item-delete :item="item" class="info-delete" @delete-item="deleteItem"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { useRoute } from 'vue-router';
 import ItemHeader from "@/components/itemDescription/itemHeader.vue";
 import ItemInfo from "@/components/itemDescription/itemInfo.vue";
 import ItemDelete from "@/components/itemDescription/itemDelete.vue";
 import {useFridgeStore, useItemStore} from "@/store/store";
+import router from "@/router/router";
 
 export default {
   name: "itemView",
   components: {ItemDelete, ItemInfo, ItemHeader},
+
+  methods:  {
+    async deleteItem(item, percentage) {
+
+      const statDeleteFromFridgeDTO = {
+        "percentageThrown": parseFloat(percentage),
+        "price": item.price,
+        "quantity": parseFloat(item.quantity),
+        "itemName": item.name,
+        "storeName": item.store,
+        "fridgeId": this.fridge.fridgeId
+      }
+
+      const itemRemoveDTO = {
+        "itemName": item.name,
+        "store": item.store,
+        "fridgeId": this.fridge.fridgeId,
+        "quantity": item.quantity
+      }
+
+      await this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO);
+      await this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO);
+
+      router.push("/fridge")
+    }
+  },
 
   setup() {
     const itemStore = useItemStore();
@@ -37,6 +63,7 @@ export default {
     return {
       item,
       fridge,
+      itemStore
     };
   }
 }

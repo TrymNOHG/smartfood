@@ -1,18 +1,16 @@
 <template>
     <div>
-        <h1>Cart</h1>
         <div id="myDropdown" class="dropdown-content">
             <SearchInput
                     v-model="searchQuery"
                     @input="handleSearch"
-                    label="Search product"
+                    :label="$t('search_product')"
             ></SearchInput>
-            <button id="searchbtn" @click="handleSearch">Search</button>
-
+            <button id="searchbtn" @click="handleSearch">{{ $t('search') }}</button>
             <div class="dropper">
                 <vue-collapsible-panel-group>
                     <vue-collapsible-panel :expanded="isExpanded.value">
-                        <template #title> Search results</template>
+                        <template #title>{{ $t('search_results') }}</template>
                         <template #content>
                             <SearchItem
                                     v-for="(item, index) in searchItems"
@@ -31,7 +29,7 @@
                 </vue-collapsible-panel-group>
             </div>
 
-            <CartControl @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
+            <CartControl v-if="isCurrentUserSuperUser" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"/>
         </div>
 
         <div class="cart-items">
@@ -41,17 +39,44 @@
                     :image="item.image"
                     :name="item.name"
                     :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
-                    :weight="item.weight"
                     :quantity="item.quantity"
                     :item="item"
-                    @add="inc_dec_CartItemAmount(item, 1)"
-                    @subtract="inc_dec_CartItemAmount(item, -1)"
+                    :isSuperUser="isCurrentUserSuperUser"
+                    @add="inc_CartItemAmount(item)"
+                    @subtract="dec_CartItemAmount(item)"
                     @delete-item="handleDeleteItem(item)"
                     @handle-checked="handleCheckedItem"
                     @buy="handleBuy"
             >
             </CartItem>
         </div>
+
+        <vue-collapsible-panel-group>
+            <vue-collapsible-panel :expanded="true">
+                <template #title>{{ $t('suggest_items') }}</template>
+                <template #content>
+                    <CartSuggestion
+                        v-for="(item, index) in suggestedItems"
+                        :key="index"
+                        :image="item.image"
+                        :name="item.name"
+                        :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
+                        :quantity="item.quantity"
+                        :item="item"
+                        :isSuperUser="isCurrentUserSuperUser"
+                        @add="inc_dec_CartItemAmount(item, 1)"
+                        @subtract="inc_dec_CartItemAmount(item, -1)"
+                        @delete-item="handleDeleteItem(item)"
+                        @buy-item="handleBuyItem(item)"
+                        @handle-checked="handleCheckedItem"
+                        @buy="handleBuy"
+                    >
+                    </CartSuggestion>
+                </template>
+            </vue-collapsible-panel>
+        </vue-collapsible-panel-group>
+
+
     </div>
 </template>
 
@@ -72,11 +97,13 @@ import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import CartItem from "@/components/shoppingcart/CartItem.vue";
+import CartSuggestion from "@/components/shoppingcart/CartSuggestion.vue";
 import CartControl from "@/components/shoppingcart/CartControl.vue";
 import BasicCheckBox from "@/components/basic-components/BasicCheckbox.vue";
-import {useLoggedInStore, useFridgeStore} from "@/store/store";
+import {useLoggedInStore, useFridgeStore, useItemStore} from "@/store/store";
 import {ref, onMounted, computed, watch} from "vue";
-
+import 'sweetalert2/dist/sweetalert2.min.css';
+import swal from 'sweetalert2';
 
 export default {
     name: "Cart",
@@ -90,7 +117,14 @@ export default {
         CartItem,
         CartControl,
         BasicCheckBox,
+        CartSuggestion,
     },
+    computed: {
+        isCurrentUserSuperUser() {
+            return useFridgeStore().getIsSuperUser;
+        },
+    },
+
     setup() {
         console.log(useFridgeStore().getCurrentFridge);
         var itemAmount = ref(1);
@@ -101,6 +135,8 @@ export default {
         const isExpanded = ref(true);
         const currentFridge = useFridgeStore().getCurrentFridge;
         let checkAll_b = ref(false);
+        const suggestedItems = ref([]);
+        const itemStore = useItemStore();
 
         //console log items every 3 seconds
         /**function callEveryThreeSeconds() {
@@ -150,6 +186,56 @@ export default {
             try {
                 itemRemoveDTOList.shift();
                 await deleteItemsFromShoppingList(itemRemoveDTOList);
+                loadItemsFromCart();
+                swal.fire(
+                  'deleted items',
+                  '',
+                  'success'
+                )
+            } catch (error) {
+                console.error(error);
+                swal.fire(
+                    error.response.data["Message:"],
+                    '',
+                    'error'
+                )
+            }
+        }
+        async function handleBuyItem(item) {
+            const selectedItems = [];
+            const selectedItemsStat = [];
+            selectedItems.push(item);
+            selectedItemsStat.push(item);
+            console.log("SELECTED ITEMS")
+            console.log(selectedItems);
+            const itemRemoveDTOList = [{}];
+            const itemAddStatDTOList = [{}];
+          selectedItems.forEach((item) => {
+                const ItemRemoveDTO = {
+                    itemName: item.name,
+                    store: item.store,
+                    fridgeId: currentFridge.fridgeId,
+                    quantity: item.quantity,
+                };
+
+                const statAddItemToFridgeDTO = {
+                  "price": item.current_price,
+                  "quantity": 1,
+                  "itemName": item.name,
+                  "storeName": item.store.name,
+                  "fridgeId": this.fridge.fridgeId
+                }
+
+                itemAddStatDTOList.push(statAddItemToFridgeDTO)
+                itemRemoveDTOList.push(ItemRemoveDTO);
+                console.log("ITEM REMOVE DTO")
+                console.log(itemRemoveDTOList);
+            });
+            try {
+                itemRemoveDTOList.shift();
+                itemAddStatDTOList.shift();
+              await itemStore.addItemsToStat(itemAddStatDTOList);
+              await buyItemsFromShoppingList(itemRemoveDTOList);
             } catch (error) {
                 console.error(error);
             }
@@ -180,10 +266,15 @@ export default {
             try {
                 itemRemoveDTOList.shift();
                 await buyItemsFromShoppingList(itemRemoveDTOList);
+                await loadItemsFromCart();
+                await swal.fire(
+                    'added to fridge',
+                    '',
+                    'success'
+                )
             } catch (error) {
                 console.error(error);
             }
-            location.reload();
         }
 
 
@@ -204,47 +295,87 @@ export default {
             try {
                 const response = await getItemsFromShoppingList(currentFridge.fridgeId);
                 items.value = response.data;
-                console.log(items.value);
+
+                suggestedItems.value = []
+                items.value = []
+                response.data.forEach((item) => {
+                    if (item.suggestion) {
+                        suggestedItems.value.push(item);
+                        return;
+                    }
+                    items.value.push(item)
+                });
+                console.log(response.data);
             } catch (error) {
                 console.error(error);
             }
         };
 
-        async function inc_dec_CartItemAmount(item, amount) {
-            console.log(item);
-            const itemDTO = {
-                name: item.name,
-                description: item.description,
-                store: item.store,
-                price: item.price,
-                purchaseDate: item.purhchaseDate,
-                expirationDate: item.expirationDate,
-                image: item.image,
-                quantity: amount,
-            };
-            const fridgeId = currentFridge.fridgeId;
 
-            console.log(itemDTO);
+        async function inc_CartItemAmount(item) {
+          console.log(item);
+          const itemDTO = {
+            name: item.name,
+            description: item.description,
+            store: item.store,
+            price: item.price,
+            purchaseDate: item.purhchaseDate,
+            expirationDate: item.expirationDate,
+            image: item.image,
+            quantity: 1,
+          };
+          const fridgeId = currentFridge.fridgeId;
+
+          console.log(itemDTO);
+          event.stopPropagation();
+          addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
+              .then(async (response) => {
+                if (response !== undefined) {
+                  await loadItemsFromCart();
+                } else {
+                  console.log("Something went wrong");
+                  submitMessage.value =
+                      "Something went wrong. Please try again later.";
+                }
+              })
+              .catch((error) => {
+                console.warn("error1", error); //TODO: add exception handling
+              });
+
+
+          await loadItemsFromCart();
+        }
+
+        async function dec_CartItemAmount(item) {
+            console.log(item);
+            const itemRemoveDTO = {
+                itemName: item.name,
+                store: item.store,
+                fridgeId: currentFridge.fridgeId,
+                quantity: 1,
+            };
+
             event.stopPropagation();
-            addItemToShoppingList(itemDTO, fridgeId, false)
+            deleteItemFromShoppingList(itemRemoveDTO, false)
                 .then(async (response) => {
-                    if (response !== undefined) {
-                        loadItemsFromCart();
-                    } else {
-                        console.log("Something went wrong");
-                        submitMessage.value =
-                            "Something went wrong. Please try again later.";
-                    }
+                  if (response !== undefined) {
+                    await loadItemsFromCart();
+                  } else {
+                    console.log("Something went wrong");
+                    submitMessage.value =
+                        "Something went wrong. Please try again later.";
+                  }
                 })
                 .catch((error) => {
-                    console.warn("error1", error); //TODO: add exception handling
+                  console.warn("error1", error); //TODO: add exception handling
                 });
 
-            loadItemsFromCart();
+            //TODO: fix so that items do not need to be loaded again continuously........
+            await loadItemsFromCart();
         }
 
         const handleSubtract = async (item) => {
-            if (itemAmount.value == 1) {
+            if (itemAmount.value === 1) {
                 return;
             }
             itemAmount.value -= 1;
@@ -303,7 +434,7 @@ export default {
 
             console.log(itemDTO);
 
-            addItemToShoppingList(itemDTO, fridgeId, false)
+            addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
                 .then(async (response) => {
                     if (response !== undefined) {
                         loadItemsFromCart();
@@ -347,13 +478,17 @@ export default {
             handleSearch,
             addItemToList,
             loadItemsFromCart,
-            inc_dec_CartItemAmount,
+            inc_CartItemAmount,
+            dec_CartItemAmount,
             isExpanded,
             handleBuy,
             handleMarkAll,
             handleCheckedItem,
             checkAll_b,
             handleDelete,
+            handleBuyItem,
+            currentFridge,
+            suggestedItems,
         };
     },
 };

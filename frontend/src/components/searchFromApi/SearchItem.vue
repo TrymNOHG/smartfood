@@ -2,9 +2,9 @@
     <div class="search-item">
       <div class="item-info">
         <img class="search-image" :src="image" />
-        <div class="text">product: <br>{{ text }}</div>
-        <div class="store">store: <br>{{ store }}</div>
-        <div class="price">price: <br>{{ price + " KR"}}</div>
+        <div class="text">{{ $t('product') }}: <br>{{ text }}</div>
+        <div class="store">{{ $t('store') }}: <br>{{ store }}</div>
+        <div class="price">{{ $t('price') }}: <br>{{ price + " KR"}}</div>
         <font-awesome-icon icon="fa-solid fa-cart-shopping" class="cart-icon" />
       </div>
     </div>

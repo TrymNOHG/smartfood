@@ -3,7 +3,9 @@ package edu.ntnu.idatt2106_2023_06.backend.controller;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
+import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemService;
+import edu.ntnu.idatt2106_2023_06.backend.service.users.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +34,7 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
+    private final UserService userService;
     /**
      * The logger for logging information about the operations performed by this controller.
      */
@@ -105,13 +109,25 @@ public class ItemController {
     @Operation(summary = "Add items to shopping list")
     public ResponseEntity<Object> addToShoppingList(@ParameterObject @RequestBody ItemDTO itemDTO,
                                                     @ParameterObject @RequestParam(name = "fridgeId") Long fridgeId,
-                                                    @ParameterObject @RequestParam(name = "suggestion") boolean suggestion){
+                                                    @ParameterObject @RequestParam(name = "suggestion") boolean suggestion,
+                                                    Authentication authentication){
+        authenticate(authentication);
 
-        logger.info("User wants to add a new items to shopping list");
-        Long itemId = itemService.addItem(itemDTO);
-        itemService.addToShoppingList(itemId, fridgeId, itemDTO.quantity(), suggestion);
-        logger.info("New items has been added!");
+        boolean isSuperUser = userService.isSuperUser(fridgeId, authentication.getName());
+
+        logger.info("Checking whether item is suggestion");
+        if(!suggestion && !isSuperUser) {
+            logger.info("User is not a superuser and can therefore not add a non-suggestion item");
+            throw new UnauthorizedException(authentication.getName(), "Regular user cannot add a non-suggestion item");
+        } else {
+            logger.info("User wants to add a new item to shopping list");
+            Long itemId = itemService.addItem(itemDTO);
+            itemService.addToShoppingList(itemId, fridgeId, itemDTO.quantity(), suggestion);
+            logger.info("New item has been added!");
+        }
+
         return ResponseEntity.ok().build();
+
     }
 
     /**
@@ -134,38 +150,65 @@ public class ItemController {
         return ResponseEntity.ok(itemList);
     }
 
+    //TODO: only fridge_item has purchase date and expiration date.
+
     /**
-     * Deletes an item from the shopping list for a given fridge.
+     * An item can be deleted from a shopping list of a fridge given the following conditions:
+     * - User is a superuser, then user can delete both suggested and actual items
+     * - User is a normal user, then user can delete suggested items but not actual items.
      *
      * @param itemRemoveDTO  the item to remove from the shopping list
-     * @param suggestion     whether or not the item was a suggestion
+     * @param suggestion     whether the item was a suggestion
      * @return               a response entity indicating success
      */
         @DeleteMapping(value="/shopping/delete")
         @Operation(summary = "Delete item from shopping list")
         public ResponseEntity<Object> deleteItemFromShoppingList(@ParameterObject @RequestBody ItemRemoveDTO itemRemoveDTO,
-                                                                 @ParameterObject @RequestParam(name = "suggestion") boolean suggestion){
-            logger.info("User wants to delete item from shopping list");
-            itemService.deleteItemFromShoppingList(itemRemoveDTO, suggestion);
-            logger.info("Items have been deleted!");
+                                                                 @ParameterObject @RequestParam(name = "suggestion") boolean suggestion,
+                                                                 Authentication authentication){
+            authenticate(authentication);
+
+            boolean isSuperUser = userService.isSuperUser(itemRemoveDTO.fridgeId(), authentication.getName());
+
+            logger.info("Checking whether delete is suggestion");
+            if(!suggestion && !isSuperUser) {
+                logger.info("User is not a superuser and can therefore not delete a non-suggestion item");
+                return ResponseEntity.ok().build();
+            } else {
+                logger.info("User wants to delete item from shopping list");
+                itemService.deleteItemFromShoppingList(itemRemoveDTO, suggestion);
+                logger.info("Items have been deleted!");
+            }
             return ResponseEntity.ok().build();
         }
 
+
+        //TODO: add authentication
     /**
-     * Buys the items on the shopping list for a given fridge.
+     * Deletes the items on the shopping list for a given fridge.
      *
      * @param itemDTOList  the list of items to buy
      * @return             a response entity indicating success
      */
     @PostMapping(value="/shopping/delete/all", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Buy items from shopping list")
-    public ResponseEntity<Object> deleteAllItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList){
+    @Operation(summary = "Delete items from shopping list")
+    public ResponseEntity<Object> deleteAllItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList,
+                                                                 Authentication authentication){
+        if(itemDTOList.isEmpty()) return ResponseEntity.ok().build();
+        authenticate(authentication);
+
+        boolean isSuperUser = userService.isSuperUser(itemDTOList.get(0).fridgeId(), authentication.getName());
+
+        if(!isSuperUser) throw new UnauthorizedException(authentication.getName(), "User must be super user");
+
         logger.info("User wants to buy item from shopping list");
         itemService.deleteAllItemsFromShoppingList(itemDTOList);
         logger.info("Items have been bought!");
         return ResponseEntity.ok().build();
     }
 
+
+    //TODO: add authentication and check whether user is a superuser or not
     /**
      * Buys the items on the shopping list for a given fridge.
      *
@@ -174,7 +217,16 @@ public class ItemController {
      */
     @PostMapping(value="/shopping/buy", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Buy items from shopping list")
-    public ResponseEntity<Object> buyItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList){
+    public ResponseEntity<Object> buyItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList,
+                                                           Authentication authentication){
+
+        if(itemDTOList.isEmpty()) return ResponseEntity.ok().build();
+        authenticate(authentication);
+
+        boolean isSuperUser = userService.isSuperUser(itemDTOList.get(0).fridgeId(), authentication.getName());
+
+        if(!isSuperUser) throw new UnauthorizedException(authentication.getName(), "User must be super user");
+
         logger.info("User wants to buy item from shopping list");
         itemService.buyItemsFromShoppingList(itemDTOList);
         logger.info("Items have been bought!");
@@ -189,10 +241,20 @@ public class ItemController {
      */
     @PostMapping(value="/shopping/suggestion")
     @Operation(summary = "Accept suggestion in shopping list")
-    public ResponseEntity<Object> acceptSuggestion(@ParameterObject @RequestBody ItemRemoveDTO itemDTO){
+    public ResponseEntity<Object> acceptSuggestion(@ParameterObject @RequestBody ItemRemoveDTO itemDTO,
+                                                   Authentication authentication){
+        authenticate(authentication);
+
+        boolean isSuperUser = userService.isSuperUser(itemDTO.fridgeId(), authentication.getName());
+        if(!isSuperUser) throw new UnauthorizedException(authentication.getName(), "User must be super user");
+
         logger.info("User wants to accept suggestion");
         itemService.acceptSuggestion(itemDTO);
         logger.info("Suggestion has been accepted");
         return ResponseEntity.ok().build();
+    }
+
+    private void authenticate(Authentication authentication){
+        if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
     }
 }

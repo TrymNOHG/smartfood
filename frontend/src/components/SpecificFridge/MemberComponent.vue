@@ -47,7 +47,7 @@ import {onMounted, ref} from "vue";
 import MemberList from "@/components/FridgeList/MemberListingComponent.vue";
 import {addUserToFridge, deleteUserFromFridge, loadUsersByFridgeId} from "@/services/FridgeServices";
 import {searchUserByUsername} from "@/services/UserService";
-import {updateUserInFridge} from "../../services/FridgeServices";
+import {updateUserInFridge} from "@/services/FridgeServices";
 
 
 
@@ -102,15 +102,15 @@ export default {
             searchResults,
             fetchUsers,
             loggedInUser,
-            fridgeId
+            fridgeId,
+            fridgeStore
         };
     },
 
     computed: {
          isCurrentUserSuperUser() {
-             const currentUser = this.memberList.find(member => member.username === this.loggedInUser);
-             return currentUser && currentUser.isSuperUser;
-        }
+           return this.fridgeStore.getIsSuperUser;
+          },
     },
 
     data() {

@@ -7,6 +7,8 @@ import edu.ntnu.idatt2106_2023_06.backend.exception.exists.UserExistsException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
+import edu.ntnu.idatt2106_2023_06.backend.service.users.EmailService;
+import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +32,7 @@ public class AuthenticationService implements IAuthenticationService {
     private final PasswordEncoder passwordEncoder;
 
     private final JwtService jwtService;
+    private final EmailService emailService;
 
     private final AuthenticationManager authenticationManager;
     private final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
@@ -41,7 +44,7 @@ public class AuthenticationService implements IAuthenticationService {
      * @return an AuthenticationResponse containing the JWT token of the user.
      */
     @Transactional
-    public AuthenticationResponseDTO register(UserRegisterDTO userRegisterDTO) {
+    public AuthenticationResponseDTO register(UserRegisterDTO userRegisterDTO) throws MessagingException {
         User user = User
                 .builder()
                 .username(userRegisterDTO.username())
@@ -55,12 +58,16 @@ public class AuthenticationService implements IAuthenticationService {
             throw new UserExistsException("email", userRegisterDTO.email());
         if (userRepository.findByUsername(userRegisterDTO.username()).isPresent())
             throw new UserExistsException("username", userRegisterDTO.username());
-        userRepository.save(user);
+
+        user = userRepository.save(user);
 
         logger.info(String.format("User %s has been saved in the DB!", user.getUsername()));
 
         String jwtToken = jwtService.generateToken(user);
         logger.info("Their JWT is: " + jwtToken);
+
+        //TODO: uncomment to add activation email
+//        emailService.sendActivationEmail(user);
 
         return AuthenticationResponseDTO
                 .builder()

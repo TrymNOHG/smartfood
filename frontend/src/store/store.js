@@ -3,6 +3,9 @@ import { getUser } from "@/services/UserService"
 import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
 import {addItemToFridge, getItemsFromFridge, deleteItemFromFridge} from "@/services/ItemService";
+import {ref} from "vue";
+import {checkSuperUserStatus} from "../services/UserService";
+import {addItemStats, deleteItemStats} from "@/services/StatsService";
 
 const storeUUID = UniqueId();
 
@@ -69,6 +72,7 @@ export const useFridgeStore = defineStore('fridgeStore', {
             "fridgeId": null,
             "fridgeName": "kjøleskap",
         },
+        isSuperUser: false,
     }),
 
     persist: {
@@ -82,6 +86,9 @@ export const useFridgeStore = defineStore('fridgeStore', {
         hasCurrentFridge() {
             return this.currentFridge.fridgeId !== null;
         },
+        getIsSuperUser() {
+            return this.isSuperUser;
+        }
     },
 
     actions: {
@@ -108,9 +115,19 @@ export const useFridgeStore = defineStore('fridgeStore', {
             for(let fridge of this.allFridges) {
                 if(fridge.fridgeId == fridgeId) {
                     this.currentFridge = fridge;
-                    console.log(this.currentFridge);
+                    this.isSuperUser = await this.checkSuperUserStatus(fridgeId)
+                    console.log(this.isSuperUser)
                     return;
                 }
+            }
+        },
+
+        async checkSuperUserStatus(fridgeId) {
+            try {
+                const response = await checkSuperUserStatus(fridgeId);
+                return response.data
+            } catch (error) {
+                console.error(error);
             }
         },
 
@@ -119,16 +136,9 @@ export const useFridgeStore = defineStore('fridgeStore', {
                 "fridgeId": null,
                 "fridgeName": "kjøleskap",
             }
+            this.isSuperUser = false;
         },
 
-        async setCurrentFridgeByFridge(state, fridge) {
-            const { fridgeId, fridgeName } = fridge
-            state.currentFridge = { fridgeId, fridgeName }
-        },
-
-        setCurrentFridge(state, fridge) {
-            state.currentFridge = fridge
-        },
     }
 });
 
@@ -151,8 +161,23 @@ export const useItemStore = defineStore('itemStore', {
             await addItemToFridge(itemDTO, fridgeId);
         },
 
+        async statAddItemToFridge(statAddItemToFridgeDTO) {
+            await addItemStats(statAddItemToFridgeDTO);
+        },
+
+        async addItemsToStat(itemDTOList){
+            for (let statAddItemToFridgeDTO in itemDTOList) {
+                console.log(statAddItemToFridgeDTO)
+                await addItemStats(statAddItemToFridgeDTO);
+            }
+        },
+
         setCurrentItem(item) {
             this.currentItem = item;
+        },
+
+        async deleteItemByStats(statDeleteFromFridgeDTO) {
+            await deleteItemStats(statDeleteFromFridgeDTO)
         },
 
         async deleteItemByNameIdStoreQuantity(itemRemoveDTO){
