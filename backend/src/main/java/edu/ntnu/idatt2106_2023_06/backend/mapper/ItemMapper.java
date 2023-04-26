@@ -23,8 +23,6 @@ public class ItemMapper {
                 .productName(itemDTO.name())
                 .desc(itemDTO.description())
                 .store(store)
-                .expirationDate(itemDTO.expirationDate())
-                .purchaseDate(itemDTO.purchaseDate())
                 .price(itemDTO.price())
                 .pictureLink(itemDTO.image())
                 .build();
@@ -44,8 +42,6 @@ public class ItemMapper {
                 .description(item.getDesc())
                 .store(item.getStore().getStoreName())
                 .price(item.getPrice())
-                .purchaseDate(item.getPurchaseDate())
-                .expirationDate(item.getExpirationDate())
                 .image(item.getPictureLink())
                 .quantity(quantity)
                 .suggestion(suggestion)

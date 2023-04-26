@@ -39,12 +39,11 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 16px;
-    background-color: #f8f8f8;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
+    padding: 5px 16px 10px;
+    background-color: #6C6C6C;
+    border-radius: 50px;
+
+  }
 
 .control-buttons {
     display: inline-block;
@@ -65,24 +64,69 @@ export default {
     background-color: #0061b5;
 }
 
+.control-buttons:nth-child(2){
+  background-color: #34c759;
+}
+
+.control-buttons:nth-child(2):hover{
+  background-color: #23863c;
+}
+
 .control-buttons:last-child {
-    background-color: #34c759;
+    background-color: darkred;
 }
 
 .control-buttons:last-child:hover {
-    background-color: #30b34e;
-}
+    background-color: #570000;
+  }
 
-@media only screen and (max-width: 800px) {
+  @media only screen and (max-width: 800px) {
 
-}
+  }
+  @media only screen and (min-width: 350px) and (max-width: 480px) {
+    .cart-control {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 16px;
+      background-color: white;
+      border-radius: 4px;
+    }
 
-@media only screen and (min-width: 350px) and (max-width: 480px) {
+    .control-buttons {
+      display: inline-block;
+      margin: 0;
+      padding: 8px 16px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+      color: #fff;
+      background-color: #007aff;
+      border: none;
+      border-radius: 20px; /* add rounded edges to the buttons */
+      cursor: pointer;
+    }
 
-}
+    .control-buttons:hover {
+      background-color: #0061b5;
+    }
 
-@media only screen and (max-width: 350px) {
+    .control-buttons:nth-child(2){
+      background-color: #34c759;
+    }
 
-}
-</style>
+    .control-buttons:last-child {
+      background-color: darkred;
+    }
+
+    .control-buttons:last-child:hover {
+      background-color: #30b34e;
+    }
+  }
+
+  @media only screen and (max-width: 350px) {
+
+  }
+  </style>
   

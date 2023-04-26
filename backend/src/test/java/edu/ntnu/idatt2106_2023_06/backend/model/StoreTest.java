@@ -99,7 +99,7 @@ class StoreTest {
             List<Item> items = new ArrayList<>();
             items.add(new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(3L, "Dairy", new ArrayList<>()), 200000,
-                    new Date(), new Date(), null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
 
             store.setItemsInStore(items);
             List<Item> actualItems = store.getItemsInStore();

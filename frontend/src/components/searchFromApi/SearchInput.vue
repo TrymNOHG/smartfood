@@ -1,4 +1,5 @@
 <template>
+
     <input
         v-bind="$attrs"
         :value="modelValue"
@@ -15,6 +16,8 @@
       >
       {{ error }}
     </p>
+  <div id="shadow">
+    </div>
   </template>
   
   <script>
@@ -38,21 +41,71 @@
   
   <style scoped>
 
+  #searchbar{
+    display: flex;
+  }
   .form-control {
-    padding: 10px 20px;
-    margin-top: 10px;
-    color: #333;
-    font-size: 18px;
-    font-weight: 500;
-    border: 3px solid #555;
+  padding: 0px 10px 0 20px;
+  color: #333;
+  font-size: 20px;
+    width: 100%;
+  font-weight: 500;
+    border: 0px solid #555;
     box-shadow: none;
-    min-height: 60px;
+    height: 40px;
     border-radius: 50px 0 0 50px;
+    margin-left: 10px;
   }
 
-  .form-control:focus {
-    outline: none;
-    border-color: transparent;
+
+  @media only screen and (min-width: 350px) and (max-width: 480px) {
+    #searchbar{
+      display: flex;
+    }
+    .form-control {
+      padding: 0px 10px 0 20px;
+      margin-top: 10px;
+      color: #333;
+      font-size: 28px;
+      font-weight: 500;
+      border: 3px solid #555;
+      box-shadow: none;
+      min-height: 60px;
+      border-radius: 50px 0 0 50px;
+      margin-left: 0;
+    }
+    .form-control {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-evenly;
+      position: fixed;
+      bottom: 62px;
+      width: 95%;
+      height: 60px;
+      font-size: 20px;
+      background-color: white;
+      border: 7px solid #31c48d;
+      border-radius: 50px 50px 50px 50px !important;
+    }
+
+
+
+    #shadow{
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      position: fixed;
+      bottom: 70px;
+      width: 95%;
+      height: 30px;
+      font-size: 20px;
+      background-color: #31c48d;
+      z-index: -2;
+
+    }
+
+
   }
+
 
   </style>

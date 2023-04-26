@@ -73,8 +73,16 @@ export const acceptSuggestion = async (itemRemoveDTO) => {
     });
 };
 
-export const buyItemsFromShoppingList = async (itemRemoveDTO) => {
-    return await axios.post(`${BASE_LISTING_URL}/shopping/buy`, itemRemoveDTO, {
+export const buyItemsFromShoppingList = async (itemMoveDTO) => {
+    return await axios.post(`${BASE_LISTING_URL}/shopping/buy`, itemMoveDTO, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
+
+export const updateShoppingListItem = async (shoppingItemUpdateDTO) => {
+    return await axios.put(`${BASE_LISTING_URL}/shopping/update`, shoppingItemUpdateDTO, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         },
