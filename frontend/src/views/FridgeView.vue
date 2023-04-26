@@ -486,6 +486,7 @@ input[type="text"]:not(:focus) + .search-results {
 
   }
   .wrapper {
+    z-index: -1;
     grid-template-rows: 1fr;
     margin-bottom: 0;
     overflow-y: scroll;
@@ -524,7 +525,7 @@ input[type="text"]:not(:focus) + .search-results {
     position: fixed;
     bottom: 70px;
     width: 100%;
-    z-index: 1;
+    z-index: 2;
     background-color: transparent;
 
   }
@@ -543,6 +544,7 @@ input[type="text"]:not(:focus) + .search-results {
     height: 0px;
     width: 100%;
     padding: 0px 10px 0px 10px;
+    z-index: 2;
 
   }
 
@@ -558,6 +560,8 @@ input[type="text"]:not(:focus) + .search-results {
   .fridge-wrapper{
     display: flex;
     width: 100%;
+    z-index: 0;
+    margin-bottom: 150px;
 
   }
 

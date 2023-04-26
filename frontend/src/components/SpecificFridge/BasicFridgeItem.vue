@@ -364,8 +364,8 @@ img {
     justify-content: end;
     width: 350px;
     height: 100px;
-    background-color: #eee;
-    border: 1px solid #ccc;
+    background-color: white;
+    border: 2px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
 
@@ -390,7 +390,7 @@ img {
     height: 80px;
     border-radius: 5px;
     background-color: white;
-    color: #eee;
+    color: white;
     margin-left: 10px;
   }
 
@@ -419,6 +419,7 @@ img {
   .card:hover .back-side {
     transform: rotateY(0deg);
   }
+
 
   .card .back-side {
     margin-right: auto;
