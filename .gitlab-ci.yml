@@ -51,6 +51,14 @@ unit-test-frontend-job:
     - npm install
     - npm run test:unit
 
+cypress-test-frontend-job:
+  image: cypress/included:9.5.0 
+  stage: test
+  script:
+    - cd frontend
+    - npm ci 
+    - npx cypress run 
+
 generatepdf:
   image: ubuntu:20.04  # vi kjører dette i en docker container, som kjører Ubuntu Linux
   stage: deploy # vi kjører den parallelt med å publisere javadoc til Pages
