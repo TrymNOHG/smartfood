@@ -4,11 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemMoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.ShoppingListLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.filter.JwtAuthenticationFilter;
-import edu.ntnu.idatt2106_2023_06.backend.mapper.FridgeItemMapper;
-import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
@@ -18,7 +15,6 @@ import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
 import edu.ntnu.idatt2106_2023_06.backend.service.users.UserService;
-import lombok.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -34,20 +30,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.times;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ActiveProfiles("test")
-public class ItemControllerTest {
+public class ShoppingItemsControllerTest {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
@@ -103,59 +96,6 @@ public class ItemControllerTest {
             // Handle any exceptions here
         }
     }
-    @Test
-    public void testAddToFridge() throws Exception {
-        ItemDTO itemDTO = new ItemDTO( "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
-                "Kiwi", 200000, null, 1, false);
-        Long fridgeId = 1L;
-        Item item = new Item();
-
-        given(itemService.addItem(itemDTO)).willReturn(item);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/item/fridge/add")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(itemDTO))
-                        .param("fridgeId", fridgeId.toString()))
-                .andExpect(status().isOk());
-
-
-        verify(itemService, times(1)).addToFridge(itemDTO, fridgeId);
-    }
-
-    @Test
-    public void testGetFridge() throws Exception {
-        Long fridgeId = 1L;
-        List<FridgeItemLoadDTO> fridgeItemLoadDTOS = new ArrayList<>();
-        fridgeItemLoadDTOS.add(new FridgeItemLoadDTO(1L, "Tine Melk",
-                "Tine melk kommer fra fri gående, grass matet kuer.", "Kiwi", 200000,
-                null, 1, new Date(), new Date()));
-        fridgeItemLoadDTOS.add(new FridgeItemLoadDTO(2L, "Tine Melk",
-                "Tine melk kommer fra fri gående, grass matet kuer.", "Kiwi", 200000,
-                null, 1, new Date(), new Date()));
-        given(itemService.getFridgeItems(fridgeId)).willReturn(fridgeItemLoadDTOS);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/item/fridge/get")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
-                        .param("fridgeId", fridgeId.toString()))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(2)));
-
-        verify(itemService, times(1)).getFridgeItems(fridgeId);
-    }
-
-    @Test
-    public void testDeleteItemFromFridge() throws Exception {
-        ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/item/fridge/delete")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(itemRemoveDTO)))
-                .andExpect(status().isOk());
-
-        verify(itemService, times(1)).removeItemFromFridge(itemRemoveDTO);
-    }
 
     @Test
     public void testAddToShoppingList() throws Exception {
@@ -193,14 +133,6 @@ public class ItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("fridgeId", fridgeId.toString()))
                 .andExpect(status().isOk());
-    }
-
-    private static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Test
@@ -258,4 +190,13 @@ public class ItemControllerTest {
 
         verify(itemService, times(1)).acceptSuggestion(itemRemoveDTO);
     }
+
+    private static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

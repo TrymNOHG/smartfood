@@ -8,7 +8,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -64,18 +63,6 @@ public class Item {
     @Column(name = "price", nullable = false)
     @NonNull
     private double price;
-
-    /**
-     * The purchase date of the items, can be null
-     */
-    @Column(name = "purchase_date")
-    private Date purchaseDate;
-
-    /**
-     * The expiration date of the items, can be null
-     */
-    @Column(name = "expiration_date")
-    private Date expirationDate;
 
     /**
      * The picture of the food items, can be null

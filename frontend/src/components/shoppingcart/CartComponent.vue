@@ -70,7 +70,6 @@
                         :key="index"
                         :image="item.image"
                         :name="item.name"
-                        :date_added="new Date(item.purchaseDate).toISOString().split('T')[0]"
                         :quantity="item.quantity"
                         :item="item"
                         :isSuperUser="isCurrentUserSuperUser"
@@ -91,7 +90,7 @@ import {
 } from "@dafcoe/vue-collapsible-panel";
 import "@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {acceptSuggestion, deleteItemFromShoppingList} from "@/services/ItemService";
+import {acceptSuggestion, deleteItemFromShoppingList, updateShoppingListItem} from "@/services/ItemService";
 import {addItemToShoppingList} from "@/services/ItemService";
 import {getItemsFromShoppingList} from "@/services/ItemService";
 import {buyItemsFromShoppingList} from "@/services/ItemService";
@@ -222,7 +221,7 @@ export default {
                 await deleteItemsFromShoppingList(itemRemoveDTOList);
                 loadItemsFromCart();
                 swal.fire(
-                  'deleted items',
+                  'Deleted items',
                   '',
                   'success'
                 )
@@ -243,10 +242,8 @@ export default {
             const itemRemoveDTOList = [{}];
             selectedItems.forEach((item) => {
                 const ItemRemoveDTO = {
-                    itemName: item.name,
-                    store: item.store,
+                    itemId: item.itemId,
                     fridgeId: currentFridge.fridgeId,
-                    quantity: item.quantity,
                 };
                 itemRemoveDTOList.push(ItemRemoveDTO);
                 console.log("ITEM REMOVE DTO")
@@ -256,7 +253,11 @@ export default {
                 itemRemoveDTOList.shift();
                 await buyItemsFromShoppingList(itemRemoveDTOList);
             } catch (error) {
-                console.error(error);
+              swal.fire(
+                  error.response.data["Message:"],
+                  '',
+                  'error'
+              )
             }
             location.reload();
         }
@@ -273,10 +274,8 @@ export default {
             const itemRemoveDTOList = [{}];
             selectedItems.forEach((item) => {
                 const ItemRemoveDTO = {
-                    itemName: item.name,
-                    store: item.store,
+                    itemId: item.itemId,
                     fridgeId: currentFridge.fridgeId,
-                    quantity: item.quantity,
                 };
                 itemRemoveDTOList.push(ItemRemoveDTO);
                 console.log("ITEM REMOVE DTO")
@@ -287,12 +286,16 @@ export default {
                 await buyItemsFromShoppingList(itemRemoveDTOList);
                 loadItemsFromCart();
                 swal.fire(
-                  'added to fridge',
+                  'Added to fridge',
                   '',
                   'success'
                 )
             } catch (error) {
-                console.error(error);
+              swal.fire(
+                  error.response.data["Message:"],
+                  '',
+                  'error'
+              )
             }
         }
 
@@ -337,8 +340,6 @@ export default {
             description: item.description,
             store: item.store,
             price: item.price,
-            purchaseDate: item.purhchaseDate,
-            expirationDate: item.expirationDate,
             image: item.image,
             quantity: 1,
           };
@@ -393,29 +394,23 @@ export default {
         }
 
         async function set_CartItemAmount(newQuantity, item){
+          //TODO: add exception handling.........
+            if(newQuantity < 1) {
+              await loadItemsFromCart();
+              return;
+            }
             console.log(newQuantity)
-            console.log("woohoo")
             console.log(item)
 
-            if(newQuantity<item.quantity){
-
-            }
-
-            const itemDTO = {
-                name: item.name,
-                description: item.description,
-                store: item.store,
-                price: item.price,
-                purchaseDate: item.purhchaseDate,
-                expirationDate: item.expirationDate,
-                image: item.image,
-                quantity: newQuantity,
+            const shoppingItemUpdateDTO = {
+              itemId: item.itemId,
+              fridgeId: currentFridge.fridgeId,
+              suggestion: null,
+              quantity: newQuantity
             };
-            const fridgeId = currentFridge.fridgeId;
 
-            console.log(itemDTO);
             event.stopPropagation();
-            addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
+            updateShoppingListItem(shoppingItemUpdateDTO)
                 .then(async (response) => {
                     if (response !== undefined) {
                         await loadItemsFromCart();
