@@ -1,24 +1,31 @@
 
-const BASE_URL = 'http://localhost:5173'
-
 describe('Cart', () => {
-  beforeEach(() => {
-    cy.request('POST', 'http://localhost:8080/login', {
-      username: 't@t.t',
+
+  it('should login an already existing  user', () =>{
+    cy.request('POST', 'http://localhost:8080/user/login', {
+      email: 't@t.t',
       password: '12345678'
     }).then((response) => {
-      const sessionToken = response.body.sessionToken;
-      window.localStorage.setItem('sessionToken', sessionToken);
     });
-  });
+  })
 
-  it('should display the cart items after logging in', () => {
-    cy.visit('http://localhost:5173/cart', {
+  //CHOOSING A FRIDGE FOR LATER TESTS
+  it('should display the fridges after logging in', () => {
+    cy.visit('http://localhost:5173/fridges', {
       onBeforeLoad(win) {
         const sessionToken = window.localStorage.getItem('sessionToken');
         win.sessionStorage.setItem('sessionToken', sessionToken);
       }
     });
+
+    cy.get('.item').should('contain', 'Home Fridge');
+  });
+
+
+
+  //MUST CHOOSE A FRIDGE BEFORE ACCESSING CART PAGE
+  it('should display the cart items after logging in', () => {
+    cy.visit('http://localhost:5173/cart');
 
     cy.get('#cart-item-1').should('contain', 'Milk');
     cy.get('#cart-item-2').should('contain', 'Bread');
