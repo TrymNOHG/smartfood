@@ -61,6 +61,8 @@
   "enter_username": "Enter Username",
   "search_MembersButton_Text": "Search",
   "select_fridge": "Select Fridge",
+  "exit-fridge": "Exit current fridge",
+  "enter-fridge": "Enter a fridge",
   "alt_info_button": "Information about the page",
   "members": "Members"
 }
