@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -104,18 +103,6 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
      * @return An optional list of items with prices between the given lower and upper bounds.
      */
     Optional<List<Item>> findItemsByPriceBetween(double lowerBound, double upperBound);
-
-    /**
-     * Finds items with purchase dates before a given date.
-     *
-     * @param purchaseDate Date of purchase.
-     * @return An optional list of items with purchase dates before a given items.
-     */
-    Optional<List<Item>> findItemsByPurchaseDateBefore(Date purchaseDate);
-
-
-
-
 
 }
 

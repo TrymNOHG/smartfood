@@ -1,7 +1,7 @@
 import axios from "axios";
 import SessionToken from '@/features/SessionToken.js'
 
-const BASE_LISTING_URL = "http://10.22.58.166:8080/item";
+const BASE_LISTING_URL = "http://localhost:8080/item";
 
 export const addItemToFridge = async (itemDTO, fridgeId) => {
     return await axios.post(`${BASE_LISTING_URL}/fridge/add?fridgeId=${fridgeId}`, itemDTO, {
@@ -48,7 +48,6 @@ export const deleteItemsFromShoppingList = async (listingDeletionDTO) => {
 };
 
 export const addItemToShoppingList = async (itemDTO, fridgeId, suggestion) => {
-    console.log(itemDTO.price + " " + fridgeId + " " + suggestion)
     return await axios.post(`${BASE_LISTING_URL}/shopping/add?fridgeId=${fridgeId}&suggestion=${suggestion}`, itemDTO, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
@@ -74,8 +73,16 @@ export const acceptSuggestion = async (itemRemoveDTO) => {
     });
 };
 
-export const buyItemsFromShoppingList = async (itemDTOList) => {
-    return await axios.post(`${BASE_LISTING_URL}/shopping/buy`, itemDTOList, {
+export const buyItemsFromShoppingList = async (itemMoveDTO) => {
+    return await axios.post(`${BASE_LISTING_URL}/shopping/buy`, itemMoveDTO, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
+
+export const updateShoppingListItem = async (shoppingItemUpdateDTO) => {
+    return await axios.put(`${BASE_LISTING_URL}/shopping/update`, shoppingItemUpdateDTO, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         },
