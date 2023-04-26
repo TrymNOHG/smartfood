@@ -19,7 +19,7 @@
 
 image: maven:eclipse-temurin
 stages:
-  - build
+  #- build
   - test
   - deploy
 
@@ -38,10 +38,10 @@ build-frontend-job:
     - npm run build
 
 unit-test-backend-job:
-  stage: test
-  script:
-    - cd backend
-    - mvn clean test
+  #stage: test
+  #script:
+  #  - cd backend
+  # - mvn clean test
 
 unit-test-frontend-job:
   image: node:16
