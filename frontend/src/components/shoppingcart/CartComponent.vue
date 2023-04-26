@@ -989,6 +989,14 @@ input:focus {
     margin-right: 0;
   }
 
+  #searchbtn{
+    display: none !important;
+  }
+
+  .grey-bar{
+    background-color: #31c48d;
+  }
+
   #backBlack {
     height: 6px;
     background-color: white;
@@ -1045,6 +1053,7 @@ input:focus {
     bottom: 70px;
     width: 100%;
     z-index: 1;
+    background-color: transparent;
 
   }
 

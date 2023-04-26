@@ -23,6 +23,7 @@
           <button id="searchbtn" @click="handleSearch">Search</button>
         </div>
       </div>
+
       <div class="dropper" v-if="search">
         <vue-collapsible-panel-group>
           <vue-collapsible-panel :expanded="isExpanded.value">
@@ -46,6 +47,7 @@
       <basic-fridge-item v-for="(item, index) in fridgeItems" :key="index" :item="item" :currenFridge="fridge"
                          @delete-item="deleteItem"/>
     </div>
+
   </div>
   <div class="members-wrapper" v-show="selectedTab === 'members'">
     <member-component/>
@@ -66,6 +68,7 @@ import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import {getItems} from "@/services/ApiService";
 import Swal from 'sweetalert2';
+
 
 
 export default {
@@ -454,12 +457,115 @@ input[type="text"]:not(:focus) + .search-results {
   }
 
   .wrapper {
+    z-index: 0;
     margin-bottom: 80px;
     overflow-y: auto;
     grid-template-columns: repeat(auto-fill, minmax(355px, 1fr));
     grid-template-rows: repeat(auto-fill, minmax(95px, 95px));
 
   }
+}
+
+@media only screen and (min-width: 350px) and (max-width: 480px) {
+
+
+  #searchbtn{
+    display: none;
+  }
+
+  .grey-bar{
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+    background-color: #31c48d;
+    max-height: 60px;
+    height: 60px;
+    border-radius: 20px 20px 0 0;
+
+  }
+  .wrapper {
+    grid-template-rows: 1fr;
+    margin-bottom: 0;
+    overflow-y: scroll;
+  }
+
+  .members-fridge{
+    background-color: #31c48d;
+    margin-top: 0px;
+    padding-top: 0;
+    padding-right: 10px;
+    text-align: center;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+  }
+
+  .link{
+    margin: 0;
+
+  }
+
+  .link.active {
+    height: 60px !important;
+    background-color: white;
+    border-radius: 20px 20px 0 0;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: none;
+    color: black;
+    margin-top: 20px;
+    padding-top: 10px;
+  }
+
+  #searchbar {
+    display: flex;
+    position: fixed;
+    bottom: 70px;
+    width: 100%;
+    z-index: 1;
+    background-color: transparent;
+
+  }
+
+  .buttons {
+    position: relative;
+    margin-left: 20px;
+    margin-right: 0;
+  }
+
+  #searchbtn{
+    display: none !important;
+  }
+
+  #backGreen {
+    height: 0px;
+    width: 100%;
+    padding: 0px 10px 0px 10px;
+
+  }
+
+  #myDropdown{
+    position: fixed;
+    z-index: 0;
+  }
+
+
+
+
+
+  .fridge-wrapper{
+    display: flex;
+    width: 100%;
+
+  }
+
+
+
+
+
+
 }
 
 </style>
