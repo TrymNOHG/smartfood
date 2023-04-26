@@ -53,7 +53,7 @@ unit-test-frontend-job:
 
 
 e2e-test-frontend-job:
-  image: cypress/included:9.5.0
+  image: cypress/base:16.13.0 # Use the Cypress base image with Node 16.13.0
   stage: test
   script:
     - cd frontend
