@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.model.fridge;
 
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -45,6 +46,14 @@ public class ShoppingItems {
     @NonNull
     @ToString.Exclude
     private Fridge fridge;
+
+    /**
+     * The user this suggestion belongs to.
+     */
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    private User user;
 
     /**
      * Is the items a suggestion.
