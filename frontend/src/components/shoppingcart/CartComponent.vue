@@ -55,9 +55,8 @@
             </CartItem>
         </div>
     <figure id="forslagBlack"></figure>
-    <div id="forslagGreen">
+
       <h1 id="sugTitle">Forslag</h1>
-    </div>
         <div class="cart-items">
                     <CartSuggestion
                         v-for="(item, index) in suggestedItems"
@@ -510,6 +509,7 @@ export default {
       var items = async () => {
         return await getItems(searchQuery.value);
       };
+      if (searchQuery.value.length < 2) search.value = false;
       items()
         .then((response) => {
           searchItems.value = response;
@@ -736,7 +736,7 @@ body {
 
 .item {
     padding: 20px 30px;
-    height: 120px;
+    height: 150px;
     width: 70%;
     margin: auto;
     display: flex;
@@ -770,6 +770,28 @@ body {
     animation-iteration-count: 1;
     animation-timing-function: steps(28);
     animation-fill-mode: forwards;
+}
+
+#forslagBlack {
+  height: 6px;
+  background-color: white;
+}
+
+#forslagGreen {
+  background-color: #31c48d;
+
+  width: 100%;
+  height: 0px;
+}
+
+
+
+#sugTitle {
+  border-radius: 20px 20px 20px 20px;
+  background-color: #31c48d;
+  color: white;
+  font-size: 25px;
+
 }
 
 @keyframes animate {
@@ -977,7 +999,7 @@ input:focus {
   #shopList {
     border-radius: 20px 20px 0px 0px;
     background-color: #31c48d;
-    color: black;
+    color: white;
   }
 
   #sugTitle {
@@ -989,7 +1011,7 @@ input:focus {
   h1 {
     z-index: 1;
     background-color: white;
-    color: black;
+    color: white;
     font-size: 20px;
     font-weight: bold;
     letter-spacing: 2px;

@@ -153,7 +153,7 @@ export default {
 .link-name{
   font-family: "Roboto", sans-serif;
   text-decoration: none;
-  color: black;
+  color: white;
   font-weight: bold;
   text-shadow: 0 0 black;
   font-size: 25px;
@@ -745,7 +745,7 @@ nav ul li a .text {
   .link-name{
     font-family: "Roboto", sans-serif;
     text-decoration: none;
-    color: black;
+    color: white;
     font-weight: bold;
     text-shadow: 0 0 black;
     font-size: 20px;
