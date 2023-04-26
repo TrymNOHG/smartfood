@@ -1,5 +1,5 @@
 {
-  "matsmart": "Matsmart",
+  "matsmart": "SmartMat",
   "dinner": "Middag",
   "fridge": "Kjøleskap",
   "statistics": "Statistikk",
@@ -62,5 +62,9 @@
   "search_Members_Title": "Søk etter brukere",
   "enter_username": "Skriv inn brukernavn",
   "search_MembersButton_Text": "Søk",
-  "select_fridge": "Velg kjøleskap"
+  "select_fridge": "Velg kjøleskap",
+  "exit-fridge": "Gå ut av nåværende kjøleskap",
+  "enter-fridge": "Gå inn i et kjøleskap",
+  "alt_info_button": "Informasjon om siden",
+  "members": "Medlemmer"
 }

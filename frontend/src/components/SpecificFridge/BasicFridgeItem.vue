@@ -29,6 +29,7 @@
       </div>
     </router-link>
   </div>
+
 </template>
 
 <script>
@@ -346,5 +347,99 @@ img {
   }
 }
 
+@media only screen and (min-width: 350px) and (max-width: 480px) {
+  body{
+    height: 100%;
+  }
+
+  .cards-container{
+
+    height: 100px;
+    margin: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .card {
+    display: flex;
+    justify-content: end;
+    width: 350px;
+    height: 100px;
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+
+  }
+
+  h3 {
+    font-weight: normal;
+    font-size: 10px;
+  }
+
+
+  .front-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 5px;
+  }
+
+  img {
+    margin-right: auto;
+    width: 80px;
+    height: 80px;
+    border-radius: 5px;
+    background-color: white;
+    color: white;
+    margin-left: 10px;
+  }
+
+  .delete-btn {
+    background-color: white;
+    width: 25px;
+    height: 25px;
+    top: 5px;
+    right: 5px;
+  }
+  .icon{
+    color: black;
+    font-size: 15px;
+    margin-right: 5px;
+  }
+
+  .item-name {
+    display: block;
+    font-size: 10px;
+  }
+
+  .card:hover .front-side {
+    transform: rotateY(0deg);
+  }
+
+  .card:hover .back-side {
+    transform: rotateY(0deg);
+  }
+
+
+  .card .back-side {
+    margin-right: auto;
+    backface-visibility: visible;
+    transform: rotateY(0deg);
+    color: black;
+    opacity: 100%;
+    width: 220px;
+    background-color: #eee;
+    border-radius: 5px;
+  }
+
+  h2 {
+    font-size: 15px;
+    margin: 10px 0;
+  }
+
+  h4 {
+    display: none;
+  }
+}
 
 </style>

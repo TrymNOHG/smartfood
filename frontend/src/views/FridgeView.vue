@@ -1,33 +1,43 @@
 <template>
-
-  <div class="members-fridge">
-      <div id="toggle-button" class="link" @click="selectedTab = 'members'" :class="{ active: selectedTab === 'members' }">Members</div>
-      <div id="toggle-button" class="link" @click="selectedTab = 'fridge'" :class="{ active: selectedTab === 'fridge' }">Fridge</div>
+  <div class="grey-bar">
+    <div class="members-fridge">
+        <div id="toggle-button" class="link" @click="selectedTab = 'members'" :class="{ active: selectedTab === 'members' }">{{ $t('members') }}</div>
+        <div id="toggle-button" class="link" @click="selectedTab = 'fridge'" :class="{ active: selectedTab === 'fridge' }">{{ $t('fridge') }}</div>
+    </div>
+    <div class="information-button">
+      <img src="src/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
+    </div>
   </div>
+
   <!--TODO: add infinite scroller or pagination-->
   <div class="fridge-wrapper" v-show="selectedTab === 'fridge'">
-    <div class="search-container">
-      <div class="dropdown">
-        <SearchInput @input="handleSearch()" v-model="searchQuery" label="Search product" class="search-input" />
-        <button class="search-btn" @click="handleSearch()">Search</button>
+    <div id="myDropdown" class="dropdown-content">
+      <figure id="backBlack"></figure>
+      <div id="backGreen">
+        <div id="searchbar">
+          <SearchInput
+              v-model="searchQuery"
+              @input="handleSearch"
+              label="Legg til vare"
+          ></SearchInput>
+          <button id="searchbtn" @click="handleSearch">Search</button>
+        </div>
       </div>
-      <div class="search-overlay" v-show="isExpanded" @click="isExpanded = false"></div>
-      <div class="search-results" v-show="isExpanded">
+
+      <div class="dropper" v-if="search">
         <vue-collapsible-panel-group>
-          <vue-collapsible-panel :expanded="isExpanded">
-            <template #title>Search results</template>
-            <template #content style="overflow-y: auto;">
-              <div class="search-item-list" style="overflow-y: auto; max-height: 250px">
-                <SearchItem
-                    v-for="(item, index) in searchItems"
-                    :key="index"
-                    :image="item.image"
-                    :text="item.name"
-                    :store="item.store.name"
-                    :price="item.current_price"
-                    @click="addItemToFridge(this.fridge.fridgeId, item)"
-                />
-              </div>
+          <vue-collapsible-panel :expanded="isExpanded.value">
+            <template  #content>
+              <SearchItem
+                  v-for="(item, index) in searchItems"
+                  :key="index"
+                  :image="item.image"
+                  :text="item.name"
+                  :store="item.store.name"
+                  :price="item.current_price"
+                  style="text-align: center"
+                  @click="addItemToFridge(this.fridge.fridgeId, item)"
+              />
             </template>
           </vue-collapsible-panel>
         </vue-collapsible-panel-group>
@@ -37,6 +47,7 @@
       <basic-fridge-item v-for="(item, index) in fridgeItems" :key="index" :item="item" :currenFridge="fridge"
                          @delete-item="deleteItem"/>
     </div>
+
   </div>
   <div class="members-wrapper" v-show="selectedTab === 'members'">
     <member-component/>
@@ -59,6 +70,7 @@ import {getItems} from "@/services/ApiService";
 import Swal from 'sweetalert2';
 
 
+
 export default {
   name: "FridgeView",
   components: {
@@ -78,6 +90,8 @@ export default {
 
   methods: {
     handleSearch() {
+      this.search = true;
+      if (this.searchQuery.length < 2) this.search = false;
       getItems(this.searchQuery).then((response) => {
         this.searchItems = response;
         this.isExpanded = true;
@@ -115,6 +129,7 @@ export default {
     },
 
     async addItemToFridge(fridgeId, item) {
+      this.search = false;
       const { value: confirmed } = await Swal.fire({
         title: 'Add item to fridge?',
         icon: 'question',
@@ -155,7 +170,17 @@ export default {
       await this.itemStore.fetchItemsFromFridgeById(this.fridge.fridgeId).then((items) => {
         this.fridgeItems = items;
       });
-    }
+    },
+
+    showInformation(){
+
+      if(this.selectedTab === 'fridge'){
+        //TODO: INFORMATION FRIDGE put information API in here
+      }
+      else {
+        //TODO: INFORMATION MEMBERS put information API in here
+      }
+    },
 
   },
 
@@ -164,6 +189,7 @@ export default {
     const itemStore = useItemStore();
     const selectedTab = ref("fridge");
     const searchItems = ref([]);
+    const search = ref(false);
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge
 
@@ -184,6 +210,7 @@ export default {
       submitMessage,
       searchQuery,
       fridgeStore,
+      search,
       itemStore,
     }
   },
@@ -192,16 +219,69 @@ export default {
     return {
       isExpanded: false,
     }
+
   },
 }
 </script>
 
 <style scoped>
 
+.grey-bar {
+  background-color: #6C6C6C;
+  max-height : 35px;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+#searchbar{
+  display: flex;
+  background-color: #6C6C6C;
+  margin: 0;
+  border: 0;
+  width: 100%;
 
+}
+
+#searchbtn {
+  border: 0;
+  padding: 0px 10px;
+  margin-top: 0px;
+  color: #fff;
+  background: #31c48d;
+  font-size: 27px;
+  font-weight: 500;
+  border: 0px solid #555;
+  border-left: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 0 50px 50px 0 !important;
+}
+#grey-header{
+  grid-column: 2;
+  color: white;
+}
+
+.information-button{
+  grid-column: 3;
+  text-align: right;
+  padding: 2px 5px;
+  max-height: 35px;
+}
+
+#info-picture{
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+}
 
 .fridge-wrapper {
   display: grid;
+}
+
+#myDropdown{
+  margin-bottom: 10px;
 }
 
 .vcpg {
@@ -274,17 +354,17 @@ input[type="text"]:not(:focus) + .search-results {
 
 .link {
   text-decoration: none;
+  line-height: 25px;
   color: white;
 }
 
 #toggle-button {
   width: 150px;
-  margin-top: 5px;
-  margin-right: 50px;
 }
 
 #toggle-button:hover {
-  color: #3b3b3b;
+  cursor: pointer;
+  font-size: x-large;
 }
 
 .search-results {
@@ -307,25 +387,62 @@ input[type="text"]:not(:focus) + .search-results {
   transition: 0.5s;
 }
 
+.grey-bar .link.active {
+  height: 25px;
+}
+
 .active {
-    height: 25px;
-    width: 150px;
+    background-size: 25px;
     background-color: #b1b1b1;
     border-radius: 5px;
     font-weight: bold;
     text-decoration: black;
     text-shadow: black 0 0 2px;
-    margin-left: 50px;
-    margin-top: 5px;
 }
 
 .members-fridge {
   background-color: #6C6C6C;
   height: 35px;
   color: white;
-  text-align: center;
+  font-size: 1.5em;
+  padding-top: 5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 20px;
+  grid-column: 2;
+}
+
+.dropper {
+  width: 70%;
+  color: white;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.dropper {
+
   display: flex;
-  justify-content: center;
+  width: 100vw;
+  justify-content: space-evenly;
+  overflow-y: scroll;
+  margin-bottom: 20px;
+  margin: auto;
+  color: white;
+
+
+}
+.vcpg {
+  --bg-color-header: transparent!important;
+  border: transparent;
+  width: 100%;
+  overflow-y: scroll;
+  color: black;
+  background-color: white;
+  border-radius: 0;
+}
+
+#backGreen{
+  background-color: #6C6C6C;
 }
 
 @media (max-width: 650px) {
@@ -340,12 +457,119 @@ input[type="text"]:not(:focus) + .search-results {
   }
 
   .wrapper {
+    z-index: 0;
     margin-bottom: 80px;
     overflow-y: auto;
     grid-template-columns: repeat(auto-fill, minmax(355px, 1fr));
     grid-template-rows: repeat(auto-fill, minmax(95px, 95px));
 
   }
+}
+
+@media only screen and (min-width: 350px) and (max-width: 480px) {
+
+
+  #searchbtn{
+    display: none;
+  }
+
+  .grey-bar{
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+    background-color: #31c48d;
+    max-height: 60px;
+    height: 60px;
+    border-radius: 20px 20px 0 0;
+
+  }
+  .wrapper {
+    z-index: -1;
+    grid-template-rows: 1fr;
+    margin-bottom: 0;
+    overflow-y: scroll;
+  }
+
+  .members-fridge{
+    background-color: #31c48d;
+    margin-top: 0px;
+    padding-top: 0;
+    padding-right: 10px;
+    text-align: center;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+  }
+
+  .link{
+    margin: 0;
+
+  }
+
+  .link.active {
+    height: 60px !important;
+    background-color: white;
+    border-radius: 20px 20px 0 0;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: none;
+    color: black;
+    margin-top: 20px;
+    padding-top: 10px;
+  }
+
+  #searchbar {
+    display: flex;
+    position: fixed;
+    bottom: 70px;
+    width: 100%;
+    z-index: 2;
+    background-color: transparent;
+
+  }
+
+  .buttons {
+    position: relative;
+    margin-left: 20px;
+    margin-right: 0;
+  }
+
+  #searchbtn{
+    display: none !important;
+  }
+
+  #backGreen {
+    height: 0px;
+    width: 100%;
+    padding: 0px 10px 0px 10px;
+    z-index: 2;
+
+  }
+
+  #myDropdown{
+    position: fixed;
+    z-index: 0;
+  }
+
+
+
+
+
+  .fridge-wrapper{
+    display: flex;
+    width: 100%;
+    z-index: 0;
+    margin-bottom: 150px;
+
+  }
+
+
+
+
+
+
 }
 
 </style>
