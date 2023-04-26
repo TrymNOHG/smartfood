@@ -1,8 +1,8 @@
 <template>
 
   <div class="members-fridge">
-      <div id="toggle-button" class="link" @click="selectedTab = 'members'" :class="{ active: selectedTab === 'members' }">Members</div>
-      <div id="toggle-button" class="link" @click="selectedTab = 'fridge'" :class="{ active: selectedTab === 'fridge' }">Fridge</div>
+      <div id="toggle-button" class="link link-member" @click="selectedTab = 'members'" :class="{ active: selectedTab === 'members' }">Members</div>
+      <div id="toggle-button" class="link link-fridge" @click="selectedTab = 'fridge'" :class="{ active: selectedTab === 'fridge' }">Fridge</div>
   </div>
   <!--TODO: add infinite scroller or pagination-->
   <div class="fridge-wrapper" v-show="selectedTab === 'fridge'">
