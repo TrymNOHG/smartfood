@@ -1,38 +1,40 @@
 <template>
-    <div>
-        <h1>Cart</h1>
-        <div id="myDropdown" class="dropdown-content">
-            <SearchInput
-                    v-model="searchQuery"
-                    @input="handleSearch"
-                    label="Search product"
-            ></SearchInput>
-            <button id="searchbtn" @click="handleSearch">Search</button>
+  <div>
 
-            <div class="dropper">
-                <vue-collapsible-panel-group>
-                    <vue-collapsible-panel :expanded="isExpanded.value">
-                        <template #title> Search results</template>
-                        <template #content>
-                            <SearchItem
-                                    v-for="(item, index) in searchItems"
-                                    :key="index"
-                                    :image="item.image"
-                                    :text="item.name"
-                                    :store="item.store.name"
-                                    :price="item.current_price"
-                                    style="text-align: center"
-                                    @click="addItemToList(item)"
-                                    @item-checked="handleItemChecked"
-
-                            />
-                        </template>
-                    </vue-collapsible-panel>
-                </vue-collapsible-panel-group>
-            </div>
-
-            <CartControl v-if="isCurrentUserSuperUser" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
+    <div id="myDropdown" class="dropdown-content">
+      <figure id="backBlack"></figure>
+      <div id="backGreen">
+        <h1 id="shopList">Handlekurv</h1>
+        <div id="searchbar">
+          <SearchInput
+              v-model="searchQuery"
+              @input="handleSearch"
+              label="Search product"
+          ></SearchInput>
+          <button id="searchbtn" @click="handleSearch">Search</button>
         </div>
+        <CartControl v-if="true" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
+      </div>
+      <div class="dropper" v-if="search">
+        <vue-collapsible-panel-group>
+          <vue-collapsible-panel :expanded="isExpanded.value">
+            <template  #content>
+              <SearchItem
+                v-for="(item, index) in searchItems"
+                :key="index"
+                :image="item.image"
+                :text="item.name"
+                :store="item.store.name"
+                :price="item.current_price"
+                style="text-align: center"
+                @click="addItemToList(item)"
+                @item-checked="handleItemChecked"
+              />
+            </template>
+          </vue-collapsible-panel>
+        </vue-collapsible-panel-group>
+      </div>
+    </div>
 
         <div class="cart-items">
             <CartItem
@@ -47,16 +49,15 @@
                     @subtract="dec_CartItemAmount(item)"
                     @delete-item="handleDeleteItem(item)"
                     @handle-checked="handleCheckedItem"
-                    @buy="handleBuy"
+                    @handle-buy="handleBuyItem"
                     @quantity-updated="set_CartItemAmount"
             >
             </CartItem>
         </div>
+    <figure id="forslagBlack"></figure>
 
-        <vue-collapsible-panel-group>
-            <vue-collapsible-panel :expanded="true">
-                <template #title> Suggested items </template>
-                <template #content>
+      <h1 id="sugTitle">Forslag</h1>
+        <div class="cart-items">
                     <CartSuggestion
                         v-for="(item, index) in suggestedItems"
                         :key="index"
@@ -69,9 +70,7 @@
                         @delete-suggestion="handleDeleteSuggestion(item)"
                     >
                     </CartSuggestion>
-                </template>
-            </vue-collapsible-panel>
-        </vue-collapsible-panel-group>
+                </div>
 
 
     </div>
@@ -103,36 +102,36 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import swal from 'sweetalert2';
 
 export default {
-    name: "Cart",
-    components: {
-        FontAwesomeIcon,
-        SearchItem,
-        BasicButton,
-        SearchInput,
-        VueCollapsiblePanelGroup,
-        VueCollapsiblePanel,
-        CartItem,
-        CartControl,
-        BasicCheckBox,
-        CartSuggestion,
+  name: "Cart",
+  components: {
+    FontAwesomeIcon,
+    SearchItem,
+    BasicButton,
+    SearchInput,
+    VueCollapsiblePanelGroup,
+    VueCollapsiblePanel,
+    CartItem,
+    CartControl,
+    BasicCheckBox,
+    CartSuggestion,
+  },
+  computed: {
+    isCurrentUserSuperUser() {
+      return useFridgeStore().getIsSuperUser;
     },
-    computed: {
-        isCurrentUserSuperUser() {
-            return useFridgeStore().getIsSuperUser;
-        },
-    },
-
-    setup() {
-        console.log(useFridgeStore().getCurrentFridge);
-        var itemAmount = ref(1);
-        var submitMessage = ref("norvegia");
-        const items = ref([]); // list of items in the cart
-        const searchQuery = ref(""); // search query entered by the user
-        const searchItems = ref([]);
-        const isExpanded = ref(true);
-        const currentFridge = useFridgeStore().getCurrentFridge;
-        let checkAll_b = ref(false);
-        const suggestedItems = ref([]);
+  },
+  setup() {
+    console.log(useFridgeStore().getCurrentFridge);
+    var itemAmount = ref(1);
+    var submitMessage = ref("norvegia");
+    const items = ref([]); // list of items in the cart
+    const searchQuery = ref(""); // search query entered by the user
+    const searchItems = ref([]);
+    const isExpanded = ref(true);
+    const search = ref(false);
+    const currentFridge = useFridgeStore().getCurrentFridge;
+    let checkAll_b = ref(false);
+    const suggestedItems = ref([]);
 
         //console log items every 3 seconds
         /**function callEveryThreeSeconds() {
@@ -178,6 +177,8 @@ export default {
                 obj.isChecked = checkAll_b.value;
             });
         }
+
+
         async function handleCheckedItem(item, isChecked) {
             item.isChecked = isChecked;
             console.log(item.name)
@@ -325,7 +326,6 @@ export default {
             }
         };
 
-
         async function inc_CartItemAmount(item) {
           console.log(item);
           const itemDTO = {
@@ -463,21 +463,21 @@ export default {
                 });
         };
 
-        //buy item from search
-        async function addItemToList(item) {
-            console.log(item.name + " " + item.store.name);
-
-            const itemDTO = {
-                name: item.name,
-                description: item.description,
-                store: item.store.name,
-                price: item.currentPrice,
-                purchaseDate: new Date(),
-                expirationDate: new Date(),
-                image: item.image,
-                quantity: 1,
-            };
-            const fridgeId = currentFridge.fridgeId;
+    //buy item from search
+    function addItemToList(item) {
+      console.log(item.name + " " + item.store.name);
+      search.value = false;
+      const itemDTO = {
+        name: item.name,
+        description: item.description,
+        store: item.store.name,
+        price: item.currentPrice,
+        purchaseDate: new Date(),
+        expirationDate: new Date(),
+        image: item.image,
+        quantity: 1,
+      };
+      const fridgeId = currentFridge.fridgeId;
 
             console.log(itemDTO);
 
@@ -497,50 +497,53 @@ export default {
             event.stopPropagation();
         }
 
-        async function handleSearch() {
-            console.log("clicked search");
-            // filter the list of items based on the search query
-            var items = async () => {
-                return await getItems(searchQuery.value);
-            };
-            items()
-                .then((response) => {
-                    searchItems.value = response;
-                    console.log(response);
-                    console.log(searchQuery.value);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        }
+    function handleSearch() {
+      console.log("clicked search");
+      search.value= true;
+      // filter the list of items based on the search query
+      var items = async () => {
+        return await getItems(searchQuery.value);
+      };
+      if (searchQuery.value.length < 2) search.value = false;
+      items()
+        .then((response) => {
+          searchItems.value = response;
+          console.log(response);
+          console.log(searchQuery.value);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
 
-        return {
-            itemAmount,
-            handleSubtract,
-            handleDeleteItem,
-            submitMessage,
-            items, // list of items in the cart
-            searchQuery, // search query entered by the user
-            searchItems,
-            handleSearch,
-            addItemToList,
-            loadItemsFromCart,
-            inc_CartItemAmount,
-            dec_CartItemAmount,
-            isExpanded,
-            handleBuy,
-            handleMarkAll,
-            handleCheckedItem,
-            checkAll_b,
-            handleDelete,
-            handleBuyItem,
-            currentFridge,
-            suggestedItems,
-            handleAcceptSuggestion,
-            handleDeleteSuggestion,
-            set_CartItemAmount,
-        };
-    },
+    return {
+      itemAmount,
+      handleSubtract,
+      handleDeleteItem,
+      submitMessage,
+      items, // list of items in the cart
+      searchQuery, // search query entered by the user
+      searchItems,
+      handleSearch,
+      addItemToList,
+      loadItemsFromCart,
+      inc_CartItemAmount,
+      dec_CartItemAmount,
+      isExpanded,
+      search,
+      handleBuy,
+      handleMarkAll,
+      handleCheckedItem,
+      checkAll_b,
+      handleDelete,
+      handleBuyItem,
+      currentFridge,
+      suggestedItems,
+      handleAcceptSuggestion,
+      handleDeleteSuggestion,
+      set_CartItemAmount,
+    };
+  },
 };
 </script>
 
@@ -548,7 +551,6 @@ export default {
 * {
     text-align: center;
 }
-
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -558,7 +560,6 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
     -moz-appearance: textfield;
 }
-
 .dropper {
     width: 70%;
     color: white;
@@ -566,34 +567,78 @@ input[type="number"] {
     margin-bottom: 20px;
 }
 
+.dropper {
+
+  display: flex;
+  width: 100vw;
+  justify-content: space-evenly;
+  overflow-y: scroll;
+  margin-bottom: 20px;
+  margin: auto;
+  color: white;
+
+
+}
 .vcpg {
-    --bg-color-header: #6c6c6c !important;
-    --bg-color-header-hover: #6c6c6c !important;
-    --bg-color-header-active: #6c6c6c !important;
+  --bg-color-header: transparent!important;
+  border: transparent;
+  width: 100%;
+  overflow-y: scroll;
+  color: black;
+  background-color: white;
+  border-radius: 0;
 }
 
+#backGreen{
+  background-color: #6C6C6C;
+}
+
+#shopList{
+  color: white;
+  font-size: 25px;
+}
+
+
+#searchbar{
+  display: flex;
+  background-color: #6C6C6C;
+  margin: 0;
+  border: 0;
+  width: 100%;
+
+}
+
+#myDropdown{
+  padding: 0;
+  margin: 0;
+  border: 0;
+
+}
 #searchbtn {
     border: 0;
     padding: 0px 10px;
-    margin-top: 10px;
+    margin-top: 0px;
     color: #fff;
-    background: #6c6c6c;
+    background: #31c48d;
     font-size: 27px;
     font-weight: 500;
-    border: 3px solid #555;
+    border: 0px solid #555;
     border-left: none;
     -webkit-box-shadow: none;
     box-shadow: none;
-    min-height: 60px;
-    height: auto;
+    height: 40px;
+    margin-right: 10px;
     border-radius: 0 50px 50px 0 !important;
 }
 
+#searchbtn:hover{
+  background-color: #1e7655;
+  cursor: pointer;
+}
 #search-button {
     width: 50px !important;
     height: 50px !important;
 }
-
 .icon {
     margin-left: 10px;
 }
@@ -610,11 +655,9 @@ body {
     background-color: #7ec855;
     font-family: "Roboto", sans-serif;
 }
-
 .search-image {
     width: 0.1vw;
 }
-
 .image img {
     width: 50%;
 }
@@ -688,7 +731,7 @@ body {
 
 .item {
     padding: 20px 30px;
-    height: 120px;
+    height: 150px;
     width: 70%;
     margin: auto;
     display: flex;
@@ -705,13 +748,11 @@ body {
     padding-top: 30px;
     margin-right: 60px;
 }
-
 .delete-btn,
 .like-btn {
     display: inline-block;
     cursor: pointer;
 }
-
 .delete-btn {
     width: 18px;
     height: 17px;
@@ -724,6 +765,28 @@ body {
     animation-iteration-count: 1;
     animation-timing-function: steps(28);
     animation-fill-mode: forwards;
+}
+
+#forslagBlack {
+  height: 6px;
+  background-color: white;
+}
+
+#forslagGreen {
+  background-color: #31c48d;
+
+  width: 100%;
+  height: 0px;
+}
+
+
+
+#sugTitle {
+  border-radius: 20px 20px 20px 20px;
+  background-color: #31c48d;
+  color: white;
+  font-size: 25px;
+
 }
 
 @keyframes animate {
@@ -892,34 +955,397 @@ input:focus {
 }
 
 @media only screen and (min-width: 350px) and (max-width: 480px) {
-    .buttons {
-        position: relative;
-        margin-left: 20px;
-        margin-right: 0;
-    }
+  .buttons {
+    position: relative;
+    margin-left: 20px;
+    margin-right: 0;
+  }
 
-    .dropper {
-        width: 100vw;
-    }
+  #backBlack {
+    height: 6px;
+    background-color: white;
+  }
 
-    .item {
-        width: 100vw;
-    }
+  #backGreen {
+    background-color: #31c48d;
 
-    .quantity {
-        padding-top: 25px;
-        display: flex;
-    }
+    width: 100%;
+    padding: 10px 10px 10px 10px;
+    border-radius: 20px 20px 20px 20px;
 
-    .quantity input {
-        -webkit-appearance: none;
-        border: none;
-        text-align: center;
-        width: 32px;
-        font-size: 16px;
-        color: #43484d;
-        font-weight: 300;
+
+    width: 100%;
+    z-index: 1;
+  }
+
+  #forslagBlack {
+    height: 6px;
+    background-color: white;
+  }
+
+  #forslagGreen {
+    background-color: #31c48d;
+
+    width: 100%;
+    padding: 10px 10px 10px 10px;
+    border-radius: 20px 20px 20px 20px;
+  }
+
+  #shopList {
+    border-radius: 20px 20px 0px 0px;
+    background-color: #31c48d;
+    color: white;
+  }
+
+  #sugTitle {
+    border-radius: 20px 20px 20px 20px;
+    background-color: #31c48d;
+
+  }
+
+  h1 {
+    z-index: 1;
+    background-color: white;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+
+
+  #searchbar {
+    display: flex;
+    position: fixed;
+    bottom: 70px;
+    width: 100%;
+    background-color: transparent;
+    z-index: 1;
+  }
+
+  nav {
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 70px;
+    background-color: #31c48d;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+
+  #searchbtn {
+    display: none;
+  }
+
+  .dropper {
+
+    display: flex;
+    width: 100vw;
+    justify-content: space-evenly;
+    position: fixed;
+    top: 160px;
+    overflow-y: scroll;
+    margin-bottom: 20px;
+    margin: auto;
+    color: white;
+
+
+  }
+
+  .cart-control {
+    border-radius: 20px 20px 20px 20px;
+  }
+
+  #myDropdown {
+    border: 0;
+  }
+
+  .vcpg {
+    --bg-color-header: transparent !important;
+    border: transparent;
+    width: 100%;
+    overflow-y: scroll;
+    max-height: 150vw;
+    color: black;
+    background-color: white;
+
+
+  }
+
+  header {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+  }
+
+
+  header img {
+    height: 40px;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+
+  nav ul {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+  }
+
+  nav ul li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+  }
+
+  nav ul li a {
+    font-size: 0.6rem;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  nav ul li a .icon {
+    margin-bottom: 5px;
+    font-size: 2em;
+  }
+
+  nav ul li.active a {
+    color: #fcfbfb;
+    background-color: #218838;
+    border-radius: 50%;
+  }
+
+  nav ul li.active a .icon {
+    color: #fcfbfb;
+  }
+
+  .quantity {
+    padding-top: 25px;
+    margin-left: 0;
+    display: flex;
+  }
+
+
+  .item {
+    width: 100vw;
+    padding: 20px 30px;
+    height: 120px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+  }
+
+
+  .quantity input {
+    -webkit-appearance: none;
+    border: none;
+    text-align: center;
+    width: 32px;
+    font-size: 16px;
+    color: #43484d;
+    font-weight: 300;
+  }
+
+
+
+
+  * {
+    text-align: center;
+    box-sizing: border-box;
+  }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+
+
+
+
+  .icon {
+    margin-left: 10px;
+  }
+
+
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: #7ec855;
+    font-family: "Roboto", sans-serif;
+  }
+  .search-image {
+    width: 0.1vw;
+  }
+  .image img {
+    width: 50%;
+  }
+
+  #myInput {
+    box-sizing: border-box;
+    background-image: url("searchicon.png");
+    background-position: 14px 12px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    padding: 14px 20px 12px 45px;
+    border: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  #myInput:focus {
+    outline: 3px solid #ddd;
+  }
+
+  .dropdown {
+    position: absolute;
+    display: inline-block;
+  }
+
+  .dropdown-content {
+    top: 100%;
+    position: relative;
+    background-color: #f6f6f6;
+    min-width: 230px;
+    overflow: auto;
+    border: 1px solid #ddd;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+
+  .dropdown a:hover {
+    background-color: #ddd;
+  }
+
+  .show {
+    display: block;
+  }
+
+  .shopping-cart {
+    width: 750px;
+    height: 423px;
+    margin: 80px auto;
+    background: #ffffff;
+    box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  .title {
+    height: 60px;
+    border-bottom: 1px solid #e1e8ee;
+    padding: 20px 30px;
+    color: #5e6977;
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+
+  .item:nth-child(3) {
+    border-top: 1px solid #e1e8ee;
+    border-bottom: 1px solid #e1e8ee;
+  }
+  .delete-btn,
+  .like-btn {
+    display: inline-block;
+    cursor: pointer;
+  }
+  .delete-btn {
+    width: 18px;
+    height: 17px;
+    background: url("../assets/images/delete-icn.svg") no-repeat center;
+  }
+
+  .is-active {
+    animation-name: animate;
+    animation-duration: 0.8s;
+    animation-iteration-count: 1;
+    animation-timing-function: steps(28);
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes animate {
+    0% {
+      background-position: left;
     }
+    50% {
+      background-position: right;
+    }
+    100% {
+      background-position: right;
+    }
+  }
+
+  .image {
+    margin-right: 50px;
+  }
+
+  .description {
+    padding-top: 10px;
+    margin-right: 60px;
+    width: 115px;
+  }
+
+  .description span {
+    display: block;
+    font-size: 14px;
+    color: #43484d;
+    font-weight: 400;
+  }
+
+  .description span:first-child {
+    margin-bottom: 5px;
+  }
+
+  .description span:last-child {
+    font-weight: 300;
+    margin-top: 8px;
+    color: #86939e;
+  }
+
+  button[class*="btn"] {
+    width: 30px;
+    height: 30px;
+    background-color: #e1e8ee;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .minus-btn img {
+    margin-bottom: 3px;
+  }
+
+  .plus-btn img {
+    margin-top: 2px;
+  }
+
+  button:focus,
+  input:focus {
+    outline: 0;
+  }
 }
 
 @media only screen and (max-width: 350px) {
@@ -952,5 +1378,6 @@ input:focus {
         color: #43484d;
         font-weight: 300;
     }
+
 }
 </style>
