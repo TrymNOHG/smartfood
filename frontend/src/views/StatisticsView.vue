@@ -2,7 +2,7 @@
   <div class="grey-bar">
     <h2 id="grey-header" >{{ $t('statistics') }}</h2>
     <div class="information-button">
-      <img src="src/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
+      <img src="@/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
     </div>
   </div>
 

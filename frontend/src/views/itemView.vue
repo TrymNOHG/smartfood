@@ -5,7 +5,7 @@
       <router-link class="link fridge" to="/fridge">{{ $t('fridge') }}</router-link>
     </div>
     <div class="information-button">
-      <img src="../assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
+      <img src="@/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
     </div>
   </div>
 
