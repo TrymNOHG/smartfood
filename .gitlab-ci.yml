@@ -58,11 +58,10 @@ e2e-test-frontend-job:
   script:
     - cd frontend
     - npm install
-    - npx vite preview --port 4173 &
+    - npx vite preview --port 4173 --root dist & # Add the --root option here
     - sleep 20
-    - curl http://localhost:4173 # Add this line to check if the server is running
+    - curl http://localhost:4173
     - npx cypress run --e2e
-
 
 
 generatepdf:
