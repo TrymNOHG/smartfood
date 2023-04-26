@@ -19,7 +19,7 @@
 
 image: maven:eclipse-temurin
 stages:
-  #- build
+  - build
   - test
   - deploy
 
