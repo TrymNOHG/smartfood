@@ -2,7 +2,9 @@ describe('After choosing fridge', () => {
     const base_url = "http://localhost:5173";
     const base_url_site = "http://localhost:5173";
     const base_url_endpoint = "http://localhost:8080";
-    let addedItem = {};
+    let cartAddedItem = {};
+    let fridgeAddedItem = [];
+
     beforeEach(() => {
 
         cy.intercept('POST', 'http://localhost:8080/user/login', {
@@ -50,7 +52,7 @@ describe('After choosing fridge', () => {
             })
             // Save the body of the intercepted request to a variable
             const requestBody = req.body;
-            addedItem = requestBody;
+            cartAddedItem = requestBody;
             // Do something with the requestBody, like logging it to the console
             console.log('Request body:', requestBody)
         }).as('addItemRequest')
@@ -67,19 +69,17 @@ describe('After choosing fridge', () => {
         cy.intercept('GET', 'http://localhost:8080/item/fridge/get?fridgeId=88', (req) => {
             req.reply({
                 statusCode: 200,
-                body: [{
-                    itemId: 7,
-                    name: "Våtservietter 64stk Lillego",
-                    description: "LilleGo’ sensitive våtservietter er milde og parfymefrie. Ideelle til bleiestell, samt vask av ansikt og hender. Våtserviettene er dermatologisk testet og dokumentert egnet for sensitiv hud.",
-                    store: "Meny",
-                    price: 24.0,
-                    image: "https://bilder.ngdata.no/7035620025037/meny/large.jpg",
-                    quantity: 1,
-                    purchaseDate: "2023-04-27T07:16:59.630+00:00",
-                    expirationDate: "2023-04-27T07:16:59.630+00:00"
-                }]
+                body: fridgeAddedItem
             });
         }).as('getFridgeItems');
+
+
+        cy.intercept('POST', 'http://localhost:8080/item/fridge/add?fridgeId=88', (req) => {
+            fridgeAddedItem.push(req.body)
+            req.reply({
+                statusCode: 200,
+            });
+        }).as('addItemToFridge');
 
         cy.intercept('GET', 'http://localhost:8080/fridge/loadAllUsers?fridgeId=88', (req) => {
             req.reply({
@@ -99,7 +99,98 @@ describe('After choosing fridge', () => {
             });
         }).as('getFridgeItems');
 
+        cy.intercept('GET', 'https://kassal.app/api/v1/products?search=egg', (req) => {
+            req.reply({
+                statusCode: 200,
+                body: {
+                    "data": [
+                        {
+                            name: "Ammeinnlegg 50stk Lillego",
+                            brand: "Lillego",
+                            vendor: "Unil",
+                            ean: "7035620043635",
+                            url: "https://meny.no/Varer/barneprodukter/babyartikler/ammeinnlegg/ammeinnlegg-7035620043635",
+                            image: "https://bilder.ngdata.no/7035620043635/meny/large.jpg",
+                            description: null,
+                            ingredients: "Overflaten som er i kontakt med huden er laget av mykt materiale i polypropylen som kjennes mykt og godt mot huden. kjernen som absorberer væsken er laget av fsc-sertifisert cellulose. baksiden av innleggene er laget av pustende, lekkasjesikkert materiale som beskytter klærne. lillego ammeinnlegg er svanemerket og anbefalt av asthma allergy nordic. dermatologisk testet. \n",
+                            current_price: 54.9,
+                            store: {
+                                "name": "Meny",
+                                "code": "MENY_NO",
+                                "url": "https://meny.no/Varer",
+                                "logo": "https://cdn.kassal.app/a9e4496b-ae68-42b8-80bc-9400bded0ff3/logos/Meny.svg"
+                            },
+                            price_history: [
+                                {
+                                    "price": 54.9,
+                                    "date": "2023-04-26T19:56:20.000000Z"
+                                }
+                            ],
+                            allergens: [],
+                            nutrition: [],
+                            created_at: "2023-04-26T19:56:20.000000Z",
+                            updated_at: "2023-04-26T19:56:20.000000Z"
+                        }]
+                }
+            });
+        }).as('getSearchFromKasal');
 
+        cy.intercept('POST', 'http://localhost:8080/stat/add/bought-item', (req) => {
+            req.reply({
+                statusCode: 200,
+            });
+        }).as('addToStatBought');
+
+        cy.intercept('POST', 'http://localhost:8080/stat/add/delete-item', (req) => {
+            req.reply({
+                statusCode: 200,
+            });
+        }).as('addToStatDelete');
+
+        cy.intercept('DELETE', 'http://localhost:8080/item/fridge/delete', (req) => {
+            req.reply({
+                statusCode: 200,
+            });
+            fridgeAddedItem=[]
+        }).as('deleteFromFridge');
+
+        cy.intercept({
+            url: /^https:\/\/kassal\.app\/api\/v1\/products/,
+        }, (req) => {
+            req.reply({
+                statusCode: 200,
+                body: {
+                    "data": [
+                        {
+                            name: "Ammeinnlegg 50stk Lillego",
+                            brand: "Lillego",
+                            vendor: "Unil",
+                            ean: "7035620043635",
+                            url: "https://meny.no/Varer/barneprodukter/babyartikler/ammeinnlegg/ammeinnlegg-7035620043635",
+                            image: "https://bilder.ngdata.no/7035620043635/meny/large.jpg",
+                            description: null,
+                            ingredients: "Overflaten som er i kontakt med huden er laget av mykt materiale i polypropylen som kjennes mykt og godt mot huden. kjernen som absorberer væsken er laget av fsc-sertifisert cellulose. baksiden av innleggene er laget av pustende, lekkasjesikkert materiale som beskytter klærne. lillego ammeinnlegg er svanemerket og anbefalt av asthma allergy nordic. dermatologisk testet. \n",
+                            current_price: 54.9,
+                            store: {
+                                "name": "Meny",
+                                "code": "MENY_NO",
+                                "url": "https://meny.no/Varer",
+                                "logo": "https://cdn.kassal.app/a9e4496b-ae68-42b8-80bc-9400bded0ff3/logos/Meny.svg"
+                            },
+                            price_history: [
+                                {
+                                    "price": 54.9,
+                                    "date": "2023-04-26T19:56:20.000000Z"
+                                }
+                            ],
+                            allergens: [],
+                            nutrition: [],
+                            created_at: "2023-04-26T19:56:20.000000Z",
+                            updated_at: "2023-04-26T19:56:20.000000Z"
+                        }]
+                }
+            });
+        }).as('getSearchFromKasal');
 
 
 
@@ -121,44 +212,25 @@ describe('After choosing fridge', () => {
     })
 
     it('should add item to fridge from fridge-search', () => {
-        cy.get('.search-input').type('egg');
-        cy.get('.vcp__header').click()
-        cy.wait(1500) //wait for about a second for api to retrieve search results
-        cy.get('.search-btn').click()
-        cy.contains('div', 'Sunda Pålegg 280g').click()
-        cy.wait('@addItemRequest');
-
-        cy.wrap(addedItem).get('name') .should('eq', 'Sunda Pålegg 280g')
+        cy.get('.form-control').type('egg');
+        cy.get('#searchbtn').click()
+        cy.wait('@getSearchFromKasal')
+        cy.contains('.item-var', 'Ammeinnlegg 50stk Lillego').click()
+        cy.contains('Yes').click();
+        cy.wait('@addItemToFridge');
+        cy.contains('Ammeinnlegg 50stk Lillego').should('be.visible');
     })
 
-    it('should display the cart items after logging in', () => {
-        cy.visit(`${base_url}/cart`);
-        cy.get('#cart-item-1').should('contain', 'Milk');
-    })
+    it('should delete item from fridge on clicking delete', ()=>{
 
-    it('should trigger handleSearch function when search button is clicked', () => {
-        cy.visit('http://localhost:5173/cart', {
-            onBeforeLoad(win) {
-                const sessionToken = window.localStorage.getItem('sessionToken');
-                win.sessionStorage.setItem('sessionToken', sessionToken);
-            }
-        });
-
-        cy.get('#searchbtn').click();
-        cy.get('@handleSearch').should('have.been.calledOnce');
-    })
-
-    it('should add an item to the cart when addItemToList is called', () => {
-        cy.visit('http://localhost:5173/cart', {
-            onBeforeLoad(win) {
-                const sessionToken = window.localStorage.getItem('sessionToken');
-                win.sessionStorage.setItem('sessionToken', sessionToken);
-            }
-        });
-
-        cy.get('#searchbtn').click();
-        cy.get('@addItemToList').should('have.been.calledOnce');
-
-        cy.get('#cart-item-3').should('contain', 'Eggs');
+        cy.wait('@getFridgeItems')
+        cy.get('.delete-btn')
+            .invoke('css', 'transform', 'none')
+            .invoke('css', 'opacity', '1')
+            .click({ force: true });
+        cy.contains('bekreft').click();
+        cy.contains('bekreft').click();
+        cy.contains('OK').click();
+        cy.get('body').should('not.contain', 'Ammeinnlegg 50stk Lillego');
     })
 })
