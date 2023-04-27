@@ -41,7 +41,6 @@ describe('Register', () => {
 
         // Submit the registration form
         cy.get('button[type="submit"]').click()
-
         cy.wait('@registerRequest')
         cy.url().should('include', '/register')
     })
