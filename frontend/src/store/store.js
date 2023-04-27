@@ -125,8 +125,6 @@ export const useFridgeStore = defineStore('fridgeStore', {
         async checkSuperUserStatus(fridgeId) {
             try {
                 const response = await checkSuperUserStatus(fridgeId);
-                console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA NOTICE MEEEEEEEEEEEEEEEE")
-                console.log(response)
                 return response.data
             } catch (error) {
                 console.error(error);
