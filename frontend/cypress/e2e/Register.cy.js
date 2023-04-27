@@ -38,6 +38,7 @@ describe('Register', () => {
         cy.get('input[name="username"]').type('johndoe')
         cy.get('input[name="email"]').type('johndoe@example.com')
         cy.get('input[name="password"]').type('password')
+
         // Submit the registration form
         cy.get('button[type="submit"]').click()
 

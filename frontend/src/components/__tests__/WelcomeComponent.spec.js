@@ -2,7 +2,6 @@ import { mount } from "@vue/test-utils";
 import { describe, test, expect } from "vitest";
 import WelcomeComponent from "@/components/WelcomeComponent.vue";
 import { router } from "@/router/router"
-import {createRouter, createWebHistory} from "vue-router";
 import { RouterLinkStub } from "@vue/test-utils";
 
 
