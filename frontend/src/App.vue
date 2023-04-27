@@ -173,6 +173,8 @@ export default {
   text-decoration: none;
 }
 
+
+
 * {
   margin: 0;
   padding: 0;
@@ -279,7 +281,29 @@ nav ul li:hover  {
   background-color: #444444;
 }
 
+
+
+
+
 nav ul li:hover img {
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(203%) contrast(103%);
+}
+.router-link-exact-active{
+  width: 60px;
+  height: 60px;
+  z-index: 1;
+  background-color: #444444;
+  border-radius: 10px;
+  padding-top: 0;
+  padding-left: 0;
+
+}
+
+.router-link-exact-active .icon{
+  color: white;
+}
+
+.router-link-exact-active img{
   filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(203%) contrast(103%);
 }
 
