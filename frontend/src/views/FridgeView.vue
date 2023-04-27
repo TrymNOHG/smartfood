@@ -90,8 +90,8 @@ export default {
 
   methods: {
     handleSearch() {
-      this.search = true;
-      if (this.searchQuery.length < 2) this.search = false;
+
+      this.search = this.searchQuery.length >= 2;
       getItems(this.searchQuery).then((response) => {
         this.searchItems = response;
         this.isExpanded = true;
