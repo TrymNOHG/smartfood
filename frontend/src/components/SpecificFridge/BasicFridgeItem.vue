@@ -10,14 +10,14 @@
             <div class="item-name">
               <h2 id="item-name-h2">{{item.name}}</h2>
               <h3 id="item-expiration-date">Expiration date: {{new Date(item.expirationDate)
-                  .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
+                  .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
               <br>
             </div>
             <h4 id="item-price">Price: {{ item.price }}; kr</h4>
             <h4 id="item-purchase-date">Purchase date: {{ new Date(item.purchaseDate)
-                .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
+                .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
             <h4>Expiration date: {{ new Date(item.expirationDate)
-                .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
+                .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
             <h4 id="item-quantity">How much is Left: {{ item.quantity }}L</h4>
             <button class="delete-btn" @click.prevent="deleteCard(item)">
               <span>
