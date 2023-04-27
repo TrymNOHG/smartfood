@@ -9,16 +9,16 @@
           <div class="item-detail">
             <div class="item-name">
               <h2>{{item.name}}</h2>
-              <h3>{{ $t('expiration_date') }}: {{new Date(item.expirationDate)
+              <h3>Expiration date: {{new Date(item.expirationDate)
                   .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
               <br>
             </div>
-            <h4>{{ $t('price') }}: {{ item.price }}; kr</h4>
-            <h4>{{ $t('purchase_date') }}: {{ new Date(item.purchaseDate)
+            <h4>Price: {{ item.price }}; kr</h4>
+            <h4>Purchase date: {{ new Date(item.purchaseDate)
                 .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
-            <h4>{{ $t('expiration_date') }}: {{ new Date(item.expirationDate)
+            <h4>Expiration date: {{ new Date(item.expirationDate)
                 .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
-            <h4>{{ $t('quantity') }}: {{ item.quantity }}</h4>
+            <h4>How much is Left: {{ item.quantity }}L</h4>
             <button class="delete-btn" @click.prevent="deleteCard(item)">
               <span>
                 <font-awesome-icon icon="fa-solid fa-trash" class="icon delete-icon" />
@@ -29,6 +29,7 @@
       </div>
     </router-link>
   </div>
+
 </template>
 
 <script>
@@ -82,13 +83,14 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           Swal.fire({
-            html:
-                `<div class="swal2-content">
-                  <div class="swal2-text"> ${this.$t('how_much_left')}
-                  </div>
-                  <div id="range-value-text" class="swal2-text">
-                  </div>
-                </div> `,
+            html: `
+          <div class="swal2-content">
+            <div class="swal2-text">
+              ${this.$t('Percent-wise, how much was left?')}
+            </div>
+            <div id="range-value-text" class="swal2-text"></div>
+          </div>
+        `,
             input: 'range',
             inputAttributes: {
               min: 0,
@@ -133,7 +135,7 @@ export default {
     const itemStore = useItemStore();
 
     let borderColor = calculateExpirationDate(props.item.purchaseDate, props.item.expirationDate);
-
+    console.log(props.item)
     function calculateExpirationDate(purchaseDate, expirationDate) {
       const currentDate = new Date();
       const purchase = new Date(purchaseDate);
@@ -345,5 +347,99 @@ img {
   }
 }
 
+@media only screen and (min-width: 350px) and (max-width: 480px) {
+  body{
+    height: 100%;
+  }
+
+  .cards-container{
+
+    height: 100px;
+    margin: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .card {
+    display: flex;
+    justify-content: end;
+    width: 350px;
+    height: 100px;
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+
+  }
+
+  h3 {
+    font-weight: normal;
+    font-size: 10px;
+  }
+
+
+  .front-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 5px;
+  }
+
+  img {
+    margin-right: auto;
+    width: 80px;
+    height: 80px;
+    border-radius: 5px;
+    background-color: white;
+    color: white;
+    margin-left: 10px;
+  }
+
+  .delete-btn {
+    background-color: white;
+    width: 25px;
+    height: 25px;
+    top: 5px;
+    right: 5px;
+  }
+  .icon{
+    color: black;
+    font-size: 15px;
+    margin-right: 5px;
+  }
+
+  .item-name {
+    display: block;
+    font-size: 10px;
+  }
+
+  .card:hover .front-side {
+    transform: rotateY(0deg);
+  }
+
+  .card:hover .back-side {
+    transform: rotateY(0deg);
+  }
+
+
+  .card .back-side {
+    margin-right: auto;
+    backface-visibility: visible;
+    transform: rotateY(0deg);
+    color: black;
+    opacity: 100%;
+    width: 220px;
+    background-color: #eee;
+    border-radius: 5px;
+  }
+
+  h2 {
+    font-size: 15px;
+    margin: 10px 0;
+  }
+
+  h4 {
+    display: none;
+  }
+}
 
 </style>

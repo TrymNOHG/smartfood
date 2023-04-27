@@ -4,6 +4,8 @@ import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 /**
  * This class represents an items in the fridge. It, therefore, contains a fridge ID and the items ID.
  *
@@ -13,6 +15,7 @@ import lombok.*;
 @Setter
 @ToString
 @NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
@@ -50,6 +53,20 @@ public class FridgeItems {
      */
     @Column(name = "quantity")
     private int quantity;
+
+    /**
+     * The purchase date of the items, can be null
+     */
+    @Column(name = "purchase_date", nullable = false)
+    @NonNull
+    private LocalDateTime purchaseDate;
+
+    /**
+     * The expiration date of the items, can be null
+     */
+    @Column(name = "expiration_date", nullable = false)
+    @NonNull
+    private LocalDateTime expirationDate;
 
 
 

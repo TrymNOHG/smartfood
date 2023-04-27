@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106_2023_06.backend.repo.Recipie;
+package edu.ntnu.idatt2106_2023_06.backend.repo.recipe;
 
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;

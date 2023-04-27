@@ -62,14 +62,11 @@ export default {
         const fridgeStore = useFridgeStore();
         const fridgeId = fridgeStore.getCurrentFridge.fridgeId;
         userStore.fetchUser();
-
         const loggedInUser = userStore.getUser.data.username
-
-
-
         async function fetchUsers() {
             try {
                 const response = await loadUsersByFridgeId(fridgeId);
+              console.log(response.data.memberInfo)
                 memberList.value = response.data.memberInfo;
             } catch (error) {
                 console.error("Error fetching users:", error);

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,10 +33,28 @@ public interface FridgeItemsRepository extends JpaRepository<FridgeItems, Fridge
     Optional<FridgeItems> findByItemAndFridge(Item item, Fridge fridge);
 
     /**
+     * Find a FridgeItem by item ID and fridge ID
+     *
+     * @param itemId    The items of product, given by a Long object
+     * @param fridgeId  The fridge to search in, given by a Long object
+     * @return An Optional containing the FridgeItem, or an empty Optional if not found
+     */
+    Optional<FridgeItems> findByItem_ItemIdAndFridge_FridgeId(Long itemId, Long fridgeId);
+
+    /**
      * Find FridgeItems by fridge
      *
      * @param fridge the fridge to search in
      * @return An Optional containing the FridgeItem, or an empty Optional if not found
      */
     Optional<List<FridgeItems>> findByFridge(Fridge fridge);
+
+    /**
+     * Finds fridge items with purchase dates before a given date.
+     *
+     * @param purchaseDate Date of purchase.
+     * @return An optional list of items with purchase dates before a given items.
+     */
+    Optional<List<FridgeItems>> findFridgeItemsByPurchaseDateBefore(Date purchaseDate);
 }
+

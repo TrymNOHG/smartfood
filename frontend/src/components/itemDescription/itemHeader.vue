@@ -43,8 +43,7 @@ export default {
   width: 200px;
   height: 150px;
   margin-right: 50px;
-  background-color: #ccc;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+
   position: relative;
 }
 
@@ -80,5 +79,11 @@ export default {
   .item-name {
     font-size: 20px;
   }
+}
+
+@media only screen and (min-width: 350px) and (max-width: 480px) {
+
+
+
 }
 </style>

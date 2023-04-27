@@ -1,75 +1,49 @@
 <template>
-  <div>
-    <h2>Test Stats</h2>
-      <BarChart />
-    <div>
-      <h2>User Stats</h2>
-      <line-chart :chart-data="userStatsChartData" :options="chartOptions"></line-chart>
+  <div class="grey-bar">
+    <h2 id="grey-header" >{{ $t('statistics') }}</h2>
+    <div class="information-button">
+      <img src="@/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
     </div>
   </div>
+
 </template>
 
 <script>
-import BarChart from '@/components/statistic/BarChart.vue';
-import LineChart from '@/components/statistic/LineChart.vue';
-import { getUserStats } from '@/services/StatsService.js';
-
 export default {
-  name: 'StatisticsView',
-  components: { BarChart, LineChart },
-  data() {
-    return {
-      userStats: [],
-      chartOptions: {
-        responsive: true,
-        maintainAspectRatio: false,
-      },
-    };
-  },
-  computed: {
-    userStatsChartData() {
-      return this.createChartData(this.userStats);
-    },
-  },
+  name: "StatisticsView",
+
   methods: {
-    async fetchStats() {
-      try {
-        const userStatsResponse = await getUserStats();
-        this.userStats = userStatsResponse.data;
-      } catch (error) {
-        console.error('Error fetching statistics:', error);
-      }
+
+    showInformation(){
+      //TODO: INFORMATION STATISTICS put information API in here
     },
-    createChartData(stats) {
-      console.log("Inserted stats from createChartData: ", stats)
-      return {
-        labels: stats.map((stat) => stat.timestamp),
-        datasets: [
-          {
-            label: 'Percentage Thrown',
-            data: stats.filter(stat => stat.statType.statTypeId === 1).map(stat => stat.statValue),
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          },
-          {
-            label: 'Money Saved',
-            data: [10, 29],
-            borderColor: 'rgba(255, 206, 86, 1)',
-            backgroundColor: 'rgba(255, 206, 86, 0.2)',
-          },
-          {
-            label: 'Bought Price',
-            data: stats.filter(stat => stat.statType.statTypeId === 3).map(stat => stat.statValue),
-            borderColor: 'rgba(255, 99, 132, 1)',
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          },
-        ],
-      };
-    },
-  },
-  mounted() {
-    this.fetchStats();
-    //TODO: add this back
-  },
-};
+  }
+}
 </script>
+
+<style scoped>
+  .grey-bar {
+    background-color: #6C6C6C;
+    max-height : 35px;
+    text-align: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  #grey-header{
+    grid-column: 2;
+    color: white;
+  }
+
+  .information-button{
+    grid-column: 3;
+    text-align: right;
+    padding: 2px 5px;
+  }
+
+  #info-picture{
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+  }
+</style>

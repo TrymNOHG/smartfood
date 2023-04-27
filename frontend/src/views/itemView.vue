@@ -1,57 +1,36 @@
 <template>
-
-  <div class="members-fridge">
-    <router-link id="member" class="link" to="/members">{{ $t('toggle_members') }}</router-link>
-    <router-link id="fridge" class="link" to="/fridge">{{ $t('toggle_fridge') }}</router-link>
+  <div class="grey-bar">
+    <div class="members-fridge">
+      <router-link class="link" to="/members">{{ $t('members') }}</router-link>
+      <router-link class="link fridge" to="/fridge">{{ $t('fridge') }}</router-link>
+    </div>
+    <div class="information-button">
+      <img src="@/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
+    </div>
   </div>
+
   <div class="item-wrapper">
     <div class="item">
       <item-header :item="item"/>
       <div class="info-delete-wrapper">
         <item-info :item="item" class="info-delete"/>
         <div></div>
-        <item-delete :item="item" class="info-delete" @delete-item="deleteItem"/>
+        <item-delete :item="item" class="info-delete"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { useRoute } from 'vue-router';
 import ItemHeader from "@/components/itemDescription/itemHeader.vue";
 import ItemInfo from "@/components/itemDescription/itemInfo.vue";
 import ItemDelete from "@/components/itemDescription/itemDelete.vue";
 import {useFridgeStore, useItemStore} from "@/store/store";
-import router from "@/router/router";
 
 export default {
   name: "itemView",
   components: {ItemDelete, ItemInfo, ItemHeader},
-
-  methods:  {
-    async deleteItem(item, percentage) {
-
-      const statDeleteFromFridgeDTO = {
-        "percentageThrown": parseFloat(percentage),
-        "price": item.price,
-        "quantity": parseFloat(item.quantity),
-        "itemName": item.name,
-        "storeName": item.store,
-        "fridgeId": this.fridge.fridgeId
-      }
-
-      const itemRemoveDTO = {
-        "itemName": item.name,
-        "store": item.store,
-        "fridgeId": this.fridge.fridgeId,
-        "quantity": item.quantity
-      }
-
-      await this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO);
-      await this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO);
-
-      router.push("/fridge")
-    }
-  },
 
   setup() {
     const itemStore = useItemStore();
@@ -63,9 +42,13 @@ export default {
     return {
       item,
       fridge,
-      itemStore
     };
-  }
+  },
+  methods: {
+    showInformation(){
+      //TODO: INFORMATION PROFILE put information API in here
+    },
+  },
 }
 </script>
 
@@ -87,41 +70,61 @@ export default {
 }
 
 
-#fridge {
-  width: 150px;
-  margin-top: 5px;
-  margin-right: 50px;
+.grey-bar {
+  background-color: #6C6C6C;
+  max-height : 35px;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
-#member {
-  width: 150px;
-  margin-top: 5px;
-  margin-: 50px;
+.information-button{
+  grid-column: 3;
+  text-align: right;
+  padding: 2px 5px;
+  max-height: 35px;
 }
 
-#member:hover {
-  color: #3b3b3b;
+#info-picture{
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+}
+
+.link {
+  text-decoration: none;
+  line-height: 25px;
+  color: white;
+}
+
+.link:hover {
+  cursor: pointer;
+  font-size: x-large;
+}
+
+.grey-bar .link {
   height: 25px;
-  border-radius: 5px;
-  background-color: #fff;
-  transition: all 0.2s ease-in-out;
 }
 
-#fridge:hover {
-  color: #3b3b3b;
-  height: 25px;
+.fridge {
+  background-size: 25px;
+  background-color: #b1b1b1;
   border-radius: 5px;
-  background-color: #fff;
-  transition: all 0.2s ease-in-out;
+  font-weight: bold;
+  text-decoration: black;
+  text-shadow: black 0 0 2px;
 }
 
 .members-fridge {
   background-color: #6C6C6C;
   height: 35px;
   color: white;
-  text-align: center;
-  display: flex;
-  justify-content: center;
+  font-size: 1.5em;
+  padding-top: 5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 20px;
+  grid-column: 2;
 }
 
 .name-display {
