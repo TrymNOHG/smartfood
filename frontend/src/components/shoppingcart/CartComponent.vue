@@ -18,7 +18,7 @@
               @input="handleSearch"
               :label="$t('search_item')"
           ></SearchInput>
-          <button id="searchbtn" @click="handleSearch">Search</button>
+          <button id="searchbtn" @click="handleSearch">{{$t('search')}}</button>
         </div>
         <CartControl v-if="isCurrentUserSuperUser" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
       </div>
