@@ -42,6 +42,9 @@ export default {
 
 }
 
+.search-item:hover{
+    cursor: pointer
+}
 
 
 
