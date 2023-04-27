@@ -35,7 +35,7 @@
             </span>
           </RouterLink>
         </li>
-        <li>
+        <li id="profile">
           <RouterLink to="/profile">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-circle-user" />
@@ -50,11 +50,11 @@
   <div class="current-fringe" v-if="!isOnAuthPage && !isOnRootPage">
     <div class="break-line"/>
     <div class="name-display" >
-      <h1 class="fridge-name">
-        <router-link to="/fridge" class="link-name" v-if="hasCurrentFridge">
+      <h1 class="fridge-name" id="chosen">
+        <router-link to="/fridge" class="link-name" id="chosenFridge" v-if="hasCurrentFridge">
           {{ currentFridge.fridgeName }}
         </router-link>
-        <router-link to="/fridges" class="link-name" v-else>
+        <router-link to="/fridges" class="link-name" id="selectFridge" v-else>
           {{ $t('select_fridge') }}
         </router-link>
       </h1>
