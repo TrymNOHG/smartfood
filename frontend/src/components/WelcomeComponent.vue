@@ -1,6 +1,6 @@
 <template>
   <div class="welcome-view">
-    <img class="logo" src="@/assets/images/smartmat.png" alt="Logo">
+    <img class="logo" src="@/assets/images/smartmat_logo_text.png" alt="Logo">
     <div class="buttons">
       <router-link to="/register" class="btn register-btn">{{ $t('register') }}</router-link>
       <router-link to="/login" class="btn login-btn">{{ $t('login') }}</router-link>

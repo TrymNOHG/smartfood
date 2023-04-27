@@ -60,7 +60,7 @@
             name="password"
           />
           <label>{{ $t("password") }}</label>
-          <div v-if="errors['password']" class="error">
+          <div v-if="errors['password']" class="error password-err">
             {{ $t(errors["password"]) }}
           </div>
         </div>
@@ -69,7 +69,8 @@
         <div class="login-register">
           <p>
             {{ $t("already_have_account") }}
-            <router-link to="/login" class="register-link">{{ $t("login") }}</router-link>          </p>
+            <router-link to="/login" class="register-link">{{ $t("login") }}</router-link>
+          </p>
         </div>
       </form>
       

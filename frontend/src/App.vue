@@ -2,7 +2,7 @@
   <header v-if="!isOnRootPage">
 
     <router-link to="/fridges">
-      <img src="@/assets/images/smartmat.png" alt="Logo">
+      <img src="@/assets/images/smartmat_logo.png" alt="Logo">
     </router-link>
     <h1 class="matprat-title" :class="{ 'centered': isOnAuthPage }">{{ $t('matsmart') }}</h1>
     <nav :class="{ 'center-profile': !hasCurrentFridge }">
@@ -62,7 +62,6 @@
       <router-link class="change-button" to="/fridges" >
         <img src="@/assets/images/exit_change_fridge.png" style="max-height: 100%" v-if="hasCurrentFridge">
         <img src="@/assets/images/enter_choose_fridge.png" style="max-height: 100%" v-else>
-
       </router-link>
     </div>
   </div>
@@ -313,129 +312,12 @@ nav ul li a .text {
   z-index: 0;
 }
 
-
-
-@media only screen and (max-width: 860px) {
-  header {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 80px;
-  }
-
-  .fridge-name {
-    margin-left: 30%;
-    font-size: 18px;
-  }
-
-  .change-button {
-    top: 10%;
-    font-size: 0.7rem;
-  }
-
-  .router-view-container {
-    padding-bottom: 80px;
-  }
-
-  header img {
+@media only screen and (max-width: 1000px) {
+  .matprat-title{
     display: none;
-  }
-
-  #fridgeIcon{
-    display: flex;
-  }
-
-  h1 {
-    font-size: 1rem;
-    letter-spacing: 2px;
-  }
-
-  nav.center-profile ul {
-    justify-content: center;
-  }
-
-  nav.center-profile ul li {
-    flex-grow: 0;
-  }
-
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 70px;
-    background-color: #31c48d;
-    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  nav ul {
-    display: flex;
-    justify-content: space-between;
-    width: 80%;
-  }
-
-  nav ul li {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-  }
-
-  .language {
-    display: none;
-  }
-
-  nav ul li a {
-    font-size: 0.6rem;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-  }
-
-  nav ul li a .icon {
-    margin-bottom: 5px;
-    font-size: 2em;
-  }
-
-  nav ul li.active a {
-    color: #fcfbfb;
-    background-color: #218838;
-    border-radius: 50%;
-  }
-
-  nav ul li.active a .icon {
-    color: #fcfbfb;
   }
 }
 
-@media only screen and (max-width: 1055px) and (min-width: 860px) {
-  header img {
-    height: 40px;
-  }
-
-  h1 {
-    font-size: 2rem;
-  }
-
-  nav ul li {
-    width: 50px;
-    height: 50px;
-  }
-
-  nav ul li a .icon {
-    line-height: 55px;
-    font-size: 1.5em;
-  }
-
-  nav ul li a .text {
-    font-size: 0.6em;
-  }
-
-}
 
 @media only screen and (min-width: 350px) and (max-width: 480px) {
   .break-line {

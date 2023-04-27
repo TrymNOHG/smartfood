@@ -16,12 +16,12 @@
         </div>
       </div>
       <div v-if="!isEditing && !isChangingPassword" class="info-section">
-        <p><strong>{{ $t("name") }}:</strong> {{ profileData.firstName + " " + profileData.lastName}}</p>
-        <p><strong>{{ $t("username") }}:</strong> {{ profileData.username }}</p>
-        <p><strong>{{ $t("email") }}:</strong> {{ profileData.email }}</p>
-        <button class="basic-button" @click="isEditing = true">{{ $t('edit') }}</button>
-        <button class="basic-button" @click="isChangingPassword = true">{{ $t('changePassword') }}</button>
-        <button class="basic-button" @click="logout">{{ $t('logout') }}</button>
+        <p id="fullName"><strong>{{ $t("name") }}:</strong> {{ profileData.firstName + " " + profileData.lastName}}</p>
+        <p id="username"><strong>{{ $t("username") }}:</strong> {{ profileData.username }}</p>
+        <p id="email"><strong>{{ $t("email") }}:</strong> {{ profileData.email }}</p>
+        <button class="basic-button edit-btn" @click="isEditing = true">{{ $t('edit') }}</button>
+        <button class="basic-button change-password-btn" @click="isChangingPassword = true">{{ $t('changePassword') }}</button>
+        <button class="basic-button logout-btn" @click="logout">{{ $t('logout') }}</button>
       </div>
       <form v-else-if="isEditing" @submit.prevent="updateUserProfile" :class="{ 'has-errors': hasErrors }">        <div class="input-box">
           <label for="firstName">{{ $t("first_name") }}</label>
@@ -108,7 +108,7 @@
   import { useLoggedInStore } from '@/store/store';
   import { useRouter } from 'vue-router';
   import { updateUser } from '@/services/UserService';
-  import {deleteProfilePicture, getProfilePicture, updateProfilePicture, updateUserPassword} from "../services/UserService";
+  import {deleteProfilePicture, getProfilePicture, updateProfilePicture, updateUserPassword} from "@/services/UserService";
   import defaultProfilePicture from '@/assets/images/profiledefualt.svg';
 
   export default {

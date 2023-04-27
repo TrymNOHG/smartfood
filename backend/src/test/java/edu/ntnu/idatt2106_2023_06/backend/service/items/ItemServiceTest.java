@@ -31,8 +31,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -203,8 +203,8 @@ public class ItemServiceTest {
                     .item(item)
                     .fridge(fridge)
                     .quantity(1)
-                    .expirationDate(new Date())
-                    .purchaseDate(new Date())
+                    .expirationDate(LocalDateTime.now())
+                    .purchaseDate(LocalDateTime.now())
                     .build();
             fridgeItemsRepository.save(fridgeItems);
             List<FridgeItemLoadDTO> itemDTOList = itemService.getFridgeItems(1L);
@@ -262,8 +262,8 @@ public class ItemServiceTest {
                     .item(item)
                     .fridge(fridge)
                     .quantity(1)
-                    .expirationDate(new Date())
-                    .purchaseDate(new Date())
+                    .expirationDate(LocalDateTime.now())
+                    .purchaseDate(LocalDateTime.now())
                     .build();
             fridgeItemsRepository.save(fridgeItems);
             ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1)
@@ -289,8 +289,8 @@ public class ItemServiceTest {
                     .item(item)
                     .fridge(fridge)
                     .quantity(3)
-                    .expirationDate(new Date())
-                    .purchaseDate(new Date())
+                    .expirationDate(LocalDateTime.now())
+                    .purchaseDate(LocalDateTime.now())
                     .build();
             fridgeItemsRepository.save(fridgeItems);
             ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 2);

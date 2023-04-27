@@ -2,9 +2,16 @@
   <div>
 
     <div id="myDropdown" class="dropdown-content">
+
       <figure id="backBlack"></figure>
+
       <div id="backGreen">
-        <h1 id="shopList">Handlekurv</h1>
+        <div class="grey-bar">
+          <h2 id="grey-header" >{{ $t('shopping_cart') }}</h2>
+          <div class="information-button">
+            <img src="@/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
+          </div>
+        </div>
         <div id="searchbar">
           <SearchInput
               v-model="searchQuery"
@@ -13,7 +20,7 @@
           ></SearchInput>
           <button id="searchbtn" @click="handleSearch">Search</button>
         </div>
-        <CartControl v-if="true" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
+        <CartControl v-if="isCurrentUserSuperUser" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
       </div>
       <div class="dropper" v-if="search">
         <vue-collapsible-panel-group>
@@ -544,6 +551,12 @@ export default {
       set_CartItemAmount,
     };
   },
+  methods: {
+
+    showInformation(){
+      //TODO: INFORMATION CART put information API in here
+    },
+  },
 };
 </script>
 
@@ -604,6 +617,7 @@ input[type="number"] {
   background-color: #6C6C6C;
   margin: 0;
   border: 0;
+  padding-top: 10px;
   width: 100%;
 
 }
@@ -629,6 +643,35 @@ input[type="number"] {
     height: 40px;
     margin-right: 10px;
     border-radius: 0 50px 50px 0 !important;
+}
+
+.grey-bar {
+  background-color: #6C6C6C;
+  max-height : 35px;
+  min-height: 35px;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+#grey-header{
+  grid-column: 2;
+  color: white;
+  height: 35px;
+}
+
+.information-button{
+  grid-column: 3;
+  text-align: right;
+  padding: 2px 5px;
+  height: 35px;
+}
+
+#info-picture{
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+
 }
 
 #searchbtn:hover{
@@ -664,7 +707,6 @@ body {
 
 #myInput {
     box-sizing: border-box;
-    background-image: url("searchicon.png");
     background-position: 14px 12px;
     background-repeat: no-repeat;
     font-size: 16px;
@@ -753,11 +795,6 @@ body {
     display: inline-block;
     cursor: pointer;
 }
-.delete-btn {
-    width: 18px;
-    height: 17px;
-    background: url("../assets/images/delete-icn.svg") no-repeat center;
-}
 
 .is-active {
     animation-name: animate;
@@ -811,22 +848,8 @@ body {
     width: 115px;
 }
 
-.description span {
-    display: block;
-    font-size: 14px;
-    color: #43484d;
-    font-weight: 400;
-}
 
-.description span:first-child {
-    margin-bottom: 5px;
-}
 
-.description span:last-child {
-    font-weight: 300;
-    margin-top: 8px;
-    color: #86939e;
-}
 
 .quantity {
     padding-top: 20px;
@@ -961,6 +984,14 @@ input:focus {
     margin-right: 0;
   }
 
+  #searchbtn{
+    display: none !important;
+  }
+
+  .grey-bar{
+    background-color: #31c48d;
+  }
+
   #backBlack {
     height: 6px;
     background-color: white;
@@ -974,8 +1005,6 @@ input:focus {
     border-radius: 20px 20px 20px 20px;
 
 
-    width: 100%;
-    z-index: 1;
   }
 
   #forslagBlack {
@@ -1018,8 +1047,9 @@ input:focus {
     position: fixed;
     bottom: 70px;
     width: 100%;
-    background-color: transparent;
     z-index: 1;
+    background-color: transparent;
+
   }
 
   nav {
@@ -1197,7 +1227,6 @@ input:focus {
 
   #myInput {
     box-sizing: border-box;
-    background-image: url("searchicon.png");
     background-position: 14px 12px;
     background-repeat: no-repeat;
     font-size: 16px;
@@ -1267,24 +1296,6 @@ input:focus {
     border-top: 1px solid #e1e8ee;
     border-bottom: 1px solid #e1e8ee;
   }
-  .delete-btn,
-  .like-btn {
-    display: inline-block;
-    cursor: pointer;
-  }
-  .delete-btn {
-    width: 18px;
-    height: 17px;
-    background: url("../assets/images/delete-icn.svg") no-repeat center;
-  }
-
-  .is-active {
-    animation-name: animate;
-    animation-duration: 0.8s;
-    animation-iteration-count: 1;
-    animation-timing-function: steps(28);
-    animation-fill-mode: forwards;
-  }
 
   @keyframes animate {
     0% {
@@ -1308,22 +1319,8 @@ input:focus {
     width: 115px;
   }
 
-  .description span {
-    display: block;
-    font-size: 14px;
-    color: #43484d;
-    font-weight: 400;
-  }
 
-  .description span:first-child {
-    margin-bottom: 5px;
-  }
 
-  .description span:last-child {
-    font-weight: 300;
-    margin-top: 8px;
-    color: #86939e;
-  }
 
   button[class*="btn"] {
     width: 30px;

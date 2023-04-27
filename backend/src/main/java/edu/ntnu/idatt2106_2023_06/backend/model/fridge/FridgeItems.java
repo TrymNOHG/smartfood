@@ -4,7 +4,7 @@ import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * This class represents an items in the fridge. It, therefore, contains a fridge ID and the items ID.
@@ -59,14 +59,14 @@ public class FridgeItems {
      */
     @Column(name = "purchase_date", nullable = false)
     @NonNull
-    private Date purchaseDate;
+    private LocalDateTime purchaseDate;
 
     /**
      * The expiration date of the items, can be null
      */
     @Column(name = "expiration_date", nullable = false)
     @NonNull
-    private Date expirationDate;
+    private LocalDateTime expirationDate;
 
 
 
