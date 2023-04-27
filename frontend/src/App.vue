@@ -35,7 +35,7 @@
             </span>
           </RouterLink>
         </li>
-        <li>
+        <li id="profile">
           <RouterLink to="/profile">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-circle-user" />
@@ -50,11 +50,11 @@
   <div class="current-fringe" v-if="!isOnAuthPage && !isOnRootPage">
     <div class="break-line"/>
     <div class="name-display" >
-      <h1 class="fridge-name">
-        <router-link to="/fridge" class="link-name" v-if="hasCurrentFridge">
+      <h1 class="fridge-name" id="chosen">
+        <router-link to="/fridge" class="link-name" id="chosenFridge" v-if="hasCurrentFridge">
           {{ currentFridge.fridgeName }}
         </router-link>
-        <router-link to="/fridges" class="link-name" v-else>
+        <router-link to="/fridges" class="link-name" id="selectFridge" v-else>
           {{ $t('select_fridge') }}
         </router-link>
       </h1>
@@ -173,6 +173,8 @@ export default {
   text-decoration: none;
 }
 
+
+
 * {
   margin: 0;
   padding: 0;
@@ -279,7 +281,29 @@ nav ul li:hover  {
   background-color: #444444;
 }
 
+
+
+
+
 nav ul li:hover img {
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(203%) contrast(103%);
+}
+.router-link-exact-active{
+  width: 60px;
+  height: 60px;
+  z-index: 1;
+  background-color: #444444;
+  border-radius: 10px;
+  padding-top: 0;
+  padding-left: 0;
+
+}
+
+.router-link-exact-active .icon{
+  color: white;
+}
+
+.router-link-exact-active img{
   filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(203%) contrast(103%);
 }
 
