@@ -288,7 +288,7 @@ nav ul li:hover  {
 nav ul li:hover img {
   filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(203%) contrast(103%);
 }
-.router-link-exact-active{
+nav .router-link-active{
   width: 60px;
   height: 60px;
   z-index: 1;
@@ -299,13 +299,14 @@ nav ul li:hover img {
 
 }
 
-.router-link-exact-active .icon{
+nav .router-link-active .icon{
   color: white;
 }
 
-.router-link-exact-active img{
+nav .router-link-active img{
   filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(203%) contrast(103%);
 }
+
 
 nav ul li a .text {
   position: absolute;
