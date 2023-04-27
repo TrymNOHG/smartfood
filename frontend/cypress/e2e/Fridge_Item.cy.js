@@ -64,6 +64,41 @@ describe('After choosing fridge', () => {
             });
         }).as('isSuperUser');
 
+        cy.intercept('GET', 'http://localhost:8080/item/fridge/get?fridgeId=88', (req) => {
+            req.reply({
+                statusCode: 200,
+                body: [{
+                    itemId: 7,
+                    name: "Våtservietter 64stk Lillego",
+                    description: "LilleGo’ sensitive våtservietter er milde og parfymefrie. Ideelle til bleiestell, samt vask av ansikt og hender. Våtserviettene er dermatologisk testet og dokumentert egnet for sensitiv hud.",
+                    store: "Meny",
+                    price: 24.0,
+                    image: "https://bilder.ngdata.no/7035620025037/meny/large.jpg",
+                    quantity: 1,
+                    purchaseDate: "2023-04-27T07:16:59.630+00:00",
+                    expirationDate: "2023-04-27T07:16:59.630+00:00"
+                }]
+            });
+        }).as('getFridgeItems');
+
+        cy.intercept('GET', 'http://localhost:8080/fridge/loadAllUsers?fridgeId=88', (req) => {
+            req.reply({
+                statusCode: 200,
+                body: {
+                    "memberInfo": [
+                        {
+                            "userId": 10,
+                            "username": "tester123",
+                            "firstName": "test",
+                            "lastName": "test",
+                            "email": "t@t.t",
+                            "isSuperUser": true
+                        }
+                    ]
+                }
+            });
+        }).as('getFridgeItems');
+
 
 
 
