@@ -15,7 +15,7 @@
       <div class="info-delete-wrapper">
         <item-info :item="item" class="info-delete"/>
         <div></div>
-        <item-delete :item="item" class="info-delete"/>
+        <item-delete v-if="isCurrentUserSuperUser" :item="item" class="info-delete"/>
       </div>
     </div>
   </div>
@@ -47,6 +47,11 @@ export default {
   methods: {
     showInformation(){
       //TODO: INFORMATION PROFILE put information API in here
+    },
+  },
+  computed: {
+    isCurrentUserSuperUser() {
+      return useFridgeStore().getIsSuperUser;
     },
   },
 }

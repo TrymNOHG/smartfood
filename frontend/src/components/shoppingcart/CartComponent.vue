@@ -16,7 +16,7 @@
           <SearchInput
               v-model="searchQuery"
               @input="handleSearch"
-              label="Search product"
+              :label="$t('search_item')"
           ></SearchInput>
           <button id="searchbtn" @click="handleSearch">Search</button>
         </div>
@@ -63,7 +63,7 @@
         </div>
     <figure id="forslagBlack"></figure>
 
-      <h1 id="sugTitle">Forslag</h1>
+      <h1 id="sugTitle">{{ $t('suggestion') }}</h1>
         <div class="cart-items">
                     <CartSuggestion
                         v-for="(item, index) in suggestedItems"

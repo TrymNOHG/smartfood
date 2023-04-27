@@ -9,17 +9,17 @@
           <div class="item-detail">
             <div class="item-name">
               <h2 id="item-name-h2">{{item.name}}</h2>
-              <h3 id="item-expiration-date">Expiration date: {{new Date(item.expirationDate)
+              <h3 id="item-expiration-date">{{ $t('expire_date') }}: {{new Date(item.expirationDate)
                   .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
               <br>
             </div>
-            <h4 id="item-price">Price: {{ item.price }}; kr</h4>
-            <h4 id="item-purchase-date">Purchase date: {{ new Date(item.purchaseDate)
+            <h4 id="item-price">{{ $t('price') }}: {{ item.price }}; kr</h4>
+            <h4 id="item-purchase-date">{{ $t('buy_date') }}: {{ new Date(item.purchaseDate)
                 .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
-            <h4>Expiration date: {{ new Date(item.expirationDate)
+            <h4>{{ $t('expire_date') }}: {{ new Date(item.expirationDate)
                 .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
-            <h4 id="item-quantity">How much is Left: {{ item.quantity }}L</h4>
-            <button class="delete-btn" @click.prevent="deleteCard(item)">
+            <h4 id="item-quantity">{{ $t('quantity') }}: {{ item.quantity }}L</h4>
+            <button v-if="isSuperUser" class="delete-btn" @click.prevent="deleteCard(item)">
               <span>
                 <font-awesome-icon icon="fa-solid fa-trash" class="icon delete-icon" />
               </span>
@@ -56,6 +56,10 @@ export default {
         store: String
       })
     },
+    isSuperUser: {
+      type: Boolean,
+      default: false
+    }
   },
 
   methods: {
