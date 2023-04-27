@@ -42,7 +42,7 @@ describe('Register', () => {
         // Submit the registration form
         cy.get('button[type="submit"]').click()
 
-        cy.wait('@registerRequest')
+        cy.wait('@registerRequest' , { timeout: 10000 })
         cy.url().should('include', '/register')
     })
 

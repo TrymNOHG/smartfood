@@ -64,5 +64,7 @@
   "exit-fridge": "Exit current fridge",
   "enter-fridge": "Enter a fridge",
   "alt_info_button": "Information about the page",
-  "members": "Members"
+  "members": "Members",
+  "how_much_left": "How much is left of the item?",
+  "item-info": "Item information"
 }

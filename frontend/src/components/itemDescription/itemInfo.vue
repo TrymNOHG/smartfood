@@ -1,11 +1,11 @@
 <template>
   <div class="info-window">
-    <h2 style="font-weight: bold">Informasjon om varen</h2>
+    <h2 style="font-weight: bold">{{ $t('item-info') }}</h2>
     <div class="text">
       <h3>Kjøpsdato: {{new Date(item.purchaseDate)
-          .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
+          .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
       <h3>Utløpsdato: {{new Date(item.expirationDate)
-          .toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
+          .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
       <h3>Pris: {{ item.price }}kr</h3>
     </div>
   </div>
