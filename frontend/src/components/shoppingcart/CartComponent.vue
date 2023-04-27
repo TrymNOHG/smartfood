@@ -15,17 +15,21 @@
             />
           </div>
         </div>
+        <div v-if="isCameraToggled">
+          <StreamBarcodeReader
+            @decode="(a, b, c) => onDecode(a, b, c)"
+            @loaded="() => onLoaded()"
+          ></StreamBarcodeReader>
+        </div>
+
         <div id="searchbar">
           <SearchInput
             v-model="searchQuery"
             @input="handleSearch"
             @upload-receipt="uploadReceipt"
             label="Search product"
+            @receipt-upload="toggleCamera"
           ></SearchInput>
-          <StreamBarcodeReader
-            @decode="(a, b, c) => onDecode(a, b, c)"
-            @loaded="() => onLoaded()"
-          ></StreamBarcodeReader>
           <button id="searchbtn" @click="handleSearch">Search</button>
         </div>
         <CartControl
@@ -156,6 +160,12 @@ export default {
     const currentFridge = useFridgeStore().getCurrentFridge;
     let checkAll_b = ref(false);
     const suggestedItems = ref([]);
+    let isCameraToggled = ref(false);
+
+    function toggleCamera() {
+      console.log("TOGGLED WOOOHOO");
+      isCameraToggled.value = !isCameraToggled.value;
+    }
 
     function onDecode(a, b, c) {
       console.log(a, b, c);
@@ -552,6 +562,8 @@ export default {
       set_CartItemAmount,
       onDecode,
       onLoaded,
+      toggleCamera,
+      isCameraToggled,
     };
   },
   methods: {
@@ -565,6 +577,10 @@ export default {
 <style scoped>
 * {
   text-align: center;
+}
+
+.scanner-container {
+  margin: auto;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -997,7 +1013,6 @@ input:focus {
 
   #backGreen {
     background-color: #31c48d;
-
     width: 100%;
     padding: 10px 10px 10px 10px;
     border-radius: 20px 20px 20px 20px;
