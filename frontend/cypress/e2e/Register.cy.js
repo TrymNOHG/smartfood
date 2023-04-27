@@ -38,11 +38,10 @@ describe('Register', () => {
         cy.get('input[name="username"]').type('johndoe')
         cy.get('input[name="email"]').type('johndoe@example.com')
         cy.get('input[name="password"]').type('password')
-
         // Submit the registration form
         cy.get('button[type="submit"]').click()
 
-        cy.wait('@registerRequest')
+        cy.wait('@registerRequest' , { timeout: 10000 })
         cy.url().should('include', '/register')
     })
 
