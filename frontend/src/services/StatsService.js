@@ -17,3 +17,21 @@ export const addItemStats = async (statAddItemToFridgeDTO) => {
         },
     });
 };
+
+export const getUserStats = async () => {
+    var response = await axios.get(`${BASE_LISTING_URL}/get/user-stats`, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+    console.log("get user response: ", response)
+    return response;
+};
+
+export const getFridgeStats = async (fridgeId) => {
+    return await axios.get(`${BASE_LISTING_URL}/get/fridge-stats/${fridgeId}`, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
