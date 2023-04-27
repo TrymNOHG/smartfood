@@ -6,7 +6,7 @@ import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class FridgeItemMapper {
 
@@ -16,8 +16,8 @@ public class FridgeItemMapper {
                 .id(new FridgeItemsId(shoppingItems.getItem().getItemId(), shoppingItems.getFridge().getFridgeId()))
                 .item(shoppingItems.getItem())
                 .fridge(shoppingItems.getFridge())
-                .purchaseDate(new Date())
-                .expirationDate(new Date()) //TODO: change to include expiration date
+                .purchaseDate(LocalDateTime.now())
+                .expirationDate(LocalDateTime.now().plusDays(5)) //TODO: change to include expiration date
                 .quantity(0)
                 .build();
     }

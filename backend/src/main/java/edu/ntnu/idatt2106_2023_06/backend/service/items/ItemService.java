@@ -29,8 +29,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -107,8 +107,8 @@ public class ItemService implements IItemService {
                 .item(item)
                 .fridge(fridge)
                 .quantity(0)
-                .purchaseDate(new Date())
-                .expirationDate(new Date()) //TODO: change to a valid expiration date....
+                .purchaseDate(LocalDateTime.now())
+                .expirationDate(LocalDateTime.now().plusDays(4)) //TODO: change to a valid expiration date....
                 .build());
 
         fridgeItem.setQuantity(fridgeItem.getQuantity() + itemDTO.quantity());
@@ -354,7 +354,6 @@ public class ItemService implements IItemService {
         shoppingItem.setSuggestion(false);
         shoppingItemsRepository.save(shoppingItem);
     }
-
 
 
 }

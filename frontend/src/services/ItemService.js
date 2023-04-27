@@ -73,8 +73,8 @@ export const acceptSuggestion = async (itemRemoveDTO) => {
     });
 };
 
-export const buyItemsFromShoppingList = async (itemMoveDTO) => {
-    return await axios.post(`${BASE_LISTING_URL}/shopping/buy`, itemMoveDTO, {
+export const buyItemsFromShoppingList = async (itemDTOList) => {
+    return await axios.post(`${BASE_LISTING_URL}/shopping/buy`, itemDTOList, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         },

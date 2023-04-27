@@ -28,9 +28,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -126,10 +125,10 @@ public class FridgeItemsControllerTest {
         List<FridgeItemLoadDTO> fridgeItemLoadDTOS = new ArrayList<>();
         fridgeItemLoadDTOS.add(new FridgeItemLoadDTO(1L, "Tine Melk",
                 "Tine melk kommer fra fri gående, grass matet kuer.", "Kiwi", 200000,
-                null, 1, new Date(), new Date()));
+                null, 1, LocalDateTime.now(), LocalDateTime.now()));
         fridgeItemLoadDTOS.add(new FridgeItemLoadDTO(2L, "Tine Melk",
                 "Tine melk kommer fra fri gående, grass matet kuer.", "Kiwi", 200000,
-                null, 1, new Date(), new Date()));
+                null, 1, LocalDateTime.now(), LocalDateTime.now()));
         given(itemService.getFridgeItems(fridgeId)).willReturn(fridgeItemLoadDTOS);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/item/fridge/get")
