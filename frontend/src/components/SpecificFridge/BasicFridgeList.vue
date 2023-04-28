@@ -3,11 +3,11 @@
     <router-link to="/fridge/item" @click="storeCurrentItem(item)" id="item-link">
       <div class="card">
         <img class="item-img" :src="item.image" alt="item image"/>
-        <h3>{{item.name}}</h3>
+        <h3 class="item-name">{{item.name}}</h3>
         <div class="item-info">
-          <h4>Expiration date: {{new Date(item.expirationDate)
+          <h4>{{ $t('expire_date') }}: {{new Date(item.expirationDate)
               .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
-          <h4>{{ $t('price') }}   {{item.price}}</h4>
+          <h4 class="price-text">{{ $t('price') }}   {{item.price}}</h4>
         </div>
         <font-awesome-icon icon="fa-solid fa-trash"  @click="deleteItem" class="delete-icon icons"/>
       </div>
@@ -158,6 +158,7 @@ export default {
   max-width: 100%;
   position: relative;
   background-color: white;
+  text-align: center;
 }
 
 .item-img {
@@ -172,6 +173,14 @@ export default {
   justify-content: center;
   align-items: flex-start;
   padding-left: 10px;
+}
+
+.item-info {
+  margin-left: auto;
+}
+
+.item-name{
+  margin-left: auto;
 }
 
 #item-link {
@@ -192,7 +201,7 @@ export default {
   transition: all 0.2s ease-in-out;
   position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   width: auto;
 }
@@ -245,6 +254,10 @@ export default {
     border-radius: 5px;
     background-color: #eee;
     color: #eee;
+  }
+
+  .price-text{
+    display: none;
   }
 }
 

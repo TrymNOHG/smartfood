@@ -158,26 +158,7 @@ export default {
   grid-column-gap: 10px;
   grid-column: 2;
 }
-
-.name-display {
-  text-align: start;
-  background-color: #31c48d;
-  color: white;
-  width: 100%;
-  height: 50px;
-  text-shadow: black 1px 1px 2px;
-  display: flex;
-  justify-content: space-evenly;
-}
-
-.fridge-name {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 50px;
-  margin-left: 28%;
-}
-.members-fridge:hover .fridge-name {
+.members-fridge:hover {
   color: #3b3b3b;
   height: 25px;
   border-radius: 5px;
@@ -185,44 +166,9 @@ export default {
   transition: all 0.2s ease-in-out;
 }
 
-.change-button {
-  text-align: center;
-  background-color: white;
-  color: black;
-  height: 35px;
-  width: 20%;
-  margin-top: 0.5%;
-  margin-right: 5%;
-  text-shadow: white 0 0 0;
-  font-weight: 500;
-  border-radius: 5px;
-}
-
-.change-button:hover {
-  color: white;
-  border-radius: 5px;
-  background-color: #b1b1b1;
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
-}
-
 .link {
   text-decoration: none;
   color: white;
-}
-.link-name{
-  text-decoration: none;
-  color: white;
-}
-
-.link-button{
-  text-decoration: none;
-  color: black;
-}
-
-.break-line {
-  height: 7px;
-  background-color: black;
 }
 
 @media (max-width: 650px) {
