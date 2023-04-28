@@ -1,12 +1,13 @@
 package edu.ntnu.idatt2106_2023_06.backend.model;
 
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipeAllergenId;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipeItemId;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-class RecipeItemIdTest {
+public class RecipeAllergenIdTest {
 
     @Nested
     class Constructor_test{
@@ -14,14 +15,14 @@ class RecipeItemIdTest {
         @Test
         void empty_constructor_does_not_throw_errors(){
             assertDoesNotThrow(() -> {
-                new RecipeItemId();
+                new RecipeAllergenId();
             });
         }
 
         @Test
         void constructor_does_not_throw_errors(){
             assertDoesNotThrow(() -> {
-                new RecipeItemId(1L, 1L);
+                new RecipeAllergenId(1L, 1L);
             });
         }
     }
