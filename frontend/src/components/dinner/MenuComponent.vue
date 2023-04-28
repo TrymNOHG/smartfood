@@ -12,6 +12,7 @@
         <div class="back-side">
           <div class="item-detail">
             <div class="item-name">
+              <h2 id="item-name-h2">{{ days.day }}</h2>
               <h2 id="item-name-h2">{{ meal.name }}</h2>
               <br />
             </div>
@@ -55,6 +56,10 @@ export default {
         name: String,
         price: String,
       }),
+    },
+    days: {
+      type: Object,
+      required: true,
     },
     isSuperUser: {
       type: Boolean,

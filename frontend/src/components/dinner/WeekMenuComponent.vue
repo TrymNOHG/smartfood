@@ -1,17 +1,20 @@
 <template>
   <h1>{{ $t("weekly_menu") }}</h1>
-  <MenuComponent
-    :isSuperUser="true"
-    v-for="(menu, index) in menus"
-    :key="index"
-    :meal="menu"
-    :currenFridge="fridge"
-    @delete-item="deleteItem"
-  />
+  <div class="wrapper">
+    <MenuComponent
+      :isSuperUser="true"
+      v-for="(menu, index) in menus"
+      :key="index"
+      :meal="menu"
+      :currenFridge="fridge"
+      @delete-item="deleteItem"
+    />
+  </div>
 </template>
 
 <script>
 import MenuComponent from "@/components/dinner/MenuComponent.vue";
+
 export default {
   components: {
     MenuComponent,
@@ -151,9 +154,19 @@ export default {
         price: 10.99,
       },
     ];
+    const days = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
 
     return {
       menus,
+      days,
     };
   },
 };
@@ -162,5 +175,17 @@ export default {
 <style scoped>
 * {
   text-align: center;
+}
+
+.wrapper {
+  z-index: 0;
+  margin-left: 2%;
+  margin-right: 2%;
+  margin-top: 2%;
+  grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
+  grid-row-gap: 30px;
+  transition: 0.5s;
+  max-width: 690px; /* added to limit the total width of the grid */
+  margin: 2% auto;
 }
 </style>

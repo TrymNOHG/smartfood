@@ -20,7 +20,6 @@
             @decode="(a, b, c) => onDecode(a, b, c)"
             @loaded="() => onLoaded()"
           ></StreamBarcodeReader>
-          Input Value: {{ text || "Nothing" }}
         </div>
 
         <div id="searchbar">
