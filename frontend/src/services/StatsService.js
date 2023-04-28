@@ -19,7 +19,7 @@ export const addItemStats = async (statAddItemToFridgeDTO) => {
 };
 
 export const getUserStats = async () => {
-    var response = await axios.get(`${BASE_LISTING_URL}/get/user-stats`, {
+    const response = await axios.get(`${BASE_LISTING_URL}/get/user-stats`, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         },

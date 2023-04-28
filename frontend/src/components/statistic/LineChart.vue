@@ -5,7 +5,7 @@
 </template>
   
 <script>
-import {Bar, Line} from 'vue-chartjs'
+import { Line} from 'vue-chartjs'
   import {
     Chart as ChartJS,
     CategoryScale,

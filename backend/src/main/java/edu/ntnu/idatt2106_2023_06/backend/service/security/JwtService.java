@@ -156,8 +156,23 @@ public class JwtService {
         return ((User) authentication.getPrincipal()).getUserId();
     }
 
+    /**
+     * Checks if the user is authenticated.
+     *
+     * @return true if the user is authenticated, false otherwise.
+     */
     public boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null && authentication.isAuthenticated();
+    }
+
+    /**
+     * Gets the email of the authenticated user.
+     *
+     * @return The email of the authenticated user. Returns null if the user is not authenticated.
+     */
+    public String getAuthenticatedUserEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return ((User) authentication.getPrincipal()).getEmail();
     }
 }
