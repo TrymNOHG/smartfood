@@ -9,7 +9,10 @@ describe('BasicFridgeItem', () => {
         const spy = sinon.spy()
         const wrapper = mount(BasicFridgeItem, {
             global: {
-                plugins: [createTestingPinia({ createSpy: spy })]
+                plugins: [createTestingPinia({ createSpy: spy })],
+                mocks: {
+                    $t: (msg) => msg, // Mock the translation function
+                },
             },
             props: {
                 item: {
@@ -44,7 +47,10 @@ describe('BasicFridgeItem', () => {
         };
         const wrapper = mount(BasicFridgeItem, {
             global: {
-                plugins: [createTestingPinia({createSpy: spy})]
+                plugins: [createTestingPinia({createSpy: spy})],
+                mocks: {
+                    $t: (msg) => msg, // Mock the translation function
+                },
             },
             props: {
                 item: item
@@ -70,7 +76,10 @@ describe('BasicFridgeItem', () => {
         };
         const wrapper = mount(BasicFridgeItem, {
             global: {
-                plugins: [createTestingPinia({createSpy: spy})]
+                plugins: [createTestingPinia({createSpy: spy})],
+                mocks: {
+                    $t: (msg) => msg, // Mock the translation function
+                },
             },
             props: {
                 item: item
@@ -96,7 +105,10 @@ describe('BasicFridgeItem', () => {
         };
         const wrapper = mount(BasicFridgeItem, {
             global: {
-                plugins: [createTestingPinia({createSpy: spy})]
+                plugins: [createTestingPinia({createSpy: spy})],
+                mocks: {
+                    $t: (msg) => msg, // Mock the translation function
+                },
             },
             props: {
                 item: item
@@ -122,7 +134,10 @@ describe('BasicFridgeItem', () => {
         };
         const wrapper = mount(BasicFridgeItem, {
             global: {
-                plugins: [createTestingPinia({createSpy: spy})]
+                plugins: [createTestingPinia({createSpy: spy})],
+                mocks: {
+                    $t: (msg) => msg, // Mock the translation function
+                },
             },
             props: {
                 item: item
@@ -148,7 +163,10 @@ describe('BasicFridgeItem', () => {
         };
         const wrapper = mount(BasicFridgeItem, {
             global: {
-                plugins: [createTestingPinia({createSpy: spy})]
+                plugins: [createTestingPinia({createSpy: spy})],
+                mocks: {
+                    $t: (msg) => msg, // Mock the translation function
+                },
             },
             props: {
                 item: item
