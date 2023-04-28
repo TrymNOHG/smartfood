@@ -122,6 +122,16 @@ describe("After choosing fridge", () => {
     ).as("getFridgeItems");
 
     cy.intercept(
+        "POST",
+        "http://localhost:8080/item/shopping/add",
+        (req) => {
+          req.reply({
+            statusCode: 200,
+          });
+        }
+    ).as("addShopping");
+
+    cy.intercept(
       "GET",
       "https://kassal.app/api/v1/products?search=egg",
       (req) => {
@@ -272,7 +282,7 @@ describe("After choosing fridge", () => {
       .click({ force: true });
     cy.contains("bekreft").click();
     cy.contains("bekreft").click();
-    cy.contains("OK").click();
+    cy.contains("Ja").click();
     cy.get("body").should("not.contain", "Ammeinnlegg 50stk Lillego");
   });
 });

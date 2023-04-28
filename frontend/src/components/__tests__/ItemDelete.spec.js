@@ -101,7 +101,7 @@ describe('ItemDelete', () => {
         const text = wrapper.find('#how-much-left')
 
         expect(text.exists()).toBe(true)
-        expect(text.text()).toBe('how_much_is_left')
+        expect(text.text()).toBe('how_much_left')
 
     });
 });
