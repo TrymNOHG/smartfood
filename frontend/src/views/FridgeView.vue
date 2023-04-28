@@ -249,7 +249,7 @@ export default {
         await addItemToShoppingList(itemDTO, fridgeId, true).then(
           async (response) => {
             console.log("response", response);
-            console.warn("error1", error); //TODO: add exception handling
+            //TODO: add exception handling
           }
         );
       } else {
