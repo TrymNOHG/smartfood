@@ -40,6 +40,7 @@
   "addNewFridgeTitle": "Add New Fridge",
   "fridgeNameLabel": "What is the name of your new Fridge?",
   "addFridgeButtonText": "Add Fridge",
+  "added_to_fridge": "Item added to Fridge",
   "fridges": "List of your refrigerators",
   "edit": "Edit",
   "changePassword": "Change password",
