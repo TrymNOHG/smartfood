@@ -1,5 +1,5 @@
 <template>
-
+  <h1>weekmenu</h1>
 </template>
 
 <script>
@@ -7,6 +7,6 @@
 
 <style scoped>
 *{
-    text-align: center;
+  text-align: center;
 }
 </style>
