@@ -66,22 +66,30 @@
       </div>
     </div>
     <div class="filter-component">
-      <filter-bar  @filter="filtering" @listing="listing"/>
+      <filter-bar  @listing="listing"/>
     </div>
-    <div v-if="!listView" class="wrapper" :style="{ marginTop: marginTopStyle }">
-      <basic-fridge-item
-        :isSuperUser="isCurrentUserSuperUser"
-        v-for="(item, index) in fridgeItems"
-        :key="index"
-        :item="item"
-        :currenFridge="fridge"
-        @delete-item="deleteItem"
-      />
-  </div>
-    <div v-else class="list-wrapper">
-      <basic-fridge-list  v-for="(item, index) in fridgeItems" :key="index" :item="item" :currenFridge="fridge"
-                          @delete-item="deleteItem"/>
-    </div>
+    <transition name="fade">
+      <div v-if="!listView" class="wrapper" :style="{ marginTop: marginTopStyle }">
+        <basic-fridge-item
+            :isSuperUser="isCurrentUserSuperUser"
+            v-for="(item, index) in fridgeItems"
+            :key="index"
+            :item="item"
+            :currenFridge="fridge"
+            @delete-item="deleteItem"
+            @add-shopping="addShopping"
+        />
+      </div>
+      <div v-else class="list-wrapper">
+        <basic-fridge-list
+            v-for="(item, index) in fridgeItems"
+            :key="index" :item="item"
+            :currenFridge="fridge"
+            @delete-item="deleteItem"
+            @add-shopping="addShopping"
+        />
+      </div>
+    </transition>
     <div class="members-wrapper" v-show="selectedTab === 'members'">
       <member-component />
     </div>
@@ -130,14 +138,34 @@ export default {
 
   methods: {
 
-    filtering(bool){
-      this.listView = bool;
-    },
-
     listing(bool){
       this.listView = bool;
     },
 
+    async addShopping(item) {
+      const date = new Date();
+      const expirationDate = new Date(date);
+      expirationDate.setDate(date.getDate() + 7);
+      const fridge = this.fridgeStore.getCurrentFridge;
+
+      const itemDTO = {
+        "name": item.name,
+        "description": item.description,
+        "store": item.store,
+        "price": item.price,
+        "purchaseDate": date,
+        "expirationDate": expirationDate,
+        "image": item.image,
+        "quantity": 1,
+      }
+
+      await addItemToShoppingList(itemDTO, fridge.fridgeId, false).then(
+          async (response) => {
+            console.log("response", response);
+            console.warn("error1", error); //TODO: add exception handling
+          }
+      );
+    },
 
     handleReceiptUpload() {},
     handleSearch() {
@@ -196,8 +224,7 @@ export default {
       }
 
       const date = new Date();
-      const expirationDate = new Date(date);
-      expirationDate.setDate(date.getDate() + 7);
+      const expirationDate = new Date();
 
       const statAddItemToFridgeDTO = {
         price: item.current_price,
@@ -287,6 +314,14 @@ export default {
 </script>
 
 <style scoped>
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .25s ease;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
 
 .list-wrapper {
   display: grid;

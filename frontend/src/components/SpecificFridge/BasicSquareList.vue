@@ -37,6 +37,7 @@ import {number} from "yup";
 import swal from "sweetalert2";
 import {useItemStore} from "@/store/store";
 import Swal from "sweetalert2";
+import {addItemToShoppingList} from "@/services/ItemService";
 
 export default {
   name: "BasicFridgeItem",
@@ -120,12 +121,24 @@ export default {
             }
           }).then((result) => {
             if (result.isConfirmed) {
-              this.$emit('delete-item', item, deletePercentage.value);
-              swal.fire(
-                  this.$t('success_message'),
-                  '',
-                  'success'
-              )
+              swal.fire({
+                title: "Vil du kjøpe den på nytt",
+                text: this.$t('confirm_text'),
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonColor: '#4dce38',
+                cancelButtonColor: '#d33',
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
+                customClass: {
+                  container: 'my-swal-dialog-container'
+                }
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.$emit('add-shopping', item)
+                }
+                this.$emit('delete-item', item, deletePercentage.value);
+              })
             }
           })
         }
@@ -140,28 +153,23 @@ export default {
     console.log(props.item)
     function calculateExpirationDate(purchaseDate, expirationDate) {
       const currentDate = new Date();
-      const purchase = new Date(purchaseDate);
       const expiration = new Date(expirationDate);
 
-      const totalTime = expiration.getTime() - purchase.getTime();
-      const remainingTime = expiration.getTime() - currentDate.getTime();
-      const percentageLeft = (remainingTime / totalTime) * 100;
+      const remainingDays = Math.ceil((expiration.getTime() - currentDate.getTime()) / (1000 * 3600 * 24));
+      console.log(remainingDays)
 
       let borderColor;
 
-      if (percentageLeft >= 75) {
-        borderColor = 'green'; // Green for 75% or more time left
-      } else if (percentageLeft >= 50) {
-        borderColor = 'orange'; // Orange for 50% to 74% time left
-      } else if (percentageLeft >= 25) {
-        borderColor = 'yellow'; // Yellow for 25% to 49% time left
+      if (remainingDays >= 5) {
+        borderColor = 'green'; // Green for 7 or more days left
+      } else if (remainingDays >= 3 && remainingDays < 5) {
+        borderColor = 'orange'; // Orange for 1 to 2 days left
       } else {
-        borderColor = 'red'; // Red for less than 25% time left
+        borderColor = 'red'; // Red for less than 1 day left
       }
 
       return borderColor;
     }
-
 
     return {
       borderColor,
