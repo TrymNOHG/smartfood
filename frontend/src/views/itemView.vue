@@ -33,6 +33,7 @@ import ItemDelete from "@/components/itemDescription/itemDelete.vue";
 import {useFridgeStore, useItemStore} from "@/store/store";
 import router from "@/router/router";
 import {addItemToShoppingList} from "@/services/ItemService";
+import swal from "sweetalert2";
 
 export default {
   name: "itemView",
@@ -80,29 +81,80 @@ export default {
       );
     },
 
-    async deleteItem(itemToDelete, deletePercentage) {
+    async deleteItem(item, deletePercentage) {
 
-      const statDeleteFromFridgeDTO = {
-        "percentageThrown": parseFloat(deletePercentage),
-        "price": itemToDelete.price,
-        "quantity": parseFloat(itemToDelete.quantity),
-        "itemName": itemToDelete.name,
-        "storeName": itemToDelete.store,
-        "fridgeId": this.fridge.fridgeId
-      }
-
-      const itemRemoveDTO = {
-        "itemName": itemToDelete.name,
-        "store": itemToDelete.store,
-        "fridgeId": this.fridge.fridgeId,
-        "quantity": itemToDelete.quantity
-      }
-
-      console.log(statDeleteFromFridgeDTO)
-      console.log(itemRemoveDTO)
-      await this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO);
-      await this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO);
-      await router.push('/fridge')
+      swal.fire({
+        title: this.$t('confirm_title'),
+        text: this.$t('confirm_text'),
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4dce38',
+        cancelButtonColor: '#d33',
+        confirmButtonText: this.$t('confirm_button'),
+        cancelButtonText: this.$t('cancel_button'),
+        customClass: {
+          container: 'my-swal-dialog-container'
+        }
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          swal.fire({
+            title: this.$t('buy_again'),
+            text: this.$t('confirm_text'),
+            icon: 'success',
+            showCancelButton: true,
+            confirmButtonColor: '#4dce38',
+            cancelButtonColor: '#d33',
+            confirmButtonText: this.$t('Yes'),
+            cancelButtonText: this.$t('No'),
+            customClass: {
+              container: 'my-swal-dialog-container'
+            }
+          }).then((result) => {
+            const statDeleteFromFridgeDTO = {
+              "percentageThrown": parseFloat(deletePercentage),
+              "price": item.price,
+              "quantity": parseFloat(item.quantity),
+              "itemName": item.name,
+              "storeName": item.store,
+              "fridgeId": this.fridge.fridgeId
+            };
+            const itemRemoveDTO = {
+              "itemName": item.name,
+              "store": item.store,
+              "fridgeId": this.fridge.fridgeId,
+              "quantity": item.quantity
+            };
+            if (result.isConfirmed) {
+              this.addShopping(item);
+            }
+            this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO).then(() => {
+              this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO).then(() => {
+                router.push('/fridge');
+              });
+            });
+          });
+        } else {
+          const statDeleteFromFridgeDTO = {
+            "percentageThrown": parseFloat(deletePercentage),
+            "price": item.price,
+            "quantity": parseFloat(item.quantity),
+            "itemName": item.name,
+            "storeName": item.store,
+            "fridgeId": this.fridge.fridgeId
+          };
+          const itemRemoveDTO = {
+            "itemName": item.name,
+            "store": item.store,
+            "fridgeId": this.fridge.fridgeId,
+            "quantity": item.quantity
+          };
+          this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO).then(() => {
+            this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO).then(() => {
+              router.push('/fridge');
+            });
+          });
+        }
+      });
     }
   },
   computed: {

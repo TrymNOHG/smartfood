@@ -27,49 +27,19 @@ export default {
     }
   },
 
+  methods: {
+    deleteItem(item) {
+      let deletePercentage = this.sliderValue
+      console.log(deletePercentage)
+      this.$emit('delete-item', item, deletePercentage);
+    },
+  },
+
   data() {
     return {
       sliderValue: 50
     }
   },
-
-  methods: {
-    deleteItem(item){
-      swal.fire({
-        title: this.$t('confirm_title'),
-        text: this.$t('confirm_text'),
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#4dce38',
-        cancelButtonColor: '#d33',
-        confirmButtonText: this.$t('confirm_button'),
-        cancelButtonText: this.$t('cancel_button'),
-        customClass: {
-          container: 'my-swal-dialog-container'
-        }}).then((result) => {
-            if (result.isConfirmed) {
-              swal.fire({
-                title: this.$t('buy_again'),
-                text: this.$t('confirm_text'),
-                icon: 'success',
-                showCancelButton: true,
-                confirmButtonColor: '#4dce38',
-                cancelButtonColor: '#d33',
-                confirmButtonText: this.$t('Yes'),
-                cancelButtonText: this.$t('No'),
-                customClass: {
-                  container: 'my-swal-dialog-container'
-                }
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  this.$emit('add-shopping', item)
-                }
-                this.$emit('delete-item', item, this.sliderValue);
-              })
-            }
-        })
-    }
-    },
 }
 
 </script>
