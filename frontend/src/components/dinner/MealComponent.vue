@@ -244,7 +244,7 @@ img {
   .card {
     display: flex;
     justify-content: end;
-    width: 350px;
+    width: 95vw;
     height: 80px;
     background-color: #eee;
     border: 1px solid #ccc;
@@ -333,7 +333,7 @@ img {
   .card {
     display: flex;
     justify-content: end;
-    width: 350px;
+    width: 90vw;
     height: 100px;
     background-color: white;
     border: 2px solid #ccc;

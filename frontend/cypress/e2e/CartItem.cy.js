@@ -89,6 +89,17 @@ describe("Adding and deleting item from cart", () => {
     ).as("getFridgeItems");
 
     cy.intercept(
+      "GET",
+      "http://localhost:8080/item/shopping/get?fridgeId=88",
+      (req) => {
+        req.reply({
+          statusCode: 200,
+          body: fridgeAddedItem,
+        });
+      }
+    ).as("getCartItems");
+
+    cy.intercept(
       "POST",
       "http://localhost:8080/item/fridge/add?fridgeId=88",
       (req) => {
@@ -255,12 +266,13 @@ describe("Adding and deleting item from cart", () => {
   });
 
   it("should add item to fridge from fridge-search", () => {
+    cy.visit(`${base_url}/cart`);
     cy.get(".form-control").type("egg");
     cy.get("#searchbtn").click();
     cy.wait("@getSearchFromKasal");
     cy.contains(".item-var", "Ammeinnlegg 50stk Lillego").click();
-    cy.contains("Yes").click();
-    cy.wait("@addItemToFridge");
+    cy.wait("@addItemRequest");
+    cy.wait("@getCartItems");
     cy.contains("Ammeinnlegg 50stk Lillego").should("be.visible");
   });
 

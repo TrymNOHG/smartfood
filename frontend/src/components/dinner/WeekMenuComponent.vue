@@ -72,13 +72,10 @@ export default {
 
 .wrapper {
   z-index: 0;
-  margin-left: 2%;
-  margin-right: 2%;
-  margin-top: 2%;
   grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
   grid-row-gap: 30px;
   transition: 0.5s;
   max-width: 690px; /* added to limit the total width of the grid */
-  margin: 2% auto;
+  margin: auto;
 }
 </style>
