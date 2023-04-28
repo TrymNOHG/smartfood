@@ -74,5 +74,7 @@
   "suggestion": "Suggestion",
   "quantity" : "Quantity",
   "add_item" : "Add item",
-  "search": "Search"
+  "search": "Search",
+  "add_to_fridge" : "Add to fridge",
+  "add_to_shopping_list" : "add to shopping list"
 }

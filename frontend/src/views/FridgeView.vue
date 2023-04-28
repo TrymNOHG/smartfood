@@ -141,7 +141,7 @@ export default {
     async addItemToFridge(fridgeId, item) {
       this.search = false;
       const { value: confirmed } = await Swal.fire({
-        title: this.isCurrentUserSuperUser ? $t('added_to_fridge') : $t('added_to_shopping_list'),
+        title: this.isCurrentUserSuperUser ? this.$t('add_to_fridge') : this.$t('add_to_shopping_list'),
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Yes',

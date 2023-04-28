@@ -75,5 +75,7 @@
   "suggestion": "Forslag",
   "quantity" : "Antall",
   "add_item" : "Legg til vare",
-  "search" : "Søk"
+  "search" : "Søk",
+  "add_to_fridge" : "Legg til i kjøleskap",
+  "add_to_shopping_list" : "Legg til i Handleliste"
 }
