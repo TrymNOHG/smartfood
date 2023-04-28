@@ -22,10 +22,7 @@
           ></StreamBarcodeReader>
           Input Value: {{ text || "Nothing" }}
         </div>
-        <ImageBarcodeReader
-          @decode="onDecodeImage"
-          @error="onError"
-        ></ImageBarcodeReader>
+
         <div id="searchbar">
           <SearchInput
             v-model="searchQuery"
@@ -137,7 +134,6 @@ import { ref, onMounted, computed, watch } from "vue";
 import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert2";
 import { StreamBarcodeReader } from "vue-barcode-reader";
-import { ImageBarcodeReader } from "vue-barcode-reader";
 
 export default {
   name: "Cart",
@@ -153,16 +149,10 @@ export default {
     BasicCheckBox,
     CartSuggestion,
     StreamBarcodeReader,
-    ImageBarcodeReader,
   },
   computed: {
     isCurrentUserSuperUser() {
       return useFridgeStore().getIsSuperUser;
-    },
-  },
-  methods: {
-    onError(error) {
-      console.log(error);
     },
   },
   setup() {
