@@ -47,12 +47,11 @@ export default {
 
 <style scoped>
 #receipt-btn {
-  position: absolute;
-  margin: -40px 0 0 80vw;
+  transform: translate(-100%, 45%);
 }
 
 #searchbar {
-  display: inline-block;
+  display: flex;
 }
 
 .form-control {
@@ -66,9 +65,16 @@ export default {
   height: 40px;
   border-radius: 50px 0 0 50px;
   margin-left: 10px;
+  margin-right: -20px;
 }
 
 @media only screen and (min-width: 350px) and (max-width: 480px) {
+  #receipt-btn {
+    transform: none;
+    position: absolute;
+    margin: -40px 0 0 80vw;
+  }
+
   #searchbar {
     display: inline-block;
   }
