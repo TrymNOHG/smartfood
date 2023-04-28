@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106_2023_06.backend.model.items;
+package edu.ntnu.idatt2106_2023_06.backend.model.recipe;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -29,7 +29,7 @@ public class RecipeItemId implements Serializable {
     /**
      * The id of the recipe.
      */
-    @Column(name = "recipe_id")
-    private Long recipe;
+    @Column(name = "recipe_part_id")
+    private Long recipePart;
 
 }

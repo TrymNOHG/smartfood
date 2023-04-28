@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.controller;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.items.Recipe;
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Recipe;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.RecipeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
