@@ -1,6 +1,6 @@
 <template>
   <div class="cards-container">
-    <router-link to="/fridge/item" @click="storeCurrentItem(meal)" id="item-link">
+    <router-link to="/dinner/meal" @click="storeCurrentItem(meal)" id="item-link">
       <div class="card">
         <div class="front-side">
           <img :src="meal.image" alt="item picture">
