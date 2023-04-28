@@ -15,7 +15,11 @@
       <div class="info-delete-wrapper">
         <item-info :item="item" class="info-delete"/>
         <div></div>
-        <item-delete v-if="isCurrentUserSuperUser" :item="item" class="info-delete" @delete-item="deleteItem"/>
+        <item-delete
+            v-if="isCurrentUserSuperUser"
+            :item="item" class="info-delete"
+            @delete-item="deleteItem"
+            @add-shopping="addShopping"/>
       </div>
     </div>
   </div>
@@ -28,6 +32,7 @@ import ItemInfo from "@/components/itemDescription/itemInfo.vue";
 import ItemDelete from "@/components/itemDescription/itemDelete.vue";
 import {useFridgeStore, useItemStore} from "@/store/store";
 import router from "@/router/router";
+import {addItemToShoppingList} from "@/services/ItemService";
 
 export default {
   name: "itemView",
@@ -49,6 +54,30 @@ export default {
 
     showInformation(){
       //TODO: INFORMATION PROFILE put information API in here
+    },
+
+    async addShopping(item) {
+      const date = new Date();
+      const expirationDate = new Date(date);
+      expirationDate.setDate(date.getDate() + 7);
+
+      const itemDTO = {
+        "name": item.name,
+        "description": item.description,
+        "store": item.store,
+        "price": item.price,
+        "purchaseDate": date,
+        "expirationDate": expirationDate,
+        "image": item.image,
+        "quantity": 1,
+      }
+
+      await addItemToShoppingList(itemDTO, this.fridge.fridgeId, false).then(
+          async (response) => {
+            console.log("response", response);
+            console.warn("error1", error); //TODO: add exception handling
+          }
+      );
     },
 
     async deleteItem(itemToDelete, deletePercentage) {

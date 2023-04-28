@@ -89,7 +89,7 @@ export default {
             html: `
           <div class="swal2-content">
             <div class="swal2-text">
-              ${this.$t('Percent-wise, how much was left?')}
+              ${this.$t('percent_wise_how_much')}
             </div>
             <div id="range-value-text" class="swal2-text"></div>
           </div>
@@ -122,14 +122,14 @@ export default {
           }).then((result) => {
             if (result.isConfirmed) {
               swal.fire({
-                title: "Vil du kjøpe den på nytt",
+                title: this.$t('buy_again'),
                 text: this.$t('confirm_text'),
                 icon: 'success',
                 showCancelButton: true,
                 confirmButtonColor: '#4dce38',
                 cancelButtonColor: '#d33',
-                confirmButtonText: "Yes",
-                cancelButtonText: "No",
+                confirmButtonText: this.$t('Yes'),
+                cancelButtonText: this.$t('No'),
                 customClass: {
                   container: 'my-swal-dialog-container'
                 }

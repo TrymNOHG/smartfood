@@ -77,5 +77,10 @@
   "add_item" : "Legg til vare",
   "search" : "Søk",
   "add_to_fridge" : "Legg til i kjøleskap",
-  "add_to_shopping_list" : "Legg til i Handleliste"
+  "add_to_shopping_list" : "Legg til i Handleliste",
+  "percent_wise_how_much": "Hvor mye er det igjen prosentvis",
+  "buy_again": "Ønsker du å legge denne vare i handlekurven?",
+  "Yes": "Ja",
+  "No": "Nei",
+  "delete_item": "Slett varen"
 }

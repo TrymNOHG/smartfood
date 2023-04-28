@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="info-window">
-      <h2 style="font-weight: bold" id="how-much-left">{{ $t('how_much_is_left') }}</h2>
+      <h2 style="font-weight: bold" id="how-much-left">{{ $t('how_much_left') }}</h2>
       <div class="slider">
         <input type="range" min="0" max="100" :value="sliderValue" @input="sliderValue = $event.target.value" class="slider-range">
         <div class="slider-bar"></div>
@@ -15,6 +15,8 @@
 <script>
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
+import swal from "sweetalert2";
+import Swal from "sweetalert2";
 export default {
   name: "itemDelete",
   components: {BasicButton, BasicFridgeItem},
@@ -25,18 +27,51 @@ export default {
     }
   },
 
-  methods: {
-    deleteItem(item){
-      this.$emit('delete-item', item, this.sliderValue);
-    }
-  },
-
   data() {
     return {
       sliderValue: 50
     }
   },
-};
+
+  methods: {
+    deleteItem(item){
+      swal.fire({
+        title: this.$t('confirm_title'),
+        text: this.$t('confirm_text'),
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4dce38',
+        cancelButtonColor: '#d33',
+        confirmButtonText: this.$t('confirm_button'),
+        cancelButtonText: this.$t('cancel_button'),
+        customClass: {
+          container: 'my-swal-dialog-container'
+        }}).then((result) => {
+            if (result.isConfirmed) {
+              swal.fire({
+                title: this.$t('buy_again'),
+                text: this.$t('confirm_text'),
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonColor: '#4dce38',
+                cancelButtonColor: '#d33',
+                confirmButtonText: this.$t('Yes'),
+                cancelButtonText: this.$t('No'),
+                customClass: {
+                  container: 'my-swal-dialog-container'
+                }
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.$emit('add-shopping', item)
+                }
+                this.$emit('delete-item', item, this.sliderValue);
+              })
+            }
+        })
+    }
+    },
+}
+
 </script>
 
 <style scoped>

@@ -76,5 +76,9 @@
   "add_item" : "Add item",
   "search": "Search",
   "add_to_fridge" : "Add to fridge",
-  "add_to_shopping_list" : "add to shopping list"
+  "add_to_shopping_list" : "add to shopping list",
+  "percent_wise_how_much": "Percent wise how much is left?",
+  "buy_again": "Do you want to add this item back to shopping cart?",
+  "Yes": "Yes",
+  "No": "No"
 }
