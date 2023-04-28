@@ -1,55 +1,69 @@
 <template>
   <div class="grey-bar">
     <div class="suggestion-weekMenu">
-      <div id="toggle-button" class="link" @click="selectedTab = 'suggestion'" :class="{ active: selectedTab === 'suggestion' }">{{ $t('suggestion') }}</div>
-      <div id="toggle-button" class="link" @click="selectedTab = 'weekMenu'" :class="{ active: selectedTab === 'weekMenu' }">{{ $t('week_menu') }}</div>
+      <div
+        id="toggle-button"
+        class="link"
+        @click="selectedTab = 'suggestion'"
+        :class="{ active: selectedTab === 'suggestion' }"
+      >
+        {{ $t("suggestion") }}
+      </div>
+      <div
+        id="toggle-button"
+        class="link"
+        @click="selectedTab = 'weekMenu'"
+        :class="{ active: selectedTab === 'weekMenu' }"
+      >
+        {{ $t("weekly_menu") }}
+      </div>
     </div>
     <div class="information-button">
-      <img src="@/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
+      <img
+        src="@/assets/images/info.svg"
+        id="info-picture"
+        @click="showInformation"
+        :alt="$t('alt_info_button')"
+      />
     </div>
   </div>
   <div class="suggestion-wrapper" v-show="selectedTab === 'suggestion'">
-    <dinner-suggestion/>
+    <dinner-suggestion />
   </div>
   <div class="weekMenu-wrapper" v-show="selectedTab === 'weekMenu'">
-    <week-menu/>
+    <week-menu />
   </div>
-  
 </template>
 
 <script>
 import DinnerSuggestion from "../components/dinner/DinnerSuggestionComponent.vue";
 import WeekMenu from "../components/dinner/WeekMenuComponent.vue";
 
-import {ref} from "vue";
+import { ref } from "vue";
 export default {
   name: "DinnerView",
   components: {
     DinnerSuggestion,
-    WeekMenu
+    WeekMenu,
   },
   setup() {
     const selectedTab = ref("suggestion");
 
-
-    return{
+    return {
       selectedTab,
-    }
-
+    };
   },
   methods: {
-
-    showInformation(){
+    showInformation() {
       //TODO: INFORMATION DINNER put information API in here
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
-
 .suggestion-weekMenu {
-  background-color: #6C6C6C;
+  background-color: #6c6c6c;
   height: 35px;
   color: white;
   font-size: 1.5em;
@@ -88,38 +102,33 @@ export default {
   height: 25px;
 }
 
-  .grey-bar {
-    background-color: #6C6C6C;
-    max-height : 35px;
-    text-align: center;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-  }
+.grey-bar {
+  background-color: #6c6c6c;
+  max-height: 35px;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
 
-  #grey-header{
-    grid-column: 2;
-    color: white;
-  }
+#grey-header {
+  grid-column: 2;
+  color: white;
+}
 
-  .information-button{
-    grid-column: 3;
-    text-align: right;
-    padding: 2px 5px;
+.information-button {
+  grid-column: 3;
+  text-align: right;
+  padding: 2px 5px;
+}
 
-
-  }
-
-  #info-picture{
-    height: 30px;
-    width: 30px;
-    cursor: pointer;
-  }
+#info-picture {
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+}
 
 @media only screen and (min-width: 350px) and (max-width: 480px) {
-
-
-
-  .grey-bar{
+  .grey-bar {
     display: flex;
     align-content: center;
     align-items: center;
@@ -129,11 +138,9 @@ export default {
     max-height: 60px;
     height: 60px;
     border-radius: 20px 20px 0 0;
-
   }
 
-
-  .suggestion-weekMenu{
+  .suggestion-weekMenu {
     background-color: #31c48d;
     margin-top: 0px;
     padding-top: 0;
@@ -144,9 +151,8 @@ export default {
     justify-content: center;
   }
 
-  .link{
+  .link {
     margin: 0;
-
   }
 
   .link.active {
@@ -160,11 +166,5 @@ export default {
     margin-top: 20px;
     padding-top: 10px;
   }
-
-
-
-
-
-
 }
 </style>

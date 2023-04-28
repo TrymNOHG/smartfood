@@ -22,6 +22,7 @@
           ></StreamBarcodeReader>
           Input Value: {{ text || "Nothing" }}
         </div>
+
         <div id="searchbar">
           <SearchInput
             v-model="searchQuery"
@@ -50,7 +51,11 @@
                 :image="item.image"
                 :text="item.name"
                 :store="item.store.name"
-                :price="item.current_price"
+                :price="
+                  typeof item.current_price === 'number'
+                    ? item.current_price
+                    : item.current_price.price
+                "
                 style="text-align: center"
                 @click="addItemToList(item)"
                 @item-checked="handleItemChecked"
@@ -116,6 +121,7 @@ import { getItemsFromShoppingList } from "@/services/ItemService";
 import { buyItemsFromShoppingList } from "@/services/ItemService";
 import { deleteItemsFromShoppingList } from "@/services/ItemService";
 import { getItems } from "@/services/ApiService";
+import { getItemByBarcode } from "@/services/ApiService";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
@@ -163,6 +169,7 @@ export default {
     const suggestedItems = ref([]);
     const itemStore = useItemStore();
     let isCameraToggled = ref(false);
+    let barcode = ref("");
 
     //console log items every 3 seconds
     /**function callEveryThreeSeconds() {
@@ -170,9 +177,26 @@ export default {
         }
          setInterval(callEveryThreeSeconds, 3000);*/
 
-    function onDecode(a, b, c) {
-      console.log(a, b, c);
+    async function onDecode(a, b, c) {
       this.text = a;
+      barcode.value = a;
+      console.log(barcode.value);
+      await getItemByBarcode(barcode.value)
+        .then((response) => {
+          if (response !== undefined) {
+            searchItems.value = response.products;
+            console.log(response.products);
+            search.value = true;
+          } else {
+            console.log("Something went wrong");
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+          }
+        })
+        .catch((error) => {
+          console.warn("error1", error); //TODO: add exception handling
+        });
+
       if (this.id) clearTimeout(this.id);
       this.id = setTimeout(() => {
         if (this.text === a) {
@@ -180,6 +204,12 @@ export default {
         }
       }, 5000);
     }
+
+    function onDecodeImage(result) {
+      console.log(aaaaaaa);
+      console.log(result);
+    }
+
     function onLoaded() {
       console.log("load");
     }
@@ -229,22 +259,17 @@ export default {
 
     async function handleCheckedItem(item, isChecked) {
       item.isChecked = isChecked;
-      console.log(item.name);
-      console.log("item ischecked: " + item.isChecked);
-      console.log("is-checked: " + isChecked);
       // console.log(item.isChecked)
     }
 
     async function handleDelete() {
       const selectedItems = [];
-      console.log(items);
       items.value.forEach((item) => {
         if (item.isChecked) {
           selectedItems.push(item);
         }
       });
-      console.log("SELECTED ITEMS");
-      console.log(selectedItems);
+
       const itemRemoveDTOList = [{}];
       selectedItems.forEach((item) => {
         const ItemRemoveDTO = {
@@ -254,8 +279,7 @@ export default {
           quantity: item.quantity,
         };
         itemRemoveDTOList.push(ItemRemoveDTO);
-        console.log("ITEM REMOVE DTO");
-        console.log(itemRemoveDTOList);
+
       });
       try {
         itemRemoveDTOList.shift();
@@ -349,10 +373,6 @@ export default {
 
     onMounted(async () => {
       await loadItemsFromCart();
-      /**items.value.forEach((obj) => {
-                obj.isChecked = checkAll_b;
-            });*/
-      console.log(items.value);
     });
     // Watch the searchItems array for changes and update the isExpanded ref accordingly
     watch(searchItems, () => {
@@ -392,7 +412,6 @@ export default {
       };
       const fridgeId = currentFridge.fridgeId;
 
-      console.log(itemDTO);
       event.stopPropagation();
       addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
         .then(async (response) => {
@@ -412,7 +431,6 @@ export default {
     }
 
     async function dec_CartItemAmount(item) {
-      console.log(item);
       const itemRemoveDTO = {
         itemName: item.name,
         store: item.store,
@@ -426,7 +444,6 @@ export default {
           if (response !== undefined) {
             await loadItemsFromCart();
           } else {
-            console.log("Something went wrong");
             submitMessage.value =
               "Something went wrong. Please try again later.";
           }
@@ -445,8 +462,6 @@ export default {
         await loadItemsFromCart();
         return;
       }
-      console.log(newQuantity);
-      console.log(item);
 
       const shoppingItemUpdateDTO = {
         itemId: item.itemId,
@@ -461,7 +476,6 @@ export default {
           if (response !== undefined) {
             await loadItemsFromCart();
           } else {
-            console.log("Something went wrong");
             submitMessage.value =
               "Something went wrong. Please try again later.";
           }
@@ -478,7 +492,6 @@ export default {
         return;
       }
       itemAmount.value -= 1;
-      console.log(itemAmount.value);
     };
 
     const handleDeleteItem = async (item) => {
@@ -488,7 +501,6 @@ export default {
         fridgeId: currentFridge.fridgeId,
         quantity: item.quantity,
       };
-      console.log(ItemRemoveDTO);
 
       deleteItemFromShoppingList(ItemRemoveDTO, false)
         .then(async (response) => {
@@ -500,7 +512,6 @@ export default {
               submitMessage.value = "";
             }, 3000);
           } else {
-            console.log("Something went wrong");
             submitMessage.value =
               "Something went wrong. Please try again later.";
             setTimeout(() => {
@@ -517,9 +528,7 @@ export default {
 
     //buy item from search
     function addItemToList(item) {
-      console.log(item.name + " " + item.store.name);
       search.value = false;
-      console.log("bruuh: ", item);
 
       const itemDTO = {
         name: item.name,
@@ -531,6 +540,10 @@ export default {
         image: item.image,
         quantity: 1,
       };
+      if (typeof item.current_price.price === "number") {
+        itemDTO.price = item.current_price.price;
+        console.log(itemDTO.price);
+      }
       const fridgeId = currentFridge.fridgeId;
 
       console.log(itemDTO);
@@ -540,7 +553,6 @@ export default {
           if (response !== undefined) {
             await loadItemsFromCart();
           } else {
-            console.log("Something went wrong");
             submitMessage.value =
               "Something went wrong. Please try again later.";
           }
@@ -562,8 +574,6 @@ export default {
       items()
         .then((response) => {
           searchItems.value = response;
-          console.log(response);
-          console.log(searchQuery.value);
         })
         .catch((error) => {
           console.error(error);
@@ -600,12 +610,8 @@ export default {
       toggleCamera,
       onLoaded,
       onDecode,
+      onDecodeImage,
     };
-  },
-  methods: {
-    showInformation() {
-      //TODO: INFORMATION CART put information API in here
-    },
   },
 };
 </script>
