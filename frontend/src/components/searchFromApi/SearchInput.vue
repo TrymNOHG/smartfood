@@ -80,19 +80,6 @@ export default {
   }
 
   .form-control {
-    padding: 0px 10px 0 20px;
-    margin-top: 10px;
-    color: #333;
-    font-size: 28px;
-    font-weight: 500;
-    border: 3px solid #555;
-    box-shadow: none;
-    min-height: 60px;
-    border-radius: 50px 0 0 50px;
-    margin-left: 0;
-  }
-
-  .form-control {
     display: flex;
     align-items: flex-end;
     justify-content: space-evenly;
@@ -103,6 +90,7 @@ export default {
     font-size: 20px;
     background-color: white;
     border: 7px solid #31c48d;
+    margin-left: 0;
     border-radius: 50px 50px 50px 50px !important;
   }
 

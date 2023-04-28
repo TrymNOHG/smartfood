@@ -22,6 +22,7 @@
           ></StreamBarcodeReader>
           Input Value: {{ text || "Nothing" }}
         </div>
+
         <div id="searchbar">
           <SearchInput
             v-model="searchQuery"
@@ -50,7 +51,11 @@
                 :image="item.image"
                 :text="item.name"
                 :store="item.store.name"
-                :price="item.current_price"
+                :price="
+                  typeof item.current_price === 'number'
+                    ? item.current_price
+                    : item.current_price.price
+                "
                 style="text-align: center"
                 @click="addItemToList(item)"
                 @item-checked="handleItemChecked"
@@ -116,6 +121,7 @@ import { getItemsFromShoppingList } from "@/services/ItemService";
 import { buyItemsFromShoppingList } from "@/services/ItemService";
 import { deleteItemsFromShoppingList } from "@/services/ItemService";
 import { getItems } from "@/services/ApiService";
+import { getItemByBarcode } from "@/services/ApiService";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
@@ -163,6 +169,7 @@ export default {
     const suggestedItems = ref([]);
     const itemStore = useItemStore();
     let isCameraToggled = ref(false);
+    let barcode = ref("");
 
     //console log items every 3 seconds
     /**function callEveryThreeSeconds() {
@@ -170,9 +177,26 @@ export default {
         }
          setInterval(callEveryThreeSeconds, 3000);*/
 
-    function onDecode(a, b, c) {
-      console.log(a, b, c);
+    async function onDecode(a, b, c) {
       this.text = a;
+      barcode.value = a;
+      console.log(barcode.value);
+      await getItemByBarcode(barcode.value)
+        .then((response) => {
+          if (response !== undefined) {
+            searchItems.value = response.products;
+            console.log(response.products);
+            search.value = true;
+          } else {
+            console.log("Something went wrong");
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+          }
+        })
+        .catch((error) => {
+          console.warn("error1", error); //TODO: add exception handling
+        });
+
       if (this.id) clearTimeout(this.id);
       this.id = setTimeout(() => {
         if (this.text === a) {
@@ -180,6 +204,12 @@ export default {
         }
       }, 5000);
     }
+
+    function onDecodeImage(result) {
+      console.log(aaaaaaa);
+      console.log(result);
+    }
+
     function onLoaded() {
       console.log("load");
     }
@@ -531,6 +561,10 @@ export default {
         image: item.image,
         quantity: 1,
       };
+      if (typeof item.current_price.price === "number") {
+        itemDTO.price = item.current_price.price;
+        console.log(itemDTO.price);
+      }
       const fridgeId = currentFridge.fridgeId;
 
       console.log(itemDTO);
@@ -600,12 +634,8 @@ export default {
       toggleCamera,
       onLoaded,
       onDecode,
+      onDecodeImage,
     };
-  },
-  methods: {
-    showInformation() {
-      //TODO: INFORMATION CART put information API in here
-    },
   },
 };
 </script>
