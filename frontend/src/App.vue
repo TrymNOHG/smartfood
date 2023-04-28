@@ -58,7 +58,7 @@
           {{ $t('select_fridge') }}
         </router-link>
       </h1>
-      
+
       <router-link class="change-button" to="/fridges" >
         <img src="@/assets/images/exit_change_fridge.png" style="max-height: 100%" v-if="hasCurrentFridge">
         <img src="@/assets/images/enter_choose_fridge.png" style="max-height: 100%" v-else>
