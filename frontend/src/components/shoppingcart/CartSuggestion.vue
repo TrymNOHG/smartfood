@@ -8,7 +8,6 @@
 
         <div class="description">
             <span>{{ name }}</span>
-            <span>{{ date_added }}</span>
         </div>
 
         <div class="quantity">
@@ -24,8 +23,8 @@
         </div>
 
         <div class="buttons">
-            <font-awesome-icon v-if="isSuperUser" icon="fa-solid fa-check" class="modify-check-mark" @click="handleAcceptSuggestion"/>
-            <font-awesome-icon icon="fa-solid fa-trash" class="modify-check-mark" @click="handleDeleteSuggestion"/>
+            <font-awesome-icon v-if="isSuperUser" icon="fa-solid fa-check" class="modify-check-mark fa-solid fa-check" @click="handleAcceptSuggestion"/>
+            <font-awesome-icon icon="fa-solid fa-trash" class="modify-check-mark fa-solid fa-trash" @click="handleDeleteSuggestion"/>
         </div>
     </div>
 </template>

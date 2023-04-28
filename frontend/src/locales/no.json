@@ -66,5 +66,7 @@
   "exit-fridge": "Gå ut av nåværende kjøleskap",
   "enter-fridge": "Gå inn i et kjøleskap",
   "alt_info_button": "Informasjon om siden",
-  "members": "Medlemmer"
+  "members": "Medlemmer",
+  "how_much_left": "Hvor mye er det igjen av varen?",
+  "item-info": "Informasjon om varen"
 }

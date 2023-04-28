@@ -1,48 +1,31 @@
 <template>
   <div>
+
     <div id="myDropdown" class="dropdown-content">
+
       <figure id="backBlack"></figure>
 
       <div id="backGreen">
         <div class="grey-bar">
-          <h2 id="grey-header">{{ $t("shopping_cart") }}</h2>
+          <h2 id="grey-header" >{{ $t('shopping_cart') }}</h2>
           <div class="information-button">
-            <img
-              src="@/assets/images/info.svg"
-              id="info-picture"
-              @click="showInformation"
-              :alt="$t('alt_info_button')"
-            />
+            <img src="@/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
           </div>
         </div>
-        <div v-if="isCameraToggled">
-          <StreamBarcodeReader
-            @decode="(a, b, c) => onDecode(a, b, c)"
-            @loaded="() => onLoaded()"
-          ></StreamBarcodeReader>
-        </div>
-
         <div id="searchbar">
           <SearchInput
-            v-model="searchQuery"
-            @input="handleSearch"
-            @upload-receipt="uploadReceipt"
-            label="Search product"
-            @receipt-upload="toggleCamera"
+              v-model="searchQuery"
+              @input="handleSearch"
+              label="Search product"
           ></SearchInput>
           <button id="searchbtn" @click="handleSearch">Search</button>
         </div>
-        <CartControl
-          v-if="isCurrentUserSuperUser"
-          @check-all="handleMarkAll"
-          @buy="handleBuy"
-          @delete="handleDelete"
-        ></CartControl>
+        <CartControl v-if="isCurrentUserSuperUser" @check-all="handleMarkAll" @buy="handleBuy" @delete="handleDelete"></CartControl>
       </div>
       <div class="dropper" v-if="search">
         <vue-collapsible-panel-group>
           <vue-collapsible-panel :expanded="isExpanded.value">
-            <template #content>
+            <template  #content>
               <SearchItem
                 v-for="(item, index) in searchItems"
                 :key="index"
@@ -60,61 +43,57 @@
       </div>
     </div>
 
-    <div class="cart-items">
-      <CartItem
-        v-for="(item, index) in items"
-        :key="index"
-        :image="item.image"
-        :name="item.name"
-        :quantity="item.quantity"
-        :item="item"
-        :isSuperUser="isCurrentUserSuperUser"
-        @add="inc_CartItemAmount(item)"
-        @subtract="dec_CartItemAmount(item)"
-        @delete-item="handleDeleteItem(item)"
-        @handle-checked="handleCheckedItem"
-        @handle-buy="handleBuyItem"
-        @quantity-updated="set_CartItemAmount"
-      >
-      </CartItem>
-    </div>
+        <div class="cart-items">
+            <CartItem
+                    v-for="(item, index) in items"
+                    :key="index"
+                    :image="item.image"
+                    :name="item.name"
+                    :quantity="item.quantity"
+                    :item="item"
+                    :isSuperUser="isCurrentUserSuperUser"
+                    @add="inc_CartItemAmount(item)"
+                    @subtract="dec_CartItemAmount(item)"
+                    @delete-item="handleDeleteItem(item)"
+                    @handle-checked="handleCheckedItem"
+                    @handle-buy="handleBuyItem"
+                    @quantity-updated="set_CartItemAmount"
+            >
+            </CartItem>
+        </div>
     <figure id="forslagBlack"></figure>
 
-    <h1 id="sugTitle">Forslag</h1>
-    <div class="cart-items">
-      <CartSuggestion
-        v-for="(item, index) in suggestedItems"
-        :key="index"
-        :image="item.image"
-        :name="item.name"
-        :quantity="item.quantity"
-        :item="item"
-        :isSuperUser="isCurrentUserSuperUser"
-        @accept-suggestion="handleAcceptSuggestion(item)"
-        @delete-suggestion="handleDeleteSuggestion(item)"
-      >
-      </CartSuggestion>
+      <h1 id="sugTitle">Forslag</h1>
+        <div class="cart-items">
+                    <CartSuggestion
+                        v-for="(item, index) in suggestedItems"
+                        :key="index"
+                        :image="item.image"
+                        :name="item.name"
+                        :quantity="item.quantity"
+                        :item="item"
+                        :isSuperUser="isCurrentUserSuperUser"
+                        @accept-suggestion="handleAcceptSuggestion(item)"
+                        @delete-suggestion="handleDeleteSuggestion(item)"
+                    >
+                    </CartSuggestion>
+                </div>
     </div>
-  </div>
 </template>
 
 <script>
 import {
-  VueCollapsiblePanelGroup,
-  VueCollapsiblePanel,
+    VueCollapsiblePanelGroup,
+    VueCollapsiblePanel,
 } from "@dafcoe/vue-collapsible-panel";
 import "@dafcoe/vue-collapsible-panel/dist/vue-collapsible-panel.css";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import {
-  acceptSuggestion,
-  deleteItemFromShoppingList,
-  updateShoppingListItem,
-} from "@/services/ItemService";
-import { addItemToShoppingList } from "@/services/ItemService";
-import { getItemsFromShoppingList } from "@/services/ItemService";
-import { buyItemsFromShoppingList } from "@/services/ItemService";
-import { deleteItemsFromShoppingList } from "@/services/ItemService";
-import { getItems } from "@/services/ApiService";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {acceptSuggestion, deleteItemFromShoppingList, updateShoppingListItem} from "@/services/ItemService";
+import {addItemToShoppingList} from "@/services/ItemService";
+import {getItemsFromShoppingList} from "@/services/ItemService";
+import {buyItemsFromShoppingList} from "@/services/ItemService";
+import {deleteItemsFromShoppingList} from "@/services/ItemService";
+import {getItems} from "@/services/ApiService";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
@@ -122,11 +101,10 @@ import CartItem from "@/components/shoppingcart/CartItem.vue";
 import CartSuggestion from "@/components/shoppingcart/CartSuggestion.vue";
 import CartControl from "@/components/shoppingcart/CartControl.vue";
 import BasicCheckBox from "@/components/basic-components/BasicCheckbox.vue";
-import { useLoggedInStore, useFridgeStore } from "@/store/store";
-import { ref, onMounted, computed, watch } from "vue";
-import "sweetalert2/dist/sweetalert2.min.css";
-import swal from "sweetalert2";
-import { StreamBarcodeReader } from "vue-barcode-reader";
+import {useLoggedInStore, useFridgeStore, useItemStore} from "@/store/store";
+import {ref, onMounted, computed, watch} from "vue";
+import 'sweetalert2/dist/sweetalert2.min.css';
+import swal from 'sweetalert2';
 
 export default {
   name: "Cart",
@@ -141,7 +119,6 @@ export default {
     CartControl,
     BasicCheckBox,
     CartSuggestion,
-    StreamBarcodeReader,
   },
   computed: {
     isCurrentUserSuperUser() {
@@ -160,364 +137,407 @@ export default {
     const currentFridge = useFridgeStore().getCurrentFridge;
     let checkAll_b = ref(false);
     const suggestedItems = ref([]);
-    let isCameraToggled = ref(false);
+    const itemStore = useItemStore();
 
-    function toggleCamera() {
-      console.log("TOGGLED WOOOHOO");
-      isCameraToggled.value = !isCameraToggled.value;
-    }
-
-    function onDecode(a, b, c) {
-      console.log(a, b, c);
-      this.text = a;
-      if (this.id) clearTimeout(this.id);
-      this.id = setTimeout(() => {
-        if (this.text === a) {
-          this.text = "";
+        //console log items every 3 seconds
+        /**function callEveryThreeSeconds() {
+            console.log(items.value);
         }
-      }, 5000);
-    }
+         setInterval(callEveryThreeSeconds, 3000);*/
 
-    function onLoaded() {
-      console.log("load");
-    }
-
-    async function handleAcceptSuggestion(item) {
-      const ItemRemoveDTO = {
-        itemName: item.name,
-        store: item.store,
-        fridgeId: currentFridge.fridgeId,
-        quantity: item.quantity,
-      };
-      try {
-        await acceptSuggestion(ItemRemoveDTO);
-        await loadItemsFromCart();
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    async function handleDeleteSuggestion(item) {
-      const ItemRemoveDTO = {
-        itemName: item.name,
-        store: item.store,
-        fridgeId: currentFridge.fridgeId,
-        quantity: item.quantity,
-      };
-      try {
-        console.log(ItemRemoveDTO);
-        await deleteItemFromShoppingList(ItemRemoveDTO, true);
-        await loadItemsFromCart();
-      } catch (error) {
-        console.error(error);
-        console.log(error.response.data["Message: "]);
-      }
-    }
-
-    function handleMarkAll() {
-      checkAll_b.value = !checkAll_b.value;
-      items.value.forEach((obj) => {
-        obj.isChecked = checkAll_b.value;
-      });
-    }
-
-    async function handleCheckedItem(item, isChecked) {
-      item.isChecked = isChecked;
-      console.log(item.name);
-      console.log("item ischecked: " + item.isChecked);
-      console.log("is-checked: " + isChecked);
-      // console.log(item.isChecked)
-    }
-
-    async function handleDelete() {
-      const selectedItems = [];
-      console.log(items);
-      items.value.forEach((item) => {
-        if (item.isChecked) {
-          selectedItems.push(item);
+        async function handleAcceptSuggestion(item){
+            const ItemRemoveDTO = {
+                "itemName": item.name,
+                "store": item.store,
+                "fridgeId": currentFridge.fridgeId,
+                "quantity": item.quantity,
+            };
+            try{
+                await acceptSuggestion(ItemRemoveDTO);
+                await loadItemsFromCart();
+            }catch(error){
+                console.error(error)
+            }
         }
-      });
-      console.log("SELECTED ITEMS");
-      console.log(selectedItems);
-      const itemRemoveDTOList = [{}];
-      selectedItems.forEach((item) => {
-        const ItemRemoveDTO = {
-          itemName: item.name,
-          store: item.store,
-          fridgeId: currentFridge.fridgeId,
-          quantity: item.quantity,
-        };
-        itemRemoveDTOList.push(ItemRemoveDTO);
-        console.log("ITEM REMOVE DTO");
-        console.log(itemRemoveDTOList);
-      });
-      try {
-        itemRemoveDTOList.shift();
-        await deleteItemsFromShoppingList(itemRemoveDTOList);
-        loadItemsFromCart();
-        swal.fire("Deleted items", "", "success");
-      } catch (error) {
-        console.error(error);
-        swal.fire(error.response.data["Message:"], "", "error");
-      }
-    }
 
-    async function handleBuyItem(item) {
-      const selectedItems = [];
-      selectedItems.push(item);
-      console.log("SELECTED ITEMS");
-      console.log(selectedItems);
-      const itemRemoveDTOList = [{}];
-      selectedItems.forEach((item) => {
-        const ItemRemoveDTO = {
-          itemId: item.itemId,
-          fridgeId: currentFridge.fridgeId,
-        };
-        itemRemoveDTOList.push(ItemRemoveDTO);
-        console.log("ITEM REMOVE DTO");
-        console.log(itemRemoveDTOList);
-      });
-      try {
-        itemRemoveDTOList.shift();
-        await buyItemsFromShoppingList(itemRemoveDTOList);
-      } catch (error) {
-        swal.fire(error.response.data["Message:"], "", "error");
-      }
-      location.reload();
-    }
 
-    async function handleBuy() {
-      const selectedItems = [];
-      items.value.forEach((item) => {
-        if (item.isChecked) {
-          selectedItems.push(item);
+        async function handleDeleteSuggestion(item){
+            const ItemRemoveDTO = {
+                "itemName": item.name,
+                "store": item.store,
+                "fridgeId": currentFridge.fridgeId,
+                "quantity": item.quantity,
+            };
+            try{
+                console.log(ItemRemoveDTO)
+                await deleteItemFromShoppingList(ItemRemoveDTO, true);
+                await loadItemsFromCart();
+            }catch(error){
+                console.error(error)
+                console.log(error.response.data["Message: "])
+            }
         }
-      });
-      console.log("SELECTED ITEMS");
-      console.log(selectedItems);
-      const itemRemoveDTOList = [{}];
-      selectedItems.forEach((item) => {
-        const ItemRemoveDTO = {
-          itemId: item.itemId,
-          fridgeId: currentFridge.fridgeId,
+        function handleMarkAll() {
+            checkAll_b.value = !checkAll_b.value;
+            items.value.forEach((obj) => {
+                obj.isChecked = checkAll_b.value;
+            });
+        }
+
+
+        async function handleCheckedItem(item, isChecked) {
+            item.isChecked = isChecked;
+            console.log(item.name)
+            console.log("item ischecked: " + item.isChecked)
+            console.log("is-checked: "+isChecked)
+            // console.log(item.isChecked)
+        }
+
+        async function handleDelete() {
+            const selectedItems = [];
+            console.log(items);
+            items.value.forEach((item) => {
+                if (item.isChecked) {
+                    selectedItems.push(item);
+                }
+            });
+            console.log("SELECTED ITEMS")
+            console.log(selectedItems);
+            const itemRemoveDTOList = [{}];
+            selectedItems.forEach((item) => {
+                const ItemRemoveDTO = {
+                    "itemName": item.name,
+                    "store": item.store,
+                    "fridgeId": currentFridge.fridgeId,
+                    "quantity": item.quantity,
+                };
+                itemRemoveDTOList.push(ItemRemoveDTO);
+                console.log("ITEM REMOVE DTO")
+                console.log(itemRemoveDTOList);
+            });
+            try {
+                itemRemoveDTOList.shift();
+                await deleteItemsFromShoppingList(itemRemoveDTOList);
+                await loadItemsFromCart();
+                await swal.fire(
+                    'Deleted items',
+                    '',
+                    'success'
+                )
+            } catch (error) {
+                console.error(error);
+                await swal.fire(
+                    error.response.data["Message:"],
+                    '',
+                    'error'
+                )
+            }
+        }
+        async function handleBuyItem(item) {
+            const selectedItems = [];
+            selectedItems.push(item);
+            const itemRemoveDTOList = [{}];
+            const itemStatDTOList = [{}];
+
+            selectedItems.forEach((item) => {
+
+              console.log(item)
+
+              const statAddItemToFridgeDTO = {
+                "price": item.price,
+                "quantity": 1,
+                "itemName": item.name,
+                "storeName": item.store,
+                "fridgeId": currentFridge.fridgeId
+              }
+
+              const ItemRemoveDTO = {
+                "itemId": item.itemId,
+                "fridgeId": currentFridge.fridgeId,
+              };
+
+              itemStatDTOList.push(statAddItemToFridgeDTO);
+              itemRemoveDTOList.push(ItemRemoveDTO);
+            });
+
+            try {
+              itemStatDTOList.shift()
+              itemRemoveDTOList.shift();
+
+              await itemStore.statAddItemListToFridge(itemStatDTOList)
+              await buyItemsFromShoppingList(itemRemoveDTOList);
+            } catch (error) {
+              await swal.fire(
+                  error.response.data["Message:"],
+                  '',
+                  'error'
+              )
+            }
+            location.reload();
+        }
+
+        async function handleBuy() {
+            const selectedItems = [];
+            items.value.forEach((item) => {
+                if (item.isChecked) {
+                    selectedItems.push(item);
+                }
+            });
+
+            const itemRemoveDTOList = [{}];
+            const itemStatDTOList = [{}];
+
+          selectedItems.forEach((item) => {
+
+              const statAddItemToFridgeDTO = {
+                "price": item.price,
+                "quantity": 1,
+                "itemName": item.name,
+                "storeName": item.store,
+                "fridgeId": currentFridge.fridgeId
+              }
+
+
+              const ItemRemoveDTO = {
+                    "itemId": item.itemId,
+                    "fridgeId": currentFridge.fridgeId,
+                };
+
+              itemStatDTOList.push(statAddItemToFridgeDTO);
+              itemRemoveDTOList.push(ItemRemoveDTO);
+
+            });
+            try {
+              itemStatDTOList.shift();
+              itemRemoveDTOList.shift();
+
+                await itemStore.statAddItemListToFridge(itemStatDTOList)
+                await buyItemsFromShoppingList(itemRemoveDTOList);
+                await loadItemsFromCart();
+                await swal.fire(
+                    'Added to fridge',
+                    '',
+                    'success'
+                )
+            } catch (error) {
+              await swal.fire(
+                  error.response.data["Message:"],
+                  '',
+                  'error'
+              )
+            }
+        }
+
+
+        onMounted(async () => {
+            await loadItemsFromCart();
+            /**items.value.forEach((obj) => {
+                obj.isChecked = checkAll_b;
+            });*/
+            console.log(items.value)
+        });
+        // Watch the searchItems array for changes and update the isExpanded ref accordingly
+        watch(searchItems, () => {
+            console.log("searchQuery: " + !searchQuery.value.length);
+            isExpanded.value = !searchQuery.value.length;
+        });
+
+        const loadItemsFromCart = async () => {
+            try {
+                const response = await getItemsFromShoppingList(currentFridge.fridgeId);
+                items.value = response.data;
+
+                suggestedItems.value = []
+                items.value = []
+                response.data.forEach((item) => {
+                    if (item.suggestion) {
+                        suggestedItems.value.push(item);
+                        return;
+                    }
+                    items.value.push(item)
+                });
+                console.log(response.data);
+            } catch (error) {
+                console.error(error);
+            }
         };
-        itemRemoveDTOList.push(ItemRemoveDTO);
-        console.log("ITEM REMOVE DTO");
-        console.log(itemRemoveDTOList);
-      });
-      try {
-        itemRemoveDTOList.shift();
-        await buyItemsFromShoppingList(itemRemoveDTOList);
-        loadItemsFromCart();
-        swal.fire("Added to fridge", "", "success");
-      } catch (error) {
-        swal.fire(error.response.data["Message:"], "", "error");
-      }
-    }
 
-    onMounted(async () => {
-      await loadItemsFromCart();
+        async function inc_CartItemAmount(item) {
+          console.log(item);
+          const itemDTO = {
+            "name": item.name,
+            "description": item.description,
+            "store": item.store,
+            "price": item.price,
+            "image": item.image,
+            "quantity": 1,
+          };
+          const fridgeId = currentFridge.fridgeId;
 
-      console.log(items.value);
-    });
-    // Watch the searchItems array for changes and update the isExpanded ref accordingly
-    watch(searchItems, () => {
-      console.log("searchQuery: " + !searchQuery.value.length);
-      isExpanded.value = !searchQuery.value.length;
-    });
+          console.log(itemDTO);
+          event.stopPropagation();
+          addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
+              .then(async (response) => {
+                if (response !== undefined) {
+                  await loadItemsFromCart();
+                } else {
+                  console.log("Something went wrong");
+                  submitMessage.value =
+                      "Something went wrong. Please try again later.";
+                }
+              })
+              .catch((error) => {
+                console.warn("error1", error); //TODO: add exception handling
+              });
 
-    const loadItemsFromCart = async () => {
-      try {
-        const response = await getItemsFromShoppingList(currentFridge.fridgeId);
-        items.value = response.data;
 
-        suggestedItems.value = [];
-        items.value = [];
-        response.data.forEach((item) => {
-          if (item.suggestion) {
-            suggestedItems.value.push(item);
-            return;
-          }
-          items.value.push(item);
-        });
-        console.log(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+          await loadItemsFromCart();
+        }
 
-    async function inc_CartItemAmount(item) {
-      console.log(item);
-      const itemDTO = {
-        name: item.name,
-        description: item.description,
-        store: item.store,
-        price: item.price,
-        image: item.image,
-        quantity: 1,
-      };
-      const fridgeId = currentFridge.fridgeId;
+        async function dec_CartItemAmount(item) {
+            console.log(item);
+            const itemRemoveDTO = {
+                "itemName": item.name,
+                "store": item.store,
+                "fridgeId": currentFridge.fridgeId,
+                "quantity": 1,
+            };
 
-      console.log(itemDTO);
-      event.stopPropagation();
-      addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
-        .then(async (response) => {
-          if (response !== undefined) {
+            event.stopPropagation();
+            deleteItemFromShoppingList(itemRemoveDTO, false)
+                .then(async (response) => {
+                  if (response !== undefined) {
+                    await loadItemsFromCart();
+                  } else {
+                    console.log("Something went wrong");
+                    submitMessage.value =
+                        "Something went wrong. Please try again later.";
+                  }
+                })
+                .catch((error) => {
+                  console.warn("error1", error); //TODO: add exception handling
+                });
+
+            //TODO: fix so that items do not need to be loaded again continuously........
             await loadItemsFromCart();
-          } else {
-            console.log("Something went wrong");
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
-          }
-        })
-        .catch((error) => {
-          console.warn("error1", error); //TODO: add exception handling
-        });
+        }
 
-      await loadItemsFromCart();
-    }
+        async function set_CartItemAmount(newQuantity, item){
+          //TODO: add exception handling.........
+            if(newQuantity < 1) {
+              await loadItemsFromCart();
+              return;
+            }
+            console.log(newQuantity)
+            console.log(item)
 
-    async function dec_CartItemAmount(item) {
-      console.log(item);
-      const itemRemoveDTO = {
-        itemName: item.name,
-        store: item.store,
-        fridgeId: currentFridge.fridgeId,
-        quantity: 1,
-      };
+            const shoppingItemUpdateDTO = {
+              "itemId": item.itemId,
+              "fridgeId": currentFridge.fridgeId,
+              "suggestion": null,
+              "quantity": newQuantity
+            };
 
-      event.stopPropagation();
-      deleteItemFromShoppingList(itemRemoveDTO, false)
-        .then(async (response) => {
-          if (response !== undefined) {
+            event.stopPropagation();
+            updateShoppingListItem(shoppingItemUpdateDTO)
+                .then(async (response) => {
+                    if (response !== undefined) {
+                        await loadItemsFromCart();
+                    } else {
+                        console.log("Something went wrong");
+                        submitMessage.value =
+                            "Something went wrong. Please try again later.";
+                    }
+                })
+                .catch((error) => {
+                    console.warn("error1", error); //TODO: add exception handling
+                });
+
+
             await loadItemsFromCart();
-          } else {
-            console.log("Something went wrong");
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
-          }
-        })
-        .catch((error) => {
-          console.warn("error1", error); //TODO: add exception handling
-        });
+        }
 
-      //TODO: fix so that items do not need to be loaded again continuously........
-      await loadItemsFromCart();
-    }
+        const handleSubtract = async (item) => {
+            if (itemAmount.value === 1) {
+                return;
+            }
+            itemAmount.value -= 1;
+            console.log(itemAmount.value);
+        };
 
-    async function set_CartItemAmount(newQuantity, item) {
-      //TODO: add exception handling.........
-      if (newQuantity < 1) {
-        await loadItemsFromCart();
-        return;
-      }
-      console.log(newQuantity);
-      console.log(item);
+        const handleDeleteItem = async (item) => {
+            const ItemRemoveDTO = {
+                "itemName": item.name,
+                "store": item.store,
+                "fridgeId": currentFridge.fridgeId,
+                "quantity": item.quantity,
+            };
+            console.log(ItemRemoveDTO);
 
-      const shoppingItemUpdateDTO = {
-        itemId: item.itemId,
-        fridgeId: currentFridge.fridgeId,
-        suggestion: null,
-        quantity: newQuantity,
-      };
+            deleteItemFromShoppingList(ItemRemoveDTO, false)
+                .then(async (response) => {
+                    if (response !== undefined) {
+                        await loadItemsFromCart();
+                        submitMessage.value = "Succesful request";
 
-      event.stopPropagation();
-      updateShoppingListItem(shoppingItemUpdateDTO)
-        .then(async (response) => {
-          if (response !== undefined) {
-            await loadItemsFromCart();
-          } else {
-            console.log("Something went wrong");
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
-          }
-        })
-        .catch((error) => {
-          console.warn("error1", error); //TODO: add exception handling
-        });
-
-      await loadItemsFromCart();
-    }
-
-    const handleSubtract = async (item) => {
-      if (itemAmount.value === 1) {
-        return;
-      }
-      itemAmount.value -= 1;
-      console.log(itemAmount.value);
-    };
-
-    const handleDeleteItem = async (item) => {
-      const ItemRemoveDTO = {
-        itemName: item.name,
-        store: item.store,
-        fridgeId: currentFridge.fridgeId,
-        quantity: item.quantity,
-      };
-      console.log(ItemRemoveDTO);
-
-      deleteItemFromShoppingList(ItemRemoveDTO, false)
-        .then(async (response) => {
-          if (response !== undefined) {
-            loadItemsFromCart();
-            submitMessage.value = "Succesful request";
-
-            setTimeout(() => {
-              submitMessage.value = "";
-            }, 3000);
-          } else {
-            console.log("Something went wrong");
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
-            setTimeout(() => {
-              submitMessage.value = "";
-            }, 3000);
-          }
-        })
-        .catch((error) => {
-          //submitMessage.value = error.response.data["Message:"];
-          //console.log(error.response.data);
-          console.warn("error1", error); //TODO: add exception handling
-        });
-    };
+                        setTimeout(() => {
+                            submitMessage.value = "";
+                        }, 3000);
+                    } else {
+                        console.log("Something went wrong");
+                        submitMessage.value =
+                            "Something went wrong. Please try again later.";
+                        setTimeout(() => {
+                            submitMessage.value = "";
+                        }, 3000);
+                    }
+                })
+                .catch((error) => {
+                    //submitMessage.value = error.response.data["Message:"];
+                    //console.log(error.response.data);
+                    console.warn("error1", error); //TODO: add exception handling
+                });
+        };
 
     //buy item from search
     function addItemToList(item) {
       console.log(item.name + " " + item.store.name);
       search.value = false;
+      console.log("bruuh: ", item)
+
       const itemDTO = {
-        name: item.name,
-        description: item.description,
-        store: item.store.name,
-        price: item.currentPrice,
-        purchaseDate: new Date(),
-        expirationDate: new Date(),
-        image: item.image,
-        quantity: 1,
+        "name": item.name,
+        "description": item.description,
+        "store": item.store.name,
+        "price": item.current_price,
+        "purchaseDate": new Date(),
+        "expirationDate": new Date(),
+        "image": item.image,
+        "quantity": 1,
       };
       const fridgeId = currentFridge.fridgeId;
 
-      console.log(itemDTO);
+            console.log(itemDTO);
 
-      addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
-        .then(async (response) => {
-          if (response !== undefined) {
-            loadItemsFromCart();
-          } else {
-            console.log("Something went wrong");
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
-          }
-        })
-        .catch((error) => {
-          console.warn("error1", error); //TODO: add exception handling
-        });
-      event.stopPropagation();
-    }
+            addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
+                .then(async (response) => {
+                    if (response !== undefined) {
+                        await loadItemsFromCart();
+                    } else {
+                        console.log("Something went wrong");
+                        submitMessage.value =
+                            "Something went wrong. Please try again later.";
+                    }
+                })
+                .catch((error) => {
+                    console.warn("error1", error); //TODO: add exception handling
+                });
+            event.stopPropagation();
+        }
 
     function handleSearch() {
       console.log("clicked search");
-      search.value = true;
+      search.value= true;
       // filter the list of items based on the search query
       var items = async () => {
         return await getItems(searchQuery.value);
@@ -560,14 +580,11 @@ export default {
       handleAcceptSuggestion,
       handleDeleteSuggestion,
       set_CartItemAmount,
-      onDecode,
-      onLoaded,
-      toggleCamera,
-      isCameraToggled,
     };
   },
   methods: {
-    showInformation() {
+
+    showInformation(){
       //TODO: INFORMATION CART put information API in here
     },
   },
@@ -576,31 +593,26 @@ export default {
 
 <style scoped>
 * {
-  text-align: center;
+    text-align: center;
 }
-
-.scanner-container {
-  margin: auto;
-}
-
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 input[type="number"] {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
+}
+.dropper {
+    width: 70%;
+    color: white;
+    margin: auto;
+    margin-bottom: 20px;
 }
 
 .dropper {
-  width: 70%;
-  color: white;
-  margin: auto;
-  margin-bottom: 20px;
-}
 
-.dropper {
   display: flex;
   width: 100vw;
   justify-content: space-evenly;
@@ -608,10 +620,11 @@ input[type="number"] {
   margin-bottom: 20px;
   margin: auto;
   color: white;
-}
 
+
+}
 .vcpg {
-  --bg-color-header: transparent !important;
+  --bg-color-header: transparent!important;
   border: transparent;
   width: 100%;
   overflow-y: scroll;
@@ -620,208 +633,206 @@ input[type="number"] {
   border-radius: 0;
 }
 
-#backGreen {
-  background-color: #6c6c6c;
+#backGreen{
+  background-color: #6C6C6C;
 }
 
-#shopList {
+#shopList{
   color: white;
   font-size: 25px;
 }
 
-#searchbar {
+
+#searchbar{
   display: flex;
-  background-color: #6c6c6c;
+  background-color: #6C6C6C;
   margin: 0;
   border: 0;
   padding-top: 10px;
   width: 100%;
+
 }
 
-#myDropdown {
+#myDropdown{
   padding: 0;
   margin: 0;
   border: 0;
-}
 
+}
 #searchbtn {
-  border: 0;
-  padding: 0px 10px;
-  margin-top: 0px;
-  color: #fff;
-  background: #31c48d;
-  font-size: 27px;
-  font-weight: 500;
-  border: 0px solid #555;
-  border-left: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  height: 40px;
-  margin-right: 10px;
-  border-radius: 0 50px 50px 0 !important;
+    border: 0;
+    padding: 0px 10px;
+    margin-top: 0px;
+    color: #fff;
+    background: #31c48d;
+    font-size: 27px;
+    font-weight: 500;
+    border: 0px solid #555;
+    border-left: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    height: 40px;
+    margin-right: 10px;
+    border-radius: 0 50px 50px 0 !important;
 }
 
 .grey-bar {
-  background-color: #6c6c6c;
-  max-height: 35px;
+  background-color: #6C6C6C;
+  max-height : 35px;
   min-height: 35px;
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-#grey-header {
+#grey-header{
   grid-column: 2;
   color: white;
   height: 35px;
 }
 
-.information-button {
+.information-button{
   grid-column: 3;
   text-align: right;
   padding: 2px 5px;
   height: 35px;
 }
 
-#info-picture {
+#info-picture{
   height: 30px;
   width: 30px;
   cursor: pointer;
+
 }
 
-#searchbtn:hover {
+#searchbtn:hover{
   background-color: #1e7655;
   cursor: pointer;
 }
-
 #search-button {
-  width: 50px !important;
-  height: 50px !important;
+    width: 50px !important;
+    height: 50px !important;
 }
-
 .icon {
-  margin-left: 10px;
+    margin-left: 10px;
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html,
 body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  background-color: #7ec855;
-  font-family: "Roboto", sans-serif;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: #7ec855;
+    font-family: "Roboto", sans-serif;
 }
-
 .search-image {
-  width: 0.1vw;
+    width: 0.1vw;
 }
-
 .image img {
-  width: 50%;
+    width: 50%;
 }
 
 #myInput {
-  box-sizing: border-box;
-  background-position: 14px 12px;
-  background-repeat: no-repeat;
-  font-size: 16px;
-  padding: 14px 20px 12px 45px;
-  border: none;
-  border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+    background-position: 14px 12px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    padding: 14px 20px 12px 45px;
+    border: none;
+    border-bottom: 1px solid #ddd;
 }
 
 #myInput:focus {
-  outline: 3px solid #ddd;
+    outline: 3px solid #ddd;
 }
 
 .dropdown {
-  position: absolute;
-  display: inline-block;
+    position: absolute;
+    display: inline-block;
 }
 
 .dropdown-content {
-  top: 100%;
-  position: relative;
-  background-color: #f6f6f6;
-  min-width: 230px;
-  overflow: auto;
-  border: 1px solid #ddd;
-  z-index: 2;
-  text-align: center;
+    top: 100%;
+    position: relative;
+    background-color: #f6f6f6;
+    min-width: 230px;
+    overflow: auto;
+    border: 1px solid #ddd;
+    z-index: 2;
+    text-align: center;
 }
 
 .dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
 }
 
 .dropdown a:hover {
-  background-color: #ddd;
+    background-color: #ddd;
 }
 
 .show {
-  display: block;
+    display: block;
 }
 
 .shopping-cart {
-  width: 750px;
-  height: 423px;
-  margin: 80px auto;
-  background: #ffffff;
-  box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.1);
-  border-radius: 6px;
+    width: 750px;
+    height: 423px;
+    margin: 80px auto;
+    background: #ffffff;
+    box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
 
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .title {
-  height: 60px;
-  border-bottom: 1px solid #e1e8ee;
-  padding: 20px 30px;
-  color: #5e6977;
-  font-size: 18px;
-  font-weight: 400;
+    height: 60px;
+    border-bottom: 1px solid #e1e8ee;
+    padding: 20px 30px;
+    color: #5e6977;
+    font-size: 18px;
+    font-weight: 400;
 }
 
 .item {
-  padding: 20px 30px;
-  height: 150px;
-  width: 70%;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
+    padding: 20px 30px;
+    height: 150px;
+    width: 70%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
 }
 
 .item:nth-child(3) {
-  border-top: 1px solid #e1e8ee;
-  border-bottom: 1px solid #e1e8ee;
+    border-top: 1px solid #e1e8ee;
+    border-bottom: 1px solid #e1e8ee;
 }
 
 .buttons {
-  position: relative;
-  padding-top: 30px;
-  margin-right: 60px;
+    position: relative;
+    padding-top: 30px;
+    margin-right: 60px;
 }
-
 .delete-btn,
 .like-btn {
-  display: inline-block;
-  cursor: pointer;
+    display: inline-block;
+    cursor: pointer;
 }
 
 .is-active {
-  animation-name: animate;
-  animation-duration: 0.8s;
-  animation-iteration-count: 1;
-  animation-timing-function: steps(28);
-  animation-fill-mode: forwards;
+    animation-name: animate;
+    animation-duration: 0.8s;
+    animation-iteration-count: 1;
+    animation-timing-function: steps(28);
+    animation-fill-mode: forwards;
 }
 
 #forslagBlack {
@@ -836,159 +847,165 @@ body {
   height: 0px;
 }
 
+
+
 #sugTitle {
   border-radius: 20px 20px 20px 20px;
   background-color: #31c48d;
   color: white;
   font-size: 25px;
+
 }
 
 @keyframes animate {
-  0% {
-    background-position: left;
-  }
-  50% {
-    background-position: right;
-  }
-  100% {
-    background-position: right;
-  }
+    0% {
+        background-position: left;
+    }
+    50% {
+        background-position: right;
+    }
+    100% {
+        background-position: right;
+    }
 }
 
 .image {
-  margin-right: 50px;
+    margin-right: 50px;
 }
 
 .description {
-  padding-top: 10px;
-  margin-right: 60px;
-  width: 115px;
+    padding-top: 10px;
+    margin-right: 60px;
+    width: 115px;
 }
 
+
+
+
 .quantity {
-  padding-top: 20px;
-  text-align: center;
-  justify-content: center;
+    padding-top: 20px;
+    text-align: center;
+    justify-content: center;
 }
 
 .quantity input {
-  -webkit-appearance: none;
-  border: none;
-  text-align: center;
-  width: 32px;
-  font-size: 16px;
-  color: #43484d;
-  font-weight: 300;
+    -webkit-appearance: none;
+    border: none;
+    text-align: center;
+    width: 32px;
+    font-size: 16px;
+    color: #43484d;
+    font-weight: 300;
 }
 
 button[class*="btn"] {
-  width: 30px;
-  height: 30px;
-  background-color: #e1e8ee;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
+    width: 30px;
+    height: 30px;
+    background-color: #e1e8ee;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
 }
 
 .minus-btn img {
-  margin-bottom: 3px;
+    margin-bottom: 3px;
 }
 
 .plus-btn img {
-  margin-top: 2px;
+    margin-top: 2px;
 }
 
 button:focus,
 input:focus {
-  outline: 0;
+    outline: 0;
 }
 
 @media only screen and (max-width: 800px) {
-  header {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 80px;
-  }
+    header {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 80px;
+    }
 
-  .item {
-    width: 98vw;
-  }
+    .item {
+        width: 98vw;
+    }
 
-  .dropper {
-    width: 97vw;
-  }
+    .dropper {
+        width: 97vw;
+    }
 
-  header img {
-    height: 40px;
-    margin-right: 0;
-    margin-bottom: 10px;
-  }
+    header img {
+        height: 40px;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
 
-  h1 {
-    font-size: 1rem;
-    letter-spacing: 2px;
-  }
+    h1 {
+        font-size: 1rem;
+        letter-spacing: 2px;
+    }
 
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 70px;
-    background-color: #31c48d;
-    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
-  }
+    nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        height: 70px;
+        background-color: #31c48d;
+        box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+    }
 
-  nav ul {
-    display: flex;
-    justify-content: space-between;
-    width: 80%;
-  }
+    nav ul {
+        display: flex;
+        justify-content: space-between;
+        width: 80%;
+    }
 
-  nav ul li {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-  }
+    nav ul li {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+    }
 
-  nav ul li a {
-    font-size: 0.6rem;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-  }
+    nav ul li a {
+        font-size: 0.6rem;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+    }
 
-  nav ul li a .icon {
-    margin-bottom: 5px;
-    font-size: 2em;
-  }
+    nav ul li a .icon {
+        margin-bottom: 5px;
+        font-size: 2em;
+    }
 
-  nav ul li.active a {
-    color: #fcfbfb;
-    background-color: #218838;
-    border-radius: 50%;
-  }
+    nav ul li.active a {
+        color: #fcfbfb;
+        background-color: #218838;
+        border-radius: 50%;
+    }
 
-  nav ul li.active a .icon {
-    color: #fcfbfb;
-  }
+    nav ul li.active a .icon {
+        color: #fcfbfb;
+    }
 
-  .buttons {
-    position: relative;
-    margin-right: 0;
-  }
+    .buttons {
+        position: relative;
+        margin-right: 0;
+    }
 
-  .quantity {
-    padding-top: 25px;
-    margin-left: 0;
-    display: flex;
-  }
+    .quantity {
+        padding-top: 25px;
+        margin-left: 0;
+        display: flex;
+    }
 }
 
 @media only screen and (min-width: 350px) and (max-width: 480px) {
@@ -998,11 +1015,11 @@ input:focus {
     margin-right: 0;
   }
 
-  #searchbtn {
+  #searchbtn{
     display: none !important;
   }
 
-  .grey-bar {
+  .grey-bar{
     background-color: #31c48d;
   }
 
@@ -1013,9 +1030,12 @@ input:focus {
 
   #backGreen {
     background-color: #31c48d;
+
     width: 100%;
     padding: 10px 10px 10px 10px;
     border-radius: 20px 20px 20px 20px;
+
+
   }
 
   #forslagBlack {
@@ -1040,6 +1060,7 @@ input:focus {
   #sugTitle {
     border-radius: 20px 20px 20px 20px;
     background-color: #31c48d;
+
   }
 
   h1 {
@@ -1051,6 +1072,7 @@ input:focus {
     letter-spacing: 2px;
   }
 
+
   #searchbar {
     display: flex;
     position: fixed;
@@ -1058,6 +1080,7 @@ input:focus {
     width: 100%;
     z-index: 1;
     background-color: transparent;
+
   }
 
   nav {
@@ -1073,11 +1096,13 @@ input:focus {
     box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
   }
 
+
   #searchbtn {
     display: none;
   }
 
   .dropper {
+
     display: flex;
     width: 100vw;
     justify-content: space-evenly;
@@ -1087,6 +1112,8 @@ input:focus {
     margin-bottom: 20px;
     margin: auto;
     color: white;
+
+
   }
 
   .cart-control {
@@ -1105,6 +1132,8 @@ input:focus {
     max-height: 150vw;
     color: black;
     background-color: white;
+
+
   }
 
   header {
@@ -1114,11 +1143,13 @@ input:focus {
     height: 80px;
   }
 
+
   header img {
     height: 40px;
     margin-right: 0;
     margin-bottom: 10px;
   }
+
 
   nav ul {
     display: flex;
@@ -1163,6 +1194,7 @@ input:focus {
     display: flex;
   }
 
+
   .item {
     width: 100vw;
     padding: 20px 30px;
@@ -1171,6 +1203,7 @@ input:focus {
     display: flex;
     justify-content: space-between;
   }
+
 
   .quantity input {
     -webkit-appearance: none;
@@ -1182,11 +1215,13 @@ input:focus {
     font-weight: 300;
   }
 
+
+
+
   * {
     text-align: center;
     box-sizing: border-box;
   }
-
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -1197,9 +1232,14 @@ input:focus {
     -moz-appearance: textfield;
   }
 
+
+
+
+
   .icon {
     margin-left: 10px;
   }
+
 
   html,
   body {
@@ -1209,11 +1249,9 @@ input:focus {
     background-color: #7ec855;
     font-family: "Roboto", sans-serif;
   }
-
   .search-image {
     width: 0.1vw;
   }
-
   .image img {
     width: 50%;
   }
@@ -1284,6 +1322,7 @@ input:focus {
     font-weight: 400;
   }
 
+
   .item:nth-child(3) {
     border-top: 1px solid #e1e8ee;
     border-bottom: 1px solid #e1e8ee;
@@ -1311,6 +1350,9 @@ input:focus {
     width: 115px;
   }
 
+
+
+
   button[class*="btn"] {
     width: 30px;
     height: 30px;
@@ -1334,38 +1376,36 @@ input:focus {
   }
 }
 
-/* DONT DELETE, EXPERIMENTING WITH CSS*/
-/*
 @media only screen and (max-width: 350px) {
-  .item {
-    width: 100vw;
-  }
+    .item {
+        width: 100vw;
+    }
 
-  .buttons {
-    position: relative;
-    margin-top: -20px;
-    margin-right: 0;
-  }
+    .buttons {
+        position: relative;
+        margin-top: -20px;
+        margin-right: 0;
+    }
 
-  .dropper {
-    width: 100vw;
-  }
+    .dropper {
+        width: 100vw;
+    }
 
-  .quantity {
-    padding-top: 0;
-    margin-top: 5px;
-    display: block;
-  }
+    .quantity {
+        padding-top: 0;
+        margin-top: 5px;
+        display: block;
+    }
 
-  .quantity input {
-    -webkit-appearance: none;
-    border: none;
-    text-align: center;
-    width: 32px;
-    font-size: 16px;
-    color: #43484d;
-    font-weight: 300;
-  }
+    .quantity input {
+        -webkit-appearance: none;
+        border: none;
+        text-align: center;
+        width: 32px;
+        font-size: 16px;
+        color: #43484d;
+        font-weight: 300;
+    }
+
 }
- */
 </style>
