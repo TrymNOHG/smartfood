@@ -44,7 +44,7 @@
           @delete="handleDelete"
         ></CartControl>
       </div>
-      <div class="dropper" v-if="true">
+      <div class="dropper" v-if="search">
         <vue-collapsible-panel-group>
           <vue-collapsible-panel :expanded="isExpanded.value">
             <template #content>
@@ -54,7 +54,11 @@
                 :image="item.image"
                 :text="item.name"
                 :store="item.store.name"
-                :price="item.current_price"
+                :price="
+                  typeof item.current_price === 'number'
+                    ? item.current_price
+                    : item.current_price.price
+                "
                 style="text-align: center"
                 @click="addItemToList(item)"
                 @item-checked="handleItemChecked"
@@ -192,6 +196,7 @@ export default {
           if (response !== undefined) {
             searchItems.value = response.products;
             console.log(response.products);
+            search.value = true;
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -566,6 +571,10 @@ export default {
         image: item.image,
         quantity: 1,
       };
+      if (typeof item.current_price.price === "number") {
+        itemDTO.price = item.current_price.price;
+        console.log(itemDTO.price);
+      }
       const fridgeId = currentFridge.fridgeId;
 
       console.log(itemDTO);
