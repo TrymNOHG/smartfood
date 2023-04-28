@@ -22,6 +22,10 @@
           ></StreamBarcodeReader>
           Input Value: {{ text || "Nothing" }}
         </div>
+        <ImageBarcodeReader
+          @decode="onDecodeImage"
+          @error="onError"
+        ></ImageBarcodeReader>
         <div id="searchbar">
           <SearchInput
             v-model="searchQuery"
@@ -40,7 +44,7 @@
           @delete="handleDelete"
         ></CartControl>
       </div>
-      <div class="dropper" v-if="search">
+      <div class="dropper" v-if="true">
         <vue-collapsible-panel-group>
           <vue-collapsible-panel :expanded="isExpanded.value">
             <template #content>
@@ -116,6 +120,7 @@ import { getItemsFromShoppingList } from "@/services/ItemService";
 import { buyItemsFromShoppingList } from "@/services/ItemService";
 import { deleteItemsFromShoppingList } from "@/services/ItemService";
 import { getItems } from "@/services/ApiService";
+import { getItemByBarcode } from "@/services/ApiService";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
@@ -128,6 +133,7 @@ import { ref, onMounted, computed, watch } from "vue";
 import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert2";
 import { StreamBarcodeReader } from "vue-barcode-reader";
+import { ImageBarcodeReader } from "vue-barcode-reader";
 
 export default {
   name: "Cart",
@@ -143,10 +149,16 @@ export default {
     BasicCheckBox,
     CartSuggestion,
     StreamBarcodeReader,
+    ImageBarcodeReader,
   },
   computed: {
     isCurrentUserSuperUser() {
       return useFridgeStore().getIsSuperUser;
+    },
+  },
+  methods: {
+    onError(error) {
+      console.log(error);
     },
   },
   setup() {
@@ -163,6 +175,7 @@ export default {
     const suggestedItems = ref([]);
     const itemStore = useItemStore();
     let isCameraToggled = ref(false);
+    let barcode = ref("");
 
     //console log items every 3 seconds
     /**function callEveryThreeSeconds() {
@@ -170,9 +183,25 @@ export default {
         }
          setInterval(callEveryThreeSeconds, 3000);*/
 
-    function onDecode(a, b, c) {
-      console.log(a, b, c);
+    async function onDecode(a, b, c) {
       this.text = a;
+      barcode.value = a;
+      console.log(barcode.value);
+      await getItemByBarcode(barcode.value)
+        .then((response) => {
+          if (response !== undefined) {
+            searchItems.value = response.products;
+            console.log(response.products);
+          } else {
+            console.log("Something went wrong");
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+          }
+        })
+        .catch((error) => {
+          console.warn("error1", error); //TODO: add exception handling
+        });
+
       if (this.id) clearTimeout(this.id);
       this.id = setTimeout(() => {
         if (this.text === a) {
@@ -180,6 +209,12 @@ export default {
         }
       }, 5000);
     }
+
+    function onDecodeImage(result) {
+      console.log(aaaaaaa);
+      console.log(result);
+    }
+
     function onLoaded() {
       console.log("load");
     }
@@ -600,12 +635,8 @@ export default {
       toggleCamera,
       onLoaded,
       onDecode,
+      onDecodeImage,
     };
-  },
-  methods: {
-    showInformation() {
-      //TODO: INFORMATION CART put information API in here
-    },
   },
 };
 </script>

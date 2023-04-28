@@ -1,23 +1,23 @@
 <template>
   <h1>{{ $t("weekly_menu") }}</h1>
-  <meal
+  <MenuComponent
     :isSuperUser="true"
-    v-for="(meal, index) in meals"
+    v-for="(menu, index) in menus"
     :key="index"
-    :meal="meal"
+    :meal="menu"
     :currenFridge="fridge"
     @delete-item="deleteItem"
   />
 </template>
 
 <script>
-import meal from "@/components/dinner/MealComponent.vue";
+import MenuComponent from "@/components/dinner/MenuComponent.vue";
 export default {
   components: {
-    meal,
+    MenuComponent,
   },
   setup() {
-    const meals = [
+    const menus = [
       {
         description:
           "Delicious grilled chicken with a side of roasted vegetables",
@@ -153,7 +153,7 @@ export default {
     ];
 
     return {
-      meals,
+      menus,
     };
   },
 };
