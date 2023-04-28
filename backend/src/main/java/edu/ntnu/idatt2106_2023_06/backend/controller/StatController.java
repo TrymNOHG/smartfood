@@ -125,7 +125,7 @@ public class StatController {
      * @param authentication    The JWT token of the user.
      * @param fridgeId          The id of the fridge.
      */
-    @GetMapping(value="/get/fridge-stats/avg-thrown-per-day/{fridgeId}")
+    @GetMapping(value="/get/fridge-stats/money-wasted-per-day/{fridgeId}")
     @Operation(summary = "Get the average percentage of items thrown per day by users in a fridge")
     public ResponseEntity<Object> getFridgeMoneyWastedPerDay(@PathVariable Long fridgeId,
                                                            Authentication authentication) throws JsonProcessingException {

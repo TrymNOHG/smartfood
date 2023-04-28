@@ -162,17 +162,14 @@ public class StatService implements IStatService {
         Long userId = checkUserIsAuthenticated();
 
         // Stats are sorted by date (timestamp)
-        List<Statistics> stats = statRepository.findAllByUserAndStatType1(userId, 1L);
+        List<Statistics> stats = statRepository.findAllByUserAndStatType(userId, 1L);
 
-        return statisticsToJson(stats);
+        return statisticsToJsonThrowRate(stats);
     }
 
     @Override
     public String getAverageThrownPerDayFridge(long fridgeId) throws JsonProcessingException {
-        if(!jwtService.isAuthenticated()) {
-            throw new UnauthorizedException();
-        }
-        Long userId = jwtService.getAuthenticatedUserId();
+        Long userId = checkUserIsAuthenticated();
 
         // Check if user and fridge exist
         fridgeRepository.findByFridgeId(fridgeId).orElseThrow(
@@ -186,19 +183,33 @@ public class StatService implements IStatService {
         }
 
         // Stats are sorted by date (timestamp)
-        List<Statistics> stats = statRepository.findAllByFridgeAndStatType1(fridgeId, 1L);
+        List<Statistics> stats = statRepository.findAllByFridgeAndStatType(fridgeId, 1L);
 
-        return statisticsToJson(stats);
+        return statisticsToJsonThrowRate(stats);
     }
 
     @Override
     public String getMoneyWastedPerDayUser() throws JsonProcessingException {
-        return null;
+        Long userId = checkUserIsAuthenticated();
+
+        List<Statistics> stats1 = statRepository.findAllByUserAndStatType(userId, 1L);
+        List<Statistics> stats2 = statRepository.findAllByUserAndStatType(userId, 2L);
+        return statisticsToJsonMoneyWasted(stats1, stats2);
     }
 
     @Override
     public String getMoneyWastedPerDayFridge(Long fridgeId) throws JsonProcessingException {
-        return null;
+        Long userId = checkUserIsAuthenticated();
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFoundException(userId)
+        );
+        if(!fridgeService.userExistsInFridge(fridgeId, user.getUsername())) {
+            throw new UnauthorizedException(user.getUsername());
+        }
+
+        List<Statistics> stats1 = statRepository.findAllByFridgeAndStatType(fridgeId, 1L);
+        List<Statistics> stats2 = statRepository.findAllByFridgeAndStatType(fridgeId, 2L);
+        return statisticsToJsonMoneyWasted(stats1, stats2);
     }
 
     private long checkUserIsAuthenticated() {
@@ -208,7 +219,7 @@ public class StatService implements IStatService {
         return jwtService.getAuthenticatedUserId();
     }
 
-    private String statisticsToJson(List<Statistics> stats) throws JsonProcessingException {
+    private String statisticsToJsonThrowRate(List<Statistics> stats) throws JsonProcessingException {
         HashMap<String, Pair<Double, Integer>> averageThrownPerDayPair = new HashMap<>();
         for(Statistics stat : stats) {
             String date = stat.getTimestamp().toString().substring(0, 10);
@@ -233,6 +244,26 @@ public class StatService implements IStatService {
         }
 
         return objectMapper.writeValueAsString(averageThrownPerDaySortedByDate);
+    }
+
+    private String statisticsToJsonMoneyWasted(List<Statistics> stats1, List<Statistics> stats2) throws JsonProcessingException {
+        if(stats1.size() != stats2.size()) {
+            // TODO: create custom exception for this?
+            throw new RuntimeException("Stats1 and stats2 are not the same size");
+        }
+        HashMap<String, Double> moneyWasted = new HashMap<>();
+        int i = 0;
+        for(Statistics stat : stats1) {
+            String date = stat.getTimestamp().toString().substring(0, 10);
+            if(!moneyWasted.containsKey(date)) {
+                moneyWasted.put(date, stat.getStatValue() * (stats2.get(i).getStatValue()/100) * stat.getQuantity());
+            } else {
+                Double statValue = moneyWasted.get(date);
+                moneyWasted.put(date, stat.getStatValue() * (stats2.get(i).getStatValue()/100) * stat.getQuantity() + statValue);
+            }
+            i++;
+        }
+        return objectMapper.writeValueAsString(moneyWasted);
     }
 }
 

@@ -21,11 +21,11 @@ public interface StatRepository extends JpaRepository<Statistics, Long>, JpaSpec
     List<Statistics> findAllByFridge(@Param("fridgeId") Long fridgeId);
 
     @Query("SELECT s FROM Statistics s WHERE s.statType.statTypeId = :statTypeId AND s.fridge.fridgeId = :fridgeId ORDER BY s.timestamp ASC")
-    List<Statistics> findAllByFridgeAndStatType1(@Param("fridgeId") Long fridgeId, @Param("statTypeId") Long statTypeId);
+    List<Statistics> findAllByFridgeAndStatType(@Param("fridgeId") Long fridgeId, @Param("statTypeId") Long statTypeId);
 
 
     @Query("SELECT s FROM Statistics s WHERE s.statType.statTypeId = :statTypeId AND s.user.userId = :userId ORDER BY s.timestamp ASC")
-    List<Statistics> findAllByUserAndStatType1(@Param("userId") Long userId, @Param("statTypeId") Long statTypeId);
+    List<Statistics> findAllByUserAndStatType(@Param("userId") Long userId, @Param("statTypeId") Long statTypeId);
 
     /**
      * Find all statistics by user ID.
