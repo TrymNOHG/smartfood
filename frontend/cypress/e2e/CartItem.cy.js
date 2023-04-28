@@ -1,4 +1,4 @@
-describe("Adding and deleting items from fridge", () => {
+describe("Adding and deleting item from cart", () => {
   const base_url = "http://localhost:5173";
   const base_url_site = "http://localhost:5173";
   const base_url_endpoint = "http://localhost:8080";

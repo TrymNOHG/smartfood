@@ -44,6 +44,12 @@
             {{ $t("search") }}
           </button>
         </div>
+        <div v-if="isCameraToggled">
+          <StreamBarcodeReader
+            @decode="(a, b, c) => onDecode(a, b, c)"
+            @loaded="() => onLoaded()"
+          ></StreamBarcodeReader>
+        </div>
       </div>
 
       <div class="dropper" v-if="search">
@@ -97,14 +103,16 @@ import { useFridgeStore, useItemStore } from "@/store/store";
 import { ref } from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
-import { getItems } from "@/services/ApiService";
+import { getItemByBarcode, getItems } from "@/services/ApiService";
 import Swal from "sweetalert2";
 import { addItemToShoppingList } from "../services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
+import { StreamBarcodeReader } from "vue-barcode-reader";
 
 export default {
   name: "FridgeView",
   components: {
+    StreamBarcodeReader,
     FilterBar,
     SearchItem,
     SearchInput,
@@ -228,6 +236,33 @@ export default {
         //TODO: INFORMATION MEMBERS put information API in here
       }
     },
+    async onDecode(a, b, c) {
+      this.text = a;
+      barcode.value = a;
+      console.log(barcode.value);
+      await getItemByBarcode(barcode.value)
+        .then((response) => {
+          if (response !== undefined) {
+            this.searchItems.value = response.products;
+            console.log(response.products);
+            search.value = true;
+          } else {
+            console.log("Something went wrong");
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+          }
+        })
+        .catch((error) => {
+          console.warn("error1", error); //TODO: add exception handling
+        });
+
+      if (this.id) clearTimeout(this.id);
+      this.id = setTimeout(() => {
+        if (this.text === a) {
+          this.text = "";
+        }
+      }, 5000);
+    },
   },
 
   setup() {
@@ -238,10 +273,11 @@ export default {
     const search = ref(false);
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
-
-    itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
-      fridgeItems.value = items;
-    });
+    const isCameraToggled = itemStore
+      .fetchItemsFromFridgeById(fridge.fridgeId)
+      .then((items) => {
+        fridgeItems.value = items;
+      });
 
     const itemAmount = ref(1);
     const submitMessage = ref("norvegia");
@@ -444,7 +480,7 @@ input[type="text"]:not(:focus) {
   }
 }
 
-@media only screen and (min-width: 350px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 480px) {
   #searchbtn {
     display: none;
   }

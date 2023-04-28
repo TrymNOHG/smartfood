@@ -1052,7 +1052,7 @@ input:focus {
   }
 }
 
-@media only screen and (min-width: 350px) and (max-width: 480px) {
+@media only screen and (min-width: 50px) and (max-width: 480px) {
   .buttons {
     position: relative;
     margin-left: 20px;

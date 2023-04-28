@@ -1,14 +1,14 @@
 <template>
   <div class="item-header">
     <div class="item-image">
-      <img :src="item.image" alt="item picture">
+      <img :src="item.image" alt="item picture" />
     </div>
     <h1 class="item-name">{{ item.name }}</h1>
   </div>
 </template>
 
 <script>
-import {number} from "yup";
+import { number } from "yup";
 
 export default {
   name: "itemHeader",
@@ -24,11 +24,11 @@ export default {
         price: String,
         purchaseDate: String,
         quantity: number,
-        store: String
-      })
+        store: String,
+      }),
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
@@ -37,7 +37,6 @@ export default {
   align-items: center;
   margin-bottom: 20px;
 }
-
 
 .item-image {
   width: 200px;
@@ -73,7 +72,7 @@ export default {
 
   .item-image {
     width: 200px;
-    height: 150px
+    height: 150px;
   }
 
   .item-name {
@@ -81,9 +80,6 @@ export default {
   }
 }
 
-@media only screen and (min-width: 350px) and (max-width: 480px) {
-
-
-
+@media only screen and (min-width: 10px) and (max-width: 480px) {
 }
 </style>

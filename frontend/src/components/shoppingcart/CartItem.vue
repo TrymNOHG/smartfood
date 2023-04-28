@@ -1,98 +1,123 @@
 <template>
-    <div class="item">
-        <div class="product-img">
-            <div class="img-container">
-                <img :src="image" alt=""/>
-            </div>
-        </div>
-
-        <div class="description">
-            <span>{{ name }}</span>
-        </div>
-
-        <div class="quantity">
-            <button  v-if="isSuperUser" class="minus-btn" type="button" @click="handleSubtract">
-                <img src="@/assets/images/minus.svg" alt=""/>
-            </button>
-
-            <input
-                    :disabled="!isSuperUser"
-                    class="number-input"
-                    type="number"
-                    name="name"
-                    :value="quantity"
-                    @input="$emit('update:quantity', $event.target.value)"
-                    @blur="$emit('quantity-updated', $event.target.value, item)"
-            />
-
-            <button v-if="isSuperUser" class="plus-btn" type="button" @click="handleAdd">
-                <img src="@/assets/images/plus.svg" alt=""/>
-            </button>
-        </div>
-
-        <div class="buttons" >
-            <font-awesome-icon class="btn-cart" v-if="isSuperUser" icon="fa-solid fa-shopping-cart" @click="handleBuyItem"/>
-            <font-awesome-icon class="btn-trash" icon="fa-solid fa-trash" @click="handleDeleteItem"/>
-            <input type="checkbox" class="btn-checkbox" v-if="isSuperUser" :checked="item.isChecked" @change="handleCheckedChange"/>
-        </div>
+  <div class="item">
+    <div class="product-img">
+      <div class="img-container">
+        <img :src="image" alt="" />
+      </div>
     </div>
+
+    <div class="description">
+      <span>{{ name }}</span>
+    </div>
+
+    <div class="quantity">
+      <button
+        v-if="isSuperUser"
+        class="minus-btn"
+        type="button"
+        @click="handleSubtract"
+      >
+        <img src="@/assets/images/minus.svg" alt="" />
+      </button>
+
+      <input
+        :disabled="!isSuperUser"
+        class="number-input"
+        type="number"
+        name="name"
+        :value="quantity"
+        @input="$emit('update:quantity', $event.target.value)"
+        @blur="$emit('quantity-updated', $event.target.value, item)"
+      />
+
+      <button
+        v-if="isSuperUser"
+        class="plus-btn"
+        type="button"
+        @click="handleAdd"
+      >
+        <img src="@/assets/images/plus.svg" alt="" />
+      </button>
+    </div>
+
+    <div class="buttons">
+      <font-awesome-icon
+        class="btn-cart"
+        v-if="isSuperUser"
+        icon="fa-solid fa-shopping-cart"
+        @click="handleBuyItem"
+      />
+      <font-awesome-icon
+        class="btn-trash"
+        icon="fa-solid fa-trash"
+        @click="handleDeleteItem"
+      />
+      <input
+        type="checkbox"
+        class="btn-checkbox"
+        v-if="isSuperUser"
+        :checked="item.isChecked"
+        @change="handleCheckedChange"
+      />
+    </div>
+  </div>
 </template>
 
 <script>
-import {reactive, watch} from "vue";
+import { reactive, watch } from "vue";
 import BasicCheckbox from "@/components/basic-components/BasicCheckbox.vue";
 
 export default {
-    props: {
-        image: {
-            type: String,
-            required: true,
-        },
-        item: {
-            type: Object,
-            required: true,
-        },
-        name: {
-            type: String,
-            required: true,
-        },
-        quantity: {
-            type: Number,
-            required: true,
-        },
-        isSuperUser:{
-            type: Boolean,
-            required: true,
-        },/**
+  props: {
+    image: {
+      type: String,
+      required: true,
+    },
+    item: {
+      type: Object,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+    },
+    isSuperUser: {
+      type: Boolean,
+      required: true,
+    } /**
          isChecked: {
             type: Boolean,
             required: true
-        },*/
+        },*/,
+  },
+  data() {
+    return {
+      inputValue: "",
+    };
+  },
+  methods: {
+    handleAdd() {
+      this.$emit("add");
     },
-    data() {
-        return {
-            inputValue: "",
-        };
+    handleSubtract() {
+      this.$emit("subtract");
     },
-    methods: {
-        handleAdd() {
-            this.$emit("add");
-        },
-        handleSubtract() {
-            this.$emit("subtract");
-        },
-        handleDeleteItem() {
-            this.$emit("delete-item");
-        },
-        handleCheckedChange(event) {
-            //event.target.checked
-            this.$emit("handle-checked", this.item, event.target.checked);
-        },
-        handleBuyItem(){
-            this.$emit("handle-buy", this.item)
-        }
+    handleDeleteItem() {
+      this.$emit("delete-item");
     },
-    components: {BasicCheckbox},
+    handleCheckedChange(event) {
+      //event.target.checked
+      this.$emit("handle-checked", this.item, event.target.checked);
+    },
+    handleBuyItem() {
+      this.$emit("handle-buy", this.item);
+    },
+  },
+  components: { BasicCheckbox },
 };
 </script>
 <style scoped>
@@ -117,43 +142,35 @@ export default {
   object-fit: contain;
 }
 
-
 .item:nth-child(3) {
-    border-top: 1px solid #e1e8ee;
-    border-bottom: 1px solid #e1e8ee;
+  border-top: 1px solid #e1e8ee;
+  border-bottom: 1px solid #e1e8ee;
 }
 
-
-
-.buttons .btn{
-    margin: 0 15px 0 15px;
+.buttons .btn {
+  margin: 0 15px 0 15px;
 }
 
-.btn:hover{
-    cursor: pointer;
-    scale: 1.3;
+.btn:hover {
+  cursor: pointer;
+  scale: 1.3;
 }
-
 
 @keyframes animate {
-    0% {
-        background-position: left;
-    }
-    50% {
-        background-position: right;
-    }
-    100% {
-        background-position: right;
-    }
+  0% {
+    background-position: left;
+  }
+  50% {
+    background-position: right;
+  }
+  100% {
+    background-position: right;
+  }
 }
 
 .image {
-    margin-right: 50px;
+  margin-right: 50px;
 }
-
-
-
-
 
 .description {
   position: center;
@@ -168,7 +185,6 @@ export default {
   color: black;
 }
 
-
 .description span:last-child {
   font-weight: 10;
   margin-top: 8px;
@@ -177,53 +193,53 @@ export default {
   margin-bottom: 5px;
 }
 .quantity {
-    display: flex;
-    align-items: center;
-    padding-top: 20px;
-    text-align: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  padding-top: 20px;
+  text-align: center;
+  justify-content: center;
 }
 
 .quantity input {
-    -webkit-appearance: none;
-    border: none;
-    text-align: center;
-    width: 32px;
-    font-size: 16px;
-    color: #43484d;
-    font-weight: 300;
+  -webkit-appearance: none;
+  border: none;
+  text-align: center;
+  width: 32px;
+  font-size: 16px;
+  color: #43484d;
+  font-weight: 300;
 }
 
 button[class*="btn"] {
-    width: 30px;
-    height: 30px;
-    background-color: #e1e8ee;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
+  width: 30px;
+  height: 30px;
+  background-color: #e1e8ee;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
 }
 
 .minus-btn img {
-    margin-bottom: 3px;
+  margin-bottom: 3px;
 }
 
 .plus-btn img {
-    margin-top: 2px;
+  margin-top: 2px;
 }
 
 button:focus,
 input:focus {
-    outline: 0;
+  outline: 0;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 input[type="number"] {
-    -moz-appearance: textfield;
+  -moz-appearance: textfield;
 }
 
 .product-img {
@@ -232,10 +248,7 @@ input[type="number"] {
   object-fit: contain;
 }
 
-
-
-.btn-cart{
-
+.btn-cart {
 }
 .img-container {
   max-width: 100%;
@@ -252,12 +265,10 @@ input[type="number"] {
   object-fit: contain;
 }
 
-
 .item:nth-child(3) {
   border-top: 1px solid #e1e8ee;
   border-bottom: 1px solid #e1e8ee;
 }
-
 
 .delete-btn,
 .like-btn {
@@ -294,9 +305,6 @@ input[type="number"] {
 .image {
   margin-right: 50px;
 }
-
-
-
 
 .quantity {
   display: flex;
@@ -365,33 +373,28 @@ input[type="number"] {
   max-height: 100%; /* ensure the image does not exceed the container height */
 }
 
-
-
-
-
 .delete-btn {
   display: none;
 }
 
 .product-img img {
   height: 100px;
-  width: 100px;/* set a fixed width for the containing div */
-  object-fit: contain/* set a fixed height for the containing div */
+  width: 100px; /* set a fixed width for the containing div */
+  object-fit: contain; /* set a fixed height for the containing div */
 }
 
 .item {
   display: flex !important;
-  height: 180px ;
+  height: 180px;
   padding-left: 10px !important;
   padding-right: 10px !important;
   margin-top: 10px;
-
 }
 
 .description span:first-child {
   width: 175px;
 }
-.buttons{
+.buttons {
   display: flex;
   justify-content: center;
   align-content: center;
@@ -400,32 +403,29 @@ input[type="number"] {
   padding-right: 5px;
   width: 40px;
   scale: 1.5;
-
 }
 
-.btn-checkbox{
+.btn-checkbox {
   margin: 10px;
 }
 
-.btn-trash{
-  margin: 10px;
-
-}
-
-.btn-cart{
+.btn-trash {
   margin: 10px;
 }
 
-#check{
+.btn-cart {
+  margin: 10px;
+}
+
+#check {
   scale: 1.5;
 }
 
-
-.quantity{
+.quantity {
   padding: 5px;
 }
 
-.number-input{
+.number-input {
   background-color: transparent;
   margin-top: 10px;
   margin-left: 0px;
@@ -443,26 +443,24 @@ input[type="number"] {
   max-height: 150px;
 }
 
-
 @media only screen and (max-width: 800px) {
-    .product-img {
-        width: 100px; /* set a fixed width for the containing div */
-        height: 100px; /* set a fixed height for the containing div */
-    }
+  .product-img {
+    width: 100px; /* set a fixed width for the containing div */
+    height: 100px; /* set a fixed height for the containing div */
+  }
 
-    .img-container {
-        max-width: 100%; /* ensure the image does not exceed the container width */
-        max-height: 100%; /* ensure the image does not exceed the container height */
-        overflow: hidden; /* hide any overflow beyond the container */
-    }
+  .img-container {
+    max-width: 100%; /* ensure the image does not exceed the container width */
+    max-height: 100%; /* ensure the image does not exceed the container height */
+    overflow: hidden; /* hide any overflow beyond the container */
+  }
 
-    .img-container img {
-        width: auto; /* allow the image to maintain its aspect ratio */
-        height: auto; /* allow the image to maintain its aspect ratio */
-        max-width: 100%; /* ensure the image does not exceed the container width */
-        max-height: 100%; /* ensure the image does not exceed the container height */
-    }
-
+  .img-container img {
+    width: auto; /* allow the image to maintain its aspect ratio */
+    height: auto; /* allow the image to maintain its aspect ratio */
+    max-width: 100%; /* ensure the image does not exceed the container width */
+    max-height: 100%; /* ensure the image does not exceed the container height */
+  }
 
   .delete-btn {
     display: none;
@@ -475,22 +473,20 @@ input[type="number"] {
     display: flex;
     justify-content: space-between;
   }
-
-
 }
 
-@media only screen and (min-width: 350px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 480px) {
   .product-img {
     width: 100px;
     height: 100px;
     object-fit: contain;
   }
 
-  .btn-trash{
+  .btn-trash {
     display: none;
   }
 
-  .btn-cart{
+  .btn-cart {
     display: none;
   }
   .img-container {
@@ -565,7 +561,6 @@ input[type="number"] {
   }
 
   .description {
-
     position: relative;
     display: flex;
     flex-direction: column;
@@ -574,9 +569,6 @@ input[type="number"] {
     margin-right: 0px;
     width: calc(50%);
   }
-
-
-
 
   .quantity {
     display: flex;
@@ -646,9 +638,7 @@ input[type="number"] {
   }
 
   .description {
-
   }
-
 
   .delete-btn {
     display: none;
@@ -664,7 +654,7 @@ input[type="number"] {
   .product-img img {
     width: 45px; /* set a fixed width for the containing div */
     height: 50px;
-    object-fit: contain/* set a fixed height for the containing div */
+    object-fit: contain; /* set a fixed height for the containing div */
   }
 
   .item {
@@ -673,49 +663,45 @@ input[type="number"] {
     padding-left: 10px !important;
     padding-right: 10px !important;
     margin-top: 10px;
-
   }
 
-  .description{
+  .description {
     width: 175px !important;
-
   }
 
-  .buttons{
+  .buttons {
     display: inline-block;
     padding-left: 10px;
     padding-right: 5px;
     width: 40px;
     padding-top: 28px;
     scale: 1;
-
   }
 
-  .btn-checkbox{
+  .btn-checkbox {
     margin: 0px;
   }
 
-  .btn-trash{
-    margin: 0px;
-
-  }
-
-  .btn-cart{
+  .btn-trash {
     margin: 0px;
   }
 
-  #check{
+  .btn-cart {
+    margin: 0px;
+  }
+
+  #check {
     scale: 1.5;
   }
 
-  .product-img{
+  .product-img {
     padding-top: 15px;
   }
-  .quantity{
+  .quantity {
     padding: 5px;
   }
 
-  .number-input{
+  .number-input {
     background-color: transparent;
     margin-top: 10px;
     margin-left: 0px;
@@ -728,33 +714,33 @@ input[type="number"] {
     max-height: 150px; /* ensure the image does not exceed the container height */
   }
 
-    .img-container img {
-        max-width: 150px;
-        max-height: 150px;
-    }
+  .img-container img {
+    max-width: 150px;
+    max-height: 150px;
+  }
 }
 
 @media only screen and (max-width: 350px) {
-    .product-img img {
-        margin-top: 35px;
-        width: 20px; /* set a fixed width for the containing div */
-        height: 30px; /* set a fixed height for the containing div */
-    }
+  .product-img img {
+    margin-top: 35px;
+    width: 20px; /* set a fixed width for the containing div */
+    height: 30px; /* set a fixed height for the containing div */
+  }
 
-    .img-container {
-        max-width: 100px; /* ensure the image does not exceed the container width */
-        max-height: 100px; /* ensure the image does not exceed the container height */
-    }
+  .img-container {
+    max-width: 100px; /* ensure the image does not exceed the container width */
+    max-height: 100px; /* ensure the image does not exceed the container height */
+  }
 
-    .img-container img {
-        max-width: 100px;
-        max-height: 100px;
-    }
+  .img-container img {
+    max-width: 100px;
+    max-height: 100px;
+  }
 
-    .img-container {
-        max-width: 100%; /* ensure the image does not exceed the container width */
-        max-height: 100%; /* ensure the image does not exceed the container height */
-        overflow: hidden; /* hide any overflow beyond the container */
-    }
+  .img-container {
+    max-width: 100%; /* ensure the image does not exceed the container width */
+    max-height: 100%; /* ensure the image does not exceed the container height */
+    overflow: hidden; /* hide any overflow beyond the container */
+  }
 }
 </style>

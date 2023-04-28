@@ -1,20 +1,31 @@
 <template>
   <div class="cards-container">
-    <router-link to="/dinner/meal" @click="storeCurrentItem(meal)" id="item-link">
+    <router-link
+      to="/dinner/meal"
+      @click="storeCurrentItem(meal)"
+      id="item-link"
+    >
       <div class="card">
         <div class="front-side">
-          <img :src="meal.image" alt="item picture">
+          <img :src="meal.image" alt="item picture" />
         </div>
         <div class="back-side">
           <div class="item-detail">
             <div class="item-name">
               <h2 id="item-name-h2">{{ meal.name }}</h2>
-              <br>
+              <br />
             </div>
-            <h4 id="item-price">{{ $t('price') }} {{ meal.price }}; kr</h4>
-            <button v-if="isSuperUser" class="delete-btn" @click.prevent="deleteCard(meal)">
+            <h4 id="item-price">{{ $t("price") }} {{ meal.price }}; kr</h4>
+            <button
+              v-if="isSuperUser"
+              class="delete-btn"
+              @click.prevent="deleteCard(meal)"
+            >
               <span>
-                <font-awesome-icon icon="fa-solid fa-trash" class="icon delete-icon" />
+                <font-awesome-icon
+                  icon="fa-solid fa-trash"
+                  class="icon delete-icon"
+                />
               </span>
             </button>
           </div>
@@ -25,15 +36,15 @@
 </template>
 
 <script>
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {number} from "yup";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { number } from "yup";
 import swal from "sweetalert2";
-import {useItemStore} from "@/store/store";
+import { useItemStore } from "@/store/store";
 import Swal from "sweetalert2";
 
 export default {
   name: "BasicFridgeItem",
-  components: {FontAwesomeIcon},
+  components: { FontAwesomeIcon },
 
   props: {
     meal: {
@@ -43,98 +54,96 @@ export default {
         image: String,
         name: String,
         price: String,
-      })
+      }),
     },
     isSuperUser: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   methods: {
-
-    storeCurrentItem(item){
+    storeCurrentItem(item) {
       this.itemStore.setCurrentItem(item);
     },
 
     deleteCard(item) {
       let deletePercentage = null;
 
-      swal.fire({
-        title: this.$t('confirm_title'),
-        text: this.$t('confirm_text'),
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#4dce38',
-        cancelButtonColor: '#d33',
-        confirmButtonText: this.$t('confirm_button'),
-        cancelButtonText: this.$t('cancel_button'),
-        customClass: {
-          container: 'my-swal-dialog-container'
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire({
-            html: `
+      swal
+        .fire({
+          title: this.$t("confirm_title"),
+          text: this.$t("confirm_text"),
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#4dce38",
+          cancelButtonColor: "#d33",
+          confirmButtonText: this.$t("confirm_button"),
+          cancelButtonText: this.$t("cancel_button"),
+          customClass: {
+            container: "my-swal-dialog-container",
+          },
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            Swal.fire({
+              html: `
           <div class="swal2-content">
             <div class="swal2-text">
-              ${this.$t('Percent-wise, how much was left?')}
+              ${this.$t("Percent-wise, how much was left?")}
             </div>
             <div id="range-value-text" class="swal2-text"></div>
           </div>
         `,
-            input: 'range',
-            inputAttributes: {
-              min: 0,
-              max: 100,
-              step: 1
-            },
-            didOpen: () => {
-              deletePercentage = Swal.getInput()
-              const inputNumber = Swal.getHtmlContainer().querySelector('#range-value')
-              const rangeValueText = Swal.getHtmlContainer().querySelector('#range-value-text')
+              input: "range",
+              inputAttributes: {
+                min: 0,
+                max: 100,
+                step: 1,
+              },
+              didOpen: () => {
+                deletePercentage = Swal.getInput();
+                const inputNumber =
+                  Swal.getHtmlContainer().querySelector("#range-value");
+                const rangeValueText =
+                  Swal.getHtmlContainer().querySelector("#range-value-text");
 
-              deletePercentage.nextElementSibling.style.display = 'none'
-              deletePercentage.style.width = '100%'
+                deletePercentage.nextElementSibling.style.display = "none";
+                deletePercentage.style.width = "100%";
 
-              deletePercentage.addEventListener('input', () => {
-                inputNumber.value = deletePercentage.value
-                rangeValueText.innerText = `${deletePercentage.value}%`
-              })
-            },
-            showCancelButton: true,
-            confirmButtonText: this.$t('confirm_button'),
-            cancelButtonText: this.$t('cancel_button'),
-            customClass: {
-              container: 'my-swal-dialog-container'
-            }
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.$emit('delete-item', item, deletePercentage.value);
-              swal.fire(
-                  this.$t('success_message'),
-                  '',
-                  'success'
-              )
-            }
-          })
-        }
-      })
-    }
+                deletePercentage.addEventListener("input", () => {
+                  inputNumber.value = deletePercentage.value;
+                  rangeValueText.innerText = `${deletePercentage.value}%`;
+                });
+              },
+              showCancelButton: true,
+              confirmButtonText: this.$t("confirm_button"),
+              cancelButtonText: this.$t("cancel_button"),
+              customClass: {
+                container: "my-swal-dialog-container",
+              },
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.$emit("delete-item", item, deletePercentage.value);
+                swal.fire(this.$t("success_message"), "", "success");
+              }
+            });
+          }
+        });
+    },
   },
 
   setup(props) {
-    console.log(props.meal)
-    const itemStore = useItemStore()
+    console.log(props.meal);
+    const itemStore = useItemStore();
     return {
       itemStore,
-    }
+    };
   },
-}
+};
 </script>
 
 <style scoped>
-
 .cards-container {
   display: flex;
   flex-wrap: wrap;
@@ -157,7 +166,7 @@ img {
   width: 320px;
   height: 225px;
   perspective: 600px;
-  transition: .5s;
+  transition: 0.5s;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
@@ -229,7 +238,7 @@ img {
 }
 
 @media (max-width: 650px) {
-  body{
+  body {
     height: 80px;
   }
   .card {
@@ -247,7 +256,6 @@ img {
     font-weight: normal;
     font-size: 10px;
   }
-
 
   .front-side {
     display: flex;
@@ -272,7 +280,7 @@ img {
     top: 13px;
     right: 2px;
   }
-  .icon{
+  .icon {
     color: black;
     font-size: 15px;
   }
@@ -311,13 +319,12 @@ img {
   }
 }
 
-@media only screen and (min-width: 350px) and (max-width: 480px) {
-  body{
+@media only screen and (min-width: 10px) and (max-width: 480px) {
+  body {
     height: 100%;
   }
 
-  .cards-container{
-
+  .cards-container {
     height: 100px;
     margin: 10px;
     padding-top: 10px;
@@ -332,14 +339,12 @@ img {
     border: 2px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
-
   }
 
   h3 {
     font-weight: normal;
     font-size: 10px;
   }
-
 
   .front-side {
     display: flex;
@@ -365,7 +370,7 @@ img {
     top: 5px;
     right: 5px;
   }
-  .icon{
+  .icon {
     color: black;
     font-size: 15px;
     margin-right: 5px;
@@ -383,7 +388,6 @@ img {
   .card:hover .back-side {
     transform: rotateY(0deg);
   }
-
 
   .card .back-side {
     margin-right: auto;
@@ -405,5 +409,4 @@ img {
     display: none;
   }
 }
-
 </style>

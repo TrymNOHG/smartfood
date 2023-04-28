@@ -12,7 +12,7 @@
         <div class="back-side">
           <div class="item-detail">
             <div class="item-name">
-              <h2 id="item-name-h2">{{ days.day }}</h2>
+              <h2 id="item-name-h2">{{ meal.day }}</h2>
               <h2 id="item-name-h2">{{ meal.name }}</h2>
               <br />
             </div>
@@ -56,10 +56,6 @@ export default {
         name: String,
         price: String,
       }),
-    },
-    days: {
-      type: Object,
-      required: true,
     },
     isSuperUser: {
       type: Boolean,
@@ -324,7 +320,7 @@ img {
   }
 }
 
-@media only screen and (min-width: 350px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 480px) {
   body {
     height: 100%;
   }
