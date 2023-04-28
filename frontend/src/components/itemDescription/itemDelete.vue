@@ -27,8 +27,7 @@ export default {
 
   methods: {
     deleteItem(item){
-
-      this.$emit('delete-item', item);
+      this.$emit('delete-item', item, this.sliderValue);
     }
   },
 

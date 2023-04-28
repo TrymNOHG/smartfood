@@ -78,8 +78,6 @@
                     >
                     </CartSuggestion>
                 </div>
-
-
     </div>
 </template>
 
@@ -103,7 +101,7 @@ import CartItem from "@/components/shoppingcart/CartItem.vue";
 import CartSuggestion from "@/components/shoppingcart/CartSuggestion.vue";
 import CartControl from "@/components/shoppingcart/CartControl.vue";
 import BasicCheckBox from "@/components/basic-components/BasicCheckbox.vue";
-import {useLoggedInStore, useFridgeStore} from "@/store/store";
+import {useLoggedInStore, useFridgeStore, useItemStore} from "@/store/store";
 import {ref, onMounted, computed, watch} from "vue";
 import 'sweetalert2/dist/sweetalert2.min.css';
 import swal from 'sweetalert2';
@@ -139,6 +137,7 @@ export default {
     const currentFridge = useFridgeStore().getCurrentFridge;
     let checkAll_b = ref(false);
     const suggestedItems = ref([]);
+    const itemStore = useItemStore();
 
         //console log items every 3 seconds
         /**function callEveryThreeSeconds() {
@@ -148,10 +147,10 @@ export default {
 
         async function handleAcceptSuggestion(item){
             const ItemRemoveDTO = {
-                itemName: item.name,
-                store: item.store,
-                fridgeId: currentFridge.fridgeId,
-                quantity: item.quantity,
+                "itemName": item.name,
+                "store": item.store,
+                "fridgeId": currentFridge.fridgeId,
+                "quantity": item.quantity,
             };
             try{
                 await acceptSuggestion(ItemRemoveDTO);
@@ -164,10 +163,10 @@ export default {
 
         async function handleDeleteSuggestion(item){
             const ItemRemoveDTO = {
-                itemName: item.name,
-                store: item.store,
-                fridgeId: currentFridge.fridgeId,
-                quantity: item.quantity,
+                "itemName": item.name,
+                "store": item.store,
+                "fridgeId": currentFridge.fridgeId,
+                "quantity": item.quantity,
             };
             try{
                 console.log(ItemRemoveDTO)
@@ -207,10 +206,10 @@ export default {
             const itemRemoveDTOList = [{}];
             selectedItems.forEach((item) => {
                 const ItemRemoveDTO = {
-                    itemName: item.name,
-                    store: item.store,
-                    fridgeId: currentFridge.fridgeId,
-                    quantity: item.quantity,
+                    "itemName": item.name,
+                    "store": item.store,
+                    "fridgeId": currentFridge.fridgeId,
+                    "quantity": item.quantity,
                 };
                 itemRemoveDTOList.push(ItemRemoveDTO);
                 console.log("ITEM REMOVE DTO")
@@ -219,15 +218,15 @@ export default {
             try {
                 itemRemoveDTOList.shift();
                 await deleteItemsFromShoppingList(itemRemoveDTOList);
-                loadItemsFromCart();
-                swal.fire(
-                  'Deleted items',
-                  '',
-                  'success'
+                await loadItemsFromCart();
+                await swal.fire(
+                    'Deleted items',
+                    '',
+                    'success'
                 )
             } catch (error) {
                 console.error(error);
-                swal.fire(
+                await swal.fire(
                     error.response.data["Message:"],
                     '',
                     'error'
@@ -237,23 +236,38 @@ export default {
         async function handleBuyItem(item) {
             const selectedItems = [];
             selectedItems.push(item);
-            console.log("SELECTED ITEMS")
-            console.log(selectedItems);
             const itemRemoveDTOList = [{}];
+            const itemStatDTOList = [{}];
+
             selectedItems.forEach((item) => {
-                const ItemRemoveDTO = {
-                    itemId: item.itemId,
-                    fridgeId: currentFridge.fridgeId,
-                };
-                itemRemoveDTOList.push(ItemRemoveDTO);
-                console.log("ITEM REMOVE DTO")
-                console.log(itemRemoveDTOList);
+
+              console.log(item)
+
+              const statAddItemToFridgeDTO = {
+                "price": item.price,
+                "quantity": 1,
+                "itemName": item.name,
+                "storeName": item.store,
+                "fridgeId": currentFridge.fridgeId
+              }
+
+              const ItemRemoveDTO = {
+                "itemId": item.itemId,
+                "fridgeId": currentFridge.fridgeId,
+              };
+
+              itemStatDTOList.push(statAddItemToFridgeDTO);
+              itemRemoveDTOList.push(ItemRemoveDTO);
             });
+
             try {
-                itemRemoveDTOList.shift();
-                await buyItemsFromShoppingList(itemRemoveDTOList);
+              itemStatDTOList.shift()
+              itemRemoveDTOList.shift();
+
+              await itemStore.statAddItemListToFridge(itemStatDTOList)
+              await buyItemsFromShoppingList(itemRemoveDTOList);
             } catch (error) {
-              swal.fire(
+              await swal.fire(
                   error.response.data["Message:"],
                   '',
                   'error'
@@ -269,29 +283,44 @@ export default {
                     selectedItems.push(item);
                 }
             });
-            console.log("SELECTED ITEMS")
-            console.log(selectedItems);
+
             const itemRemoveDTOList = [{}];
-            selectedItems.forEach((item) => {
-                const ItemRemoveDTO = {
-                    itemId: item.itemId,
-                    fridgeId: currentFridge.fridgeId,
+            const itemStatDTOList = [{}];
+
+          selectedItems.forEach((item) => {
+
+              const statAddItemToFridgeDTO = {
+                "price": item.price,
+                "quantity": 1,
+                "itemName": item.name,
+                "storeName": item.store,
+                "fridgeId": currentFridge.fridgeId
+              }
+
+
+              const ItemRemoveDTO = {
+                    "itemId": item.itemId,
+                    "fridgeId": currentFridge.fridgeId,
                 };
-                itemRemoveDTOList.push(ItemRemoveDTO);
-                console.log("ITEM REMOVE DTO")
-                console.log(itemRemoveDTOList);
+
+              itemStatDTOList.push(statAddItemToFridgeDTO);
+              itemRemoveDTOList.push(ItemRemoveDTO);
+
             });
             try {
-                itemRemoveDTOList.shift();
+              itemStatDTOList.shift();
+              itemRemoveDTOList.shift();
+
+                await itemStore.statAddItemListToFridge(itemStatDTOList)
                 await buyItemsFromShoppingList(itemRemoveDTOList);
-                loadItemsFromCart();
-                swal.fire(
-                  'Added to fridge',
-                  '',
-                  'success'
+                await loadItemsFromCart();
+                await swal.fire(
+                    'Added to fridge',
+                    '',
+                    'success'
                 )
             } catch (error) {
-              swal.fire(
+              await swal.fire(
                   error.response.data["Message:"],
                   '',
                   'error'
@@ -336,12 +365,12 @@ export default {
         async function inc_CartItemAmount(item) {
           console.log(item);
           const itemDTO = {
-            name: item.name,
-            description: item.description,
-            store: item.store,
-            price: item.price,
-            image: item.image,
-            quantity: 1,
+            "name": item.name,
+            "description": item.description,
+            "store": item.store,
+            "price": item.price,
+            "image": item.image,
+            "quantity": 1,
           };
           const fridgeId = currentFridge.fridgeId;
 
@@ -368,10 +397,10 @@ export default {
         async function dec_CartItemAmount(item) {
             console.log(item);
             const itemRemoveDTO = {
-                itemName: item.name,
-                store: item.store,
-                fridgeId: currentFridge.fridgeId,
-                quantity: 1,
+                "itemName": item.name,
+                "store": item.store,
+                "fridgeId": currentFridge.fridgeId,
+                "quantity": 1,
             };
 
             event.stopPropagation();
@@ -403,10 +432,10 @@ export default {
             console.log(item)
 
             const shoppingItemUpdateDTO = {
-              itemId: item.itemId,
-              fridgeId: currentFridge.fridgeId,
-              suggestion: null,
-              quantity: newQuantity
+              "itemId": item.itemId,
+              "fridgeId": currentFridge.fridgeId,
+              "suggestion": null,
+              "quantity": newQuantity
             };
 
             event.stopPropagation();
@@ -438,17 +467,17 @@ export default {
 
         const handleDeleteItem = async (item) => {
             const ItemRemoveDTO = {
-                itemName: item.name,
-                store: item.store,
-                fridgeId: currentFridge.fridgeId,
-                quantity: item.quantity,
+                "itemName": item.name,
+                "store": item.store,
+                "fridgeId": currentFridge.fridgeId,
+                "quantity": item.quantity,
             };
             console.log(ItemRemoveDTO);
 
             deleteItemFromShoppingList(ItemRemoveDTO, false)
                 .then(async (response) => {
                     if (response !== undefined) {
-                        loadItemsFromCart();
+                        await loadItemsFromCart();
                         submitMessage.value = "Succesful request";
 
                         setTimeout(() => {
@@ -474,15 +503,17 @@ export default {
     function addItemToList(item) {
       console.log(item.name + " " + item.store.name);
       search.value = false;
+      console.log("bruuh: ", item)
+
       const itemDTO = {
-        name: item.name,
-        description: item.description,
-        store: item.store.name,
-        price: item.currentPrice,
-        purchaseDate: new Date(),
-        expirationDate: new Date(),
-        image: item.image,
-        quantity: 1,
+        "name": item.name,
+        "description": item.description,
+        "store": item.store.name,
+        "price": item.current_price,
+        "purchaseDate": new Date(),
+        "expirationDate": new Date(),
+        "image": item.image,
+        "quantity": 1,
       };
       const fridgeId = currentFridge.fridgeId;
 
@@ -491,7 +522,7 @@ export default {
             addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
                 .then(async (response) => {
                     if (response !== undefined) {
-                        loadItemsFromCart();
+                        await loadItemsFromCart();
                     } else {
                         console.log("Something went wrong");
                         submitMessage.value =

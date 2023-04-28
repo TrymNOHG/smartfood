@@ -165,6 +165,14 @@ export const useItemStore = defineStore('itemStore', {
             await addItemStats(statAddItemToFridgeDTO);
         },
 
+        async statAddItemListToFridge(statItemListDTO) {
+            for (const statItemListDTOElement of statItemListDTO) {
+                console.log(statItemListDTOElement)
+                await addItemStats(statItemListDTOElement)
+            }
+        },
+
+
         setCurrentItem(item) {
             this.currentItem = item;
         },
