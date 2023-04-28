@@ -67,7 +67,7 @@ describe('Profile', () => {
 
     it('The fullName values should be visible',  () => {
         cy.get('#fullName')
-            .should('have.text', 'Fornavn og etternavn: Tomas Beranek');
+            .should('have.text', 'Navn: Tomas Beranek');
     })
 
     it('The username values should be visible',  () => {
@@ -106,7 +106,7 @@ describe('Profile', () => {
         cy.wait('@updateUser')
 
         cy.get('#fullName')
-            .should('have.text', 'Fornavn og etternavn: Tomasino Beranek');
+            .should('have.text', 'Navn: Tomasino Beranek');
     })
 
     it('edit password should work',  () => {

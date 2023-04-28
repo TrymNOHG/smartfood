@@ -18,9 +18,9 @@
           <SearchInput
               v-model="searchQuery"
               @input="handleSearch"
-              label="Legg til vare"
+              :label="$t('add_item')"
           ></SearchInput>
-          <button id="searchbtn" @click="handleSearch">Search</button>
+          <button id="searchbtn" @click="handleSearch">{{$t('search')}}</button>
         </div>
       </div>
 
@@ -47,7 +47,7 @@
       <filter-bar/>
     </div>
     <div class="wrapper" :style="{marginTop: marginTopStyle}">
-      <basic-fridge-item v-for="(item, index) in fridgeItems" :key="index" :item="item" :currenFridge="fridge"
+      <basic-fridge-item :isSuperUser="isCurrentUserSuperUser" v-for="(item, index) in fridgeItems" :key="index" :item="item" :currenFridge="fridge"
                          @delete-item="deleteItem"/>
     </div>
 
@@ -72,6 +72,7 @@ import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import {getItems} from "@/services/ApiService";
 import Swal from 'sweetalert2';
+import {addItemToShoppingList} from "../services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 
 
@@ -91,7 +92,10 @@ export default {
   computed: {
     marginTopStyle(){
       return this.isExpanded ? "1%" : "1%"
-    }
+    },
+    isCurrentUserSuperUser() {
+      return useFridgeStore().getIsSuperUser;
+    },
   },
 
   methods: {
@@ -137,7 +141,7 @@ export default {
     async addItemToFridge(fridgeId, item) {
       this.search = false;
       const { value: confirmed } = await Swal.fire({
-        title: 'Add item to fridge?',
+        title: this.isCurrentUserSuperUser ? this.$t('add_to_fridge') : this.$t('add_to_shopping_list'),
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Yes',
@@ -171,11 +175,19 @@ export default {
         "quantity": 1
       }
 
-      await this.itemStore.statAddItemToFridge(statAddItemToFridgeDTO)
-      await this.itemStore.addItemToFridgeById(this.fridge.fridgeId, itemDTO);
-      await this.itemStore.fetchItemsFromFridgeById(this.fridge.fridgeId).then((items) => {
-        this.fridgeItems = items;
-      });
+      if (!this.isCurrentUserSuperUser){
+        await addItemToShoppingList(itemDTO, fridgeId, true)
+            .then(async (response) => {
+              console.log("response", response);
+              console.warn("error1", error); //TODO: add exception handling
+            });
+      } else {
+        await this.itemStore.statAddItemToFridge(statAddItemToFridgeDTO)
+        await this.itemStore.addItemToFridgeById(this.fridge.fridgeId, itemDTO);
+        await this.itemStore.fetchItemsFromFridgeById(this.fridge.fridgeId).then((items) => {
+          this.fridgeItems = items;
+        });
+      }
     },
 
     showInformation(){

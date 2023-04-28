@@ -13,7 +13,7 @@
   "full_name": "Fullt navn",
   "firstname": "Fornavn",
   "lastname": "Etternavn",
-  "name": "Fornavn og etternavn",
+  "name": "Navn",
   "first_name": "Fornavn",
   "last_name": "Etternavn", 
   "username": "Brukernavn",
@@ -54,7 +54,7 @@
   "save_changes": "Lagre endringer",
   "cancel": "Avbryt",
   "select_role_title": "Velg rolle",
-  "limited_user": "Begrenset bruker",
+  "limited_user": "Vanlig bruker",
   "super_user": "Super bruker",
   "role_selection_error": "feil ved valg av rolle",
   "success_message_deleted_user": "Brukeren er slettet",
@@ -68,5 +68,14 @@
   "alt_info_button": "Informasjon om siden",
   "members": "Medlemmer",
   "how_much_left": "Hvor mye er det igjen av varen?",
-  "item-info": "Informasjon om varen"
+  "item-info": "Informasjon om varen",
+  "buy_date": "Kjøpsdato",
+  "expire_date": "Utløpsdato",
+  "search_item": "Søk etter vare",
+  "suggestion": "Forslag",
+  "quantity" : "Antall",
+  "add_item" : "Legg til vare",
+  "search" : "Søk",
+  "add_to_fridge" : "Legg til i kjøleskap",
+  "add_to_shopping_list" : "Legg til i Handleliste"
 }

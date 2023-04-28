@@ -18,7 +18,7 @@ describe('ItemInfo', () => {
                 }
             }
         });
-        expect(wrapper.find('.text h3:first-of-type').text()).toMatch('Kjøpsdato: 26. april 2022');
+        expect(wrapper.find('.text h3:first-of-type').text()).toMatch('buy_date: 26. april 2022');
     });
 
     test('renders expiration date', () => {
@@ -30,7 +30,7 @@ describe('ItemInfo', () => {
                 }
             }
         });
-        expect(wrapper.find('.text h3:nth-of-type(2)').text()).toMatch('Utløpsdato: 26. mai 2022');
+        expect(wrapper.find('.text h3:nth-of-type(2)').text()).toMatch('expire_date: 26. mai 2022');
     });
 
     test('renders price', () => {
@@ -42,6 +42,6 @@ describe('ItemInfo', () => {
                 }
             }
         });
-        expect(wrapper.find('.text h3:last-of-type').text()).toMatch('Pris: 50kr');
+        expect(wrapper.find('.text h3:last-of-type').text()).toMatch('price: 50kr');
     });
 });
