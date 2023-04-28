@@ -1,11 +1,13 @@
 package edu.ntnu.idatt2106_2023_06.backend.model;
 
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Instructions;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Recipe;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipePart;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,7 +34,7 @@ class RecipeTest {
                                  "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
                                  "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
                                  "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
-                        50, new ArrayList<>());
+                        50, new ArrayList<>(),  new ArrayList<>(),new HashSet<>());
             } catch (Exception e) {
                 fail();
             }
@@ -67,7 +69,7 @@ class RecipeTest {
                             "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
                             "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
                             "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
-                    50, new ArrayList<>());
+                    50, new ArrayList<>(),  new ArrayList<>(), new HashSet<>());
         }
 
         @Test
@@ -147,6 +149,16 @@ class RecipeTest {
             assertEquals(expectedParts, actualPars);
         }
 
+        @Test
+        void instructions() {
+            Recipe recipe = getRecipe();
+            List<Instructions> expectedInstructions = new ArrayList<>();
+
+            List<Instructions> actualInstructions = recipe.getInstructions();
+
+            assertEquals(expectedInstructions, actualInstructions);
+        }
+
 
     }
 
@@ -158,7 +170,7 @@ class RecipeTest {
                             "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
                             "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
                             "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
-                    50, new ArrayList<>());
+                    50, new ArrayList<>(),  new ArrayList<>(), new HashSet<>());
         }
 
         @Test
@@ -225,6 +237,17 @@ class RecipeTest {
             double actualCookTime = recipe.getCookTime();
 
             assertEquals(expectedCookTime, actualCookTime);
+        }
+
+        @Test
+        void instructions() {
+            Recipe recipe = getRecipe();
+            List<Instructions> expectedInstructions = new ArrayList<>();
+
+            recipe.setInstructions(expectedInstructions);
+            List<Instructions> actualInstructions = recipe.getInstructions();
+
+            assertEquals(expectedInstructions, actualInstructions);
         }
 
     }

@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.model;
 
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Recipe;
-import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipeItemId;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipePart;
 import org.junit.jupiter.api.Nested;
@@ -30,8 +29,7 @@ public class RecipePartTest {
         @Test
         void all_arg_constructor_can_be_made() {
             try {
-                RecipePart recipePart = new RecipePart(1L, new Recipe(), "Make dough",
-                        "Step 1. Knead dough", new ArrayList<>());
+                RecipePart recipePart = new RecipePart(1L, new Recipe(), "Make dough", new ArrayList<>());
             } catch (Exception e) {
                 fail();
             }
@@ -45,7 +43,6 @@ public class RecipePartTest {
                         .recipePartId(1L)
                         .recipe(new Recipe())
                         .partName("Make dough")
-                        .instructions("Step 1. ...")
                         .itemsInRecipe(new ArrayList<>())
                         .build();
             } catch (Exception e) {
@@ -58,8 +55,7 @@ public class RecipePartTest {
     @Nested
     class RecipePart_can_properly_get {
         RecipePart getRecipePart() {
-            return new RecipePart(1L, new Recipe(), "Make dough",
-                    "Step 1. Knead dough", new ArrayList<>());
+            return new RecipePart(1L, new Recipe(), "Make dough", new ArrayList<>());
         }
 
         @Test
@@ -90,15 +86,6 @@ public class RecipePartTest {
             assertEquals(expectedName, actualName);
         }
 
-        @Test
-        void instructions() {
-            RecipePart recipePart = getRecipePart();
-            String expectedInstructions = "Step 1. Knead dough";
-            String actualInstructions = recipePart.getInstructions();
-
-            assertEquals(expectedInstructions, actualInstructions);
-        }
-
 
         @Test
         void recipe_part_items() {
@@ -117,7 +104,7 @@ public class RecipePartTest {
     class RecipePart_can_properly_set {
         RecipePart getRecipePart() {
             return new RecipePart(1L, new Recipe(), "Make dough",
-                    "Step 1. Knead dough", new ArrayList<>());
+                     new ArrayList<>());
         }
 
         @Test
@@ -151,17 +138,6 @@ public class RecipePartTest {
             String actualName = recipePart.getPartName();
 
             assertEquals(expectedName, actualName);
-        }
-
-        @Test
-        void instructions() {
-            RecipePart recipePart = getRecipePart();
-            String expectedInstructions = "Step 2. Mix spices";
-
-            recipePart.setInstructions(expectedInstructions);
-            String actualInstructions = recipePart.getInstructions();
-
-            assertEquals(expectedInstructions, actualInstructions);
         }
 
 

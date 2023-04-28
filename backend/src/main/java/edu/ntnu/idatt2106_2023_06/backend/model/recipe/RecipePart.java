@@ -21,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "recipe")
+@Table(name = "recipe_part")
 public class RecipePart {
 
     /**
@@ -48,13 +48,6 @@ public class RecipePart {
     @Column(name = "part_name", nullable = false)
     @NonNull
     private String partName;
-
-    /**
-     * The instructions of this part of the recipe.
-     */
-    @Column(name = "instructions", nullable = false)
-    @NonNull
-    private String instructions;
 
     /**
      * The items in the recipe part.

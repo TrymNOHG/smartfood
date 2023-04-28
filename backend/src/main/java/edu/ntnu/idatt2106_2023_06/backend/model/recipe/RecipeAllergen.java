@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 /**
- * This class represents an allergen in a recipe. It, therefore, contains a recipe part ID and Allergen enum.
+ * This class represents an allergen in a recipe. It, therefore, contains a recipe part ID and AllergenRepository enum.
  *
  * @author Trym Hamer Gudvangen
  */
@@ -43,5 +43,12 @@ public class RecipeAllergen {
     @NonNull
     @ToString.Exclude
     private Allergen allergen;
+
+    /**
+     * Amount of allergen in food, eiter TRACE or PRESENT
+     */
+    @Column(name = "amount")
+    @Enumerated(EnumType.STRING)
+    private Amount amount;
 
 }

@@ -2,8 +2,10 @@ package edu.ntnu.idatt2106_2023_06.backend.model.recipe;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * This class represents a recipe. It, therefore, contains a recipe ID and the time it takes to create the meal.
@@ -17,8 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@EqualsAndHashCode
-@Table(name = "recipe", indexes = {
+@Table(name = "recipes", indexes = {
         @Index(columnList = "recipe_name", name = "idx_recipe_name")
 })
 public class Recipe {
@@ -66,7 +67,7 @@ public class Recipe {
     private int difficulty;
 
     /**
-     * The author of the recipe
+     * The thumbnail of the recipe
      */
     @Column(name = "thumbnail", nullable = false)
     @NonNull
@@ -79,9 +80,63 @@ public class Recipe {
     @NonNull
     private double cookTime;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recipe")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
     @OrderBy("recipePartId ASC")
-    private List<RecipePart> recipeParts;
+    private List<RecipePart> recipeParts = new ArrayList<>();
 
+    /**
+     * The instructions of the recipe.
+     */
+    @OneToMany(mappedBy = "recipe")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    @OrderBy("recipeInstructionId ASC")
+    private List<Instructions> instructions = new ArrayList<>();
 
+    /**
+     * The allergens of a recipe.
+     */
+    @OneToMany(mappedBy = "recipe")
+    @ToString.Exclude
+    private Set<RecipeAllergen> recipeAllergenSet = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Recipe recipe)) return false;
+
+        if (servingSize != recipe.servingSize) return false;
+        if (difficulty != recipe.difficulty) return false;
+        if (Double.compare(recipe.cookTime, cookTime) != 0) return false;
+        if (!Objects.equals(recipeId, recipe.recipeId)) return false;
+        if (!recipeName.equals(recipe.recipeName)) return false;
+        if (!description.equals(recipe.description)) return false;
+        if (!author.equals(recipe.author)) return false;
+        if (!thumbnailLink.equals(recipe.thumbnailLink)) return false;
+        if (!Objects.equals(recipeParts, recipe.recipeParts)) return false;
+        if (!Objects.equals(instructions, recipe.instructions))
+            return false;
+        return Objects.equals(recipeAllergenSet, recipe.recipeAllergenSet);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = recipeId != null ? recipeId.hashCode() : 0;
+        result = 31 * result + recipeName.hashCode();
+        result = 31 * result + description.hashCode();
+        result = 31 * result + author.hashCode();
+        result = 31 * result + servingSize;
+        result = 31 * result + difficulty;
+        result = 31 * result + thumbnailLink.hashCode();
+        temp = Double.doubleToLongBits(cookTime);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (recipeParts != null ? recipeParts.hashCode() : 0);
+        result = 31 * result + (instructions != null ? instructions.hashCode() : 0);
+        result = 31 * result + (recipeAllergenSet != null ? recipeAllergenSet.hashCode() : 0);
+        return result;
+    }
 }

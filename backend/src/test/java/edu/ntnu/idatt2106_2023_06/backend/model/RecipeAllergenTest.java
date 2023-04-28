@@ -1,12 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.model;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
-import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeMember;
-import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Allergen;
-import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Recipe;
-import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipeAllergen;
-import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipeAllergenId;
-import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.*;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +27,7 @@ public class RecipeAllergenTest {
         @Test
         void all_arg_constructor_can_be_made() {
             try {
-                RecipeAllergen recipeAllergen = new RecipeAllergen(new RecipeAllergenId(), new Recipe(), new Allergen());
+                RecipeAllergen recipeAllergen = new RecipeAllergen(new RecipeAllergenId(), new Recipe(), new Allergen(), Amount.TRACE);
             } catch (Exception e) {
                 fail();
             }
@@ -62,14 +56,14 @@ public class RecipeAllergenTest {
         @Test
         void recipe_cannot_be_null(){
             assertThrows(NullPointerException.class, () -> {
-                RecipeAllergen recipeAllergen = new RecipeAllergen(new RecipeAllergenId(), null, new Allergen());
+                RecipeAllergen recipeAllergen = new RecipeAllergen(new RecipeAllergenId(), null, new Allergen(), Amount.TRACE);
             });
         }
 
         @Test
         void allergen_cannot_be_null(){
             assertThrows(NullPointerException.class, () -> {
-                RecipeAllergen recipeAllergen = new RecipeAllergen(new RecipeAllergenId(), new Recipe(), null);
+                RecipeAllergen recipeAllergen = new RecipeAllergen(new RecipeAllergenId(), new Recipe(), null, Amount.TRACE);
             });
         }
 
@@ -80,7 +74,7 @@ public class RecipeAllergenTest {
 
         @Test
         void recipe_cannot_be_set_to_null(){
-            RecipeAllergen recipeAllergen = new RecipeAllergen(new RecipeAllergenId(), new Recipe(), new Allergen());
+            RecipeAllergen recipeAllergen = new RecipeAllergen(new RecipeAllergenId(), new Recipe(), new Allergen(), Amount.TRACE);
             assertThrows(NullPointerException.class, () -> {
                 recipeAllergen.setRecipe(null);
             });
@@ -88,7 +82,7 @@ public class RecipeAllergenTest {
 
         @Test
         void allergen_cannot_be_set_to_null(){
-            RecipeAllergen recipeAllergen = new RecipeAllergen(new RecipeAllergenId(), new Recipe(), new Allergen());
+            RecipeAllergen recipeAllergen = new RecipeAllergen(new RecipeAllergenId(), new Recipe(), new Allergen(), Amount.TRACE);
             assertThrows(NullPointerException.class, () -> {
                 recipeAllergen.setAllergen(null);
             });
@@ -105,11 +99,11 @@ public class RecipeAllergenTest {
                             "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
                             "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
                             "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
-                    50, new ArrayList<>());
+                    50, new ArrayList<>(), new ArrayList<>(), new HashSet<>());
 
             Allergen allergen = new Allergen(1L, "Dairy", new HashSet<>());
             RecipeAllergen recipeAllergen = new RecipeAllergen(new RecipeAllergenId(recipe.getRecipeId(), allergen.getAllergenId()),
-                    recipe, allergen);
+                    recipe, allergen, Amount.TRACE);
 
             assertEquals(recipe, recipeAllergen.getRecipe());
         }
@@ -121,13 +115,29 @@ public class RecipeAllergenTest {
                             "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
                             "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
                             "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
-                    50, new ArrayList<>());
+                    50, new ArrayList<>(), new ArrayList<>(), new HashSet<>());
 
             Allergen allergen = new Allergen(1L, "Dairy", new HashSet<>());
             RecipeAllergen recipeAllergen = new RecipeAllergen(new RecipeAllergenId(recipe.getRecipeId(), allergen.getAllergenId()),
-                    recipe, allergen);
+                    recipe, allergen, Amount.TRACE);
 
             assertEquals(allergen, recipeAllergen.getAllergen());
+        }
+
+        @Test
+        void amount_getter_returns_correct_value(){
+            Recipe recipe = new Recipe(1L, "Grønnsakslasagne med søtpotet, aubergine og grønnkål",
+                    "En vegetarisk oppskrift på grønnsakslasagne full av smak. Her er kjøttdeigen " +
+                            "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
+                            "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
+                            "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
+                    50, new ArrayList<>(), new ArrayList<>(), new HashSet<>());
+
+            Allergen allergen = new Allergen(1L, "Dairy", new HashSet<>());
+            RecipeAllergen recipeAllergen = new RecipeAllergen(new RecipeAllergenId(recipe.getRecipeId(), allergen.getAllergenId()),
+                    recipe, allergen, Amount.TRACE);
+
+            assertEquals(Amount.TRACE, recipeAllergen.getAmount());
         }
     }
 }
