@@ -68,7 +68,7 @@
     <div class="filter-component">
       <filter-bar  @filter="filtering" @listing="listing"/>
     </div>
-    <div class="wrapper" :style="{ marginTop: marginTopStyle }">
+    <div v-if="!listView" class="wrapper" :style="{ marginTop: marginTopStyle }">
       <basic-fridge-item
         :isSuperUser="isCurrentUserSuperUser"
         v-for="(item, index) in fridgeItems"
@@ -77,11 +77,11 @@
         :currenFridge="fridge"
         @delete-item="deleteItem"
       />
+  </div>
     <div v-else class="list-wrapper">
       <basic-fridge-list  v-for="(item, index) in fridgeItems" :key="index" :item="item" :currenFridge="fridge"
                           @delete-item="deleteItem"/>
     </div>
-  </div>
     <div class="members-wrapper" v-show="selectedTab === 'members'">
       <member-component />
     </div>
@@ -95,14 +95,14 @@ import {
 } from "@dafcoe/vue-collapsible-panel";
 import { useRoute } from "vue-router";
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
-import BasicFridgeItem from "@/components/SpecificFridge/BasicFridgeItem.vue";
+import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import { useFridgeStore, useItemStore } from "@/store/store";
 import { ref } from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import { getItems } from "@/services/ApiService";
 import Swal from "sweetalert2";
-import { addItemToShoppingList } from "../services/ItemService";
+import { addItemToShoppingList } from "@/services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
 
@@ -437,7 +437,6 @@ input[type="text"]:not(:focus) {
   --bg-color-header: transparent !important;
   border: transparent;
   width: 100%;
-  overflow-y: scroll;
   color: black;
   background-color: white;
   border-radius: 0;
