@@ -13,4 +13,16 @@ public interface IStatService {
     String getUserStats() throws JsonProcessingException;
 
     String getFridgeStats(Long fridgeId);
+
+    Object getAverageThrownPerDayUser() throws JsonProcessingException;
+
+    String getAverageThrownPerDayFridge(long fridgeId) throws JsonProcessingException;
+
+    String getMoneyWastedPerDayUser() throws JsonProcessingException;
+
+    String getMoneyWastedPerDayFridge(Long fridgeId) throws JsonProcessingException;
+
+    String getMoneyUsedPerDayUser() throws JsonProcessingException;
+
+    String getMoneyUsedPerDayFridge(Long fridgeId) throws JsonProcessingException;
 }

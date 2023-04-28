@@ -4,21 +4,47 @@
     <div class="information-button">
       <img src="@/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
     </div>
+      <div>
+          <h2>Dummy test Stats</h2>
+          <BarChart />
+          <div>
+              <h2>User Stats</h2>
+          </div>
+      </div>
   </div>
 
 </template>
 
 <script>
+//<line-chart :chart-data="userStatsChartData" :options="chartOptions"></line-chart>
+import BarChart from '@/components/statistic/BarChart.vue';
+import LineChart from '@/components/statistic/LineChart.vue';
+import { getUserStats, getFridgeStats } from '@/services/StatsService.js';
+import {useFridgeStore} from "../store/store";
+
 export default {
   name: "StatisticsView",
-
-  methods: {
-
-    showInformation(){
-      //TODO: INFORMATION STATISTICS put information API in here
+    components: { BarChart, LineChart },
+    data() {
+        return {
+            userStats: [],
+            fridgeStats: [],
+            chartOptions: {
+                responsive: true,
+                maintainAspectRatio: false,
+            },
+            fridgeId: useFridgeStore().currentFridge.fridgeId
+        };
     },
-  }
-}
+    computed: {
+
+    },
+    methods: {
+    },
+    mounted() {
+        //this.fetchStats();
+    },
+};
 </script>
 
 <style scoped>
