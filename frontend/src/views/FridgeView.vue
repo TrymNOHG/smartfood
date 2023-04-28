@@ -43,12 +43,16 @@
         </vue-collapsible-panel-group>
       </div>
     </div>
+    <div class="filter-component">
+      <filter-bar/>
+    </div>
     <div class="wrapper" :style="{marginTop: marginTopStyle}">
       <basic-fridge-item v-for="(item, index) in fridgeItems" :key="index" :item="item" :currenFridge="fridge"
                          @delete-item="deleteItem"/>
     </div>
 
   </div>
+
   <div class="members-wrapper" v-show="selectedTab === 'members'">
     <member-component/>
   </div>
@@ -68,12 +72,14 @@ import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import {getItems} from "@/services/ApiService";
 import Swal from 'sweetalert2';
+import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 
 
 
 export default {
   name: "FridgeView",
   components: {
+    FilterBar,
     SearchItem,
     SearchInput,
     BasicFridgeItem,
@@ -84,14 +90,14 @@ export default {
 
   computed: {
     marginTopStyle(){
-      return this.isExpanded ? "5%" : "0"
+      return this.isExpanded ? "1%" : "1%"
     }
   },
 
   methods: {
     handleSearch() {
-      this.search = true;
-      if (this.searchQuery.length < 2) this.search = false;
+
+      this.search = this.searchQuery.length >= 2;
       getItems(this.searchQuery).then((response) => {
         this.searchItems = response;
         this.isExpanded = true;
@@ -243,14 +249,13 @@ export default {
 }
 
 #searchbtn {
-  border: 0;
-  padding: 0px 10px;
-  margin-top: 0px;
+  padding: 0 10px;
+  margin-top: 0;
   color: #fff;
   background: #31c48d;
   font-size: 27px;
   font-weight: 500;
-  border: 0px solid #555;
+  border: 0 solid #555;
   border-left: none;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -280,41 +285,11 @@ export default {
   display: grid;
 }
 
-#myDropdown{
-  margin-bottom: 10px;
-}
-
 .vcpg {
   --bg-color-header: #6c6c6c !important;
   --bg-color-header-hover: #6c6c6c !important;
   --bg-color-header-active: #6c6c6c !important;
   border-radius: 10px 10px 10px 10px;
-}
-
-.dropdown {
-  display: flex;
-  justify-content: center;
-}
-
-.search-btn {
-  padding: 0 10px;
-  margin-top: 10px;
-  color: #fff;
-  background: #6c6c6c;
-  font-size: 25px;
-  font-weight: 500;
-  border: 3px solid #555;
-  border-left: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  max-height: 60px;
-  border-radius: 0 50px 50px 0 !important;
-}
-
-.dropdown {
-  width: 100%;
-  position: relative;
-  text-align: center;
 }
 
 .dropdown a {
@@ -324,27 +299,15 @@ export default {
   display: block;
 }
 
-.search-results {
-  left: 0;
-  background-color: white;
-  border: 1px solid gray;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  padding: 0;
-  margin-left: 10%;
-  list-style: none;
-  width: 80%;
-  z-index: 2;
-}
-
 .search-results li {
   padding: 8px;
 }
 
-input[type="text"]:focus + .search-results {
+input[type="text"]:focus  {
   display: block;
 }
 
-input[type="text"]:not(:focus) + .search-results {
+input[type="text"]:not(:focus) {
   display: none;
 }
 
@@ -367,21 +330,11 @@ input[type="text"]:not(:focus) + .search-results {
   font-size: x-large;
 }
 
-.search-results {
-  position: absolute;
-  top: 95%;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1;
-  background-color: white;
-  color: white;
-}
-
 .wrapper {
   z-index: 0;
   margin-left: 2%;
   margin-right: 2%;
+  margin-top: 2%;
   grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
   grid-template-rows: repeat(auto-fill, minmax(250px, 1fr));
   transition: 0.5s;
@@ -413,24 +366,12 @@ input[type="text"]:not(:focus) + .search-results {
 }
 
 .dropper {
-  width: 70%;
   color: white;
-  margin: auto;
-  margin-bottom: 20px;
-}
-
-.dropper {
-
   display: flex;
-  width: 100vw;
   justify-content: space-evenly;
   overflow-y: scroll;
-  margin-bottom: 20px;
-  margin: auto;
-  color: white;
-
-
 }
+
 .vcpg {
   --bg-color-header: transparent!important;
   border: transparent;
@@ -530,12 +471,6 @@ input[type="text"]:not(:focus) + .search-results {
 
   }
 
-  .buttons {
-    position: relative;
-    margin-left: 20px;
-    margin-right: 0;
-  }
-
   #searchbtn{
     display: none !important;
   }
@@ -553,10 +488,6 @@ input[type="text"]:not(:focus) + .search-results {
     z-index: 0;
   }
 
-
-
-
-
   .fridge-wrapper{
     display: flex;
     width: 100%;
@@ -564,12 +495,6 @@ input[type="text"]:not(:focus) + .search-results {
     margin-bottom: 150px;
 
   }
-
-
-
-
-
-
 }
 
 </style>
