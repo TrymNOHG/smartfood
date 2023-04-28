@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="info-window">
-      <h2 style="font-weight: bold">Hvor mye er det igjen av Varen?</h2>
+      <h2 style="font-weight: bold" id="how-much-left">{{ $t('how_much_is_left') }}</h2>
       <div class="slider">
         <input type="range" min="0" max="100" :value="sliderValue" @input="sliderValue = $event.target.value" class="slider-range">
         <div class="slider-bar"></div>

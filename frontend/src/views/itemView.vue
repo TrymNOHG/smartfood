@@ -15,7 +15,7 @@
       <div class="info-delete-wrapper">
         <item-info :item="item" class="info-delete"/>
         <div></div>
-        <item-delete :item="item" class="info-delete"/>
+        <item-delete v-if="isCurrentUserSuperUser" :item="item" class="info-delete" @delete-item="deleteItem"/>
       </div>
     </div>
   </div>
@@ -27,6 +27,7 @@ import ItemHeader from "@/components/itemDescription/itemHeader.vue";
 import ItemInfo from "@/components/itemDescription/itemInfo.vue";
 import ItemDelete from "@/components/itemDescription/itemDelete.vue";
 import {useFridgeStore, useItemStore} from "@/store/store";
+import router from "@/router/router";
 
 export default {
   name: "itemView",
@@ -36,17 +37,48 @@ export default {
     const itemStore = useItemStore();
     const fridgeStore = useFridgeStore();
     const fridge = fridgeStore.currentFridge;
-
     const item = itemStore.getCurrentItem;
 
     return {
       item,
       fridge,
+      itemStore
     };
   },
   methods: {
+
     showInformation(){
       //TODO: INFORMATION PROFILE put information API in here
+    },
+
+    async deleteItem(itemToDelete, deletePercentage) {
+
+      const statDeleteFromFridgeDTO = {
+        "percentageThrown": parseFloat(deletePercentage),
+        "price": itemToDelete.price,
+        "quantity": parseFloat(itemToDelete.quantity),
+        "itemName": itemToDelete.name,
+        "storeName": itemToDelete.store,
+        "fridgeId": this.fridge.fridgeId
+      }
+
+      const itemRemoveDTO = {
+        "itemName": itemToDelete.name,
+        "store": itemToDelete.store,
+        "fridgeId": this.fridge.fridgeId,
+        "quantity": itemToDelete.quantity
+      }
+
+      console.log(statDeleteFromFridgeDTO)
+      console.log(itemRemoveDTO)
+      await this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO);
+      await this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO);
+      await router.push('/fridge')
+    }
+  },
+  computed: {
+    isCurrentUserSuperUser() {
+      return useFridgeStore().getIsSuperUser;
     },
   },
 }

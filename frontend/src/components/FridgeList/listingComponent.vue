@@ -1,13 +1,13 @@
 <template>
   <div class="list">
-    <router-link v-for="(fridge, index) in fridgeList" :key="index" :to="'/fridge'" @click="addToStore(fridge)" class="link" >
+    <router-link v-for="(fridge, index) in fridgeList" :key="index" :to="'/fridge'" @click="addToStore(fridge)" class="link" :id="'Fridge' + index">
       <div class="item">
         <span v-if="!isEditing[index]" class="item-text">{{ fridge.fridgeName }}</span>
         <input v-else type="text" v-model="editingFridge.fridgeName" @keyup.enter="confirmEdit(index)" class="edit-input" @click.prevent />
-        <div class="icons" @click.prevent>
-          <font-awesome-icon v-if="!isEditing[index]" icon="fa-solid fa-pen-to-square" @click="onEditClick(index)" class="icon edit-conf-icon" />
+        <div class="icons" @click.prevent :id="'EditFridge' + index">
+          <font-awesome-icon v-if="!isEditing[index]" icon="fa-solid fa-pen-to-square" @click="onEditClick(index)"  class="icon edit-conf-icon" />
           <font-awesome-icon v-else icon="fa-solid fa-circle-check" @click="confirmEdit(index)" class="icon edit-conf-icon conf"/>
-          <font-awesome-icon icon="fa-solid fa-trash" @click="onDeleteClick(index)" class="icon delete-icon" />
+          <font-awesome-icon icon="fa-solid fa-trash" @click="onDeleteClick(index)"  class="icon delete-icon" />
         </div>
       </div>
     </router-link>

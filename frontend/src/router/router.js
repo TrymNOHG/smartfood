@@ -10,6 +10,7 @@ import FridgeView from "@/views/FridgeView.vue";
 import { useLoggedInStore, useFridgeStore } from '@/store/store';
 import itemView from "@/views/itemView.vue";
 import WelcomeComponent from "@/components/WelcomeComponent.vue";
+import MealView from "@/views/MealView.vue"
 
 
 const router = createRouter({
@@ -91,6 +92,18 @@ const router = createRouter({
       path: '/fridge/item',
       name: 'itemView',
       component: itemView,
+      props: true,
+      meta:
+          {
+            requiresAuth: true,
+            requiresCurrentFridge: true
+          }
+    },
+
+    {
+      path: '/dinner/meal',
+      name: 'mealView',
+      component: MealView,
       props: true,
       meta:
           {

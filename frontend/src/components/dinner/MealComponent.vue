@@ -1,25 +1,18 @@
 <template>
   <div class="cards-container">
-    <router-link to="/fridge/item" @click="storeCurrentItem(item)" id="item-link">
-      <div class="card" :style="{ 'border-color': borderColor }">
+    <router-link to="/dinner/meal" @click="storeCurrentItem(meal)" id="item-link">
+      <div class="card">
         <div class="front-side">
-          <img :src="item.image" alt="item picture">
+          <img :src="meal.image" alt="item picture">
         </div>
         <div class="back-side">
           <div class="item-detail">
             <div class="item-name">
-              <h2 id="item-name-h2">{{item.name}}</h2>
-              <h3 id="item-expiration-date">{{ $t('expire_date') }}: {{new Date(item.expirationDate)
-                  .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
+              <h2 id="item-name-h2">{{ meal.name }}</h2>
               <br>
             </div>
-            <h4 id="item-price">{{ $t('price') }}: {{ item.price }}; kr</h4>
-            <h4 id="item-purchase-date">{{ $t('buy_date') }}: {{ new Date(item.purchaseDate)
-                .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
-            <h4>{{ $t('expire_date') }}: {{ new Date(item.expirationDate)
-                .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
-            <h4 id="item-quantity">{{ $t('quantity') }}: {{ item.quantity }}L</h4>
-            <button v-if="isSuperUser" class="delete-btn" @click.prevent="deleteCard(item)">
+            <h4 id="item-price">{{ $t('price') }} {{ meal.price }}; kr</h4>
+            <button v-if="isSuperUser" class="delete-btn" @click.prevent="deleteCard(meal)">
               <span>
                 <font-awesome-icon icon="fa-solid fa-trash" class="icon delete-icon" />
               </span>
@@ -43,17 +36,13 @@ export default {
   components: {FontAwesomeIcon},
 
   props: {
-    item: {
+    meal: {
       type: Object,
       default: () => ({
         description: String,
-        expirationDate: String,
         image: String,
         name: String,
         price: String,
-        purchaseDate: String,
-        quantity: number,
-        store: String
       })
     },
     isSuperUser: {
@@ -135,37 +124,9 @@ export default {
   },
 
   setup(props) {
-    const itemStore = useItemStore();
-
-    let borderColor = calculateExpirationDate(props.item.purchaseDate, props.item.expirationDate);
-    console.log(props.item)
-    function calculateExpirationDate(purchaseDate, expirationDate) {
-      const currentDate = new Date();
-      const purchase = new Date(purchaseDate);
-      const expiration = new Date(expirationDate);
-
-      const totalTime = expiration.getTime() - purchase.getTime();
-      const remainingTime = expiration.getTime() - currentDate.getTime();
-      const percentageLeft = (remainingTime / totalTime) * 100;
-
-      let borderColor;
-
-      if (percentageLeft >= 75) {
-        borderColor = 'green'; // Green for 75% or more time left
-      } else if (percentageLeft >= 50) {
-        borderColor = 'orange'; // Orange for 50% to 74% time left
-      } else if (percentageLeft >= 25) {
-        borderColor = 'yellow'; // Yellow for 25% to 49% time left
-      } else {
-        borderColor = 'red'; // Red for less than 25% time left
-      }
-
-      return borderColor;
-    }
-
-
+    console.log(props.meal)
+    const itemStore = useItemStore()
     return {
-      borderColor,
       itemStore,
     }
   },
@@ -184,13 +145,13 @@ export default {
 
 img {
   border-radius: 25px;
-  object-fit: contain;
+  object-fit: cover;
   width: 100%;
   height: 100%;
 }
 
 .card {
-  border: 4px solid;
+  border: 4px solid green;
   border-radius: 23px;
   text-align: center;
   width: 320px;

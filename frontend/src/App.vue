@@ -35,7 +35,7 @@
             </span>
           </RouterLink>
         </li>
-        <li>
+        <li id="profile">
           <RouterLink to="/profile">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-circle-user" />
@@ -50,15 +50,15 @@
   <div class="current-fringe" v-if="!isOnAuthPage && !isOnRootPage">
     <div class="break-line"/>
     <div class="name-display" >
-      <h1 class="fridge-name">
-        <router-link to="/fridge" class="link-name" v-if="hasCurrentFridge">
+      <h1 class="fridge-name" id="chosen">
+        <router-link to="/fridge" class="link-name" id="chosenFridge" v-if="hasCurrentFridge">
           {{ currentFridge.fridgeName }}
         </router-link>
-        <router-link to="/fridges" class="link-name" v-else>
+        <router-link to="/fridges" class="link-name" id="selectFridge" v-else>
           {{ $t('select_fridge') }}
         </router-link>
       </h1>
-      
+
       <router-link class="change-button" to="/fridges" >
         <img src="@/assets/images/exit_change_fridge.png" style="max-height: 100%" v-if="hasCurrentFridge">
         <img src="@/assets/images/enter_choose_fridge.png" style="max-height: 100%" v-else>
@@ -173,6 +173,8 @@ export default {
   text-decoration: none;
 }
 
+
+
 * {
   margin: 0;
   padding: 0;
@@ -279,9 +281,32 @@ nav ul li:hover  {
   background-color: #444444;
 }
 
+
+
+
+
 nav ul li:hover img {
   filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(203%) contrast(103%);
 }
+nav .router-link-active{
+  width: 60px;
+  height: 60px;
+  z-index: 1;
+  background-color: #444444;
+  border-radius: 10px;
+  padding-top: 0;
+  padding-left: 0;
+
+}
+
+nav .router-link-active .icon{
+  color: white;
+}
+
+nav .router-link-active img{
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(203%) contrast(103%);
+}
+
 
 nav ul li a .text {
   position: absolute;
