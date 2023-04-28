@@ -212,6 +212,29 @@ public class StatService implements IStatService {
         return statisticsToJsonMoneyWasted(stats1, stats2);
     }
 
+    @Override
+    public String getMoneyUsedPerDayUser() throws JsonProcessingException {
+        Long userId = checkUserIsAuthenticated();
+
+        List<Statistics> stats = statRepository.findAllByUserAndStatType(userId, 3L);
+        return statisticsToJsonMoneySpent(stats);
+    }
+
+    @Override
+    public String getMoneyUsedPerDayFridge(Long fridgeId) throws JsonProcessingException {
+        Long userId = checkUserIsAuthenticated();
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFoundException(userId)
+        );
+        if(!fridgeService.userExistsInFridge(fridgeId, user.getUsername())) {
+            throw new UnauthorizedException(user.getUsername());
+        }
+
+        List<Statistics> stats = statRepository.findAllByFridgeAndStatType(fridgeId, 3L);
+        return statisticsToJsonMoneySpent(stats);
+    }
+
     private long checkUserIsAuthenticated() {
         if(!jwtService.isAuthenticated()) {
             throw new UnauthorizedException();
@@ -249,6 +272,7 @@ public class StatService implements IStatService {
     private String statisticsToJsonMoneyWasted(List<Statistics> stats1, List<Statistics> stats2) throws JsonProcessingException {
         if(stats1.size() != stats2.size()) {
             // TODO: create custom exception for this?
+            // If this happens, something is seriously wrong with the date in the database.
             throw new RuntimeException("Stats1 and stats2 are not the same size");
         }
         HashMap<String, Double> moneyWasted = new HashMap<>();
@@ -264,6 +288,20 @@ public class StatService implements IStatService {
             i++;
         }
         return objectMapper.writeValueAsString(moneyWasted);
+    }
+
+    private String statisticsToJsonMoneySpent(List<Statistics> stats) throws JsonProcessingException {
+        HashMap<String, Double> moneySaved = new HashMap<>();
+        for(Statistics stat : stats) {
+            String date = stat.getTimestamp().toString().substring(0, 10);
+            if(!moneySaved.containsKey(date)) {
+                moneySaved.put(date, stat.getStatValue() * stat.getQuantity());
+            } else {
+                Double statValue = moneySaved.get(date);
+                moneySaved.put(date, stat.getStatValue() * stat.getQuantity() + statValue);
+            }
+        }
+        return objectMapper.writeValueAsString(moneySaved);
     }
 }
 

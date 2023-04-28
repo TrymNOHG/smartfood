@@ -132,4 +132,27 @@ public class StatController {
         return ResponseEntity.ok(statService.getMoneyWastedPerDayFridge(fridgeId));
     }
 
+    /**
+     * Get the money spent per day by the user.
+     *
+     * @param authentication    The JWT token of the user.
+     */
+    @GetMapping(value="/get/user-stats/money-used-per-day")
+    @Operation(summary = "Get the money spent per day by the user")
+    public ResponseEntity<Object> getUserMoneyUsedPerDay(Authentication authentication) throws JsonProcessingException {
+        return ResponseEntity.ok(statService.getMoneyUsedPerDayUser());
+    }
+
+    /**
+     * Get the money spent per day in a fridge.
+     *
+     * @param authentication    The JWT token of the user.
+     */
+    @GetMapping(value="/get/fridge-stats/money-used-per-day/{fridgeId}")
+    @Operation(summary = "Get the money spent per day by users in a fridge")
+    public ResponseEntity<Object> getFridgeMoneyUsedPerDay(@PathVariable Long fridgeId,
+                                                           Authentication authentication) throws JsonProcessingException {
+        return ResponseEntity.ok(statService.getMoneyUsedPerDayFridge(fridgeId));
+    }
+
 }

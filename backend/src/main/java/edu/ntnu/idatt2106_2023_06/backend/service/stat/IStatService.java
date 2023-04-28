@@ -21,4 +21,8 @@ public interface IStatService {
     String getMoneyWastedPerDayUser() throws JsonProcessingException;
 
     String getMoneyWastedPerDayFridge(Long fridgeId) throws JsonProcessingException;
+
+    String getMoneyUsedPerDayUser() throws JsonProcessingException;
+
+    String getMoneyUsedPerDayFridge(Long fridgeId) throws JsonProcessingException;
 }
