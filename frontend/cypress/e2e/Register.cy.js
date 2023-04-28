@@ -1,5 +1,7 @@
 describe('Register', () => {
     const base_url_site = "http://localhost:5173";
+    const base_url_endpoint = "http://localhost:8080";
+
 
     beforeEach(() => {
         cy.intercept('POST', 'http://localhost:8080/user/register', {
@@ -8,6 +10,19 @@ describe('Register', () => {
                 token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
             }
         }).as('registerRequest')
+
+        cy.intercept('GET', `${base_url_endpoint}/user/get/info`, (req) => {
+            //req.headers['Authorization'] = `Bearer my-user-token`
+            req.reply({
+                statusCode: 200,
+                body: {
+                    userId: 123,
+                    username: 'johndoe',
+                    firstName: 'John',
+                    lastName: 'Doe', email: 'johndoe@example.com'
+                }
+            })
+        }).as('fetchUser')
 
 
 
@@ -43,7 +58,7 @@ describe('Register', () => {
         cy.get('button[type="submit"]').click()
 
         cy.wait('@registerRequest' , { timeout: 10000 })
-        cy.url().should('include', '/register')
+        cy.url().should('include', '/fridges')
     })
 
 
