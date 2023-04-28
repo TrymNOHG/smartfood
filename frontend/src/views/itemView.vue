@@ -150,7 +150,7 @@ export default {
   padding-top: 5px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-column-gap: 20px;
+  grid-column-gap: 10px;
   grid-column: 2;
 }
 

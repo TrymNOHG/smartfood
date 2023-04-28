@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import BasicFridgeItem from "@/components/SpecificFridge/BasicFridgeItem.vue";
+import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
 export default {
   name: "itemDelete",

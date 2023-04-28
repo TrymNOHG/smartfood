@@ -1,14 +1,38 @@
 <template>
   <div class="filter-container">
     <div class="view-options">
-      <font-awesome-icon icon="fa-solid fa-list" class="icon"/>
-      <font-awesome-icon icon="fa-solid fa-table-cells" class="icon"/>
+      <font-awesome-icon icon="fa-solid fa-list" class="icon" @click="listingView(true)"/>
+      <font-awesome-icon icon="fa-solid fa-table-cells" class="icon" @click="listingView(false)"/>
     </div>
     <div class="filter">
       <font-awesome-icon icon="fa-solid fa-filter" class="icon"/>
     </div>
   </div>
 </template>
+
+
+<script>
+
+export default {
+
+  data() {
+    return {
+      listView: false,
+
+    }
+  },
+
+  methods: {
+    listingView(bool){
+      this.$emit("listing", bool);
+    }
+  }
+
+
+}
+
+
+</script>
 
 <style scoped>
 .filter-container {

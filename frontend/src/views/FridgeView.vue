@@ -1,8 +1,8 @@
 <template>
   <div class="grey-bar">
     <div class="members-fridge">
-        <div id="toggle-button" class="link" @click="selectedTab = 'members'" :class="{ active: selectedTab === 'members' }">{{ $t('members') }}</div>
-        <div id="toggle-button" class="link" @click="selectedTab = 'fridge'" :class="{ active: selectedTab === 'fridge' }">{{ $t('fridge') }}</div>
+      <div id="toggle-button" class="link" @click="selectedTab = 'members'" :class="{ active: selectedTab === 'members' }">{{ $t('members') }}</div>
+      <div id="toggle-button" class="link" @click="selectedTab = 'fridge'" :class="{ active: selectedTab === 'fridge' }">{{ $t('fridge') }}</div>
     </div>
     <div class="information-button">
       <img src="@/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
@@ -44,15 +44,17 @@
       </div>
     </div>
     <div class="filter-component">
-      <filter-bar/>
+      <filter-bar  @filter="filtering" @listing="listing"/>
     </div>
-    <div class="wrapper" :style="{marginTop: marginTopStyle}">
+    <div v-if="!listView" class="wrapper" :style="{marginTop: marginTopStyle}">
       <basic-fridge-item v-for="(item, index) in fridgeItems" :key="index" :item="item" :currenFridge="fridge"
                          @delete-item="deleteItem"/>
     </div>
-
+    <div v-else class="list-wrapper">
+      <basic-fridge-list  v-for="(item, index) in fridgeItems" :key="index" :item="item" :currenFridge="fridge"
+                          @delete-item="deleteItem"/>
+    </div>
   </div>
-
   <div class="members-wrapper" v-show="selectedTab === 'members'">
     <member-component/>
   </div>
@@ -65,7 +67,7 @@ import {
 } from "@dafcoe/vue-collapsible-panel";
 import {useRoute} from "vue-router";
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
-import BasicFridgeItem from "@/components/SpecificFridge/BasicFridgeItem.vue";
+import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import {useFridgeStore, useItemStore} from "@/store/store"
 import {ref} from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
@@ -73,12 +75,14 @@ import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import {getItems} from "@/services/ApiService";
 import Swal from 'sweetalert2';
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
+import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
 
 
 
 export default {
   name: "FridgeView",
   components: {
+    BasicFridgeList,
     FilterBar,
     SearchItem,
     SearchInput,
@@ -95,6 +99,16 @@ export default {
   },
 
   methods: {
+
+    filtering(bool){
+      this.listView = bool;
+    },
+
+    listing(bool){
+      this.listView = bool;
+    },
+
+
     handleSearch() {
 
       this.search = this.searchQuery.length >= 2;
@@ -224,6 +238,7 @@ export default {
   data() {
     return {
       isExpanded: false,
+      listView: false,
     }
 
   },
@@ -231,6 +246,13 @@ export default {
 </script>
 
 <style scoped>
+
+.list-wrapper {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin: 2%;
+  z-index: 0;
+}
 
 .grey-bar {
   background-color: #6C6C6C;
@@ -283,6 +305,7 @@ export default {
 
 .fridge-wrapper {
   display: grid;
+  flex-direction: column;
 }
 
 .vcpg {
@@ -319,10 +342,6 @@ input[type="text"]:not(:focus) {
   text-decoration: none;
   line-height: 25px;
   color: white;
-}
-
-#toggle-button {
-  width: 150px;
 }
 
 #toggle-button:hover {
@@ -386,7 +405,21 @@ input[type="text"]:not(:focus) {
   background-color: #6C6C6C;
 }
 
+@media (max-width: 860px) {
+
+  .list-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
 @media (max-width: 650px) {
+
+  .filter-component {
+    width: 100%;
+  }
 
   .fridge-wrapper {
     height: 100%;
@@ -408,6 +441,11 @@ input[type="text"]:not(:focus) {
 }
 
 @media only screen and (min-width: 350px) and (max-width: 480px) {
+
+  .list-wrapper {
+    z-index: -1;
+    overflow-y: scroll;
+  }
 
 
   #searchbtn{
@@ -435,7 +473,7 @@ input[type="text"]:not(:focus) {
 
   .members-fridge{
     background-color: #31c48d;
-    margin-top: 0px;
+    margin-top: 0;
     padding-top: 0;
     padding-right: 10px;
     text-align: center;

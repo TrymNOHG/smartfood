@@ -59,7 +59,6 @@ export default {
   },
 
   methods: {
-
     storeCurrentItem(item){
       this.itemStore.setCurrentItem(item);
     },
@@ -264,9 +263,7 @@ img {
 }
 
 @media (max-width: 650px) {
-  body{
-    height: 80px;
-  }
+
   .card {
     display: flex;
     justify-content: end;

@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
 import { describe, test, expect } from "vitest";
-import BasicFridgeItem from "@/components/SpecificFridge/BasicFridgeItem.vue";
+import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import {createTestingPinia} from "@pinia/testing";
 import sinon from "sinon";
 
