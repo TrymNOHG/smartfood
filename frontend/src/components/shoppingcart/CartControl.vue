@@ -79,7 +79,7 @@ export default {
 
 @media only screen and (max-width: 800px) {
 }
-@media only screen and (min-width: 10px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 650px) {
   .cart-control {
     display: flex;
     justify-content: space-between;
@@ -119,8 +119,5 @@ export default {
   .control-buttons:last-child:hover {
     background-color: #30b34e;
   }
-}
-
-@media only screen and (max-width: 350px) {
 }
 </style>

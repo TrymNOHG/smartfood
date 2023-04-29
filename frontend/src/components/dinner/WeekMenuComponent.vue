@@ -5,7 +5,7 @@
       :isSuperUser="true"
       v-for="(menu, index) in menus"
       :key="index"
-      :meal="menu"
+      :menu="menu"
       :currenFridge="fridge"
       @delete-item="deleteItem"
     />
@@ -46,6 +46,38 @@ export default {
           "https://leitesculinaria.com/wp-content/uploads/2022/07/skillet-bacon-cheeseburger-with-crispy-fried-onions.jpg",
         day: "Wednesday",
       },
+      {
+        name: "Bacon Cheeseburger",
+        description: "Savory beef burger with bacon and cheese",
+        price: 10.99,
+        image:
+          "https://leitesculinaria.com/wp-content/uploads/2022/07/skillet-bacon-cheeseburger-with-crispy-fried-onions.jpg",
+        day: "Thursday",
+      },
+      {
+        name: "Bacon Cheeseburger",
+        description: "Savory beef burger with bacon and cheese",
+        price: 10.99,
+        image:
+          "https://leitesculinaria.com/wp-content/uploads/2022/07/skillet-bacon-cheeseburger-with-crispy-fried-onions.jpg",
+        day: "Friday",
+      },
+      {
+        name: "Bacon Cheeseburger",
+        description: "Savory beef burger with bacon and cheese",
+        price: 10.99,
+        image:
+          "https://leitesculinaria.com/wp-content/uploads/2022/07/skillet-bacon-cheeseburger-with-crispy-fried-onions.jpg",
+        day: "Saturday",
+      },
+      {
+        name: "Bacon Cheeseburger",
+        description: "Savory beef burger with bacon and cheese",
+        price: 10.99,
+        image:
+          "https://leitesculinaria.com/wp-content/uploads/2022/07/skillet-bacon-cheeseburger-with-crispy-fried-onions.jpg",
+        day: "Sunday",
+      },
     ];
     const days = [
       "Monday",
@@ -77,5 +109,18 @@ export default {
   transition: 0.5s;
   max-width: 690px; /* added to limit the total width of the grid */
   margin: auto;
+}
+.wrapper {
+  z-index: 0;
+  grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
+  grid-row-gap: 30px;
+  transition: 0.5s;
+  max-width: 690px;
+  margin: auto;
+}
+
+.wrapper > *:only-child,
+.wrapper > *:last-child:nth-child(odd) {
+  margin: 0 auto;
 }
 </style>

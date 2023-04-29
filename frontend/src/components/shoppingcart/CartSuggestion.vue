@@ -533,7 +533,7 @@ input[type="number"] {
   }
 }
 
-@media only screen and (min-width: 10px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 650px) {
   .product-img {
     width: 100px;
     height: 100px;

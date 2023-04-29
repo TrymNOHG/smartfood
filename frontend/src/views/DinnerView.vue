@@ -127,7 +127,7 @@ export default {
   cursor: pointer;
 }
 
-@media only screen and (min-width: 10px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 650px) {
   .grey-bar {
     display: flex;
     align-content: center;

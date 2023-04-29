@@ -2,25 +2,25 @@
   <div class="cards-container">
     <router-link
       to="/fridge/item"
-      @click="storeCurrentItem(meal)"
+      @click="storeCurrentItem(menu)"
       id="item-link"
     >
       <div class="card">
         <div class="front-side">
-          <img :src="meal.image" alt="item picture" />
+          <img :src="menu.image" alt="item picture" />
         </div>
         <div class="back-side">
           <div class="item-detail">
             <div class="item-name">
-              <h2 id="item-name-h2">{{ meal.day }}</h2>
-              <h2 id="item-name-h2">{{ meal.name }}</h2>
+              <h2 id="item-name-h2">{{ menu.day }}</h2>
+              <h2 id="item-name-h2">{{ menu.name }}</h2>
               <br />
             </div>
-            <h4 id="item-price">{{ $t("price") }} {{ meal.price }}; kr</h4>
+            <h4 id="item-price">{{ $t("price") }} {{ menu.price }}; kr</h4>
             <button
               v-if="isSuperUser"
               class="delete-btn"
-              @click.prevent="deleteCard(meal)"
+              @click.prevent="deleteCard(menu)"
             >
               <span>
                 <font-awesome-icon
@@ -48,7 +48,7 @@ export default {
   components: { FontAwesomeIcon },
 
   props: {
-    meal: {
+    menu: {
       type: Object,
       default: () => ({
         description: String,
@@ -135,7 +135,7 @@ export default {
   },
 
   setup(props) {
-    console.log(props.meal);
+    console.log(props.menu);
     const itemStore = useItemStore();
     return {
       itemStore,
@@ -320,7 +320,7 @@ img {
   }
 }
 
-@media only screen and (min-width: 10px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 650px) {
   body {
     height: 100%;
   }

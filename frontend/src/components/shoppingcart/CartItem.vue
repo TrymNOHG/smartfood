@@ -147,6 +147,10 @@ export default {
   border-bottom: 1px solid #e1e8ee;
 }
 
+.item .description {
+  overflow-wrap: break-word !important;
+}
+
 .buttons .btn {
   margin: 0 15px 0 15px;
 }
@@ -173,25 +177,22 @@ export default {
 }
 
 .description {
-  position: center;
   justify-content: center;
   align-items: center;
   align-content: center;
   text-align: center;
   display: flex;
   flex-direction: column;
-  max-width: 250px;
-  width: 175px !important;
   color: black;
 }
 
 .description span:last-child {
-  font-weight: 10;
   margin-top: 8px;
   color: black;
   white-space: normal;
   margin-bottom: 5px;
 }
+
 .quantity {
   display: flex;
   align-items: center;
@@ -250,6 +251,7 @@ input[type="number"] {
 
 .btn-cart {
 }
+
 .img-container {
   max-width: 100%;
   max-height: 100%;
@@ -355,6 +357,7 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
 .product-img {
   width: 100px; /* set a fixed width for the containing div */
   height: 100px; /* set a fixed height for the containing div */
@@ -392,8 +395,9 @@ input[type="number"] {
 }
 
 .description span:first-child {
-  width: 175px;
+  /*empty for now*/
 }
+
 .buttons {
   display: flex;
   justify-content: center;
@@ -401,7 +405,7 @@ input[type="number"] {
   align-items: center;
   padding-left: 10px;
   padding-right: 5px;
-  width: 40px;
+  width: 60px;
   scale: 1.5;
 }
 
@@ -409,12 +413,30 @@ input[type="number"] {
   margin: 10px;
 }
 
+.btn-checkbox:hover {
+  margin: 10px;
+  cursor: pointer;
+  scale: 1.2;
+}
+
 .btn-trash {
   margin: 10px;
 }
 
+.btn-trash:hover {
+  margin: 10px;
+  cursor: pointer;
+  scale: 1.2;
+}
+
 .btn-cart {
   margin: 10px;
+}
+
+.btn-cart:hover {
+  margin: 10px;
+  cursor: pointer;
+  scale: 1.2;
 }
 
 #check {
@@ -433,6 +455,7 @@ input[type="number"] {
   padding-bottom: 5px;
   padding-right: 5px;
 }
+
 .img-container {
   max-width: 150px; /* ensure the image does not exceed the container width */
   max-height: 150px; /* ensure the image does not exceed the container height */
@@ -441,6 +464,26 @@ input[type="number"] {
 .img-container img {
   max-width: 150px;
   max-height: 150px;
+}
+
+.is-active {
+  animation-name: animate;
+  animation-duration: 0.8s;
+  animation-iteration-count: 1;
+  animation-timing-function: steps(28);
+  animation-fill-mode: forwards;
+}
+
+@keyframes animate {
+  0% {
+    background-position: left;
+  }
+  50% {
+    background-position: right;
+  }
+  100% {
+    background-position: right;
+  }
 }
 
 @media only screen and (max-width: 800px) {
@@ -465,6 +508,7 @@ input[type="number"] {
   .delete-btn {
     display: none;
   }
+
   .item {
     padding: 0px 0px;
     height: 120px;
@@ -475,7 +519,7 @@ input[type="number"] {
   }
 }
 
-@media only screen and (min-width: 10px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 650px) {
   .product-img {
     width: 100px;
     height: 100px;
@@ -489,6 +533,7 @@ input[type="number"] {
   .btn-cart {
     display: none;
   }
+
   .img-container {
     max-width: 100%;
     max-height: 100%;
@@ -524,36 +569,9 @@ input[type="number"] {
     margin-right: 60px;
   }
 
-  .delete-btn,
   .like-btn {
     display: inline-block;
     cursor: pointer;
-  }
-
-  .delete-btn {
-    width: 18px;
-    height: 17px;
-    background: url("@/assets/images/delete-icn.svg") no-repeat center;
-  }
-
-  .is-active {
-    animation-name: animate;
-    animation-duration: 0.8s;
-    animation-iteration-count: 1;
-    animation-timing-function: steps(28);
-    animation-fill-mode: forwards;
-  }
-
-  @keyframes animate {
-    0% {
-      background-position: left;
-    }
-    50% {
-      background-position: right;
-    }
-    100% {
-      background-position: right;
-    }
   }
 
   .image {
@@ -619,6 +637,7 @@ input[type="number"] {
   input[type="number"] {
     -moz-appearance: textfield;
   }
+
   .product-img {
     width: 100px; /* set a fixed width for the containing div */
     height: 100px; /* set a fixed height for the containing div */
@@ -643,6 +662,7 @@ input[type="number"] {
   .delete-btn {
     display: none;
   }
+
   .item {
     padding: 0px 0px;
     height: 120px;
@@ -651,6 +671,7 @@ input[type="number"] {
     display: flex;
     justify-content: space-between;
   }
+
   .product-img img {
     width: 45px; /* set a fixed width for the containing div */
     height: 50px;
@@ -665,24 +686,23 @@ input[type="number"] {
     margin-top: 10px;
   }
 
-  .description {
-    width: 175px !important;
-  }
-
   .buttons {
     display: inline-block;
     padding-left: 10px;
     padding-right: 5px;
-    width: 40px;
-    padding-top: 28px;
+    width: 65px;
+    padding-top: 40px;
     scale: 1;
   }
 
   .btn-checkbox {
-    margin: 0px;
+    margin: 0;
+    position: absolute;
+    right: 0;
+    transform: translateX(62px);
   }
 
-  .btn-trash {
+  .btn-checkbox .btn-trash {
     margin: 0px;
   }
 
@@ -697,8 +717,13 @@ input[type="number"] {
   .product-img {
     padding-top: 15px;
   }
+
   .quantity {
     padding: 5px;
+    top: 35px;
+    position: absolute;
+    right: 0;
+    transform: translateX(-25px);
   }
 
   .number-input {
@@ -709,6 +734,7 @@ input[type="number"] {
     padding-bottom: 5px;
     padding-right: 5px;
   }
+
   .img-container {
     max-width: 150px; /* ensure the image does not exceed the container width */
     max-height: 150px; /* ensure the image does not exceed the container height */
@@ -718,29 +744,11 @@ input[type="number"] {
     max-width: 150px;
     max-height: 150px;
   }
-}
 
-@media only screen and (max-width: 350px) {
-  .product-img img {
-    margin-top: 35px;
-    width: 20px; /* set a fixed width for the containing div */
-    height: 30px; /* set a fixed height for the containing div */
-  }
-
-  .img-container {
-    max-width: 100px; /* ensure the image does not exceed the container width */
-    max-height: 100px; /* ensure the image does not exceed the container height */
-  }
-
-  .img-container img {
-    max-width: 100px;
-    max-height: 100px;
-  }
-
-  .img-container {
-    max-width: 100%; /* ensure the image does not exceed the container width */
-    max-height: 100%; /* ensure the image does not exceed the container height */
-    overflow: hidden; /* hide any overflow beyond the container */
+  .description {
+    max-width: 100%;
+    text-align: justify;
+    word-break: break-all;
   }
 }
 </style>

@@ -339,7 +339,7 @@ nav ul li a .text {
   }
 }
 
-@media only screen and (min-width: 10px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 650px) {
   .break-line {
     height: 7px;
     background-color: black;

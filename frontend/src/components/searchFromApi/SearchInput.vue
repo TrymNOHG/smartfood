@@ -68,7 +68,7 @@ export default {
   margin-right: -20px;
 }
 
-@media only screen and (min-width: 10px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 650px) {
   #receipt-btn {
     transform: none;
     position: absolute;

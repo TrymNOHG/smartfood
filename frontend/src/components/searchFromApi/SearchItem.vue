@@ -132,16 +132,7 @@ img {
   height: 25px;
 }
 
-@media only screen and (min-width: 10px) and (max-width: 480px) {
-  .item-info:hover {
-    box-shadow: 0 0 5px #ccc;
-    transform: scale(1.02);
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  #cart-icon {
-  }
-
+@media only screen and (min-width: 10px) and (max-width: 650px) {
   .search-item {
     display: flex;
     justify-content: center;
@@ -149,10 +140,6 @@ img {
     padding: 15px;
     width: 100%;
     color: #444444 !important;
-  }
-
-  .item-action {
-    margin-left: 1rem;
   }
 
   .search-item img {
