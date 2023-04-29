@@ -1,9 +1,11 @@
+//global variables for intricate testing
+let cartAddedItem = [];
+let fridgeAddedItem = [];
+
 describe("Adding and deleting item from cart", () => {
   const base_url = "http://localhost:5173";
   const base_url_site = "http://localhost:5173";
   const base_url_endpoint = "http://localhost:8080";
-  let cartAddedItem = [];
-  let fridgeAddedItem = [];
 
   beforeEach(() => {
     cy.intercept("POST", "http://localhost:8080/user/login", {
@@ -203,6 +205,17 @@ describe("Adding and deleting item from cart", () => {
     ).as("deleteFromFridge");
 
     cy.intercept(
+      "DELETE",
+      "http://localhost:8080/item/shopping/delete?suggestion=false",
+      (req) => {
+        req.reply({
+          statusCode: 200,
+        });
+        cartAddedItem = [];
+      }
+    ).as("deleteFromCart");
+
+    cy.intercept(
       {
         url: /^https:\/\/kassal\.app\/api\/v1\/products/,
       },
@@ -262,7 +275,7 @@ describe("Adding and deleting item from cart", () => {
     cy.wait("@isSuperUser");
   });
 
-  it("should add item to fridge from fridge-search", () => {
+  it("should add item to cart from cart-search", () => {
     cy.visit(`${base_url}/cart`);
     cy.get(".form-control").type("egg");
     cy.get("#searchbtn").click();
@@ -274,15 +287,11 @@ describe("Adding and deleting item from cart", () => {
     cy.contains("Ammeinnlegg 50stk Lillego").should("be.visible");
   });
 
-  it("should delete item from fridge on clicking delete", () => {
-    cy.wait("@getFridgeItems");
-    cy.get(".delete-btn")
-      .invoke("css", "transform", "none")
-      .invoke("css", "opacity", "1")
-      .click({ force: true });
-    cy.contains("bekreft").click();
-    cy.contains("bekreft").click();
-    cy.contains("OK").click();
+  it("should delete item from cart on clicking delete", () => {
+    cy.visit(`${base_url}/cart`);
+    cy.wait("@getCartItems");
+    cy.get(".btn-trash").click({ force: true });
+    cy.wait("@deleteFromCart");
     cy.get("body").should("not.contain", "Ammeinnlegg 50stk Lillego");
   });
 });
