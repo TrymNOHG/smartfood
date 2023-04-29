@@ -189,6 +189,28 @@ public class StatService implements IStatService {
     }
 
     @Override
+    public String getAverageThrownTotalUser() throws JsonProcessingException {
+        Long userId = checkUserIsAuthenticated();
+
+        return null;
+    }
+
+    @Override
+    public String getAverageThrownTotalFridge(long fridgeId) throws JsonProcessingException {
+        Long userId = checkUserIsAuthenticated();
+        fridgeRepository.findByFridgeId(fridgeId).orElseThrow(
+                () -> new FridgeNotFoundException(fridgeId)
+        );
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFoundException(userId)
+        );
+        if(!fridgeService.userExistsInFridge(fridgeId, user.getUsername())) {
+            throw new UnauthorizedException(user.getUsername());
+        }
+        return null;
+    }
+
+    @Override
     public String getMoneyWastedPerDayUser() throws JsonProcessingException {
         Long userId = checkUserIsAuthenticated();
 
@@ -302,6 +324,33 @@ public class StatService implements IStatService {
             }
         }
         return objectMapper.writeValueAsString(moneySaved);
+    }
+
+    private String statisticsToJsonTotalThrowRate(List<Statistics> stats) throws JsonProcessingException {
+        HashMap<String, Pair<Double, Integer>> averageThrownPerDayPair = new HashMap<>();
+        for(Statistics stat : stats) {
+            String date = stat.getTimestamp().toString().substring(0, 10);
+            if(!averageThrownPerDayPair.containsKey(date)) {
+                averageThrownPerDayPair.put(date, new Pair<>(stat.getStatValue()*stat.getQuantity(), stat.getQuantity()));
+            } else {
+                Pair<Double, Integer> pair = averageThrownPerDayPair.get(date);
+                averageThrownPerDayPair.put(date, new Pair<>(pair.getFirst() + stat.getStatValue()*stat.getQuantity(), (int) pair.getSecond() + stat.getQuantity()));
+            }
+        }
+
+        ArrayList<Pair<String, Double>> averageThrownPerDaySortedByDate = new ArrayList<>();
+        HashSet<String> processedDates = new HashSet<>();
+
+        for(Statistics stat : stats) {
+            String date = stat.getTimestamp().toString().substring(0, 10);
+            if (!processedDates.contains(date)) {
+                Pair<Double, Integer> pair = averageThrownPerDayPair.get(date);
+                averageThrownPerDaySortedByDate.add(new Pair<>(date, pair.getFirst() / pair.getSecond()));
+                processedDates.add(date);
+            }
+        }
+
+        return objectMapper.writeValueAsString(averageThrownPerDaySortedByDate);
     }
 }
 
