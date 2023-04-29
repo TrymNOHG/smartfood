@@ -2,7 +2,7 @@ describe("Adding and deleting item from cart", () => {
   const base_url = "http://localhost:5173";
   const base_url_site = "http://localhost:5173";
   const base_url_endpoint = "http://localhost:8080";
-  let cartAddedItem = {};
+  let cartAddedItem = [];
   let fridgeAddedItem = [];
 
   beforeEach(() => {
@@ -57,10 +57,7 @@ describe("Adding and deleting item from cart", () => {
           },
         });
         // Save the body of the intercepted request to a variable
-        const requestBody = req.body;
-        cartAddedItem = requestBody;
-        // Do something with the requestBody, like logging it to the console
-        console.log("Request body:", requestBody);
+        cartAddedItem.push(req.body);
       }
     ).as("addItemRequest");
 
@@ -94,7 +91,7 @@ describe("Adding and deleting item from cart", () => {
       (req) => {
         req.reply({
           statusCode: 200,
-          body: fridgeAddedItem,
+          body: cartAddedItem,
         });
       }
     ).as("getCartItems");
@@ -271,8 +268,9 @@ describe("Adding and deleting item from cart", () => {
     cy.get("#searchbtn").click();
     cy.wait("@getSearchFromKasal");
     cy.contains(".item-var", "Ammeinnlegg 50stk Lillego").click();
-    cy.wait("@addItemRequest");
     cy.wait("@getCartItems");
+    cy.wait("@addItemRequest");
+
     cy.contains("Ammeinnlegg 50stk Lillego").should("be.visible");
   });
 
