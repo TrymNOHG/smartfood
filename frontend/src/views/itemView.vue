@@ -133,26 +133,6 @@ export default {
               });
             });
           });
-        } else {
-          const statDeleteFromFridgeDTO = {
-            "percentageThrown": parseFloat(deletePercentage),
-            "price": item.price,
-            "quantity": parseFloat(item.quantity),
-            "itemName": item.name,
-            "storeName": item.store,
-            "fridgeId": this.fridge.fridgeId
-          };
-          const itemRemoveDTO = {
-            "itemName": item.name,
-            "store": item.store,
-            "fridgeId": this.fridge.fridgeId,
-            "quantity": item.quantity
-          };
-          this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO).then(() => {
-            this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO).then(() => {
-              router.push('/fridge');
-            });
-          });
         }
       });
     }
