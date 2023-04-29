@@ -90,9 +90,9 @@
         />
       </div>
     </transition>
-    <div class="members-wrapper" v-show="selectedTab === 'members'">
-      <member-component />
-    </div>
+  </div>
+  <div class="members-wrapper" v-show="selectedTab === 'members'">
+    <member-component />
   </div>
 </template>
 

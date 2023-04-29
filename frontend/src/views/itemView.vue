@@ -223,7 +223,6 @@ export default {
   color: #3b3b3b;
   height: 25px;
   border-radius: 5px;
-  background-color: #fff;
   transition: all 0.2s ease-in-out;
 }
 
