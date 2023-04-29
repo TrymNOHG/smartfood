@@ -70,7 +70,7 @@ export default {
 }
 
 .control-buttons:last-child {
-  background-color: darkred;
+  background-color: red;
 }
 
 .control-buttons:last-child:hover {
@@ -93,7 +93,7 @@ export default {
     display: inline-block;
     margin: 0;
     padding: 8px 16px;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: bold;
     text-align: center;
     text-transform: uppercase;
@@ -113,7 +113,7 @@ export default {
   }
 
   .control-buttons:last-child {
-    background-color: darkred;
+    background-color: red;
   }
 
   .control-buttons:last-child:hover {

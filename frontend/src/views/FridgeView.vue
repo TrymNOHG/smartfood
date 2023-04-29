@@ -44,12 +44,6 @@
             {{ $t("search") }}
           </button>
         </div>
-        <div v-if="isCameraToggled">
-          <StreamBarcodeReader
-            @decode="(a, b, c) => onDecode(a, b, c)"
-            @loaded="() => onLoaded()"
-          ></StreamBarcodeReader>
-        </div>
       </div>
 
       <div class="dropper" v-if="search">
@@ -72,27 +66,32 @@
       </div>
     </div>
     <div class="filter-component">
-      <filter-bar  @listing="listing"/>
+      <filter-bar @listing="listing" />
     </div>
     <transition name="fade">
-      <div v-if="!listView" class="wrapper" :style="{ marginTop: marginTopStyle }">
+      <div
+        v-if="!listView"
+        class="wrapper"
+        :style="{ marginTop: marginTopStyle }"
+      >
         <basic-fridge-item
-            :isSuperUser="isCurrentUserSuperUser"
-            v-for="(item, index) in fridgeItems"
-            :key="index"
-            :item="item"
-            :currenFridge="fridge"
-            @delete-item="deleteItem"
-            @add-shopping="addShopping"
+          :isSuperUser="isCurrentUserSuperUser"
+          v-for="(item, index) in fridgeItems"
+          :key="index"
+          :item="item"
+          :currenFridge="fridge"
+          @delete-item="deleteItem"
+          @add-shopping="addShopping"
         />
       </div>
       <div v-else class="list-wrapper">
         <basic-fridge-list
-            v-for="(item, index) in fridgeItems"
-            :key="index" :item="item"
-            :currenFridge="fridge"
-            @delete-item="deleteItem"
-            @add-shopping="addShopping"
+          v-for="(item, index) in fridgeItems"
+          :key="index"
+          :item="item"
+          :currenFridge="fridge"
+          @delete-item="deleteItem"
+          @add-shopping="addShopping"
         />
       </div>
     </transition>
@@ -114,17 +113,15 @@ import { useFridgeStore, useItemStore } from "@/store/store";
 import { ref } from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
-import { getItemByBarcode, getItems } from "@/services/ApiService";
+import { getItems } from "@/services/ApiService";
 import Swal from "sweetalert2";
 import { addItemToShoppingList } from "@/services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
-import { StreamBarcodeReader } from "vue-barcode-reader";
 
 export default {
   name: "FridgeView",
   components: {
-    StreamBarcodeReader,
     BasicFridgeList,
     FilterBar,
     SearchItem,
@@ -145,8 +142,7 @@ export default {
   },
 
   methods: {
-
-    listing(bool){
+    listing(bool) {
       this.listView = bool;
     },
 
@@ -157,20 +153,20 @@ export default {
       const fridge = this.fridgeStore.getCurrentFridge;
 
       const itemDTO = {
-        "name": item.name,
-        "description": item.description,
-        "store": item.store,
-        "price": item.price,
-        "purchaseDate": date,
-        "expirationDate": expirationDate,
-        "image": item.image,
-        "quantity": 1,
-      }
+        name: item.name,
+        description: item.description,
+        store: item.store,
+        price: item.price,
+        purchaseDate: date,
+        expirationDate: expirationDate,
+        image: item.image,
+        quantity: 1,
+      };
 
       await addItemToShoppingList(itemDTO, fridge.fridgeId, false).then(
-          async (response) => {
-            console.log("response", response);
-          }
+        async (response) => {
+          console.log("response", response);
+        }
       );
     },
 
@@ -277,33 +273,6 @@ export default {
         //TODO: INFORMATION MEMBERS put information API in here
       }
     },
-    async onDecode(a, b, c) {
-      this.text = a;
-      barcode.value = a;
-      console.log(barcode.value);
-      await getItemByBarcode(barcode.value)
-        .then((response) => {
-          if (response !== undefined) {
-            this.searchItems.value = response.products;
-            console.log(response.products);
-            search.value = true;
-          } else {
-            console.log("Something went wrong");
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
-          }
-        })
-        .catch((error) => {
-          console.warn("error1", error); //TODO: add exception handling
-        });
-
-      if (this.id) clearTimeout(this.id);
-      this.id = setTimeout(() => {
-        if (this.text === a) {
-          this.text = "";
-        }
-      }, 5000);
-    },
   },
 
   setup() {
@@ -341,18 +310,19 @@ export default {
     return {
       isExpanded: false,
       listView: false,
-    }
+    };
   },
 };
 </script>
 
 <style scoped>
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .25s ease;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
 }
 
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 
@@ -515,17 +485,13 @@ input[type="text"]:not(:focus) {
 }
 
 @media (max-width: 860px) {
-
   .list-wrapper {
     display: grid;
     grid-template-columns: 1fr;
   }
-
 }
 
-
 @media (max-width: 650px) {
-
   .filter-component {
     width: 100%;
   }
@@ -558,8 +524,7 @@ input[type="text"]:not(:focus) {
     overflow-y: scroll;
   }
 
-
-  #searchbtn{
+  #searchbtn {
     display: none;
   }
 
