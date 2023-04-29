@@ -38,11 +38,17 @@
             v-model="searchQuery"
             @input="handleSearch"
             :label="$t('add_item')"
-            @receipt-upload="handleReceiptUpload"
+            @receipt-upload="toggleCamera"
           ></SearchInput>
           <button id="searchbtn" @click="handleSearch">
             {{ $t("search") }}
           </button>
+        </div>
+        <div v-if="isCameraToggled">
+          <StreamBarcodeReader
+            @decode="(a, b, c) => onDecode(a, b, c)"
+            @loaded="() => onLoaded()"
+          ></StreamBarcodeReader>
         </div>
       </div>
 
@@ -113,15 +119,17 @@ import { useFridgeStore, useItemStore } from "@/store/store";
 import { ref } from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
-import { getItems } from "@/services/ApiService";
+import { getItemByBarcode, getItems } from "@/services/ApiService";
 import Swal from "sweetalert2";
 import { addItemToShoppingList } from "@/services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
+import { StreamBarcodeReader } from "vue-barcode-reader";
 
 export default {
   name: "FridgeView",
   components: {
+    StreamBarcodeReader,
     BasicFridgeList,
     FilterBar,
     SearchItem,
@@ -144,6 +152,9 @@ export default {
   methods: {
     listing(bool) {
       this.listView = bool;
+    },
+    toggleCamera() {
+      this.isCameraToggled = !this.isCameraToggled;
     },
 
     async addShopping(item) {
@@ -169,8 +180,33 @@ export default {
         }
       );
     },
+    async onDecode(a, b, c) {
+      this.text = a;
+      const barcode = a;
+      console.log(barcode);
+      await getItemByBarcode(barcode)
+        .then((response) => {
+          if (response !== undefined) {
+            this.searchItems = response.products;
+            console.log(response.products);
+            this.search = true;
+          } else {
+            console.log("Something went wrong");
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+          }
+        })
+        .catch((error) => {
+          console.warn("error1", error); //TODO: add exception handling
+        });
 
-    handleReceiptUpload() {},
+      if (this.id) clearTimeout(this.id);
+      this.id = setTimeout(() => {
+        if (this.text === a) {
+          this.text = "";
+        }
+      }, 5000);
+    },
     handleSearch() {
       this.search = this.searchQuery.length >= 2;
       getItems(this.searchQuery)
@@ -181,6 +217,9 @@ export default {
         .catch((error) => {
           console.error(error);
         });
+    },
+    onLoaded() {
+      console.log("load");
     },
 
     async deleteItem(itemToDelete, deletePercentage) {
@@ -248,6 +287,14 @@ export default {
         quantity: 1,
       };
 
+      if (typeof item.current_price.price === "number" && itemDTO) {
+        itemDTO.price = item.current_price.price;
+        if (statAddItemToFridgeDTO) {
+          statAddItemToFridgeDTO.price = item.current_price.price;
+          console.log(itemDTO.price);
+        }
+      }
+
       if (!this.isCurrentUserSuperUser) {
         await addItemToShoppingList(itemDTO, fridgeId, true).then(
           async (response) => {
@@ -283,6 +330,7 @@ export default {
     const search = ref(false);
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
+    const isCameraToggled = ref(false);
 
     itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
       fridgeItems.value = items;
@@ -303,6 +351,7 @@ export default {
       fridgeStore,
       search,
       itemStore,
+      isCameraToggled,
     };
   },
 
