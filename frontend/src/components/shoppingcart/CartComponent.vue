@@ -341,7 +341,8 @@ export default {
             store: item.store,
             price: item.price,
             image: item.image,
-            quantity: 1,
+            EAN: item.ean,
+            quantity: 1
           };
           const fridgeId = currentFridge.fridgeId;
 
@@ -482,6 +483,7 @@ export default {
         purchaseDate: new Date(),
         expirationDate: new Date(),
         image: item.image,
+        EAN: item.ean,
         quantity: 1,
       };
       const fridgeId = currentFridge.fridgeId;

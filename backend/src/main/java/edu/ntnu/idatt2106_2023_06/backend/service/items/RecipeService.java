@@ -2,8 +2,10 @@ package edu.ntnu.idatt2106_2023_06.backend.service.items;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.*;
+import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.recipe.*;
 import jakarta.transaction.Transactional;
 import lombok.*;
@@ -31,9 +33,13 @@ public class RecipeService {
     private final RecipeAllergenRepository recipeAllergenRepository;
     private final InstructionRepository instructionRepository;
     private final RecipePartRepository recipePartRepository;
+    private final ItemRepository itemRepository;
+    private final ItemService itemService;
+    private final RecipeItemsRepository recipeItemsRepository;
 
     @Transactional
     public void scrapeRecipe(String recipePageURL) throws IOException {
+
         final Document document = Jsoup.connect(recipePageURL).get();
 
         Element recipeComponent = document.selectFirst("div[data-component=RecipeWeb]");
@@ -170,15 +176,20 @@ public class RecipeService {
                     String EAN = product.get("ean").asText();
                     int measurementValue = ingredient.get("measurementValue").asInt();
                     String unit = ingredient.get("measurementType").asText();
+
+                    Item itemOfRecipe = itemRepository.findItemByEanAndStore_StoreName(EAN, "Meny")
+                            .orElseGet(() -> createItemByEAN(EAN));
+
                     RecipeItems recipeItem = RecipeItems
                             .builder()
-                            .id(new RecipeItemId(1L, recipePart.getRecipePartId())) //TODO: add itemID
-                            .item(new Item()) //TODO
+                            .id(new RecipeItemId(itemOfRecipe.getItemId(), recipePart.getRecipePartId()))
+                            .item(itemOfRecipe)
                             .recipePart(recipePart)
                             .quantity(measurementValue)
                             .unitOfMeasurement(unit)
                             .build();
 
+                    recipeItemsRepository.save(recipeItem);
                     System.out.println(recipeItem + "    " + EAN);
 
                     //TODO: first add EAN to an item, change the itemDTO to include this...
@@ -223,5 +234,43 @@ public class RecipeService {
                 System.out.println("Part name: " + partName);
             }
         }
+    }
+
+    @Transactional
+    public Item createItemByEAN(String ean){
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("https://kassal.app/api/v1/products/ean/" + ean)
+                .header("Authorization", "Bearer lWLt2onXRYSUgtMTkeJQq5i4dP6XhHPkl7ywLOSX") //TODO: use ApiConfig instead
+                .build();
+
+        try(Response response = client.newCall(request).execute()) {
+            String responseBody = response.body().string();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(responseBody);
+
+            for(JsonNode product : rootNode.at("/data/products")) {
+                if(!product.get("store").get("name").asText().equals("Meny")) continue;
+                ItemDTO itemDTO = ItemDTO
+                        .builder()
+                        .EAN(ean)
+                        .price(product.get("current_price").get("price").asDouble())
+                        .name(product.get("name").asText())
+                        .store("Meny")
+                        .quantity(1)
+                        .image(product.get("image").asText())
+                        .description(product.get("description").asText())
+                        .suggestion(false)
+                        .build();
+
+                return itemService.addItem(itemDTO);
+            }
+        }
+        catch (Exception ignored) {
+
+        }
+        return null;
     }
 }
