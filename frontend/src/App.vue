@@ -401,7 +401,7 @@ nav ul li a .text {
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    z-index: 1;
+    z-index: 10;
   }
 
   header img {
