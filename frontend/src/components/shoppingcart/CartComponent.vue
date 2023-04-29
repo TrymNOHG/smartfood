@@ -278,7 +278,6 @@ export default {
           quantity: item.quantity,
         };
         itemRemoveDTOList.push(ItemRemoveDTO);
-
       });
       try {
         itemRemoveDTOList.shift();
@@ -918,94 +917,6 @@ button[class*="btn"] {
 button:focus,
 input:focus {
   outline: 0;
-}
-
-@media only screen and (max-width: 800px) {
-  header {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 80px;
-  }
-
-  .item {
-    width: 98vw;
-  }
-
-  .dropper {
-    width: 97vw;
-  }
-
-  header img {
-    height: 40px;
-    margin-right: 0;
-    margin-bottom: 10px;
-  }
-
-  h1 {
-    font-size: 1rem;
-    letter-spacing: 2px;
-  }
-
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 70px;
-    background-color: #31c48d;
-    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  nav ul {
-    display: flex;
-    justify-content: space-between;
-    width: 80%;
-  }
-
-  nav ul li {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-  }
-
-  nav ul li a {
-    font-size: 0.6rem;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-  }
-
-  nav ul li a .icon {
-    margin-bottom: 5px;
-    font-size: 2em;
-  }
-
-  nav ul li.active a {
-    color: #fcfbfb;
-    background-color: #218838;
-    border-radius: 50%;
-  }
-
-  nav ul li.active a .icon {
-    color: #fcfbfb;
-  }
-
-  .buttons {
-    position: relative;
-    margin-right: 0;
-  }
-
-  .quantity {
-    padding-top: 25px;
-    margin-left: 0;
-    display: flex;
-  }
 }
 
 @media only screen and (min-width: 50px) and (max-width: 650px) {

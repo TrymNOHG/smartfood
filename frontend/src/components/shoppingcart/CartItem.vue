@@ -414,9 +414,7 @@ input[type="number"] {
 }
 
 .btn-checkbox:hover {
-  margin: 10px;
   cursor: pointer;
-  scale: 1.2;
 }
 
 .btn-trash {
@@ -487,35 +485,12 @@ input[type="number"] {
 }
 
 @media only screen and (max-width: 800px) {
-  .product-img {
-    width: 100px; /* set a fixed width for the containing div */
-    height: 100px; /* set a fixed height for the containing div */
+  .quantity {
+    position: relative;
+    transform: translateX(-200px);
   }
-
-  .img-container {
-    max-width: 100%; /* ensure the image does not exceed the container width */
-    max-height: 100%; /* ensure the image does not exceed the container height */
-    overflow: hidden; /* hide any overflow beyond the container */
-  }
-
-  .img-container img {
-    width: auto; /* allow the image to maintain its aspect ratio */
-    height: auto; /* allow the image to maintain its aspect ratio */
-    max-width: 100%; /* ensure the image does not exceed the container width */
-    max-height: 100%; /* ensure the image does not exceed the container height */
-  }
-
-  .delete-btn {
-    display: none;
-  }
-
-  .item {
-    padding: 0px 0px;
-    height: 120px;
-    width: 70%;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
+  .description {
+    word-break: break-all;
   }
 }
 
