@@ -15,7 +15,11 @@
       <div class="info-delete-wrapper">
         <item-info :item="item" class="info-delete"/>
         <div></div>
-        <item-delete v-if="isCurrentUserSuperUser" :item="item" class="info-delete" @delete-item="deleteItem"/>
+        <item-delete
+            v-if="isCurrentUserSuperUser"
+            :item="item" class="info-delete"
+            @delete-item="deleteItem"
+            @add-shopping="addShopping"/>
       </div>
     </div>
   </div>
@@ -28,6 +32,8 @@ import ItemInfo from "@/components/itemDescription/itemInfo.vue";
 import ItemDelete from "@/components/itemDescription/itemDelete.vue";
 import {useFridgeStore, useItemStore} from "@/store/store";
 import router from "@/router/router";
+import {addItemToShoppingList} from "@/services/ItemService";
+import swal from "sweetalert2";
 
 export default {
   name: "itemView",
@@ -51,29 +57,104 @@ export default {
       //TODO: INFORMATION PROFILE put information API in here
     },
 
-    async deleteItem(itemToDelete, deletePercentage) {
+    async addShopping(item) {
+      const date = new Date();
+      const expirationDate = new Date(date);
+      expirationDate.setDate(date.getDate() + 7);
 
-      const statDeleteFromFridgeDTO = {
-        "percentageThrown": parseFloat(deletePercentage),
-        "price": itemToDelete.price,
-        "quantity": parseFloat(itemToDelete.quantity),
-        "itemName": itemToDelete.name,
-        "storeName": itemToDelete.store,
-        "fridgeId": this.fridge.fridgeId
+      const itemDTO = {
+        "name": item.name,
+        "description": item.description,
+        "store": item.store,
+        "price": item.price,
+        "purchaseDate": date,
+        "expirationDate": expirationDate,
+        "image": item.image,
+        "quantity": 1,
       }
 
-      const itemRemoveDTO = {
-        "itemName": itemToDelete.name,
-        "store": itemToDelete.store,
-        "fridgeId": this.fridge.fridgeId,
-        "quantity": itemToDelete.quantity
-      }
+      await addItemToShoppingList(itemDTO, this.fridge.fridgeId, false).then(
+          async (response) => {
+            console.log("response", response);
+            console.warn("error1", error); //TODO: add exception handling
+          }
+      );
+    },
 
-      console.log(statDeleteFromFridgeDTO)
-      console.log(itemRemoveDTO)
-      await this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO);
-      await this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO);
-      await router.push('/fridge')
+    async deleteItem(item, deletePercentage) {
+
+      swal.fire({
+        title: this.$t('confirm_title'),
+        text: this.$t('confirm_text'),
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4dce38',
+        cancelButtonColor: '#d33',
+        confirmButtonText: this.$t('confirm_button'),
+        cancelButtonText: this.$t('cancel_button'),
+        customClass: {
+          container: 'my-swal-dialog-container'
+        }
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          swal.fire({
+            title: this.$t('buy_again'),
+            text: this.$t('confirm_text'),
+            icon: 'success',
+            showCancelButton: true,
+            confirmButtonColor: '#4dce38',
+            cancelButtonColor: '#d33',
+            confirmButtonText: this.$t('Yes'),
+            cancelButtonText: this.$t('No'),
+            customClass: {
+              container: 'my-swal-dialog-container'
+            }
+          }).then((result) => {
+            const statDeleteFromFridgeDTO = {
+              "percentageThrown": parseFloat(deletePercentage),
+              "price": item.price,
+              "quantity": parseFloat(item.quantity),
+              "itemName": item.name,
+              "storeName": item.store,
+              "fridgeId": this.fridge.fridgeId
+            };
+            const itemRemoveDTO = {
+              "itemName": item.name,
+              "store": item.store,
+              "fridgeId": this.fridge.fridgeId,
+              "quantity": item.quantity
+            };
+            if (result.isConfirmed) {
+              this.addShopping(item);
+            }
+            this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO).then(() => {
+              this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO).then(() => {
+                router.push('/fridge');
+              });
+            });
+          });
+        } else {
+          const statDeleteFromFridgeDTO = {
+            "percentageThrown": parseFloat(deletePercentage),
+            "price": item.price,
+            "quantity": parseFloat(item.quantity),
+            "itemName": item.name,
+            "storeName": item.store,
+            "fridgeId": this.fridge.fridgeId
+          };
+          const itemRemoveDTO = {
+            "itemName": item.name,
+            "store": item.store,
+            "fridgeId": this.fridge.fridgeId,
+            "quantity": item.quantity
+          };
+          this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO).then(() => {
+            this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO).then(() => {
+              router.push('/fridge');
+            });
+          });
+        }
+      });
     }
   },
   computed: {
@@ -155,29 +236,10 @@ export default {
   padding-top: 5px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-column-gap: 20px;
+  grid-column-gap: 10px;
   grid-column: 2;
 }
-
-.name-display {
-  text-align: start;
-  background-color: #31c48d;
-  color: white;
-  width: 100%;
-  height: 50px;
-  text-shadow: black 1px 1px 2px;
-  display: flex;
-  justify-content: space-evenly;
-}
-
-.fridge-name {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 50px;
-  margin-left: 28%;
-}
-.members-fridge:hover .fridge-name {
+.members-fridge:hover {
   color: #3b3b3b;
   height: 25px;
   border-radius: 5px;
@@ -185,44 +247,9 @@ export default {
   transition: all 0.2s ease-in-out;
 }
 
-.change-button {
-  text-align: center;
-  background-color: white;
-  color: black;
-  height: 35px;
-  width: 20%;
-  margin-top: 0.5%;
-  margin-right: 5%;
-  text-shadow: white 0 0 0;
-  font-weight: 500;
-  border-radius: 5px;
-}
-
-.change-button:hover {
-  color: white;
-  border-radius: 5px;
-  background-color: #b1b1b1;
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
-}
-
 .link {
   text-decoration: none;
   color: white;
-}
-.link-name{
-  text-decoration: none;
-  color: white;
-}
-
-.link-button{
-  text-decoration: none;
-  color: black;
-}
-
-.break-line {
-  height: 7px;
-  background-color: black;
 }
 
 @media (max-width: 650px) {
