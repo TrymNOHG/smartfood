@@ -247,21 +247,6 @@ export default {
     align-items: center;
   }
 
-  .fridge-name {
-    margin-left: 30%;
-    font-size: 18px;
-  }
-
-  .change-button {
-    width: 20%;
-    top: 20%;
-    font-size: 0.7rem;
-  }
-
-  .name-display {
-    font-size: 1.2rem;
-  }
-
 }
 
 

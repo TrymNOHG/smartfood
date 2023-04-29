@@ -35,7 +35,7 @@
       </div>
       </div>
     <div class="sidebar">
-      <h3>Choose Statistics</h3>
+      <h3 v-if="!isMobile">Choose Statistics</h3>
       <BasicSelect
           v-if="!isMobile"
           class="dropDown"
@@ -103,12 +103,8 @@ export default {
 
 <style scoped>
 
-/* General styles */
-
 #chart {
   width: 500px;
-  min-width: 380px;
-  max-width: 100%;
   height: 300px;
 }
 
@@ -204,6 +200,10 @@ h3 {
 }
 
 @media screen and (max-width: 768px) {
+  #chart {
+    width: 380px;
+  }
+
   .dropDown {
     font-size: 14px;
   }
@@ -235,10 +235,6 @@ h3 {
 
   .chart-legend li {
     font-size: 0.9rem;
-  }
-
-  .sidebar {
-    display: none;
   }
 }
 

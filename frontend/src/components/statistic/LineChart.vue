@@ -131,12 +131,6 @@ export default {
   padding: 20px;
 }
 
-.chart-wrapper {
-  position: relative;
-  height: 300px;
-  width: 100%;
-}
-
 .chart-legend {
   display: flex;
   justify-content: center;
@@ -149,17 +143,6 @@ export default {
   font-size: 14px;
   line-height: 1.2;
   margin-right: 20px;
-}
-
-.chart-legend-color {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  margin-right: 5px;
-}
-
-.chart-legend-text {
-  white-space: nowrap;
 }
 
 .chart-legend li:last-child {
