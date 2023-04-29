@@ -42,7 +42,7 @@ public class Recipe {
     /**
      * The description of the recipe
      */
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, length = 1000)
     @NonNull
     private String description;
 

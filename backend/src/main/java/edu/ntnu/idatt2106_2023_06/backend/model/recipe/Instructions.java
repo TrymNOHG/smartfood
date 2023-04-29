@@ -41,7 +41,7 @@ public class Instructions {
     /**
      * The actual instruction.
      */
-    @Column(name = "instruction", nullable = false)
+    @Column(name = "instruction", nullable = false, length = 1000)
     @NonNull
     private String instruction;
 

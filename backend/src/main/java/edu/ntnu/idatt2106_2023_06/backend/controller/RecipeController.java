@@ -38,7 +38,9 @@ public class RecipeController {
 
 
         //TODO: I could first scrape the different urls for the different recipes and then use those
-        String recipePageUrl = "https://meny.no/oppskrifter/pizza/enkel-pizza-med-karbonadedeig/";
+        String recipePageUrl = "https://meny.no/oppskrifter/Kylling/kylling-tikka-masala/";
+
+        //TODO: test https://meny.no/oppskrifter/Kylling/kylling-tikka-masala/ for too long desc
 
 
         recipeService.scrapeRecipe(recipePageUrl);
