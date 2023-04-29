@@ -72,22 +72,33 @@
       </div>
     </div>
     <div class="filter-component">
-      <filter-bar />
+      <filter-bar  @listing="listing"/>
     </div>
-    <div class="wrapper" :style="{ marginTop: marginTopStyle }">
-      <basic-fridge-item
-        :isSuperUser="isCurrentUserSuperUser"
-        v-for="(item, index) in fridgeItems"
-        :key="index"
-        :item="item"
-        :currenFridge="fridge"
-        @delete-item="deleteItem"
-      />
+    <transition name="fade">
+      <div v-if="!listView" class="wrapper" :style="{ marginTop: marginTopStyle }">
+        <basic-fridge-item
+            :isSuperUser="isCurrentUserSuperUser"
+            v-for="(item, index) in fridgeItems"
+            :key="index"
+            :item="item"
+            :currenFridge="fridge"
+            @delete-item="deleteItem"
+            @add-shopping="addShopping"
+        />
+      </div>
+      <div v-else class="list-wrapper">
+        <basic-fridge-list
+            v-for="(item, index) in fridgeItems"
+            :key="index" :item="item"
+            :currenFridge="fridge"
+            @delete-item="deleteItem"
+            @add-shopping="addShopping"
+        />
+      </div>
+    </transition>
+    <div class="members-wrapper" v-show="selectedTab === 'members'">
+      <member-component />
     </div>
-  </div>
-
-  <div class="members-wrapper" v-show="selectedTab === 'members'">
-    <member-component />
   </div>
 </template>
 
@@ -98,21 +109,23 @@ import {
 } from "@dafcoe/vue-collapsible-panel";
 import { useRoute } from "vue-router";
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
-import BasicFridgeItem from "@/components/SpecificFridge/BasicFridgeItem.vue";
+import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import { useFridgeStore, useItemStore } from "@/store/store";
 import { ref } from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import { getItemByBarcode, getItems } from "@/services/ApiService";
 import Swal from "sweetalert2";
-import { addItemToShoppingList } from "../services/ItemService";
+import { addItemToShoppingList } from "@/services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
+import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
 import { StreamBarcodeReader } from "vue-barcode-reader";
 
 export default {
   name: "FridgeView",
   components: {
     StreamBarcodeReader,
+    BasicFridgeList,
     FilterBar,
     SearchItem,
     SearchInput,
@@ -132,6 +145,35 @@ export default {
   },
 
   methods: {
+
+    listing(bool){
+      this.listView = bool;
+    },
+
+    async addShopping(item) {
+      const date = new Date();
+      const expirationDate = new Date(date);
+      expirationDate.setDate(date.getDate() + 7);
+      const fridge = this.fridgeStore.getCurrentFridge;
+
+      const itemDTO = {
+        "name": item.name,
+        "description": item.description,
+        "store": item.store,
+        "price": item.price,
+        "purchaseDate": date,
+        "expirationDate": expirationDate,
+        "image": item.image,
+        "quantity": 1,
+      }
+
+      await addItemToShoppingList(itemDTO, fridge.fridgeId, false).then(
+          async (response) => {
+            console.log("response", response);
+          }
+      );
+    },
+
     handleReceiptUpload() {},
     handleSearch() {
       this.search = this.searchQuery.length >= 2;
@@ -189,8 +231,7 @@ export default {
       }
 
       const date = new Date();
-      const expirationDate = new Date(date);
-      expirationDate.setDate(date.getDate() + 7);
+      const expirationDate = new Date();
 
       const statAddItemToFridgeDTO = {
         price: item.current_price,
@@ -273,11 +314,10 @@ export default {
     const search = ref(false);
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
-    const isCameraToggled = itemStore
-      .fetchItemsFromFridgeById(fridge.fridgeId)
-      .then((items) => {
-        fridgeItems.value = items;
-      });
+
+    itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
+      fridgeItems.value = items;
+    });
 
     const itemAmount = ref(1);
     const submitMessage = ref("norvegia");
@@ -300,12 +340,29 @@ export default {
   data() {
     return {
       isExpanded: false,
-    };
+      listView: false,
+    }
   },
 };
 </script>
 
 <style scoped>
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .25s ease;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+.list-wrapper {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin: 2%;
+  z-index: 0;
+}
+
 .grey-bar {
   background-color: #6c6c6c;
   max-height: 35px;
@@ -358,6 +415,7 @@ export default {
 
 .fridge-wrapper {
   display: grid;
+  flex-direction: column;
 }
 
 .vcpg {
@@ -394,10 +452,6 @@ input[type="text"]:not(:focus) {
   text-decoration: none;
   line-height: 25px;
   color: white;
-}
-
-#toggle-button {
-  width: 150px;
 }
 
 #toggle-button:hover {
@@ -451,7 +505,6 @@ input[type="text"]:not(:focus) {
   --bg-color-header: transparent !important;
   border: transparent;
   width: 100%;
-  overflow-y: scroll;
   color: black;
   background-color: white;
   border-radius: 0;
@@ -461,7 +514,22 @@ input[type="text"]:not(:focus) {
   background-color: #6c6c6c;
 }
 
+@media (max-width: 860px) {
+
+  .list-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
 @media (max-width: 650px) {
+
+  .filter-component {
+    width: 100%;
+  }
+
   .fridge-wrapper {
     height: 100%;
     grid-template-rows: repeat(auto-fill, minmax(95px, 95px));
@@ -482,6 +550,16 @@ input[type="text"]:not(:focus) {
 
 @media only screen and (min-width: 10px) and (max-width: 650px) {
   #searchbtn {
+    display: none;
+  }
+
+  .list-wrapper {
+    z-index: -1;
+    overflow-y: scroll;
+  }
+
+
+  #searchbtn{
     display: none;
   }
 
@@ -506,7 +584,7 @@ input[type="text"]:not(:focus) {
 
   .members-fridge {
     background-color: #31c48d;
-    margin-top: 0px;
+    margin-top: 0;
     padding-top: 0;
     padding-right: 10px;
     text-align: center;
