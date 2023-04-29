@@ -20,7 +20,6 @@
             @decode="(a, b, c) => onDecode(a, b, c)"
             @loaded="() => onLoaded()"
           ></StreamBarcodeReader>
-          Input Value: {{ text || "Nothing" }}
         </div>
 
         <div id="searchbar">
@@ -842,26 +841,6 @@ body {
   border-bottom: 1px solid #e1e8ee;
 }
 
-.buttons {
-  position: relative;
-  padding-top: 30px;
-  margin-right: 60px;
-}
-
-.delete-btn,
-.like-btn {
-  display: inline-block;
-  cursor: pointer;
-}
-
-.is-active {
-  animation-name: animate;
-  animation-duration: 0.8s;
-  animation-iteration-count: 1;
-  animation-timing-function: steps(28);
-  animation-fill-mode: forwards;
-}
-
 #forslagBlack {
   height: 6px;
   background-color: white;
@@ -1029,7 +1008,7 @@ input:focus {
   }
 }
 
-@media only screen and (min-width: 350px) and (max-width: 480px) {
+@media only screen and (min-width: 50px) and (max-width: 650px) {
   .buttons {
     position: relative;
     margin-left: 20px;
@@ -1370,38 +1349,6 @@ input:focus {
   button:focus,
   input:focus {
     outline: 0;
-  }
-}
-
-@media only screen and (max-width: 350px) {
-  .item {
-    width: 100vw;
-  }
-
-  .buttons {
-    position: relative;
-    margin-top: -20px;
-    margin-right: 0;
-  }
-
-  .dropper {
-    width: 100vw;
-  }
-
-  .quantity {
-    padding-top: 0;
-    margin-top: 5px;
-    display: block;
-  }
-
-  .quantity input {
-    -webkit-appearance: none;
-    border: none;
-    text-align: center;
-    width: 32px;
-    font-size: 16px;
-    color: #43484d;
-    font-weight: 300;
   }
 }
 </style>

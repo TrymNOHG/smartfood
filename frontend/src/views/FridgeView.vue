@@ -66,27 +66,32 @@
       </div>
     </div>
     <div class="filter-component">
-      <filter-bar  @listing="listing"/>
+      <filter-bar @listing="listing" />
     </div>
     <transition name="fade">
-      <div v-if="!listView" class="wrapper" :style="{ marginTop: marginTopStyle }">
+      <div
+        v-if="!listView"
+        class="wrapper"
+        :style="{ marginTop: marginTopStyle }"
+      >
         <basic-fridge-item
-            :isSuperUser="isCurrentUserSuperUser"
-            v-for="(item, index) in fridgeItems"
-            :key="index"
-            :item="item"
-            :currenFridge="fridge"
-            @delete-item="deleteItem"
-            @add-shopping="addShopping"
+          :isSuperUser="isCurrentUserSuperUser"
+          v-for="(item, index) in fridgeItems"
+          :key="index"
+          :item="item"
+          :currenFridge="fridge"
+          @delete-item="deleteItem"
+          @add-shopping="addShopping"
         />
       </div>
       <div v-else class="list-wrapper">
         <basic-fridge-list
-            v-for="(item, index) in fridgeItems"
-            :key="index" :item="item"
-            :currenFridge="fridge"
-            @delete-item="deleteItem"
-            @add-shopping="addShopping"
+          v-for="(item, index) in fridgeItems"
+          :key="index"
+          :item="item"
+          :currenFridge="fridge"
+          @delete-item="deleteItem"
+          @add-shopping="addShopping"
         />
       </div>
     </transition>
@@ -137,8 +142,7 @@ export default {
   },
 
   methods: {
-
-    listing(bool){
+    listing(bool) {
       this.listView = bool;
     },
 
@@ -149,20 +153,20 @@ export default {
       const fridge = this.fridgeStore.getCurrentFridge;
 
       const itemDTO = {
-        "name": item.name,
-        "description": item.description,
-        "store": item.store,
-        "price": item.price,
-        "purchaseDate": date,
-        "expirationDate": expirationDate,
-        "image": item.image,
-        "quantity": 1,
-      }
+        name: item.name,
+        description: item.description,
+        store: item.store,
+        price: item.price,
+        purchaseDate: date,
+        expirationDate: expirationDate,
+        image: item.image,
+        quantity: 1,
+      };
 
       await addItemToShoppingList(itemDTO, fridge.fridgeId, false).then(
-          async (response) => {
-            console.log("response", response);
-          }
+        async (response) => {
+          console.log("response", response);
+        }
       );
     },
 
@@ -269,7 +273,6 @@ export default {
         //TODO: INFORMATION MEMBERS put information API in here
       }
     },
-
   },
 
   setup() {
@@ -307,18 +310,19 @@ export default {
     return {
       isExpanded: false,
       listView: false,
-    }
+    };
   },
 };
 </script>
 
 <style scoped>
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .25s ease;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
 }
 
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 
@@ -481,17 +485,13 @@ input[type="text"]:not(:focus) {
 }
 
 @media (max-width: 860px) {
-
   .list-wrapper {
     display: grid;
     grid-template-columns: 1fr;
   }
-
 }
 
-
 @media (max-width: 650px) {
-
   .filter-component {
     width: 100%;
   }
@@ -514,7 +514,7 @@ input[type="text"]:not(:focus) {
   }
 }
 
-@media only screen and (min-width: 350px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 650px) {
   #searchbtn {
     display: none;
   }
@@ -524,8 +524,7 @@ input[type="text"]:not(:focus) {
     overflow-y: scroll;
   }
 
-
-  #searchbtn{
+  #searchbtn {
     display: none;
   }
 
