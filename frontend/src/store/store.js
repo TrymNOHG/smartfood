@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { getUser } from "@/services/UserService"
-import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
+import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge, filterFridge} from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
 import {addItemToFridge, getItemsFromFridge, deleteItemFromFridge} from "@/services/ItemService";
 import {ref} from "vue";
@@ -191,7 +191,15 @@ export const useItemStore = defineStore('itemStore', {
                 this.allItems = response.data;
             })
             return this.allItems;
-        }
+        },
+
+        async filterItemsInFridge(filters, sort, page){
+            await filterFridge(filters, sort, page).then(response => {
+                this.allItems = []
+                this.allItems = response;
+            })
+            return this.allItems
+        },
     },
 });
 
