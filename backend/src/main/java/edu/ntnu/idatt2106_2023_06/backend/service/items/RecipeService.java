@@ -161,6 +161,10 @@ public class RecipeService {
                             ---- END OF SAVING RECIPE ALLERGENS ----
                          */
 
+                    /*
+                        ---- SAVING RECIPE ITEM ----
+                     */
+
                     //TODO: if item does not already exist in database, register it and then use the item created to create recipe item
                     //TODO: need to store EAN in database...
                     String EAN = product.get("ean").asText();
@@ -182,6 +186,9 @@ public class RecipeService {
 //                    Can get List of items by EAN and pick first.
                     //TODO: create RecipeItem, get EAN here
                 }
+                /*
+                    ---- END OF SAVING RECIPE ITEM ----
+                 */
 
                 /*
                            ---- SAVING INSTRUCTIONS FOR RECIPE ----
@@ -189,7 +196,6 @@ public class RecipeService {
                 if(!stepsAdded) {
                     JsonNode steps = recipePartNode.at("/recipeSteps");
                     if(steps.isArray() && steps.size() > 0) {
-                        StringBuilder sb = new StringBuilder();
                         for (JsonNode step : steps) {
                             JsonNode imgId = step.get("/imageId");
                             String stepImageLink = imgId == null ? "" :

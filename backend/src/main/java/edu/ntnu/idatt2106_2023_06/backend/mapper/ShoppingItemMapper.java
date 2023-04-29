@@ -28,6 +28,7 @@ public class ShoppingItemMapper {
                 .image(item.getPictureLink())
                 .quantity(quantity)
                 .suggestion(suggestion)
+                .ean(item.getEan())
                 .build();
     }
 

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,7 +56,12 @@ public class RecipePartTest {
     @Nested
     class RecipePart_can_properly_get {
         RecipePart getRecipePart() {
-            return new RecipePart(1L, new Recipe(), "Make dough", new ArrayList<>());
+            return new RecipePart(1L, new Recipe(1L, "Grønnsakslasagne med søtpotet, aubergine og grønnkål",
+                    "En vegetarisk oppskrift på grønnsakslasagne full av smak. Her er kjøttdeigen " +
+                            "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
+                            "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
+                            "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
+                    50, new ArrayList<>(),  new ArrayList<>(), new HashSet<>()), "Make dough", new ArrayList<>());
         }
 
         @Test
@@ -70,7 +76,12 @@ public class RecipePartTest {
         @Test
         void recipe() {
             RecipePart recipePart = getRecipePart();
-            Recipe expectedRecipe = new Recipe();
+            Recipe expectedRecipe = new Recipe(1L, "Grønnsakslasagne med søtpotet, aubergine og grønnkål",
+                    "En vegetarisk oppskrift på grønnsakslasagne full av smak. Her er kjøttdeigen " +
+                            "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
+                            "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
+                            "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
+                    50, new ArrayList<>(),  new ArrayList<>(), new HashSet<>());
 
             Recipe actualRecipe = recipePart.getRecipe();
 

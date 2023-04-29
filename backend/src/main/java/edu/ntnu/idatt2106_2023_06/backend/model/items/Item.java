@@ -72,6 +72,12 @@ public class Item {
     private String pictureLink;
 
     /**
+     * The ean code of the item, can be null
+     */
+    @Column(name = "ean")
+    private String ean;
+
+    /**
      * The items in the recipe.
      */
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)

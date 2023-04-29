@@ -64,7 +64,7 @@ public class ItemServiceTest {
 
             ItemDTO itemDTO = new ItemDTO( "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     "Kiwi", 200000,
-                    null, 1, null);
+                    null, 1, null, "12345678");
             itemService.addItem(itemDTO);
             assertDoesNotThrow(() -> {
                 itemRepository.findByItemId(1L).orElseThrow();
@@ -98,7 +98,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
 
             ItemDTO itemDTO = ItemMapper.toItemDTO(item, 1, true);
@@ -120,7 +120,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ItemDTO itemDTO = ItemMapper.toItemDTO(item, 1, true);
 
@@ -157,7 +157,7 @@ public class ItemServiceTest {
         void throws_FridgeNotFoundException(){
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             assertThrows(FridgeNotFoundException.class, () -> {
                 ItemDTO itemDTO = ItemMapper.toItemDTO(item, 1, true);
@@ -196,7 +196,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             FridgeItems fridgeItems = FridgeItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
@@ -255,7 +255,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             FridgeItems fridgeItems = FridgeItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
@@ -282,7 +282,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             FridgeItems fridgeItems = FridgeItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
@@ -323,7 +323,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
             assertThrows(FridgeNotFoundException.class, () -> {
@@ -361,7 +361,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
             assertThrows(FridgeItemsNotFoundException.class, () -> {
@@ -400,7 +400,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
 
             ItemDTO itemDTO = ItemMapper.toItemDTO(item, 1, true);
@@ -424,7 +424,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
 
             ItemDTO itemDTO = ItemMapper.toItemDTO(item, 1, true);
@@ -450,6 +450,7 @@ public class ItemServiceTest {
                     .builder()
                     .name("Melk")
                     .store("Dairy")
+                    .EAN("12356")
                     .build();
 
 
@@ -464,13 +465,14 @@ public class ItemServiceTest {
         void throws_IllegalArgumentException_when_list_is_empty(){
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
 
             ItemDTO itemDTO = ItemDTO
                     .builder()
                     .name("Melk")
                     .store("Dairy")
+                    .EAN("12356")
                     .build();
 
             assertThrows(IllegalArgumentException.class, () -> {
@@ -509,7 +511,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ShoppingItems shoppingItems = ShoppingItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
@@ -564,7 +566,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ShoppingItems shoppingItems = ShoppingItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
@@ -590,7 +592,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ShoppingItems shoppingItems = ShoppingItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
@@ -630,7 +632,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
             assertThrows(FridgeNotFoundException.class, () -> {
@@ -668,7 +670,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
             assertThrows(ShoppingItemsNotFoundException.class, () -> {
@@ -713,7 +715,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ShoppingItems shoppingItems = ShoppingItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
@@ -745,7 +747,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ShoppingItems shoppingItems = ShoppingItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
@@ -835,7 +837,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ShoppingItems shoppingItems = ShoppingItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
@@ -865,7 +867,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ShoppingItems shoppingItems = ShoppingItems.builder()
                     .id(new FridgeItemsId(1L, 1L))

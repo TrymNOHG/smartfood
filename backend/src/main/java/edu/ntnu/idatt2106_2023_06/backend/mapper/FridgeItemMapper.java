@@ -32,6 +32,7 @@ public class FridgeItemMapper {
                 .name(item.getProductName())
                 .store(item.getStore().getStoreName())
                 .description(item.getDesc())
+                .ean(item.getEan())
                 .purchaseDate(fridgeItem.getPurchaseDate())
                 .expirationDate(fridgeItem.getExpirationDate()) //TODO: change to include expiration date
                 .quantity(fridgeItem.getQuantity())

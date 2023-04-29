@@ -25,6 +25,7 @@ public class ItemMapper {
                 .store(store)
                 .price(itemDTO.price())
                 .pictureLink(itemDTO.image())
+                .ean(itemDTO.EAN())
                 .build();
     }
 
@@ -45,6 +46,7 @@ public class ItemMapper {
                 .image(item.getPictureLink())
                 .quantity(quantity)
                 .suggestion(suggestion)
+                .EAN(item.getEan())
                 .build();
     }
 }

@@ -32,7 +32,7 @@ class ItemTest {
             try {
                 Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                         new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                        null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                        null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             } catch (Exception e) {
                 fail();
             }
@@ -57,6 +57,7 @@ class ItemTest {
                         .desc("Tine melk kommer fra fri gående, grass matet kuer.")
                         .store(new Store(1L, "Dairy", new ArrayList<>()))
                         .price(200000)
+                        .ean("123456")
                         .build();
             } catch (Exception e) {
                 fail();
@@ -73,7 +74,7 @@ class ItemTest {
             assertThrows(NullPointerException.class, () -> {
                 Item item = new Item(1L, null, "Tine melk kommer fra fri gående, grass matet kuer.",
                         new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                        null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                        null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             });
         }
 
@@ -87,10 +88,10 @@ class ItemTest {
 //        }
 
         @Test
-        void food_category_cannot_be_null(){
+        void store_cannot_be_null(){
             assertThrows(NullPointerException.class, () -> {
                 Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
-                        null, 200000, null, new ArrayList<>(),
+                        null, 200000, null, "12345678", new ArrayList<>(),
                         new ArrayList<>(), new ArrayList<>());
             });
         }
@@ -105,7 +106,7 @@ class ItemTest {
         void product_name_cannot_be_set_to_null(){
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             assertThrows(NullPointerException.class, () -> {
                 item.setProductName(null);
             });
@@ -122,10 +123,10 @@ class ItemTest {
 //        }
 
         @Test
-        void food_category_cannot_be_set_to_null(){
+        void store_cannot_be_set_to_null(){
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             assertThrows(NullPointerException.class, () -> {
                 item.setStore(null);
             });
@@ -140,7 +141,7 @@ class ItemTest {
         void item_id_getter_returns_correct_value(){
             Store store = new Store(1L, "Dairy", new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
-                    store, 200000, null, new ArrayList<>(),
+                    store, 200000, null, "12345678", new ArrayList<>(),
                     new ArrayList<>(), new ArrayList<>());
             Long expectedItemId = 1L;
 
@@ -151,7 +152,7 @@ class ItemTest {
         void product_name_returns_correct_value(){
             Store store = new Store(1L, "Dairy", new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.", store,
-                    200000, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             String expectedProductName = "Tine melk";
 
             assertEquals(expectedProductName, item.getProductName());
@@ -161,7 +162,7 @@ class ItemTest {
         void brief_description_getter_returns_correct_value(){
             Store store = new Store(1L, "Dairy", new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
-                    store, 200000, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    store, 200000, null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             String expectedBriefDesc = "Tine melk kommer fra fri gående, grass matet kuer.";
 
             assertEquals(expectedBriefDesc, item.getDesc());
@@ -171,7 +172,7 @@ class ItemTest {
         void price_getter_returns_correct_value(){
             Store store = new Store(1L, "Dairy", new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.", store,
-                    200000, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             double expectedPrice = 200000;
 
             assertEquals(expectedPrice, item.getPrice());
@@ -181,17 +182,27 @@ class ItemTest {
         void picture_getter_returns_correct_value(){
             Store store = new Store(1L, "Dairy", new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.", store,
-                    200000, "picture.png", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, "picture.png", "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             String expectedPictureLink = "picture.png";
 
             assertEquals(expectedPictureLink, item.getPictureLink());
         }
 
         @Test
+        void ean_getter_returns_correct_value(){
+            Store store = new Store(1L, "Dairy", new ArrayList<>());
+            Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.", store,
+                    200000, "picture.png", "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            String expectedEAN = "12345678";
+
+            assertEquals(expectedEAN, item.getEan());
+        }
+
+        @Test
         void recipe_items_getter_returns_correct_value(){
             Store store = new Store(1L, "Dairy", new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.", store,
-                    200000, "picture.png", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, "picture.png", "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             List<RecipeItems> expectedItems = new ArrayList<>();
 
             assertEquals(expectedItems, item.getItemsInRecipe());
@@ -201,7 +212,7 @@ class ItemTest {
         void shopping_items_getter_returns_correct_value(){
             Store store = new Store(1L, "Dairy", new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.", store,
-                    200000, "picture.png", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, "picture.png", "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             List<ShoppingItems> expectedItems = new ArrayList<>();
 
             assertEquals(expectedItems, item.getItemsInShoppingList());
@@ -211,7 +222,7 @@ class ItemTest {
         void fridge_items_getter_returns_correct_value(){
             Store store = new Store(1L, "Dairy", new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.", store,
-                    200000, "picture.png", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, "picture.png", "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             List<FridgeItems> expectedItems = new ArrayList<>();
 
             assertEquals(expectedItems, item.getItemsInFridge());
