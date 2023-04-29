@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.model.fridge;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import jakarta.persistence.*;
 import lombok.*;
@@ -46,6 +47,7 @@ public class FridgeItems {
     @JoinColumn(name = "fridge_id", nullable = false)
     @NonNull
     @ToString.Exclude
+    @JsonIgnore
     private Fridge fridge;
 
     /**

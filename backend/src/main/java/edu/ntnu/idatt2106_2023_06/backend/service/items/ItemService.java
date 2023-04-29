@@ -22,10 +22,14 @@ import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ShoppingItemsRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.store.StoreRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
+import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.SearchRequest;
+import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.SearchSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -226,6 +230,13 @@ public class ItemService implements IItemService {
             fridgeItem.setQuantity(fridgeItem.getQuantity() - itemRemoveDTO.quantity());
             fridgeItemsRepository.save(fridgeItem);
         }
+    }
+
+    @Override
+    public Page<FridgeItems> searchFridgeItems(SearchRequest request) {
+        SearchSpecification<FridgeItems> specification = new SearchSpecification<>(request);
+        Pageable pageable = SearchSpecification.getPageable(request.getPage(), request.getSize());
+        return fridgeItemsRepository.findAll(specification, pageable);
     }
 
     /**

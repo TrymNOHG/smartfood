@@ -5,7 +5,10 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemMoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.ShoppingListLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
+import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.SearchRequest;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -21,6 +24,5 @@ public interface IItemService {
     void buyItemsFromShoppingList(List<ItemMoveDTO> shoppingItemIds);
     void acceptSuggestion(ItemRemoveDTO itemDTO);
     void removeItemFromFridge(ItemRemoveDTO itemRemoveDTO);
-
-
+    Page<FridgeItems> searchFridgeItems(SearchRequest request);
 }
