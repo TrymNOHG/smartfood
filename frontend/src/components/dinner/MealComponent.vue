@@ -4,19 +4,25 @@
       <div class="card">
         <div class="front-side">
           <img :src="meal.thumbnailLink" alt="item picture">
+          <div class="recipe-name-desktop">
+            <h2>{{ meal.recipeName }}</h2>
+          </div>
         </div>
         <div class="back-side">
           <div class="item-detail">
+            <div class="item-description">
+              <p>{{ meal.description }}</p>
+            </div>
             <div class="item-name">
               <h2 id="item-name-h2">{{ meal.recipeName }}</h2>
               <br>
             </div>
-            <button v-if="isSuperUser" class="delete-btn" @click.prevent="deleteCard(meal)">
+          </div>
+          <button v-if="isSuperUser" class="delete-btn" @click.prevent="deleteCard(meal)">
               <span>
                 <font-awesome-icon icon="fa-solid fa-trash" class="icon delete-icon" />
               </span>
-            </button>
-          </div>
+          </button>
         </div>
       </div>
     </router-link>
@@ -222,7 +228,44 @@ img {
   color: white;
 }
 
+.recipe-name-desktop {
+  display: none;
+}
+
+.item-name {
+  display: none;
+}
+
+.item-description{
+  display: none;
+}
+
+@media (min-width: 651px) {
+  .recipe-name-desktop {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 5px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .item-description {
+    display: block;
+  }
+}
+
 @media (max-width: 650px) {
+
+    .item-name {
+      display: block;
+    }
+
+
   body{
     height: 80px;
   }

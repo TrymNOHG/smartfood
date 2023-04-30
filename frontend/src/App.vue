@@ -65,7 +65,9 @@
       </router-link>
     </div>
   </div>
-  <RouterView class="router-view-container"/>
+  <div class="router-view-container">
+    <RouterView/>
+  </div>
 
 </template>
 
@@ -527,7 +529,7 @@ nav ul li a .text {
   }
 
   .router-view-container {
-    padding-bottom: 80px;
+    padding-bottom: 70px;
   }
 
   header img {
