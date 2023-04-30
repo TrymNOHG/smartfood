@@ -29,6 +29,18 @@
                 />
               </span>
             </button>
+            <button
+              v-if="isSuperUser"
+              class="buy-btn"
+              @click.prevent="deleteCard(menu)"
+            >
+              <span>
+                <font-awesome-icon
+                  icon="fa-solid fa-shopping-cart"
+                  class="icon buy-icon"
+                />
+              </span>
+            </button>
           </div>
         </div>
       </div>
@@ -211,7 +223,23 @@ img {
 
 .delete-btn {
   position: absolute;
-  top: 5px;
+  top: 20px;
+  right: 5px;
+  background-color: white;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  opacity: 100%;
+}
+
+.buy-btn {
+  position: absolute;
+  top: 60px;
   right: 5px;
   background-color: white;
   color: white;
@@ -230,6 +258,11 @@ img {
   background-color: red;
 }
 
+.buy-btn:hover {
+  transform: scale(1.2);
+  background-color: red;
+}
+
 .icon {
   color: black;
 }
@@ -242,6 +275,7 @@ img {
   body {
     height: 80px;
   }
+
   .card {
     display: flex;
     justify-content: end;
@@ -276,11 +310,18 @@ img {
 
   .delete-btn {
     background-color: white;
+    top: 10px;
     width: 25px;
     height: 25px;
-    top: 13px;
-    right: 2px;
   }
+
+  .buy-btn {
+    background-color: white;
+    width: 25px;
+    height: 25px;
+    top: 60px;
+  }
+
   .icon {
     color: black;
     font-size: 15px;
@@ -331,6 +372,7 @@ img {
     padding-top: 10px;
     padding-bottom: 10px;
   }
+
   .card {
     display: flex;
     justify-content: end;
@@ -368,9 +410,15 @@ img {
     background-color: white;
     width: 25px;
     height: 25px;
-    top: 5px;
     right: 5px;
   }
+
+  buy-btn {
+    background-color: white;
+    width: 25px;
+    height: 25px;
+  }
+
   .icon {
     color: black;
     font-size: 15px;
