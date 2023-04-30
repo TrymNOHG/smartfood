@@ -1,9 +1,11 @@
-describe("Adding and deleting items from fridge", () => {
+//global variables for intricate testing
+let cartAddedItem = [];
+let fridgeAddedItem = [];
+
+describe("Adding and deleting item from cart", () => {
   const base_url = "http://localhost:5173";
   const base_url_site = "http://localhost:5173";
   const base_url_endpoint = "http://localhost:8080";
-  let cartAddedItem = {};
-  let fridgeAddedItem = [];
 
   beforeEach(() => {
     cy.intercept("POST", "http://localhost:8080/user/login", {
@@ -57,10 +59,7 @@ describe("Adding and deleting items from fridge", () => {
           },
         });
         // Save the body of the intercepted request to a variable
-        const requestBody = req.body;
-        cartAddedItem = requestBody;
-        // Do something with the requestBody, like logging it to the console
-        console.log("Request body:", requestBody);
+        cartAddedItem.push(req.body);
       }
     ).as("addItemRequest");
 
@@ -87,6 +86,17 @@ describe("Adding and deleting items from fridge", () => {
         });
       }
     ).as("getFridgeItems");
+
+    cy.intercept(
+      "GET",
+      "http://localhost:8080/item/shopping/get?fridgeId=88",
+      (req) => {
+        req.reply({
+          statusCode: 200,
+          body: cartAddedItem,
+        });
+      }
+    ).as("getCartItems");
 
     cy.intercept(
       "POST",
@@ -120,16 +130,6 @@ describe("Adding and deleting items from fridge", () => {
         });
       }
     ).as("getFridgeItems");
-
-    cy.intercept(
-        "POST",
-        "http://localhost:8080/item/shopping/add",
-        (req) => {
-          req.reply({
-            statusCode: 200,
-          });
-        }
-    ).as("addShopping");
 
     cy.intercept(
       "GET",
@@ -205,6 +205,17 @@ describe("Adding and deleting items from fridge", () => {
     ).as("deleteFromFridge");
 
     cy.intercept(
+      "DELETE",
+      "http://localhost:8080/item/shopping/delete?suggestion=false",
+      (req) => {
+        req.reply({
+          statusCode: 200,
+        });
+        cartAddedItem = [];
+      }
+    ).as("deleteFromCart");
+
+    cy.intercept(
       {
         url: /^https:\/\/kassal\.app\/api\/v1\/products/,
       },
@@ -264,25 +275,23 @@ describe("Adding and deleting items from fridge", () => {
     cy.wait("@isSuperUser");
   });
 
-  it("should add item to fridge from fridge-search", () => {
+  it("should add item to cart from cart-search", () => {
+    cy.visit(`${base_url}/cart`);
     cy.get(".form-control").type("egg");
     cy.get("#searchbtn").click();
     cy.wait("@getSearchFromKasal");
     cy.contains(".item-var", "Ammeinnlegg 50stk Lillego").click();
-    cy.contains("Yes").click();
-    cy.wait("@addItemToFridge");
+    cy.wait("@getCartItems");
+    cy.wait("@addItemRequest");
+
     cy.contains("Ammeinnlegg 50stk Lillego").should("be.visible");
   });
 
-  it("should delete item from fridge on clicking delete", () => {
-    cy.wait("@getFridgeItems");
-    cy.get(".delete-btn")
-      .invoke("css", "transform", "none")
-      .invoke("css", "opacity", "1")
-      .click({ force: true });
-    cy.contains("bekreft").click();
-    cy.contains("bekreft").click();
-    cy.contains("Ja").click();
+  it("should delete item from cart on clicking delete", () => {
+    cy.visit(`${base_url}/cart`);
+    cy.wait("@getCartItems");
+    cy.get(".btn-trash").click({ force: true });
+    cy.wait("@deleteFromCart");
     cy.get("body").should("not.contain", "Ammeinnlegg 50stk Lillego");
   });
 });

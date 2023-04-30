@@ -38,11 +38,17 @@
             v-model="searchQuery"
             @input="handleSearch"
             :label="$t('add_item')"
-            @receipt-upload="handleReceiptUpload"
+            @receipt-upload="toggleCamera"
           ></SearchInput>
           <button id="searchbtn" @click="handleSearch">
             {{ $t("search") }}
           </button>
+        </div>
+        <div v-if="isCameraToggled">
+          <StreamBarcodeReader
+            @decode="(a, b, c) => onDecode(a, b, c)"
+            @loaded="() => onLoaded()"
+          ></StreamBarcodeReader>
         </div>
       </div>
 
@@ -66,27 +72,32 @@
       </div>
     </div>
     <div class="filter-component">
-      <filter-bar  @listing="listing"/>
+      <filter-bar @listing="listing" />
     </div>
     <transition name="fade">
-      <div v-if="!listView" class="wrapper" :style="{ marginTop: marginTopStyle }">
+      <div
+        v-if="!listView"
+        class="wrapper"
+        :style="{ marginTop: marginTopStyle }"
+      >
         <basic-fridge-item
-            :isSuperUser="isCurrentUserSuperUser"
-            v-for="(item, index) in fridgeItems"
-            :key="index"
-            :item="item"
-            :currenFridge="fridge"
-            @delete-item="deleteItem"
-            @add-shopping="addShopping"
+          :isSuperUser="isCurrentUserSuperUser"
+          v-for="(item, index) in fridgeItems"
+          :key="index"
+          :item="item"
+          :currenFridge="fridge"
+          @delete-item="deleteItem"
+          @add-shopping="addShopping"
         />
       </div>
       <div v-else class="list-wrapper">
         <basic-fridge-list
-            v-for="(item, index) in fridgeItems"
-            :key="index" :item="item"
-            :currenFridge="fridge"
-            @delete-item="deleteItem"
-            @add-shopping="addShopping"
+          v-for="(item, index) in fridgeItems"
+          :key="index"
+          :item="item"
+          :currenFridge="fridge"
+          @delete-item="deleteItem"
+          @add-shopping="addShopping"
         />
       </div>
     </transition>
@@ -108,16 +119,18 @@ import { useFridgeStore, useItemStore } from "@/store/store";
 import { ref } from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
-import { getItems } from "@/services/ApiService";
+import { getItemByBarcode, getItems } from "@/services/ApiService";
 import Swal from "sweetalert2";
 import { addItemToShoppingList } from "@/services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
 import router from "../router/router";
+import { StreamBarcodeReader } from "vue-barcode-reader";
 
 export default {
   name: "FridgeView",
   components: {
+    StreamBarcodeReader,
     BasicFridgeList,
     FilterBar,
     SearchItem,
@@ -138,9 +151,11 @@ export default {
   },
 
   methods: {
-
-    listing(bool){
+    listing(bool) {
       this.listView = bool;
+    },
+    toggleCamera() {
+      this.isCameraToggled = !this.isCameraToggled;
     },
 
     async addShopping(item) {
@@ -150,24 +165,49 @@ export default {
       const fridge = this.fridgeStore.getCurrentFridge;
 
       const itemDTO = {
-        "name": item.name,
-        "description": item.description,
-        "store": item.store,
-        "price": item.price,
-        "purchaseDate": date,
-        "expirationDate": expirationDate,
-        "image": item.image,
-        "quantity": 1,
-      }
+        name: item.name,
+        description: item.description,
+        store: item.store,
+        price: item.price,
+        purchaseDate: date,
+        expirationDate: expirationDate,
+        image: item.image,
+        quantity: 1,
+      };
 
       await addItemToShoppingList(itemDTO, fridge.fridgeId, false).then(
-          async (response) => {
-            console.log("response", response);
-          }
+        async (response) => {
+          console.log("response", response);
+        }
       );
     },
+    async onDecode(a, b, c) {
+      this.text = a;
+      const barcode = a;
+      console.log(barcode);
+      await getItemByBarcode(barcode)
+        .then((response) => {
+          if (response !== undefined) {
+            this.searchItems = response.products;
+            console.log(response.products);
+            this.search = true;
+          } else {
+            console.log("Something went wrong");
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+          }
+        })
+        .catch((error) => {
+          console.warn("error1", error); //TODO: add exception handling
+        });
 
-    handleReceiptUpload() {},
+      if (this.id) clearTimeout(this.id);
+      this.id = setTimeout(() => {
+        if (this.text === a) {
+          this.text = "";
+        }
+      }, 5000);
+    },
     handleSearch() {
       this.search = this.searchQuery.length >= 2;
       getItems(this.searchQuery)
@@ -178,6 +218,9 @@ export default {
         .catch((error) => {
           console.error(error);
         });
+    },
+    onLoaded() {
+      console.log("load");
     },
 
     async deleteItem(itemToDelete, deletePercentage) {
@@ -245,6 +288,14 @@ export default {
         quantity: 1,
       };
 
+      if (typeof item.current_price.price === "number" && itemDTO) {
+        itemDTO.price = item.current_price.price;
+        if (statAddItemToFridgeDTO) {
+          statAddItemToFridgeDTO.price = item.current_price.price;
+          console.log(itemDTO.price);
+        }
+      }
+
       if (!this.isCurrentUserSuperUser) {
         await addItemToShoppingList(itemDTO, fridgeId, true).then(
           async (response) => {
@@ -270,7 +321,6 @@ export default {
         //TODO: INFORMATION MEMBERS put information API in here
       }
     },
-
   },
 
   setup() {
@@ -285,6 +335,7 @@ export default {
     const search = ref(false);
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
+    const isCameraToggled = ref(false);
 
     itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
       fridgeItems.value = items;
@@ -305,6 +356,7 @@ export default {
       fridgeStore,
       search,
       itemStore,
+      isCameraToggled,
     };
   },
 
@@ -312,18 +364,19 @@ export default {
     return {
       isExpanded: false,
       listView: false,
-    }
+    };
   },
 };
 </script>
 
 <style scoped>
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .25s ease;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
 }
 
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 
@@ -486,17 +539,13 @@ input[type="text"]:not(:focus) {
 }
 
 @media (max-width: 860px) {
-
   .list-wrapper {
     display: grid;
     grid-template-columns: 1fr;
   }
-
 }
 
-
 @media (max-width: 650px) {
-
   .filter-component {
     width: 100%;
   }
@@ -519,7 +568,7 @@ input[type="text"]:not(:focus) {
   }
 }
 
-@media only screen and (min-width: 350px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 650px) {
   #searchbtn {
     display: none;
   }
@@ -529,8 +578,7 @@ input[type="text"]:not(:focus) {
     overflow-y: scroll;
   }
 
-
-  #searchbtn{
+  #searchbtn {
     display: none;
   }
 
