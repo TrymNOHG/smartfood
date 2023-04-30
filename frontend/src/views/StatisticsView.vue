@@ -88,7 +88,7 @@ export default {
 
   data() {
     return {
-      moneyUsedPerPers: 120,
+      moneyUsedPerPers: 46,
       percentageThrownPerPers: 26,
       choosenStat: "Personal Statistics",
       statChoice: ["Personal Statistics", "Fridge Statistics"],

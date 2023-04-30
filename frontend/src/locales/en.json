@@ -82,5 +82,10 @@
   "percent_wise_how_much": "Percent wise how much is left?",
   "buy_again": "Do you want to add this item back to shopping cart?",
   "Yes": "Yes",
-  "No": "No"
+  "No": "No",
+  "choose_statistics": "Choose Statistics",
+  "personal_statistics": "Personal Statistics",
+  "fridge_statistics": "Fridge Statistics",
+  "percentage_thrown_last_day": "Percentage thrown last day",
+  "money_wasted_last_day": "Money wasted last day"
 }

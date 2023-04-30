@@ -84,5 +84,10 @@
   "buy_again": "Ønsker du å legge denne vare i handlekurven?",
   "Yes": "Ja",
   "No": "Nei",
-  "delete_item": "Slett varen"
+  "delete_item": "Slett varen",
+  "choose_statistics": "Velg statistikk",
+  "personal_statistics": "Personlig statistikk",
+  "fridge_statistics": "Kjøleskap statistikk",
+  "percentage_thrown_last_day": "Prosent kastet siste dag",
+  "money_wasted_last_day": "Penger brukt siste dag"
 }
