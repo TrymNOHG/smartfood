@@ -1,11 +1,9 @@
-import { defineStore } from 'pinia'
-import { getUser } from "@/services/UserService"
+import {defineStore} from 'pinia'
+import {checkSuperUserStatus, getUser} from "@/services/UserService"
 import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
-import {addItemToFridge, getItemsFromFridge, deleteItemFromFridge} from "@/services/ItemService";
-import {ref} from "vue";
-import {checkSuperUserStatus} from "../services/UserService";
-import {addItemStats, deleteItemStats} from "@/services/StatsService";
+import {addItemToFridge, deleteItemFromFridge, getItemsFromFridge} from "@/services/ItemService";
+import {addItemStats, deleteItemStats, getUserMoneyStats, getUserPercentageStats} from "@/services/StatsService";
 
 const storeUUID = UniqueId();
 
@@ -195,4 +193,68 @@ export const useItemStore = defineStore('itemStore', {
     },
 });
 
+export const useStatStore = defineStore('statStore', {
+    state: () => ({
+        percentageChart: [],
+        moneyChart: []
+    }),
 
+    getters: {
+        getPercentageChart(){
+            const labels = this.percentageChart.map(obj => obj.first);
+            const values = this.percentageChart.map(obj => obj.second);
+
+            return {
+                labels,
+                values
+            }
+        },
+
+        getMoneyChart(){
+            const labels = Object.keys(this.moneyChart);
+            const values = Object.values(this.moneyChart);
+
+            console.log(labels)
+            console.log(values)
+
+            return {
+                labels,
+                values
+            }
+        },
+    },
+
+
+
+    actions: {
+        async fetchUserStatsPercentage() {
+            this.percentageChart = []
+            await getUserPercentageStats().then((response) => {
+                console.log("response: ", response)
+                    for (const dataSet of response.data) {
+                        const { first, second } = dataSet
+                        this.percentageChart.push({first, second});
+                    }
+                });
+            },
+
+        async fetchUserStatsMoney() {
+            this.moneyChart = []
+            await getUserMoneyStats()
+                .then((response) => {
+                    for (const key in response.data) {
+                        this.moneyChart[key] = response.data[key]
+                    }
+                });
+            console.log(this.moneyChart)
+        },
+
+        async fetchFridgePercentage() {
+
+        },
+
+        async fetchFridgeMoney() {
+
+        }
+    },
+});

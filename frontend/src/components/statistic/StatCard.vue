@@ -3,9 +3,9 @@
     <div class="icon-wrapper">
       <font-awesome-icon :icon="`fa-solid ${iconName}`" class="icon" />
     </div>
-    <h4 class="description"> Percentage Thrown </h4>
+    <h4 class="description">{{ name }}</h4>
     <figure class="stats">
-      32%
+      {{ value }}
     </figure>
   </div>
 </template>
@@ -14,8 +14,11 @@ export default {
   name: "StatCard",
 
   props: {
-    stats: {
+    value: {
       type: Object
+    },
+    name: {
+
     },
     iconName: {
       type: String,

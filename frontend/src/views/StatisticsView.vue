@@ -19,17 +19,19 @@
         <div>
           <line-chart
               id="chart"
-              :data="chartData"
-              :ymin="55"
-              :ymax="55"
+              :data="chartDataPercentage"
+              :ymin="percentageThrown"
+              :ymax="percentageThrown"
+              :chart-label="'Percentage Thrown'"
           />
         </div>
         <div>
           <line-chart
               id="chart"
-              :data="chartData"
-              :ymin="55"
-              :ymax="55"
+              :data="chartDataMoney"
+              :ymin="moneyUsedPerPers"
+              :ymax="moneyUsedPerPers"
+              :chart-label="'Money Wasted'"
           />
         </div>
       </div>
@@ -45,16 +47,16 @@
       />
       <div class="display-details">
         <stat-card
+            :value="percentageThrown + '%'"
+            :name="'Percentage thrown last day'"
             class="card"
             iconName="fa-chart-simple"
         />
         <stat-card
+            :value="moneyThrown + 'kr'"
+            :name="'Money wasted last day'"
             class="card"
             iconName="fa-coins"
-        />
-        <stat-card
-            class="card"
-            iconName="fa-flag"
         />
       </div>
     </div>
@@ -66,22 +68,57 @@ import BarChart from '@/components/statistic/BarChart.vue';
 import LineChart from '@/components/statistic/LineChart.vue';
 import StatCard from "@/components/statistic/StatCard.vue";
 import BasicSelect from "@/components/basic-components/BasicSelect.vue";
+import {ref} from "vue";
+import {useStatStore} from "@/store/store";
 
 export default {
   name: "StatisticsView",
-    components: {BasicSelect, StatCard, BarChart, LineChart },
+    components: {BasicSelect, StatCard, BarChart, LineChart},
 
   data() {
     return {
-      chartData: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        values: [50, 45, 55, 60, 65, 40, 35],
-      },
-      statChoice: ["Personal Statistics", "Fridge Statistics"],
-      choosenStat: "Personal Statistics",
-      width: window.innerWidth,
+      moneyUsedPerPers: 120,
+      percentageThrownPerPers: 26,
+
+    }
+  },
+
+  setup() {
+    const chartDataPercentage = ref({
+      labels: [],
+      values: []
+    });
+    const chartDataMoney = ref({
+      labels: [],
+      values: []
+    });
+    const statStore = useStatStore();
+    let percentageThrown = ref();
+    let moneyThrown = ref();
+
+
+    const fetchStats = async () => {
+      await statStore.fetchUserStatsPercentage();
+      await statStore.fetchUserStatsMoney()
+      chartDataPercentage.value = statStore.getPercentageChart;
+      chartDataMoney.value = statStore.getMoneyChart;
+      percentageThrown.value = Math.trunc(chartDataPercentage.value
+          .values[chartDataPercentage.value.values.length - 1]);
+      moneyThrown.value = Math.trunc(chartDataMoney.value
+          .values[chartDataMoney.value.values.length -1])
+
+    };
+
+    fetchStats();
+
+    return {
+      chartDataPercentage,
+      percentageThrown,
+      moneyThrown,
+      chartDataMoney
     };
   },
+
   computed: {
     isMobile() {
       return this.width < 768;

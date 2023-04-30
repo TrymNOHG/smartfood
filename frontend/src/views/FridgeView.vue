@@ -101,7 +101,6 @@ import {
   VueCollapsiblePanelGroup,
   VueCollapsiblePanel,
 } from "@dafcoe/vue-collapsible-panel";
-import { useRoute } from "vue-router";
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import { useFridgeStore, useItemStore } from "@/store/store";

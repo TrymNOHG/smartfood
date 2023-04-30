@@ -18,14 +18,20 @@ export const addItemStats = async (statAddItemToFridgeDTO) => {
     });
 };
 
-export const getUserStats = async () => {
-    const response = await axios.get(`${BASE_LISTING_URL}/get/user-stats`, {
+export const getUserPercentageStats = async () => {
+    return await axios.get(`${BASE_LISTING_URL}/get/user-stats/avg-thrown-per-day`, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         },
     });
-    console.log("get user response: ", response)
-    return response;
+};
+
+export const getUserMoneyStats = async () => {
+    return await axios.get(`${BASE_LISTING_URL}/get/user-stats/money-wasted-per-day`, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
 };
 
 export const getFridgeStats = async (fridgeId) => {
