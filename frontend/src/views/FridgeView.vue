@@ -101,9 +101,9 @@
         />
       </div>
     </transition>
-    <div class="members-wrapper" v-show="selectedTab === 'members'">
-      <member-component />
-    </div>
+  </div>
+  <div class="members-wrapper" v-show="selectedTab === 'members'">
+    <member-component />
   </div>
 </template>
 
@@ -124,6 +124,7 @@ import Swal from "sweetalert2";
 import { addItemToShoppingList } from "@/services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
+import router from "../router/router";
 import { StreamBarcodeReader } from "vue-barcode-reader";
 
 export default {
@@ -325,7 +326,11 @@ export default {
   setup() {
     const fridgeStore = useFridgeStore();
     const itemStore = useItemStore();
-    const selectedTab = ref("fridge");
+    const selectedTab = ref(router.currentRoute.value.query.selectedTab || 'fridge');
+
+    history.replaceState(null, null, '/fridge');
+    const currentUrl = window.location.href;
+
     const searchItems = ref([]);
     const search = ref(false);
     const fridgeItems = ref([]);

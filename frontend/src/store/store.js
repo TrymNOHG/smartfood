@@ -149,6 +149,10 @@ export const useItemStore = defineStore('itemStore', {
         currentItem: null,
     }),
 
+    persist: {
+        storage: sessionStorage,
+    },
+
     getters: {
         getCurrentItem(){
             console.log(this.currentItem)
@@ -192,6 +196,29 @@ export const useItemStore = defineStore('itemStore', {
             })
             return this.allItems;
         }
+    },
+});
+
+export const useMealStore = defineStore('mealStore', {
+    state: () => ({
+        all: [],
+        currentMeal: null,
+    }),
+
+    persist: {
+        storage: sessionStorage,
+    },
+
+    getters: {
+        getCurrentMeal(){
+            return this.currentMeal;
+        }
+    },
+
+    actions: {
+        setCurrentMeal(meal) {
+            this.currentMeal = meal;
+        },
     },
 });
 
