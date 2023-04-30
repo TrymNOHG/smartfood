@@ -1,13 +1,16 @@
 <template>
-    <div class="search-item">
-
-        <img class="item-var" id="search-image" :src="image" />
-        <div class="item-var" id="text">{{ text }}</div>
-        <div class="item-var" id="store">{{ store }}</div>
-        <div class="item-var" id="price">{{ price + " KR"}}</div>
-        <font-awesome-icon icon="fa-solid fa-cart-shopping" class="item-var" id="cart-icon" />
-    </div>
-  </template>
+  <div class="search-item">
+    <img class="item-var" id="search-image" :src="image" />
+    <div class="item-var" id="text">{{ text }}</div>
+    <div class="item-var" id="store">{{ store }}</div>
+    <div class="item-var" id="price">{{ price + " KR" }}</div>
+    <font-awesome-icon
+      icon="fa-solid fa-cart-shopping"
+      class="item-var"
+      id="cart-icon"
+    />
+  </div>
+</template>
 <script>
 export default {
   props: {
@@ -38,12 +41,8 @@ export default {
   cursor: pointer;
   transition: all 0.3s ease;
 }
-#cart-icon{
-
+#cart-icon {
 }
-
-
-
 
 .item-action {
   margin-left: 1rem;
@@ -60,11 +59,9 @@ img {
   object-fit: contain;
 }
 
-
 .search-item #text {
   flex: 1;
   font-weight: bold;
-  
 }
 
 .search-item #price {
@@ -77,8 +74,7 @@ img {
   cursor: pointer;
   transition: all 0.3s ease;
 }
-#cart-icon{
-
+#cart-icon {
 }
 
 .search-item {
@@ -89,8 +85,6 @@ img {
   width: 100%;
   color: #444444 !important;
 }
-
-
 
 .item-action {
   margin-left: 1rem;
@@ -107,7 +101,7 @@ img {
   object-fit: contain;
 }
 
-.search-item{
+.search-item {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -116,41 +110,29 @@ img {
   margin-bottom: 20px;
 }
 
-.item-var{
+.item-var {
   padding-right: 15px;
   padding-left: 15px;
 }
 
-#text{
+#text {
   line-height: 1.5;
   position: relative;
   display: flex;
   flex-direction: column;
-
 }
 
 .search-item img {
   width: 100px;
   height: 100px;
-  object-fit: contain
-
+  object-fit: contain;
 }
 
-#cart-icon{
+#cart-icon {
   height: 25px;
 }
 
-@media only screen and (min-width: 350px) and (max-width: 480px) {
-  .item-info:hover {
-    box-shadow: 0 0 5px #ccc;
-    transform: scale(1.02);
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  #cart-icon{
-
-  }
-
+@media only screen and (min-width: 10px) and (max-width: 650px) {
   .search-item {
     display: flex;
     justify-content: center;
@@ -158,12 +140,6 @@ img {
     padding: 15px;
     width: 100%;
     color: #444444 !important;
-  }
-
-
-
-  .item-action {
-    margin-left: 1rem;
   }
 
   .search-item img {
@@ -177,17 +153,15 @@ img {
     object-fit: contain;
   }
 
-
   .search-item #text {
     flex: 1;
     font-weight: bold;
-
   }
 
   .search-item #price {
     font-weight: bold;
   }
-  .search-item{
+  .search-item {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -196,27 +170,25 @@ img {
     margin-bottom: 10px;
   }
 
-  .item-var{
+  .item-var {
     padding-right: 7px;
     padding-left: 7px;
   }
 
-  #text{
+  #text {
     line-height: 1.5;
     position: relative;
     display: flex;
     flex-direction: column;
-
   }
 
   .search-item img {
     width: 60px;
     height: 60px;
-    object-fit: contain
-
+    object-fit: contain;
   }
 
-  #cart-icon{
+  #cart-icon {
     height: 25px;
   }
 }
