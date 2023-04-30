@@ -7,7 +7,7 @@
   </div>
   <div class="page-layout">
     <div class="stat-container">
-      <h3>{{choosenStat}}</h3>
+      <h3>{{ $t(choosenStat) }}</h3>
       <BasicSelect
           v-if="isMobile"
           class="dropDown"
@@ -22,7 +22,7 @@
               :data="chartDataPercentage"
               :ymin="percentageThrown"
               :ymax="percentageThrown"
-              :chart-label="'Percentage Thrown'"
+              :chart-label="$t('percentage_thrown')"
           />
         </div>
         <div>
@@ -31,13 +31,13 @@
               :data="chartDataMoney"
               :ymin="moneyUsedPerPers"
               :ymax="moneyUsedPerPers"
-              :chart-label="'Money Wasted'"
+              :chart-label="$t('money_wasted')"
           />
         </div>
       </div>
-      </div>
+    </div>
     <div class="sidebar">
-      <h3 v-if="!isMobile">Choose Statistics</h3>
+      <h3 v-if="!isMobile">{{ $t('choose_statistics') }}</h3>
       <BasicSelect
           v-if="!isMobile"
           class="dropDown"
@@ -48,13 +48,13 @@
       <div class="display-details">
         <stat-card
             :value="percentageThrown + '%'"
-            :name="'Percentage thrown last day'"
+            :name="$t('percentage_thrown_last_day')"
             class="card"
             iconName="fa-chart-simple"
         />
         <stat-card
             :value="moneyThrown + 'kr'"
-            :name="'Money wasted last day'"
+            :name="$t('money_wasted_last_day')"
             class="card"
             iconName="fa-coins"
         />
@@ -77,7 +77,7 @@ export default {
 
   methods: {
     updateStats(stat) {
-      if (stat === "Personal Statistics") {
+      if (stat === "Personal Statistics" || stat === "Personlig statistikk") {
         this.fetchFridgeStats();
       } else {
         this.fetchUserStats();
@@ -90,8 +90,8 @@ export default {
     return {
       moneyUsedPerPers: 46,
       percentageThrownPerPers: 26,
-      choosenStat: "Personal Statistics",
-      statChoice: ["Personal Statistics", "Fridge Statistics"],
+      choosenStat: this.$t('personal_statistics'),
+      statChoice: [this.$t('personal_statistics'), this.$t('fridge_statistics')],
       width: window.innerWidth
     }
   },
