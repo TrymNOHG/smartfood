@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
 
  This repository provides CRUD operations for the Recipe entity.
@@ -16,5 +18,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Long>, JpaSpecificationExecutor<Recipe> {
+
+    /**
+     * This method retrieves a recipe by its name.
+     * @param recipeName    Name of the recipe, given as a String.
+     * @return              An optional of the recipe.
+     */
+    Optional<Recipe> findRecipeByRecipeName(String recipeName);
 
 }

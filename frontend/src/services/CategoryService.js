@@ -1,7 +1,7 @@
 import axios from "axios";
 import SessionToken from '@/features/SessionToken.js'
 
-const BASE_USER_URL = "http://localhost:8080/category";
+const BASE_USER_URL = "http://localhost:8089/category";
 export const addCategory = async (categoryEditDTO) => {
     return await axios.post(`${BASE_USER_URL}/admin/save`, {
         headers: {

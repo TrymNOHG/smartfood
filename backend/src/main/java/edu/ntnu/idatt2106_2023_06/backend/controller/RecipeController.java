@@ -1,5 +1,8 @@
 package edu.ntnu.idatt2106_2023_06.backend.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Recipe;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.RecipeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,15 +11,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @CrossOrigin("*")
@@ -27,6 +32,40 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
+    @GetMapping(value="/download")
+    @Operation(summary = "Get recipe from Meny")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Loading items of a given shopping list",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Recipe.class)) })}
+    )
+    public ResponseEntity<Object> downloadRecipe() throws IOException {
+
+        for(int pageNr = 1;; pageNr++) {
+            Document document = Jsoup.connect("https://meny.no/oppskrifter/middagstips/?pagenr=" + pageNr).get();
+
+            // Extract the JSON script from the HTML page
+            Element script = document.select("script[type=application/ld+json]").first();
+            String scriptText = script.html();
+
+            // Parse the JSON using Jackson's ObjectMapper
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode rootNode = mapper.readTree(scriptText);
+
+            // Extract the URL from the JSON
+            for(JsonNode item : rootNode.get("itemListElement")) {
+                String url = item.get("url").asText();
+                System.out.println(url);
+                recipeService.scrapeRecipe(url);
+            }
+
+            if(pageNr == 100) {
+                return ResponseEntity.ok().build();
+            }
+        }
+
+    }
+
     @GetMapping(value="/get")
     @Operation(summary = "Get recipe from Meny")
     @ApiResponses(value = {
@@ -34,19 +73,13 @@ public class RecipeController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Recipe.class)) })}
     )
-    public ResponseEntity<Object> getRecipe() throws IOException {
-
-
-        //TODO: I could first scrape the different urls for the different recipes and then use those
-        String recipePageUrl = "https://meny.no/oppskrifter/Kylling/kylling-tikka-masala/";
-
-        //TODO: test https://meny.no/oppskrifter/Kylling/kylling-tikka-masala/ for too long desc
-
-
-        recipeService.scrapeRecipe(recipePageUrl);
-
-        return ResponseEntity.ok(null);
+    public ResponseEntity<RecipeLoadDTO> loadRecipe(@ParameterObject @RequestParam(name = "recipe") String recipeName) {
+        logger.info("Trying to load: " + recipeName);
+        RecipeLoadDTO recipeLoadDTO = recipeService.getRecipe(recipeName);
+        logger.info("Recipe DTO successfully made!");
+        return ResponseEntity.ok(recipeLoadDTO);
     }
 
+    //TODO: add more recipe load things, including pagination of random recipes.
 
 }
