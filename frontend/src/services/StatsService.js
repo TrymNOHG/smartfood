@@ -34,8 +34,16 @@ export const getUserMoneyStats = async () => {
     });
 };
 
-export const getFridgeStats = async (fridgeId) => {
-    return await axios.get(`${BASE_LISTING_URL}/get/fridge-stats/${fridgeId}`, {
+export const getFridgePercentageStats = async (fridgeId) => {
+    return await axios.get(`${BASE_LISTING_URL}/get/fridge-stats/avg-thrown-per-day/${fridgeId}`, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
+
+export const getFridgeMoneyStats = async (fridgeId) => {
+    return await axios.get(`${BASE_LISTING_URL}/get/fridge-stats/money-wasted-per-day/${fridgeId}`, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         },

@@ -3,7 +3,13 @@ import {checkSuperUserStatus, getUser} from "@/services/UserService"
 import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
 import {addItemToFridge, deleteItemFromFridge, getItemsFromFridge} from "@/services/ItemService";
-import {addItemStats, deleteItemStats, getUserMoneyStats, getUserPercentageStats} from "@/services/StatsService";
+import {
+    addItemStats,
+    deleteItemStats, getFridgeMoneyStats,
+    getFridgePercentageStats,
+    getUserMoneyStats,
+    getUserPercentageStats
+} from "@/services/StatsService";
 
 const storeUUID = UniqueId();
 
@@ -246,15 +252,27 @@ export const useStatStore = defineStore('statStore', {
                         this.moneyChart[key] = response.data[key]
                     }
                 });
-            console.log(this.moneyChart)
         },
 
-        async fetchFridgePercentage() {
-
+        async fetchFridgePercentage(fridge) {
+            this.percentageChart = []
+            await getFridgePercentageStats(fridge.fridgeId)
+                .then((response) => {
+                    for (const dataSet of response.data) {
+                        const { first, second } = dataSet
+                        this.percentageChart.push({first, second});
+                    }
+                })
         },
 
-        async fetchFridgeMoney() {
-
+        async fetchFridgeMoney(fridge) {
+            this.moneyChart = []
+            await getFridgeMoneyStats(fridge.fridgeId)
+                .then((response) => {
+                    for (const key in response.data) {
+                        this.moneyChart[key] = response.data[key]
+                    }
+                })
         }
     },
 });

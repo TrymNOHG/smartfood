@@ -4,9 +4,11 @@
       <font-awesome-icon :icon="`fa-solid ${iconName}`" class="icon" />
     </div>
     <h4 class="description">{{ name }}</h4>
-    <figure class="stats">
-      {{ value }}
-    </figure>
+    <transition name="fade">
+      <figure class="stats">
+        {{ value }}
+      </figure>
+    </transition>
   </div>
 </template>
 <script>
@@ -29,6 +31,16 @@ export default {
 </script>
 
 <style scoped>
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .icon {
   font-weight: bold;
   font-size: 150%;

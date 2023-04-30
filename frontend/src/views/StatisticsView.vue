@@ -13,7 +13,7 @@
           class="dropDown"
           :options="statChoice"
           v-model="choosenStat"
-          @change="updateStats()"
+          @input="updateStats(choosenStat)"
       />
       <div class="display-stat">
         <div>
@@ -43,7 +43,7 @@
           class="dropDown"
           :options="statChoice"
           v-model="choosenStat"
-          @change="updateStats()"
+          @input="updateStats(choosenStat)"
       />
       <div class="display-details">
         <stat-card
@@ -69,17 +69,30 @@ import LineChart from '@/components/statistic/LineChart.vue';
 import StatCard from "@/components/statistic/StatCard.vue";
 import BasicSelect from "@/components/basic-components/BasicSelect.vue";
 import {ref} from "vue";
-import {useStatStore} from "@/store/store";
+import {useFridgeStore, useStatStore} from "@/store/store";
 
 export default {
   name: "StatisticsView",
-    components: {BasicSelect, StatCard, BarChart, LineChart},
+  components: {BasicSelect, StatCard, BarChart, LineChart},
+
+  methods: {
+    updateStats(stat) {
+      if (stat === "Personal Statistics") {
+        this.fetchFridgeStats();
+      } else {
+        this.fetchUserStats();
+      }
+    },
+  },
+
 
   data() {
     return {
       moneyUsedPerPers: 120,
       percentageThrownPerPers: 26,
-
+      choosenStat: "Personal Statistics",
+      statChoice: ["Personal Statistics", "Fridge Statistics"],
+      width: window.innerWidth
     }
   },
 
@@ -93,28 +106,59 @@ export default {
       values: []
     });
     const statStore = useStatStore();
+    const fridgeStore = useFridgeStore();
     let percentageThrown = ref();
     let moneyThrown = ref();
-
-
-    const fetchStats = async () => {
+    const fetchUserStats = async () => {
       await statStore.fetchUserStatsPercentage();
-      await statStore.fetchUserStatsMoney()
+      await statStore.fetchUserStatsMoney();
       chartDataPercentage.value = statStore.getPercentageChart;
       chartDataMoney.value = statStore.getMoneyChart;
+
       percentageThrown.value = Math.trunc(chartDataPercentage.value
           .values[chartDataPercentage.value.values.length - 1]);
       moneyThrown.value = Math.trunc(chartDataMoney.value
           .values[chartDataMoney.value.values.length -1])
 
+
+      if (isNaN(percentageThrown.value)) {
+        percentageThrown.value = 0;
+      }
+
+      if (isNaN(moneyThrown.value)) {
+        moneyThrown.value = 0;
+      }
     };
 
-    fetchStats();
+    const fetchFridgeStats = async () => {
+      await statStore.fetchFridgePercentage(fridgeStore.getCurrentFridge);
+      await statStore.fetchFridgeMoney(fridgeStore.getCurrentFridge)
+      chartDataPercentage.value = statStore.getPercentageChart;
+      chartDataMoney.value = statStore.getMoneyChart;
+
+      percentageThrown.value = Math.trunc(chartDataPercentage.value
+          .values[chartDataPercentage.value.values.length - 1]);
+      moneyThrown.value = Math.trunc(chartDataMoney.value
+          .values[chartDataMoney.value.values.length -1])
+
+
+      if (isNaN(percentageThrown.value)) {
+        percentageThrown.value = 0;
+      }
+
+      if (isNaN(moneyThrown.value)) {
+        moneyThrown.value = 0;
+      }
+    };
+
+    fetchUserStats();
 
     return {
       chartDataPercentage,
       percentageThrown,
       moneyThrown,
+      fetchFridgeStats,
+      fetchUserStats,
       chartDataMoney
     };
   },
@@ -122,11 +166,6 @@ export default {
   computed: {
     isMobile() {
       return this.width < 768;
-    },
-  },
-  methods: {
-    updateStats() {
-      // Update the stats based on the chosen stat
     },
   },
 
@@ -225,7 +264,7 @@ h3 {
 
 .card {
   height: 180px;
-  margin: 2%;
+  margin: 2% 2% 20%;
 }
 
 .sidebar {
