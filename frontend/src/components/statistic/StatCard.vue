@@ -5,9 +5,9 @@
     </div>
     <h4 class="description">{{ name }}</h4>
     <transition name="fade">
-      <figure class="stats">
+      <h2 class="stats">
         {{ value }}
-      </figure>
+      </h2>
     </transition>
   </div>
 </template>
@@ -20,7 +20,8 @@ export default {
       type: Object
     },
     name: {
-
+      type: String,
+      required: true,
     },
     iconName: {
       type: String,
