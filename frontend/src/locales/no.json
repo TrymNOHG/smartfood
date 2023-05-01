@@ -102,5 +102,7 @@
   "fridge_name_err": "Navnet til kjøleskapet kan ikke være tomt eller null",
   "new_fridge": "Kjøleskap med navnet: '{name}' ble lagt til",
   "login_error": "Feil passord eller E-post",
-  "register_error": "Brukeren eksisterer allerede"
+  "register_error": "Brukeren eksisterer allerede",
+  "next_page": "Neste Side",
+  "previous_page": "Forrige Side"
 }

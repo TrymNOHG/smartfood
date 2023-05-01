@@ -384,8 +384,8 @@ export default {
 .list-wrapper {
   display: grid;
   grid-template-columns: 50% 50%;
-  margin: 2%;
   z-index: 0;
+  margin: 2% 2% 80px;
 }
 
 .grey-bar {
