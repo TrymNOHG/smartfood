@@ -66,7 +66,7 @@ export default {
         meals.value = response.content;
       } catch (error) {
         console.error("Failed to load previous page:", error);
-        pageIndex.value++; // If failed to load, revert the pageIndex back
+        pageIndex.value++;
       }
     };
 
