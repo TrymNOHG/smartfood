@@ -65,9 +65,30 @@
         </vue-collapsible-panel-group>
       </div>
     </div>
-    <div class="filter-component">
-      <filter-bar  @listing="listing"/>
+    <div class="searchbar-wrapper">
+
+      <button id="toggle" @click="handleClick">Filter</button>
+      <div id="filter" class="slide-in" :class="active ? 'slide-in': 'slide-out'">
+      <div id="search-wrapper">
+        <input type="text" v-model="searchText" @input="searchHandler()" :placeholder="$t('search')+'...'" />
+      </div>
+
+      <div id="sort-wrapper">
+        <select v-model="sort" @change="searchHandler()">
+          <option :value=sortOptions[0]>{{ $t('Utløpsdato - Synkende') }}</option>
+          <option :value=sortOptions[1]>{{ $t('Utløpsdato - Stigende') }}</option>
+          <option :value=sortOptions[2]>{{ $t('Kjøpsdato - Synkende') }}</option>
+          <option :value=sortOptions[3]>{{ $t('Kjøpsdato - Stigende') }}</option>
+        </select>
+      </div>
+      </div>
+
+      <div id="filter-component" class="slide-in" :class="active ? 'slide-in': 'slide-out'">
+        <filter-bar  @listing="listing"/>
+      </div>
+
     </div>
+
     <transition name="fade">
       <div v-if="!listView" class="wrapper" :style="{ marginTop: marginTopStyle }">
         <basic-fridge-item
@@ -94,9 +115,12 @@
       <member-component />
     </div>
   </div>
+  <div id="bottom-element"></div>
 </template>
 
-<script>
+<script lang="ts">
+
+
 import {
   VueCollapsiblePanelGroup,
   VueCollapsiblePanel,
@@ -105,7 +129,7 @@ import { useRoute } from "vue-router";
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import { useFridgeStore, useItemStore } from "@/store/store";
-import { ref } from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import { getItems } from "@/services/ApiService";
@@ -113,6 +137,13 @@ import Swal from "sweetalert2";
 import { addItemToShoppingList } from "@/services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
+
+interface Filter {
+  key: string;
+  operator: string;
+  field_type: string;
+  value: string | number;
+}
 
 export default {
   name: "FridgeView",
@@ -137,6 +168,10 @@ export default {
   },
 
   methods: {
+
+    handleClick() {
+        this.active = !this.active;
+      },
 
     listing(bool){
       this.listView = bool;
@@ -270,9 +305,11 @@ export default {
       }
     },
 
+
   },
 
   setup() {
+
     const fridgeStore = useFridgeStore();
     const itemStore = useItemStore();
     const selectedTab = ref("fridge");
@@ -280,14 +317,105 @@ export default {
     const search = ref(false);
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
+    const isLoading = ref(false);
+    const page = ref(0);
+    const searchText = ref('');
+    const selectedCategory = ref(0);
+    const categories = ref<Array<{ id: number; name: string }>>([]);
+
+    const sortOptions = ref([
+      { key: "expiry", direction: "DESC" },
+      { key: "expiry", direction: "ASC" },
+      { key: "purchase", direction: "DESC" },
+      { key: "purchase", direction: "ASC" },
+    ]);
+
+    const searchParamOptions = ref([
+      "productName",
+    ]);
+
+    const selectedSearchParam = ref(searchParamOptions.value[0]);
+
+    const sort = ref(sortOptions.value[0]);
+
 
     itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
       fridgeItems.value = items;
     });
 
+    const loadMore = () => {
+      console.log(sort);
+      if (!isLoading.value) {
+        isLoading.value = true;
+
+
+        const filters: Filter[] = [
+          {
+            key: selectedSearchParam.value,
+            operator: 'LIKE',
+            field_type: 'STRING',
+            value: searchText.value,
+          },
+        ];
+
+        itemStore.filterItemsInFridge(filters, sort, page).then(response => {
+          console.log(response.data);
+          page.value++;
+          fridgeItems.value = response.data;
+          isLoading.value = false;
+        })
+            .catch((error) => {
+              console.error(error);
+              isLoading.value = false;
+            });
+      }
+    };
+
+
+    const searchHandler = () => {
+      page.value = 0;
+      fridgeItems.value = [];
+      loadMore();
+    };
+
+
+
+    const observeBottom = () => {
+      const bottomElement = document.querySelector("#bottom-element");
+      const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                loadMore();
+              }
+            });
+          },
+          { threshold: 1 }
+      );
+      if (bottomElement) {
+        observer.observe(bottomElement);
+      }
+    };
+
+    onMounted(async () => {
+      await observeBottom();
+      loadMore();
+    });
+
+    onUnmounted(() => {
+      const bottomElement = document.querySelector("#bottom-element");
+      const observer = new IntersectionObserver(() => {}, { threshold: 1 });
+      if (bottomElement) {
+        observer.unobserve(bottomElement);
+      }
+    });
+
+
     const itemAmount = ref(1);
     const submitMessage = ref("norvegia");
     const searchQuery = ref("");
+
+
 
     return {
       fridge,
@@ -300,6 +428,14 @@ export default {
       fridgeStore,
       search,
       itemStore,
+      searchText,
+      searchHandler,
+      selectedCategory,
+      categories,
+      sort,
+      sortOptions,
+      selectedSearchParam,
+      searchParamOptions,
     };
   },
 
@@ -307,6 +443,7 @@ export default {
     return {
       isExpanded: false,
       listView: false,
+      active: false,
     }
   },
 };
@@ -318,6 +455,137 @@ export default {
   transition: opacity .25s ease;
 }
 
+.searchbar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  background-color: white;
+  border-radius: 8px;
+}
+
+#toggle{
+margin-top: 10px;
+  margin-left: 10px;
+  height: 40px;
+  width: 8%;
+  border-radius: 20px;
+  background-color: #31c48d;
+  border: 0;
+}
+
+#toggle:hover{
+  background-color: #238b65;
+  cursor: pointer;
+}
+
+#filter{
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  gap: 25px;
+  padding: 16px;
+  background-color: #f8f8f8;
+  margin-top: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 0;
+  width: 70%;
+  background-color: #31c48d;
+  transform: translateX(2000px);
+  -webkit-transform: translateX(2000px);
+
+}
+
+#filter-component{
+  transform: translateX(2000px);
+  -webkit-transform: translateX(2000px);
+margin-top: 10px;
+  height: 90%;
+  width: 10%;
+  margin-left: auto;
+  margin-right: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background-color: transparent;
+
+}
+
+#search-wrapper{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 60%;
+  border-radius: 20px;
+}
+
+#search-wrapper input{
+  width: 100%;
+}
+#sort-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 30%;
+  border-radius: 20px;
+}
+
+
+.slide-in {
+  animation: slide-in 0.5s forwards;
+  -webkit-animation: slide-in 0.5s forwards;
+
+}
+
+.slide-out {
+  animation: slide-out 0.5s forwards;
+  -webkit-animation: slide-out 0.5s forwards;
+}
+
+@keyframes slide-in {
+  100% { transform: translateX(0%);
+    opacity: 1;
+  pointer-events: all}
+}
+
+@-webkit-keyframes slide-in {
+  100% { -webkit-transform: translateX(0%);
+    opacity: 1;
+    pointer-events: all}
+}
+
+@keyframes slide-out {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(2000px); }
+}
+
+@-webkit-keyframes slide-out {
+  0% { -webkit-transform: translateX(0%); }
+  100% { -webkit-transform: translateX(2000px); }
+}
+
+
+
+
+
+input[type="text"],
+select {
+  padding: 8px 12px;
+  margin: 0; /* Reset margin */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 16px;
+  box-sizing: border-box; /* Fix for width and height */
+}
+
+input[type="text"] {
+  width: 300px;
+}
+
+select {
+  width: 250px;
+  appearance: none; /* Remove default styling for consistent appearance */
+}
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
@@ -406,9 +674,6 @@ input[type="text"]:focus {
   display: block;
 }
 
-input[type="text"]:not(:focus) {
-  display: none;
-}
 
 .dropdown a:hover {
   background-color: #ddd;
@@ -480,6 +745,8 @@ input[type="text"]:not(:focus) {
   background-color: #6c6c6c;
 }
 
+
+
 @media (max-width: 860px) {
 
   .list-wrapper {
@@ -487,12 +754,14 @@ input[type="text"]:not(:focus) {
     grid-template-columns: 1fr;
   }
 
+
+
 }
 
 
 @media (max-width: 650px) {
 
-  .filter-component {
+  #filter-component {
     width: 100%;
   }
 

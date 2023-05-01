@@ -1,23 +1,33 @@
 <template>
   <div class="filter-container">
+
     <div class="view-options">
-      <font-awesome-icon icon="fa-solid fa-list" class="icon" @click="listingView(true)"/>
-      <font-awesome-icon icon="fa-solid fa-table-cells" class="icon" @click="listingView(false)"/>
-    </div>
-    <div class="filter">
-      <font-awesome-icon icon="fa-solid fa-filter" class="icon"/>
+      <font-awesome-icon icon="fa-solid fa-list" class="icon" :class="active ? 'icon2' : 'icon'" @click="listingView(true); handleClick();" />
+      <font-awesome-icon icon="fa-solid fa-table-cells" class="icon" :class="active ? 'icon' : 'icon2'" @click="listingView(false); handleClick2();"/>
     </div>
   </div>
 </template>
 
 
-<script>
+<script lang="ts">
+
+import {onMounted, onUnmounted, ref} from "vue";
+
+interface Filter {
+  key: string;
+  operator: string;
+  field_type: string;
+  value: string | number;
+}
+
 
 export default {
+
 
   data() {
     return {
       listView: false,
+      active: false,
 
     }
   },
@@ -25,6 +35,14 @@ export default {
   methods: {
     listingView(bool){
       this.$emit("listing", bool);
+    },
+
+    handleClick() {
+      this.active = true;
+    },
+
+    handleClick2() {
+      this.active = false;
     }
   }
 
@@ -37,11 +55,14 @@ export default {
 <style scoped>
 .filter-container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
-  background-color: #6C6C6C;
-  padding: 5px;
+  background-color: #31c48d;
+  height: 100%;
+  border-radius: 10px;
+
 }
+
 
 .filter {
   margin-left: 1.5%;
@@ -50,7 +71,9 @@ export default {
 
 .view-options {
   display: flex;
+  gap: 30px;
   align-items: center;
+  height: 100%;
 }
 
 .icon{
@@ -59,11 +82,20 @@ export default {
 
 .icon:hover {
   transform: scale(1.2);
-  color: #31c48d;
+  cursor: pointer;
+
 }
 
 .icon {
-  margin: 5px;
   color: white;
+  padding: 5px;
+  scale: 1.7;
+
+}
+
+.icon2{
+  background-color: white;
+  color: #31c48d;
+  border-radius: 10px;
 }
 </style>
