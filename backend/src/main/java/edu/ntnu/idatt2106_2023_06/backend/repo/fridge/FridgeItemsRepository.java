@@ -6,6 +6,8 @@ import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -56,5 +58,22 @@ public interface FridgeItemsRepository extends JpaRepository<FridgeItems, Fridge
      * @return An optional list of items with purchase dates before a given items.
      */
     Optional<List<FridgeItems>> findFridgeItemsByPurchaseDateBefore(Date purchaseDate);
+
+
+    /*@Query("SELECT fi FROM FridgeItems fi WHERE fi.fridge.fridgeId = :fridgeId " +
+            "AND (LOWER(fi.item.productName) LIKE LOWER(:productName))) " +
+            "ORDER BY " +
+            "CASE :sortField " +
+            "WHEN 'expirationDate' THEN fi.expirationDate " +
+            "WHEN 'quantity' THEN fi.quantity " +
+            "END " +
+            "DESC")
+    List<FridgeItems> findFridgeItemsByFridgeIdAndProductName(
+            @Param("fridgeId") Long fridgeId,
+            @Param("productName") String productName,
+            @Param("sortField") String sortField,
+            @Param("sortOrder") String sortOrder);*/
+
+
 }
 

@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106_2023_06.backend.controller;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemSearchDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
@@ -127,13 +128,13 @@ public class FridgeItemsController implements IFridgeItemsController{
     /**
      * Search and filter items from a fridge.
      *
-     * @param request The search request containing the search parameters.
+     * @param fridgeItemSearchDTO The search request containing the search parameters.
      */
-    @GetMapping(value="/search")
+    @PostMapping(value="/search")
     @Operation(summary = "Search items from fridge")
-    public ResponseEntity<Page<FridgeItems>> searchFridgeItems(@RequestBody SearchRequest request) {
+    public ResponseEntity<Object> searchFridgeItems(@RequestBody FridgeItemSearchDTO fridgeItemSearchDTO) {
         logger.info("User wants to search items from fridge");
-        Page<FridgeItems> itemList = itemService.searchFridgeItems(request);
+        Page<FridgeItemLoadDTO> itemList = itemService.searchFridgeItems(fridgeItemSearchDTO);
         logger.info("Items have been retrieved!");
         return ResponseEntity.ok(itemList);
     }

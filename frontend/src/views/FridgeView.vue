@@ -324,10 +324,10 @@ export default {
     const categories = ref<Array<{ id: number; name: string }>>([]);
 
     const sortOptions = ref([
-      { key: "expiry", direction: "DESC" },
-      { key: "expiry", direction: "ASC" },
-      { key: "purchase", direction: "DESC" },
-      { key: "purchase", direction: "ASC" },
+      { key: "expirationDate", direction: "DESC" },
+      { key: "expirationDate", direction: "ASC" },
+      { key: "purchaseDate", direction: "DESC" },
+      { key: "purchaseDate", direction: "ASC" },
     ]);
 
     const searchParamOptions = ref([

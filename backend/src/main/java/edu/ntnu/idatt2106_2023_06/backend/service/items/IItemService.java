@@ -4,6 +4,7 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemMoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemSearchDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.ShoppingListLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
@@ -24,5 +25,6 @@ public interface IItemService {
     void buyItemsFromShoppingList(List<ItemMoveDTO> shoppingItemIds);
     void acceptSuggestion(ItemRemoveDTO itemDTO);
     void removeItemFromFridge(ItemRemoveDTO itemRemoveDTO);
-    Page<FridgeItems> searchFridgeItems(SearchRequest request);
+    Page<FridgeItemLoadDTO> searchFridgeItems(FridgeItemSearchDTO fridgeItemSearchDTO);
+    Page<FridgeItems> searchFridgeItems(SearchRequest request, Long fridgeId);
 }

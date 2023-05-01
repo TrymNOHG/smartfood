@@ -98,5 +98,4 @@ public class Item {
     @ToString.Exclude
     @JsonIgnore
     private List<FridgeItems> itemsInFridge = new ArrayList<>();
-
 }
