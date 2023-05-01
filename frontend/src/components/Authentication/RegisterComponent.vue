@@ -64,7 +64,7 @@
             {{ $t(errors["password"]) }}
           </div>
         </div>
-        <h5 v-if="submitMessage" id="submit-message" aria-describedby="login-form">{{ submitMessage }}</h5>
+        <h5 v-if="submitMessage" id="submit-message" aria-describedby="login-form">{{ $t( submitMessage ) }}</h5>
         <button type="submit" @click="submit">{{ $t("register") }}</button>
         <div class="login-register">
           <p>
@@ -140,24 +140,14 @@ export default {
           if (response !== undefined) {
             store.setSessionToken(response.data.token);
             await store.fetchUser();
-            submitMessage.value = "Registration Successful";
-            setTimeout(() => {
-              submitMessage.value = "";
-            }, 3000);
             await router.push("/fridges");
-          } else {
-            console.log('Something went wrong registering')
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
+          }
+        }).catch((error) => {
+            submitMessage.value = 'register_error';
             setTimeout(() => {
               submitMessage.value = "";
-            }, 3000);
-          }
-        })
-        .catch((error) => {
-          submitMessage.value = error.response.data["Message:"]
-          console.log(error.response.data);
-          console.warn("error1", error); //TODO: add exception handling
+            }, 2000);
+            console.warn("error", error);
         });
     });
 

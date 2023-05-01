@@ -18,7 +18,6 @@ export default {
   data() {
     return {
       listView: false,
-
     }
   },
 
@@ -27,8 +26,6 @@ export default {
       this.$emit("listing", bool);
     }
   }
-
-
 }
 
 

@@ -23,6 +23,7 @@ import BasicInput from "@/components/basic-components/BasicInput.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
 import {useFridgeStore, useLoggedInStore} from "@/store/store";
 import {ref} from "vue";
+import swal from "sweetalert2";
 
 export default {
   components: {BasicButton, BasicInput, List },
@@ -64,7 +65,35 @@ export default {
         "fridgeName": name
       }
 
-      await this.fridgeStore.updateFridgeNameByDTO(fridgeDTO);
+      let err = null
+      await this.fridgeStore.updateFridgeNameByDTO(fridgeDTO)
+          .catch((errors) => {
+            err = errors
+          });
+
+      if (err){
+        await swal.fire({
+          title: this.$t('errorTitle'),
+          text: this.$t('errorText'),
+          icon: "error",
+          confirmButtonColor: this.$t('confirmButtonColorError'),
+          confirmButtonText: this.$t('confirmButtonText'),
+          customClass: {
+            container: "my-swal-dialog-container",
+          },
+        });
+      } else {
+        await swal.fire({
+          title: this.$t('updateTitle'),
+          text: this.$t('updateText', { oldName: fridgeToChange.fridgeName, newName: name }),
+          icon: "success",
+          confirmButtonColor: this.$t('confirmButtonColorSuccess'),
+          confirmButtonText: this.$t('confirmButtonText'),
+          customClass: {
+            container: "my-swal-dialog-container",
+          },
+        });
+      }
       this.fridgeList = await this.fridgeStore.fetchFridgesByUsername(this.user.username);
     },
 
@@ -77,8 +106,6 @@ export default {
         "isSuperUser": false
       }
 
-      console.log(fridgeUserDTO)
-
       await this.fridgeStore.deleteUserFromFridgeByDTO(fridgeUserDTO);
       this.fridgeList = await this.fridgeStore.fetchFridgesByUsername(this.user.username);
     },
@@ -89,7 +116,30 @@ export default {
 
     async addNewFridge() {
       this.showModal = false;
+      if (this.newFridgeName.isEmpty || this.newFridgeName === ""){
+        await swal.fire({
+          title: this.$t('errorTitle'),
+          text: "Fridge name cannot be empty or null",
+          icon: "error",
+          confirmButtonColor: this.$t('confirmButtonColorError'),
+          confirmButtonText: this.$t('confirmButtonText'),
+          customClass: {
+            container: "my-swal-dialog-container",
+          },
+        });
+        return;
+      }
       await this.fridgeStore.addNewFridgeByFridgeNameAndUsername(this.newFridgeName);
+      await swal.fire({
+        title: this.$t('updateTitle'),
+        text: this.$t('new_fridge', { name: this.newFridgeName }),
+        icon: "success",
+        confirmButtonColor: this.$t('confirmButtonColorSuccess'),
+        confirmButtonText: this.$t('confirmButtonText'),
+        customClass: {
+          container: "my-swal-dialog-container",
+        },
+      });
       this.fridgeList = await this.fridgeStore.fetchFridgesByUsername(this.user.username);
     },
 

@@ -35,3 +35,22 @@ export default {
   }
 }
 </script>
+
+
+<style scoped>
+.field {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 16px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+</style>
