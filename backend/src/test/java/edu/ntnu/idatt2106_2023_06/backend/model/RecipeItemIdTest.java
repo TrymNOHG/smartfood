@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.model;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.items.RecipeItemId;
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipeItemId;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 

@@ -104,5 +104,20 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
      */
     Optional<List<Item>> findItemsByPriceBetween(double lowerBound, double upperBound);
 
+    /**
+     * This method finds items with a given ean.
+     * @param ean   The ean to be checked, given as String.
+     * @return      An optional list of items containing the ean provided.
+     */
+    Optional<List<Item>> findItemsByEan(String ean);
+
+    /**
+     * This method finds items with a given ean.
+     * @param ean           The ean to be checked, given as String.
+     * @param storeName     Name of the store, given as a String.
+     * @return              An optional list of items containing the ean provided.
+     */
+    Optional<Item> findItemByEanAndStore_StoreName(String ean, String storeName);
+
 }
 

@@ -1,34 +1,28 @@
 <template>
   <div class="cards-container">
-    <router-link
-      to="/dinner/meal"
-      @click="storeCurrentItem(meal)"
-      id="item-link"
-    >
+    <router-link to="/dinner/meal" @click="storeCurrentMeal(meal)" id="item-link">
       <div class="card">
         <div class="front-side">
-          <img :src="meal.image" alt="item picture" />
+          <img :src="meal.thumbnailLink" alt="item picture">
+          <div class="recipe-name-desktop">
+            <h2>{{ meal.recipeName }}</h2>
+          </div>
         </div>
         <div class="back-side">
           <div class="item-detail">
-            <div class="item-name">
-              <h2 id="item-name-h2">{{ meal.name }}</h2>
-              <br />
+            <div class="item-description">
+              <p>{{ meal.description }}</p>
             </div>
-            <h4 id="item-price">{{ $t("price") }} {{ meal.price }}; kr</h4>
-            <button
-              v-if="isSuperUser"
-              class="delete-btn"
-              @click.prevent="deleteCard(meal)"
-            >
-              <span>
-                <font-awesome-icon
-                  icon="fa-solid fa-trash"
-                  class="icon delete-icon"
-                />
-              </span>
-            </button>
+            <div class="item-name">
+              <h2 id="item-name-h2">{{ meal.recipeName }}</h2>
+              <br>
+            </div>
           </div>
+          <button v-if="isSuperUser" class="delete-btn" @click.prevent="deleteCard(meal)">
+              <span>
+                <font-awesome-icon icon="fa-solid fa-trash" class="icon delete-icon" />
+              </span>
+          </button>
         </div>
       </div>
     </router-link>
@@ -36,114 +30,111 @@
 </template>
 
 <script>
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { number } from "yup";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {number} from "yup";
 import swal from "sweetalert2";
-import { useItemStore } from "@/store/store";
+import {useItemStore} from "@/store/store";
 import Swal from "sweetalert2";
+import {useMealStore} from "../../store/store";
 
 export default {
   name: "BasicFridgeItem",
-  components: { FontAwesomeIcon },
+  components: {FontAwesomeIcon},
 
   props: {
     meal: {
       type: Object,
-      default: () => ({
-        description: String,
-        image: String,
-        name: String,
-        price: String,
-      }),
     },
     isSuperUser: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
 
   methods: {
-    storeCurrentItem(item) {
-      this.itemStore.setCurrentItem(item);
+
+    storeCurrentMeal(meal){
+      this.mealStore.setCurrentMeal(meal);
     },
 
     deleteCard(item) {
       let deletePercentage = null;
 
-      swal
-        .fire({
-          title: this.$t("confirm_title"),
-          text: this.$t("confirm_text"),
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#4dce38",
-          cancelButtonColor: "#d33",
-          confirmButtonText: this.$t("confirm_button"),
-          cancelButtonText: this.$t("cancel_button"),
-          customClass: {
-            container: "my-swal-dialog-container",
-          },
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            Swal.fire({
-              html: `
+      swal.fire({
+        title: this.$t('confirm_title'),
+        text: this.$t('confirm_text'),
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4dce38',
+        cancelButtonColor: '#d33',
+        confirmButtonText: this.$t('confirm_button'),
+        cancelButtonText: this.$t('cancel_button'),
+        customClass: {
+          container: 'my-swal-dialog-container'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            html: `
           <div class="swal2-content">
             <div class="swal2-text">
-              ${this.$t("Percent-wise, how much was left?")}
+              ${this.$t('Percent-wise, how much was left?')}
             </div>
             <div id="range-value-text" class="swal2-text"></div>
           </div>
         `,
-              input: "range",
-              inputAttributes: {
-                min: 0,
-                max: 100,
-                step: 1,
-              },
-              didOpen: () => {
-                deletePercentage = Swal.getInput();
-                const inputNumber =
-                  Swal.getHtmlContainer().querySelector("#range-value");
-                const rangeValueText =
-                  Swal.getHtmlContainer().querySelector("#range-value-text");
+            input: 'range',
+            inputAttributes: {
+              min: 0,
+              max: 100,
+              step: 1
+            },
+            didOpen: () => {
+              deletePercentage = Swal.getInput()
+              const inputNumber = Swal.getHtmlContainer().querySelector('#range-value')
+              const rangeValueText = Swal.getHtmlContainer().querySelector('#range-value-text')
 
-                deletePercentage.nextElementSibling.style.display = "none";
-                deletePercentage.style.width = "100%";
+              deletePercentage.nextElementSibling.style.display = 'none'
+              deletePercentage.style.width = '100%'
 
-                deletePercentage.addEventListener("input", () => {
-                  inputNumber.value = deletePercentage.value;
-                  rangeValueText.innerText = `${deletePercentage.value}%`;
-                });
-              },
-              showCancelButton: true,
-              confirmButtonText: this.$t("confirm_button"),
-              cancelButtonText: this.$t("cancel_button"),
-              customClass: {
-                container: "my-swal-dialog-container",
-              },
-            }).then((result) => {
-              if (result.isConfirmed) {
-                this.$emit("delete-item", item, deletePercentage.value);
-                swal.fire(this.$t("success_message"), "", "success");
-              }
-            });
-          }
-        });
-    },
+              deletePercentage.addEventListener('input', () => {
+                inputNumber.value = deletePercentage.value
+                rangeValueText.innerText = `${deletePercentage.value}%`
+              })
+            },
+            showCancelButton: true,
+            confirmButtonText: this.$t('confirm_button'),
+            cancelButtonText: this.$t('cancel_button'),
+            customClass: {
+              container: 'my-swal-dialog-container'
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.$emit('delete-item', item, deletePercentage.value);
+              swal.fire(
+                  this.$t('success_message'),
+                  '',
+                  'success'
+              )
+            }
+          })
+        }
+      })
+    }
   },
 
   setup(props) {
-    console.log(props.meal);
-    const itemStore = useItemStore();
+    console.log(props.meal)
+    const mealStore = useMealStore()
     return {
-      itemStore,
-    };
+      mealStore,
+    }
   },
-};
+}
 </script>
 
 <style scoped>
+
 .cards-container {
   display: flex;
   flex-wrap: wrap;
@@ -166,7 +157,7 @@ img {
   width: 320px;
   height: 225px;
   perspective: 600px;
-  transition: 0.5s;
+  transition: .5s;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
@@ -237,14 +228,51 @@ img {
   color: white;
 }
 
+.recipe-name-desktop {
+  display: none;
+}
+
+.item-name {
+  display: none;
+}
+
+.item-description{
+  display: none;
+}
+
+@media (min-width: 651px) {
+  .recipe-name-desktop {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 5px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .item-description {
+    display: block;
+  }
+}
+
 @media (max-width: 650px) {
-  body {
+
+    .item-name {
+      display: block;
+    }
+
+
+  body{
     height: 80px;
   }
   .card {
     display: flex;
     justify-content: end;
-    width: 95vw;
+    width: 350px;
     height: 80px;
     background-color: #eee;
     border: 1px solid #ccc;
@@ -256,6 +284,7 @@ img {
     font-weight: normal;
     font-size: 10px;
   }
+
 
   .front-side {
     display: flex;
@@ -280,7 +309,7 @@ img {
     top: 13px;
     right: 2px;
   }
-  .icon {
+  .icon{
     color: black;
     font-size: 15px;
   }
@@ -319,12 +348,13 @@ img {
   }
 }
 
-@media only screen and (min-width: 10px) and (max-width: 650px) {
-  body {
+@media only screen and (min-width: 350px) and (max-width: 480px) {
+  body{
     height: 100%;
   }
 
-  .cards-container {
+  .cards-container{
+
     height: 100px;
     margin: 10px;
     padding-top: 10px;
@@ -333,18 +363,20 @@ img {
   .card {
     display: flex;
     justify-content: end;
-    width: 90vw;
+    width: 350px;
     height: 100px;
     background-color: white;
     border: 2px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
+
   }
 
   h3 {
     font-weight: normal;
     font-size: 10px;
   }
+
 
   .front-side {
     display: flex;
@@ -370,7 +402,7 @@ img {
     top: 5px;
     right: 5px;
   }
-  .icon {
+  .icon{
     color: black;
     font-size: 15px;
     margin-right: 5px;
@@ -388,6 +420,7 @@ img {
   .card:hover .back-side {
     transform: rotateY(0deg);
   }
+
 
   .card .back-side {
     margin-right: auto;
@@ -409,4 +442,5 @@ img {
     display: none;
   }
 }
+
 </style>

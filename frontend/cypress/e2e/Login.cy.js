@@ -1,9 +1,9 @@
 describe('Start to end: ', () => {
     const base_url_site = "http://localhost:5173";
-    const base_url_endpoint = "http://localhost:8080";
+    const base_url_endpoint = "http://localhost:8089/api";
 
     beforeEach(() => {
-        cy.intercept('POST', 'http://localhost:8080/user/login', {
+        cy.intercept('POST', 'http://localhost:8089/api/user/login', {
             statusCode: 200,
             body: {
                 token: 'my-user-token'

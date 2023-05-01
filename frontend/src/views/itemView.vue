@@ -1,9 +1,8 @@
 <template>
   <div class="grey-bar">
     <div class="members-fridge">
-      <router-link class="link" to="/members">{{ $t('members') }}</router-link>
-      <router-link class="link fridge" to="/fridge">{{ $t('fridge') }}</router-link>
-    </div>
+      <router-link class="link" :to="{ name: 'fridgeView', query: { selectedTab: 'members' } }" >{{ $t('members') }}</router-link>
+      <router-link class="link fridge" :to="{ name: 'fridgeView'}">{{ $t('fridge') }}</router-link>    </div>
     <div class="information-button">
       <img src="@/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
     </div>
@@ -184,8 +183,8 @@ export default {
 
 
 .grey-bar {
-  background-color: #6C6C6C;
-  max-height : 35px;
+  background-color: #6c6c6c;
+  max-height: 35px;
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -239,13 +238,7 @@ export default {
   grid-column-gap: 10px;
   grid-column: 2;
 }
-.members-fridge:hover {
-  color: #3b3b3b;
-  height: 25px;
-  border-radius: 5px;
-  background-color: #fff;
-  transition: all 0.2s ease-in-out;
-}
+
 
 .link {
   text-decoration: none;
@@ -284,5 +277,44 @@ export default {
 
 }
 
+@media only screen and (min-width: 1px) and (max-width: 480px) {
+  .grey-bar {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+    background-color: #31c48d;
+    max-height: 60px;
+    height: 60px;
+    border-radius: 20px 20px 0 0;
+  }
 
+  .members-fridge {
+    background-color: #31c48d;
+    margin-top: 0px;
+    padding-top: 0;
+    padding-right: 10px;
+    text-align: center;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+  }
+
+  .link {
+    margin: 0;
+  }
+
+  .fridge {
+    height: 60px !important;
+    background-color: white;
+    border-radius: 20px 20px 0 0;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: none;
+    color: black;
+    margin-top: 20px;
+    padding-top: 10px;
+  }
+}
 </style>
