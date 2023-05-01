@@ -17,11 +17,11 @@ import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @CrossOrigin("*")
@@ -78,6 +78,40 @@ public class RecipeController {
         RecipeLoadDTO recipeLoadDTO = recipeService.getRecipe(recipeName);
         logger.info("Recipe DTO successfully made!");
         return ResponseEntity.ok(recipeLoadDTO);
+    }
+
+    @GetMapping(value="/load")
+    @Operation(summary = "Get recipe from Meny")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Loading items of a given shopping list",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RecipeLoadDTO.class)) })}
+    )
+    public ResponseEntity<Page<RecipeLoadDTO>> loadRecipe(
+            @ParameterObject @RequestParam(name = "recipe") String recipeName,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+        logger.info("Trying to load: " + recipeName);
+        Page<RecipeLoadDTO> recipeLoadDTOs = recipeService.getRecipesByName(recipeName, page, size);
+        logger.info("Recipe DTOs successfully made!");
+        return ResponseEntity.ok(recipeLoadDTOs);
+    }
+
+    @GetMapping(value="/loadByFridge")
+    @Operation(summary = "Get recipe from Meny")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Loading items of a given shopping list",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RecipeLoadDTO.class)) })}
+    )
+    public ResponseEntity<Page<RecipeLoadDTO>> loadRecipeByFridgeItems(
+            @ParameterObject @RequestParam(name = "fridge") Long fridgeId,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+        logger.info("Trying to load recipes for fridge with ID: " + fridgeId);
+        Page<RecipeLoadDTO> recipeLoadDTOs = recipeService.getRecipesByFridgeId(fridgeId, page, size);
+        logger.info("Recipe DTOs successfully made!");
+        return ResponseEntity.ok(recipeLoadDTOs);
     }
 
     //TODO: add more recipe load things, including pagination of random recipes.
