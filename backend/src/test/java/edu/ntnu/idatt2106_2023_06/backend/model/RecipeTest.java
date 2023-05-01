@@ -1,11 +1,13 @@
 package edu.ntnu.idatt2106_2023_06.backend.model;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.items.Recipe;
-import edu.ntnu.idatt2106_2023_06.backend.model.items.RecipeItems;
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Instructions;
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Recipe;
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipePart;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +29,12 @@ class RecipeTest {
         @Test
         void all_arg_constructor_can_be_made() {
             try {
-                Recipe recipe = new Recipe(1L, 50, new ArrayList<>());
+                Recipe recipe = new Recipe(1L, "Grønnsakslasagne med søtpotet, aubergine og grønnkål",
+                         "En vegetarisk oppskrift på grønnsakslasagne full av smak. Her er kjøttdeigen " +
+                                 "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
+                                 "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
+                                 "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
+                        50, new ArrayList<>(),  new ArrayList<>(),new HashSet<>());
             } catch (Exception e) {
                 fail();
             }
@@ -39,6 +46,12 @@ class RecipeTest {
                 Recipe recipe = Recipe
                         .builder()
                         .recipeId(1L)
+                        .recipeName("Lasagna")
+                        .description("Delicious lasagna")
+                        .recipeParts(new ArrayList<>())
+                        .author("Meny")
+                        .thumbnailLink("image.png")
+                        .servingSize(5)
                         .cookTime(50)
                         .build();
             } catch (Exception e) {
@@ -51,7 +64,12 @@ class RecipeTest {
     @Nested
     class Recipe_can_properly_get {
         Recipe getRecipe() {
-            return new Recipe(1L, 50, new ArrayList<>());
+            return new Recipe(1L, "Grønnsakslasagne med søtpotet, aubergine og grønnkål",
+                    "En vegetarisk oppskrift på grønnsakslasagne full av smak. Her er kjøttdeigen " +
+                            "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
+                            "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
+                            "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
+                    50, new ArrayList<>(),  new ArrayList<>(), new HashSet<>());
         }
 
         @Test
@@ -64,6 +82,54 @@ class RecipeTest {
         }
 
         @Test
+        void recipeName() {
+            Recipe recipe = getRecipe();
+            String expectedName = "Grønnsakslasagne med søtpotet, aubergine og grønnkål";
+            String actualName = recipe.getRecipeName();
+
+            assertEquals(expectedName, actualName);
+        }
+
+        @Test
+        void description() {
+            Recipe recipe = getRecipe();
+            String expectedDescription = "En vegetarisk oppskrift på grønnsakslasagne full av smak. Her er kjøttdeigen " +
+                    "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene med ulike " +
+                    "grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en rekke grønnsaksrester.\n";
+            String actualDescription = recipe.getDescription();
+
+            assertEquals(expectedDescription, actualDescription);
+        }
+
+        @Test
+        void author() {
+            Recipe recipe = getRecipe();
+            String expectedAuthor = "Meny";
+            String actualAuthor = recipe.getAuthor();
+
+            assertEquals(expectedAuthor, actualAuthor);
+        }
+
+        @Test
+        void servingSize() {
+            Recipe recipe = getRecipe();
+            int expectedServingSize = 5;
+            int actualServingSize = recipe.getServingSize();
+
+            assertEquals(expectedServingSize, actualServingSize);
+        }
+
+        @Test
+        void thumbnail_link() {
+            Recipe recipe = getRecipe();
+            String expectedLink = "image.png";
+            String actualLink = recipe.getThumbnailLink();
+
+            assertEquals(expectedLink, actualLink);
+        }
+
+
+        @Test
         void cook_time() {
             Recipe recipe = getRecipe();
             double expectedCookTime = 50;
@@ -74,13 +140,23 @@ class RecipeTest {
         }
 
         @Test
-        void recipe_items() {
+        void recipe_parts() {
             Recipe recipe = getRecipe();
-            List<RecipeItems> expectedItems = new ArrayList<>();
+            List<RecipePart> expectedParts= new ArrayList<>();
 
-            List<RecipeItems> actualItems = recipe.getItemsInRecipe();
+            List<RecipePart> actualPars = recipe.getRecipeParts();
 
-            assertEquals(expectedItems, actualItems);
+            assertEquals(expectedParts, actualPars);
+        }
+
+        @Test
+        void instructions() {
+            Recipe recipe = getRecipe();
+            List<Instructions> expectedInstructions = new ArrayList<>();
+
+            List<Instructions> actualInstructions = recipe.getInstructions();
+
+            assertEquals(expectedInstructions, actualInstructions);
         }
 
 
@@ -89,7 +165,67 @@ class RecipeTest {
     @Nested
     class Recipe_can_properly_set {
         Recipe getRecipe() {
-            return new Recipe(1L, 50, new ArrayList<>());
+            return new Recipe(1L, "Grønnsakslasagne med søtpotet, aubergine og grønnkål",
+                    "En vegetarisk oppskrift på grønnsakslasagne full av smak. Her er kjøttdeigen " +
+                            "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
+                            "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
+                            "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
+                    50, new ArrayList<>(),  new ArrayList<>(), new HashSet<>());
+        }
+
+        @Test
+        void recipeName() {
+            Recipe recipe = getRecipe();
+            String expectedName = "Lasagne";
+
+            recipe.setRecipeName(expectedName);
+            String actualName = recipe.getRecipeName();
+
+            assertEquals(expectedName, actualName);
+        }
+
+        @Test
+        void description() {
+            Recipe recipe = getRecipe();
+            String expectedDescription = "Pasta-like dish";
+
+            recipe.setDescription(expectedDescription);
+            String actualDescription = recipe.getDescription();
+
+            assertEquals(expectedDescription, actualDescription);
+        }
+
+        @Test
+        void author() {
+            Recipe recipe = getRecipe();
+            String expectedAuthor = "Coop";
+
+            recipe.setAuthor(expectedAuthor);
+            String actualAuthor = recipe.getAuthor();
+
+            assertEquals(expectedAuthor, actualAuthor);
+        }
+
+        @Test
+        void servingSize() {
+            Recipe recipe = getRecipe();
+            int expectedServingSize = 4;
+
+            recipe.setServingSize(expectedServingSize);
+            int actualServingSize = recipe.getServingSize();
+
+            assertEquals(expectedServingSize, actualServingSize);
+        }
+
+        @Test
+        void thumbnail_link() {
+            Recipe recipe = getRecipe();
+            String expectedLink = "image.jpeg";
+
+            recipe.setThumbnailLink(expectedLink);
+            String actualLink = recipe.getThumbnailLink();
+
+            assertEquals(expectedLink, actualLink);
         }
 
         @Test
@@ -101,6 +237,17 @@ class RecipeTest {
             double actualCookTime = recipe.getCookTime();
 
             assertEquals(expectedCookTime, actualCookTime);
+        }
+
+        @Test
+        void instructions() {
+            Recipe recipe = getRecipe();
+            List<Instructions> expectedInstructions = new ArrayList<>();
+
+            recipe.setInstructions(expectedInstructions);
+            List<Instructions> actualInstructions = recipe.getInstructions();
+
+            assertEquals(expectedInstructions, actualInstructions);
         }
 
     }

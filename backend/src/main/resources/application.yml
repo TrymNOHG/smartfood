@@ -2,7 +2,11 @@ logging:
   level:
     root: INFO
 
-server.port: 8080
+server:
+  port: 8089
+  servlet:
+    context-path: /api
+
 springdoc:
   api-docs:
     path: /docs

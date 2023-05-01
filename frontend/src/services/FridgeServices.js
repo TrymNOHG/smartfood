@@ -1,7 +1,7 @@
 import axios from "axios";
 import SessionToken from '@/features/SessionToken.js'
 
-const BASE_LISTING_URL = "http://localhost:8080/fridge";
+const BASE_LISTING_URL = "http://localhost:8089/api/fridge";
 
 export const getAllFridges = async (username) => {
     return await axios.get(`${BASE_LISTING_URL}/loadAll?user=${username}`);
