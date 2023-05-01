@@ -6,7 +6,7 @@ describe("Adding and deleting items from fridge", () => {
   let fridgeAddedItem = [];
 
   beforeEach(() => {
-    cy.intercept("POST", "http://localhost:8080/api/user/login", {
+    cy.intercept("POST", "http://localhost:8089/api/user/login", {
       statusCode: 200,
       body: {
         token: "my-user-token",
@@ -47,7 +47,7 @@ describe("Adding and deleting items from fridge", () => {
 
     cy.intercept(
       "POST",
-      "http://localhost:8080/api/item/shopping/add?fridgeId=88&suggestion=false",
+      "http://localhost:8089/api/item/shopping/add?fridgeId=88&suggestion=false",
       (req) => {
         req.reply({
           statusCode: 200,
@@ -66,7 +66,7 @@ describe("Adding and deleting items from fridge", () => {
 
     cy.intercept(
       "GET",
-      "http://localhost:8080/api/user/superuser?fridgeId=88",
+      "http://localhost:8089/api/user/superuser?fridgeId=88",
       (req) => {
         req.reply({
           statusCode: 200,
@@ -79,7 +79,7 @@ describe("Adding and deleting items from fridge", () => {
 
     cy.intercept(
       "GET",
-      "http://localhost:8080/api/item/fridge/get?fridgeId=88",
+      "http://localhost:8089/api/item/fridge/get?fridgeId=88",
       (req) => {
         req.reply({
           statusCode: 200,
@@ -90,7 +90,7 @@ describe("Adding and deleting items from fridge", () => {
 
     cy.intercept(
       "POST",
-      "http://localhost:8080/api/item/fridge/add?fridgeId=88",
+      "http://localhost:8089/api/item/fridge/add?fridgeId=88",
       (req) => {
         fridgeAddedItem.push(req.body);
         req.reply({
@@ -101,7 +101,7 @@ describe("Adding and deleting items from fridge", () => {
 
     cy.intercept(
       "GET",
-      "http://localhost:8080/api/fridge/loadAllUsers?fridgeId=88",
+      "http://localhost:8089/api/fridge/loadAllUsers?fridgeId=88",
       (req) => {
         req.reply({
           statusCode: 200,
@@ -123,7 +123,7 @@ describe("Adding and deleting items from fridge", () => {
 
     cy.intercept(
         "POST",
-        "http://localhost:8080/api/item/shopping/add",
+        "http://localhost:8089/api/item/shopping/add",
         (req) => {
           req.reply({
             statusCode: 200,
@@ -175,7 +175,7 @@ describe("Adding and deleting items from fridge", () => {
 
     cy.intercept(
       "POST",
-      "http://localhost:8080/api/stat/add/bought-item",
+      "http://localhost:8089/api/stat/add/bought-item",
       (req) => {
         req.reply({
           statusCode: 200,
@@ -185,7 +185,7 @@ describe("Adding and deleting items from fridge", () => {
 
     cy.intercept(
       "POST",
-      "http://localhost:8080/api/stat/add/delete-item",
+      "http://localhost:8089/api/stat/add/delete-item",
       (req) => {
         req.reply({
           statusCode: 200,
@@ -195,7 +195,7 @@ describe("Adding and deleting items from fridge", () => {
 
     cy.intercept(
       "DELETE",
-      "http://localhost:8080/api/item/fridge/delete",
+      "http://localhost:8089/api/item/fridge/delete",
       (req) => {
         req.reply({
           statusCode: 200,
