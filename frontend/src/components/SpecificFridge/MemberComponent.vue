@@ -166,6 +166,7 @@ export default {
                 await addUserToFridge(fridgeUserDTO);
                 this.changeModal()
                 await this.fetchUsers()
+                this.searchResults = []
             } catch (error) {
             }
         },

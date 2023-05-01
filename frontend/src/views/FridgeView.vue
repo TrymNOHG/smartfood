@@ -659,7 +659,7 @@ input[type="text"]:not(:focus) {
     display: flex;
     width: 100%;
     z-index: 0;
-    margin-bottom: 150px;
+    margin-bottom: 70px;
   }
 }
 </style>

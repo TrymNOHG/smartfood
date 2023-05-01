@@ -8,16 +8,10 @@
   <div class="item-wrapper">
     <div class="item">
       <meal-header :meal="meal"/>
+      <meal-info :meal="meal"/>
       <div class="info-delete-wrapper">
-        <div>
-          <meal-info :meal="meal"/>
-          <recipe-parts :recipe-parts="meal.recipeParts"></recipe-parts>
-        </div>
-        <div class="spacer"></div>
-        <div class="additional-info">
-          <p id="description">{{meal.description}}</p>
-          <instructions :instructions="meal.instructions"></instructions>
-        </div>
+          <recipe-parts id="recipe-parts" :recipe-parts="meal.recipeParts"></recipe-parts>
+          <instructions id="instructions" :instructions="meal.instructions"></instructions>
       </div>
     </div>
   </div>
@@ -61,10 +55,17 @@ export default {
 
 .info-delete-wrapper {
   display: flex;
+  width: 100%;
 }
 
-.additional-info {
+#instructions {
   flex-grow: 1;
+  width: 70%;
+}
+
+#recipe-parts {
+  width: 30%;
+  margin-right: 20px; /* Add margin to separate the two sections */
 }
 
 .grey-bar {
@@ -88,10 +89,24 @@ export default {
   cursor: pointer;
 }
 
-#description{
-  padding: 20px;
 
+@media only screen and (max-width: 768px) {
+
+  .info-delete-wrapper {
+    flex-direction: column;
+  }
+
+  #instructions {
+    flex-grow: 1;
+    width: 100%;
+  }
+
+  #recipe-parts {
+    width: 100%;
+    margin-right: 0px; /* Add margin to separate the two sections */
+  }
 }
+
 
 @media (max-width: 650px) {
   .item-wrapper {
@@ -102,8 +117,5 @@ export default {
     flex-direction: column;
   }
 
-  .spacer {
-    height: 20px;
-  }
 }
 </style>
