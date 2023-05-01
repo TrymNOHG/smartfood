@@ -87,5 +87,7 @@
   "personal_statistics": "Personal Statistics",
   "fridge_statistics": "Fridge Statistics",
   "percentage_thrown_last_day": "Percentage thrown last day",
-  "money_wasted_last_day": "Money wasted last day"
+  "money_wasted_last_day": "Money wasted last day",
+  "percentage_thrown": "Percentage thrown last day",
+  "money_wasted": "Money wasted last day"
 }

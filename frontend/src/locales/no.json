@@ -89,5 +89,7 @@
   "personal_statistics": "Personlig statistikk",
   "fridge_statistics": "Kjøleskap statistikk",
   "percentage_thrown_last_day": "Prosent kastet siste dag",
-  "money_wasted_last_day": "Penger brukt siste dag"
+  "money_wasted_last_day": "Penger kastet siste dag",
+  "percentage_thrown": "Prosent kastet siste dag",
+  "money_wasted": "Penger brukt siste dag"
 }
