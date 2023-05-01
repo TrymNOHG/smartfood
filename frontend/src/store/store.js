@@ -153,6 +153,10 @@ export const useItemStore = defineStore('itemStore', {
         currentItem: null,
     }),
 
+    persist: {
+        storage: sessionStorage,
+    },
+
     getters: {
         getCurrentItem(){
             console.log(this.currentItem)
@@ -230,19 +234,17 @@ export const useStatStore = defineStore('statStore', {
         },
     },
 
-
-
     actions: {
         async fetchUserStatsPercentage() {
             this.percentageChart = []
             await getUserPercentageStats().then((response) => {
                 console.log("response: ", response)
-                    for (const dataSet of response.data) {
-                        const { first, second } = dataSet
-                        this.percentageChart.push({first, second});
-                    }
-                });
-            },
+                for (const dataSet of response.data) {
+                    const { first, second } = dataSet
+                    this.percentageChart.push({first, second});
+                }
+            });
+        },
 
         async fetchUserStatsMoney() {
             this.moneyChart = []
@@ -276,3 +278,28 @@ export const useStatStore = defineStore('statStore', {
         }
     },
 });
+
+export const useMealStore = defineStore('mealStore', {
+    state: () => ({
+        all: [],
+        currentMeal: null,
+    }),
+
+    persist: {
+        storage: sessionStorage,
+    },
+
+    getters: {
+        getCurrentMeal(){
+            return this.currentMeal;
+        }
+    },
+
+    actions: {
+        setCurrentMeal(meal) {
+            this.currentMeal = meal;
+        },
+    },
+});
+
+

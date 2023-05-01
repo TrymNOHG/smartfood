@@ -49,6 +49,7 @@
       </ul>
       <div class="language" @click="changeLanguage()">{{ language }}</div>
     </nav>
+
   </header>
   <div class="current-fringe" v-if="!isOnAuthPage && !isOnRootPage">
     <div class="break-line" />
@@ -81,7 +82,10 @@
       </router-link>
     </div>
   </div>
-  <RouterView class="router-view-container" />
+  <div class="router-view-container">
+    <RouterView/>
+  </div>
+
 </template>
 
 <script>
@@ -521,7 +525,7 @@ nav ul li a .text {
   }
 
   .router-view-container {
-    padding-bottom: 80px;
+    padding-bottom: 70px;
   }
 
   header img {
@@ -634,6 +638,7 @@ nav ul li a .text {
 
   .icon {
     scale: 2 !important;
+
   }
   nav ul li a {
     padding: 5px 0px 0px 0px !important;

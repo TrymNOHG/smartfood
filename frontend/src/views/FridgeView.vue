@@ -123,6 +123,7 @@ import Swal from "sweetalert2";
 import { addItemToShoppingList } from "@/services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
+import router from "../router/router";
 import { StreamBarcodeReader } from "vue-barcode-reader";
 
 export default {
@@ -170,6 +171,7 @@ export default {
         purchaseDate: date,
         expirationDate: expirationDate,
         image: item.image,
+        EAN: item.ean,
         quantity: 1,
       };
 
@@ -283,6 +285,7 @@ export default {
         purchaseDate: date,
         expirationDate: expirationDate,
         image: item.image,
+        EAN: item.ean,
         quantity: 1,
       };
 
@@ -324,7 +327,11 @@ export default {
   setup() {
     const fridgeStore = useFridgeStore();
     const itemStore = useItemStore();
-    const selectedTab = ref("fridge");
+    const selectedTab = ref(router.currentRoute.value.query.selectedTab || 'fridge');
+
+    history.replaceState(null, null, '/fridge');
+    const currentUrl = window.location.href;
+
     const searchItems = ref([]);
     const search = ref(false);
     const fridgeItems = ref([]);

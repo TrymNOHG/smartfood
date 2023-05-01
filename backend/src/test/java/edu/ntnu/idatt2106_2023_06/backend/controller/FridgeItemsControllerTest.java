@@ -102,7 +102,7 @@ public class FridgeItemsControllerTest {
     @Test
     public void testAddToFridge() throws Exception {
         ItemDTO itemDTO = new ItemDTO( "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
-                "Kiwi", 200000, null, 1, false);
+                "Kiwi", 200000, null, 1, false, "12345678");
         Long fridgeId = 1L;
         Item item = new Item();
 
@@ -125,10 +125,10 @@ public class FridgeItemsControllerTest {
         List<FridgeItemLoadDTO> fridgeItemLoadDTOS = new ArrayList<>();
         fridgeItemLoadDTOS.add(new FridgeItemLoadDTO(1L, "Tine Melk",
                 "Tine melk kommer fra fri gående, grass matet kuer.", "Kiwi", 200000,
-                null, 1, LocalDateTime.now(), LocalDateTime.now()));
+                null, 1, LocalDateTime.now(), LocalDateTime.now(), "123456"));
         fridgeItemLoadDTOS.add(new FridgeItemLoadDTO(2L, "Tine Melk",
                 "Tine melk kommer fra fri gående, grass matet kuer.", "Kiwi", 200000,
-                null, 1, LocalDateTime.now(), LocalDateTime.now()));
+                null, 1, LocalDateTime.now(), LocalDateTime.now(), "123456"));
         given(itemService.getFridgeItems(fridgeId)).willReturn(fridgeItemLoadDTOS);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/item/fridge/get")
