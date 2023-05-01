@@ -6,5 +6,5 @@ import lombok.NonNull;
 @Builder
 public record RecipeItemDTO(@NonNull Long itemId, @NonNull String name,
                             double price, double quantity,
-                            String unitOfMeasurement) {
+                            String unitOfMeasurement, boolean hasItem) {
 }

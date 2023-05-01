@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 public record RecipeLoadDTO(@NonNull String recipeName, String description,
         String author, int servingSize, int difficulty,
-        String thumbnail, double cookingTime,
+        String thumbnail, double cookingTime, int numMatchingItems,
         @NonNull List<InstructionDTO> instructions,
         @NonNull List<RecipePartDTO> recipeParts,
         @NonNull List<RecipeAllergenDTO> allergens) {
