@@ -2,13 +2,13 @@
   <div class="meal-info-container">
     <div class="meal-info">
       <h3>{{ $t('serving_size') }}:</h3>
-      <span>{{ meal.servingSize }}</span>
+      <span class="serving-size">{{ meal.servingSize }}</span>
       <h3>{{ $t('cook_time') }}:</h3>
-      <span> {{ meal.cookingTime }} {{ $t('minutes') }}</span>
+      <span class="cooking-time"> {{ meal.cookingTime }} {{ $t('minutes') }}</span>
       <h3>{{ $t('difficulty') }}:</h3>
       <span class="difficulty-stars">{{ difficultyEmojis }}</span>
       <h3>{{ $t('author') }}:</h3>
-      <span>{{ meal.author }}</span>
+      <span id="meal-auther">{{ meal.author }}</span>
     </div>
     <div class="allergens-container">
       <h3>{{ $t('allergens') }}:</h3>
