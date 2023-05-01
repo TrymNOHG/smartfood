@@ -9,11 +9,14 @@
     <div class="item">
       <meal-header :meal="meal"/>
       <div class="info-delete-wrapper">
-        <meal-info :meal="meal"/>
+        <div>
+          <meal-info :meal="meal"/>
+          <recipe-parts :recipe-parts="meal.recipeParts"></recipe-parts>
+        </div>
         <div class="spacer"></div>
         <div class="additional-info">
           <p id="description">{{meal.description}}</p>
-          <recipe-parts :recipe-parts="meal.recipeParts"></recipe-parts>
+          <instructions :instructions="meal.instructions"></instructions>
         </div>
       </div>
     </div>
@@ -25,6 +28,7 @@ import { useMealStore } from "../store/store";
 import mealHeader from "@/components/mealDescription/mealHeader.vue";
 import MealInfo from "../components/mealDescription/mealInfo.vue";
 import recipeParts from "../components/mealDescription/RecipeParts.vue";
+import Instructions from "../components/mealDescription/Instructions.vue";
 
 
 export default {
@@ -32,6 +36,7 @@ export default {
     mealHeader,
     MealInfo,
     recipeParts,
+    Instructions
   },
   setup() {
     const mealStore = useMealStore();

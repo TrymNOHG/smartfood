@@ -2,13 +2,16 @@
   <div>
     <div class="meal-info">
       <h3>{{ $t('serving_size') }}: {{ meal.servingSize }}</h3>
-      <h3>{{ $t('cook_time') }}: {{ meal.cookTime }} {{ $t('minutes') }}</h3>
+      <h3>{{ $t('cook_time') }}: {{ meal.cookingTime }} {{ $t('minutes') }}</h3>
       <h3>{{ $t('difficulty') }}: <span class="difficulty-stars">{{ difficultyEmojis }}</span></h3>
+      <h3>{{ $t('author') }}: {{ meal.author }}</h3>
     </div>
     <div class="allergens">
       <h3>{{ $t('allergens') }}:</h3>
       <ul>
-        <li v-for="allergen in meal.allergens" :key="allergen">{{ allergen }}</li>
+        <li v-for="allergen in meal.allergens" :key="allergen.displayName">
+          {{ allergen.displayName }} ({{ allergen.amount }})
+        </li>
       </ul>
     </div>
   </div>
@@ -39,21 +42,12 @@ export default {
 </script>
 <style scoped>
 .meal-info,
-.recipe-parts,
 .allergens {
   padding: 20px;
 }
 
 .meal-info h3,
 .allergens h3 {
-  margin: 1em 0;
-}
-
-.recipe-parts h3 {
-  margin-top: 1em;
-}
-
-.item-info {
   margin: 1em 0;
 }
 

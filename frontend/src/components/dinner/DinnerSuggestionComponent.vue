@@ -16,6 +16,136 @@ export default {
 
     const meals = [
       {
+        "recipeName": "Kremet pasta med kylling",
+        "description": "En pastarett med kremet, fyldig saus, sopp og saftige kyllingbiter. Dette er en rask middag, som lages enkelt og virkelig er hverdagsluksus.",
+        "author": "Meny",
+        "servingSize": 4,
+        "difficulty": 2,
+        "thumbnail": "https://res.cloudinary.com/norgesgruppen/images/c_scale,dpr_auto,f_auto,q_auto:eco,w_1600/raivhxwrrqwqmtpqdt0s/kremet-pasta-med-kylling",
+        "cookingTime": 1.0,
+        "instructions": [
+          {
+            "instruction": "Stek kyllingen i en stekepanne med smør. Stek på begge sider til kyllingen har fått en gyllen stekeskorpe og er gjennomstekt.",
+            "imageLink": "https://res.cloudinary.com/norgesgruppen/image/upload/f_auto,q_50,dpr_2.0,w_700,h_350,c_fill/tugcpheevklm7pp1wkur"
+          },
+          {
+            "instruction": "Ta kyllingen ut av pannen så lenge, la hvile noen minutter før du deler den i mindre biter.",
+            "imageLink": "https://res.cloudinary.com/norgesgruppen/image/upload/f_auto,q_50,dpr_2.0,w_700,h_350,c_fill/zz0styvl4l5j0vvri6fm"
+          },
+          {
+            "instruction": "Finhakk hvitløk og sjalottløk, og fres i samme panne som du stekte kyllingen i. Kutt soppen i skiver eller grove biter og fres i 2 ss smør sammen med løken til soppen er gyllen.",
+            "imageLink": "https://res.cloudinary.com/norgesgruppen/image/upload/f_auto,q_50,dpr_2.0,w_700,h_350,c_fill/dwjlfozoxbup4wamcddt"
+          },
+          {
+            "instruction": "Kok pasta etter anvisning på pakken. Ta vare på 3 dl av kokevannet når du heller av pastaen.",
+            "imageLink": ""
+          },
+          {
+            "instruction": "Ha fløten og 2 dl av pastavannet over i pannen med løken. Kok opp og la blandingen putre i 2 minutter, eller til den tykner noe. Rør inn parmesan og smak til med salt og pepper.",
+            "imageLink": ""
+          },
+          {
+            "instruction": "Bland pastaen sammen med sausen. Spe på med mer pastavann dersom sausen blir for tykk eller la den trekke noen minutter om den virker for tynn.",
+            "imageLink": ""
+          },
+          {
+            "instruction": "Vend inn kyllingen, løk, sopp og hakket persille.",
+            "imageLink": "https://res.cloudinary.com/norgesgruppen/image/upload/f_auto,q_50,dpr_2.0,w_700,h_350,c_fill/gjh6mc89p7mgktvigunr"
+          }
+        ],
+        "recipeParts": [
+          {
+            "partName": "",
+            "ingredients": [
+              {
+                "itemId": 166,
+                "name": "Tagliatelle 250g Jacobs Utvalgte",
+                "price": 37.4,
+                "quantity": 350.0,
+                "unitOfMeasurement": "g"
+              },
+              {
+                "itemId": 167,
+                "name": "Kyllingfilet 650g Kyllinggården",
+                "price": 114.0,
+                "quantity": 380.0,
+                "unitOfMeasurement": "g"
+              },
+              {
+                "itemId": 168,
+                "name": "Champignon Bama",
+                "price": 74.9,
+                "quantity": 250.0,
+                "unitOfMeasurement": "g"
+              },
+              {
+                "itemId": 169,
+                "name": "Bladpersille 40g",
+                "price": 29.9,
+                "quantity": 10.0,
+                "unitOfMeasurement": "g"
+              }
+            ]
+          },
+          {
+            "partName": "Kremet saus",
+            "ingredients": [
+              {
+                "itemId": 70,
+                "name": "Kremfløte 37% 3dl Tine",
+                "price": 24.5,
+                "quantity": 300.0,
+                "unitOfMeasurement": "ml"
+              },
+              {
+                "itemId": 170,
+                "name": "Hvitløk m/Fedd",
+                "price": 18.9,
+                "quantity": 10.0,
+                "unitOfMeasurement": "g"
+              },
+              {
+                "itemId": 171,
+                "name": "Løk Gul",
+                "price": 2.99,
+                "quantity": 100.0,
+                "unitOfMeasurement": "g"
+              },
+              {
+                "itemId": 172,
+                "name": "Parmigiano Reggiano 150g Jacobs Utvalgte",
+                "price": 86.0,
+                "quantity": 60.0,
+                "unitOfMeasurement": "g"
+              }
+            ]
+          }
+        ],
+        "allergens": [
+          {
+            "displayName": "Egg",
+            "amount": "PRESENT"
+          },
+          {
+            "displayName": "Gluten",
+            "amount": "PRESENT"
+          },
+          {
+            "displayName": "Soya",
+            "amount": "TRACE"
+          },
+          {
+            "displayName": "Melk",
+            "amount": "PRESENT"
+          },
+          {
+            "displayName": "Sennep",
+            "amount": "TRACE"
+          }
+        ]
+      },
+
+        {
         "recipeId": 1,
         "recipeName": "Grønnsakslasagne med søtpotet, aubergine og grønnkål",
         "description": "En vegetarisk oppskrift på grønnsakslasagne full av smak. Her er kjøttdeigen byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en rekke grønnsaksrester.\n",

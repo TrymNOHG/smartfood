@@ -1,7 +1,7 @@
 <template>
   <div class="meal-header">
     <div class="meal-image">
-      <img :src="meal.thumbnailLink" alt="meal picture">
+      <img :src="meal.thumbnail" alt="meal picture">
     </div>
     <h1 class="meal-name">{{ meal.recipeName }}</h1>
   </div>

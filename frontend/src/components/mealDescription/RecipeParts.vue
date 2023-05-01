@@ -1,31 +1,26 @@
 <template>
   <div class="recipe-parts">
-    <div v-for="part in recipeParts" :key="part.recipePartId">
-      <h3>{{ part.partTitle }}</h3>
-      <p>{{ part.partDescription }}</p>
-      <div class="item-info" v-for="item in part.recipeItems" :key="item.itemId">
-        <h4>{{ $t('item-info') }}</h4>
-        <h5>{{ item.itemId }}</h5>
-        <h5>{{ item.quantity }}</h5>
+    <div v-for="part in recipeParts" :key="part.partName">
+      <h3>{{ part.partName || $t('default_part_name') }}</h3>
+      <div class="item-info" v-for="item in part.ingredients" :key="item.itemId">
+        <h4>{{ item.name }}</h4>
+        <p>{{ item.quantity }} {{ item.unitOfMeasurement }}</p>
+        <p>{{ $t('price') }}: {{ item.price }}</p>
       </div>
     </div>
   </div>
 </template>
-
 <script>
-
 export default {
   name: 'RecipeParts',
 
-  components: {
-  },
+  components: {},
 
   props: {
     recipeParts: Array,
   },
 };
 </script>
-
 <style scoped>
 .recipe-parts {
   padding: 20px;
