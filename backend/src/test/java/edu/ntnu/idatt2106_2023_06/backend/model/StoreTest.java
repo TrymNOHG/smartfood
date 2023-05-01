@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -99,7 +98,7 @@ class StoreTest {
             List<Item> items = new ArrayList<>();
             items.add(new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(3L, "Dairy", new ArrayList<>()), 200000,
-                    null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
 
             store.setItemsInStore(items);
             List<Item> actualItems = store.getItemsInStore();

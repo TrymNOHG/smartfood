@@ -100,7 +100,7 @@ public class ShoppingItemsControllerTest {
     @Test
     public void testAddToShoppingList() throws Exception {
         ItemDTO itemDTO = new ItemDTO( "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
-                "Kiwi", 200000, null, 1, false);
+                "Kiwi", 200000, null, 1, false, "12345678");
         Long fridgeId = 1L;
         boolean suggestion = false;
 
@@ -126,7 +126,7 @@ public class ShoppingItemsControllerTest {
         List<ShoppingListLoadDTO> shoppingItems = new ArrayList<>();
         shoppingItems.add(new ShoppingListLoadDTO(1L, "Tine Melk",
                 "Tine melk kommer fra fri gående, grass matet kuer.", "Kiwi", 200000,
-                null, 1, true));
+                null, 1, true, "123456"));
         when(itemService.getShoppingListItems(fridgeId)).thenReturn(shoppingItems);
         mockMvc.perform(MockMvcRequestBuilders.get("/item/shopping/get")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)

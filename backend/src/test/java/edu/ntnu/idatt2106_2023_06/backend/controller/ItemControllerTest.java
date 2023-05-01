@@ -7,8 +7,6 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.ShoppingListLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.filter.JwtAuthenticationFilter;
-import edu.ntnu.idatt2106_2023_06.backend.mapper.FridgeItemMapper;
-import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
@@ -35,8 +33,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -107,7 +103,7 @@ public class ItemControllerTest {
     @Test
     public void testAddToFridge() throws Exception {
         ItemDTO itemDTO = new ItemDTO( "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
-                "Kiwi", 200000, null, 1, false);
+                "Kiwi", 200000, null, 1, false, "12345678");
         Long fridgeId = 1L;
         Item item = new Item();
 
@@ -130,10 +126,10 @@ public class ItemControllerTest {
         List<FridgeItemLoadDTO> fridgeItemLoadDTOS = new ArrayList<>();
         fridgeItemLoadDTOS.add(new FridgeItemLoadDTO(1L, "Tine Melk",
                 "Tine melk kommer fra fri gående, grass matet kuer.", "Kiwi", 200000,
-                null, 1, LocalDateTime.now(), LocalDateTime.now()));
+                null, 1, LocalDateTime.now(), LocalDateTime.now(), "123456"));
         fridgeItemLoadDTOS.add(new FridgeItemLoadDTO(2L, "Tine Melk",
                 "Tine melk kommer fra fri gående, grass matet kuer.", "Kiwi", 200000,
-                null, 1, LocalDateTime.now(), LocalDateTime.now()));
+                null, 1, LocalDateTime.now(), LocalDateTime.now(), "123456"));
         given(itemService.getFridgeItems(fridgeId)).willReturn(fridgeItemLoadDTOS);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/item/fridge/get")
@@ -161,7 +157,7 @@ public class ItemControllerTest {
     @Test
     public void testAddToShoppingList() throws Exception {
         ItemDTO itemDTO = new ItemDTO( "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
-                "Kiwi", 200000, null, 1, false);
+                "Kiwi", 200000, null, 1, false, "12345678");
         Long fridgeId = 1L;
         boolean suggestion = false;
 
@@ -187,7 +183,7 @@ public class ItemControllerTest {
         List<ShoppingListLoadDTO> shoppingItems = new ArrayList<>();
         shoppingItems.add(new ShoppingListLoadDTO(1L, "Tine Melk",
                 "Tine melk kommer fra fri gående, grass matet kuer.", "Kiwi", 200000,
-                null, 1, true));
+                null, 1, true, "123456"));
         when(itemService.getShoppingListItems(fridgeId)).thenReturn(shoppingItems);
         mockMvc.perform(MockMvcRequestBuilders.get("/item/shopping/get")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)

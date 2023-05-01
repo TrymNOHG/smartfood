@@ -6,6 +6,7 @@ import lombok.NonNull;
 @Builder
 public record ShoppingListLoadDTO(@NonNull Long itemId, @NonNull String name,
                                   String description, @NonNull String store,
-                                  double price, String image, int quantity, Boolean suggestion) {
+                                  double price, String image, int quantity, Boolean suggestion,
+                                  String ean) {
 }
 
