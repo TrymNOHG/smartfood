@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" id="fridgeList">
     <list :fridgeList="fridgeList"  class="listing" @update-item="onUpdateItem" @delete-item="onDeleteItem"/>
     <div @click="changeModal()" class="container_button">+</div>
   </div>

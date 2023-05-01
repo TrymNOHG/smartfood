@@ -1,20 +1,22 @@
 <template>
   <div>
     <div class="info-window">
-      <h2 style="font-weight: bold">Hvor mye er det igjen av Varen?</h2>
+      <h2 style="font-weight: bold" id="how-much-left">{{ $t('how_much_left') }}</h2>
       <div class="slider">
         <input type="range" min="0" max="100" :value="sliderValue" @input="sliderValue = $event.target.value" class="slider-range">
         <div class="slider-bar"></div>
         <div class="slider-value" id="rangeValue">{{sliderValue}}%</div>
       </div>
-      <basic-button :button-text="'Slett vare'" class="basic-button" @click="deleteItem(item)"/>
+      <basic-button :button-text="$t('delete_item')" class="basic-button" @click="deleteItem(item)"/>
     </div>
   </div>
 </template>
 
 <script>
-import BasicFridgeItem from "@/components/SpecificFridge/BasicFridgeItem.vue";
+import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
+import swal from "sweetalert2";
+import Swal from "sweetalert2";
 export default {
   name: "itemDelete",
   components: {BasicButton, BasicFridgeItem},
@@ -26,10 +28,11 @@ export default {
   },
 
   methods: {
-    deleteItem(item){
-
-      this.$emit('delete-item', item);
-    }
+    deleteItem(item) {
+      let deletePercentage = this.sliderValue
+      console.log(deletePercentage)
+      this.$emit('delete-item', item, deletePercentage);
+    },
   },
 
   data() {
@@ -37,7 +40,8 @@ export default {
       sliderValue: 50
     }
   },
-};
+}
+
 </script>
 
 <style scoped>

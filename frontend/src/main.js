@@ -25,7 +25,8 @@ import {
     faCircleCheck,
     faPlus,
     faCrown,
-    faCheck,
+    faCheck, faTableCells, faList, faFilter,
+  faReceipt,
 } from "@fortawesome/free-solid-svg-icons";
 
 /* Imports fr multiple languages */
@@ -50,16 +51,19 @@ library.add(
     faPlus,
     faCrown,
     faCheck,
+    faTableCells,
+    faList,
+    faFilter,
+    faReceipt
 )
 
-const pinia = createPinia()
+const pinia = createPinia();
 
-pinia.use(piniaPluginPersistedState)
-
+pinia.use(piniaPluginPersistedState);
 
 createApp(App)
-    .use(pinia)
-    .use(i18n)
-    .use(router)
-    .component('font-awesome-icon', FontAwesomeIcon)
-    .mount('#app');
+  .use(pinia)
+  .use(i18n)
+  .use(router)
+  .component("font-awesome-icon", FontAwesomeIcon)
+  .mount("#app");

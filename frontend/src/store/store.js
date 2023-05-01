@@ -149,6 +149,10 @@ export const useItemStore = defineStore('itemStore', {
         currentItem: null,
     }),
 
+    persist: {
+        storage: sessionStorage,
+    },
+
     getters: {
         getCurrentItem(){
             console.log(this.currentItem)
@@ -164,6 +168,14 @@ export const useItemStore = defineStore('itemStore', {
         async statAddItemToFridge(statAddItemToFridgeDTO) {
             await addItemStats(statAddItemToFridgeDTO);
         },
+
+        async statAddItemListToFridge(statItemListDTO) {
+            for (const statItemListDTOElement of statItemListDTO) {
+                console.log(statItemListDTOElement)
+                await addItemStats(statItemListDTOElement)
+            }
+        },
+
 
         setCurrentItem(item) {
             this.currentItem = item;
@@ -184,6 +196,29 @@ export const useItemStore = defineStore('itemStore', {
             })
             return this.allItems;
         }
+    },
+});
+
+export const useMealStore = defineStore('mealStore', {
+    state: () => ({
+        all: [],
+        currentMeal: null,
+    }),
+
+    persist: {
+        storage: sessionStorage,
+    },
+
+    getters: {
+        getCurrentMeal(){
+            return this.currentMeal;
+        }
+    },
+
+    actions: {
+        setCurrentMeal(meal) {
+            this.currentMeal = meal;
+        },
     },
 });
 

@@ -1,17 +1,21 @@
 <template>
   <header v-if="!isOnRootPage">
-
     <router-link to="/fridges">
-      <img src="@/assets/images/smartmat_logo.png" alt="Logo">
+      <img src="@/assets/images/smartmat_logo.png" alt="Logo" />
     </router-link>
-    <h1 class="matprat-title" :class="{ 'centered': isOnAuthPage }">{{ $t('matsmart') }}</h1>
+    <h1 class="matprat-title" :class="{ centered: isOnAuthPage }">
+      {{ $t("matsmart") }}
+    </h1>
     <nav :class="{ 'center-profile': !hasCurrentFridge }">
-
       <ul v-if="!isOnAuthPage">
-
         <li v-if="hasCurrentFridge">
-          <RouterLink to="/fridge" >
-            <img id="fridgeIcon" class="icon" src="@/assets/images/fridge.svg" alt="Logo">
+          <RouterLink to="/fridge">
+            <img
+              id="fridgeIcon"
+              class="icon"
+              src="@/assets/images/fridge.svg"
+              alt="Logo"
+            />
           </RouterLink>
         </li>
         <li v-if="hasCurrentFridge">
@@ -22,7 +26,7 @@
           </RouterLink>
         </li>
         <li v-if="hasCurrentFridge">
-          <RouterLink to="/dinner" >
+          <RouterLink to="/dinner">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-utensils" />
             </span>
@@ -35,7 +39,7 @@
             </span>
           </RouterLink>
         </li>
-        <li>
+        <li id="profile">
           <RouterLink to="/profile">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-circle-user" />
@@ -43,38 +47,52 @@
           </RouterLink>
         </li>
       </ul>
-      <div class="language" @click="changeLanguage()">{{language}}</div>
+      <div class="language" @click="changeLanguage()">{{ language }}</div>
     </nav>
 
   </header>
   <div class="current-fringe" v-if="!isOnAuthPage && !isOnRootPage">
-    <div class="break-line"/>
-    <div class="name-display" >
-      <h1 class="fridge-name">
-        <router-link to="/fridge" class="link-name" v-if="hasCurrentFridge">
+    <div class="break-line" />
+    <div class="name-display">
+      <h1 class="fridge-name" id="chosen">
+        <router-link
+          to="/fridge"
+          class="link-name"
+          id="chosenFridge"
+          v-if="hasCurrentFridge"
+        >
           {{ currentFridge.fridgeName }}
         </router-link>
-        <router-link to="/fridges" class="link-name" v-else>
-          {{ $t('select_fridge') }}
+        <router-link to="/fridges" class="link-name" id="selectFridge" v-else>
+          {{ $t("select_fridge") }}
         </router-link>
       </h1>
-      
-      <router-link class="change-button" to="/fridges" >
-        <img src="@/assets/images/exit_change_fridge.png" style="max-height: 100%" v-if="hasCurrentFridge">
-        <img src="@/assets/images/enter_choose_fridge.png" style="max-height: 100%" v-else>
+
+      <router-link class="change-button" to="/fridges">
+        <img
+          src="@/assets/images/exit_change_fridge.png"
+          style="max-height: 100%"
+          v-if="hasCurrentFridge"
+        />
+        <img
+          src="@/assets/images/enter_choose_fridge.png"
+          style="max-height: 100%"
+          v-else
+        />
       </router-link>
     </div>
   </div>
-  <RouterView class="router-view-container"/>
+  <div class="router-view-container">
+    <RouterView/>
+  </div>
 
 </template>
 
-
 <script>
-import {computed, ref, watch} from "vue";
-import {useRoute} from "vue-router";
+import { computed, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 import i18n from "@/locales/i18n";
-import {useFridgeStore} from "./store/store";
+import { useFridgeStore } from "./store/store";
 
 export default {
   setup() {
@@ -91,7 +109,6 @@ export default {
     const isOnAuthPage = computed(() => {
       return route.path === "/register" || route.path === "/login";
     });
-
 
     const changeLanguage = () => {
       if (language.value === "NO") {
@@ -112,13 +129,10 @@ export default {
       isOnRootPage,
       hasCurrentFridge,
       currentFridge,
-
     };
   },
 };
 </script>
-
-
 
 <style scoped>
 .break-line {
@@ -126,7 +140,7 @@ export default {
   background-color: white;
 }
 
-#fridgeIcon{
+#fridgeIcon {
 }
 
 .name-display {
@@ -149,7 +163,7 @@ export default {
   margin-left: 28%;
 }
 
-.link-name{
+.link-name {
   font-family: "Roboto", sans-serif;
   text-decoration: none;
   color: white;
@@ -157,9 +171,6 @@ export default {
   text-shadow: 0 0 black;
   font-size: 25px;
 }
-
-
-
 
 .change-button {
   text-align: center;
@@ -268,19 +279,37 @@ nav ul li a .icon {
   transition: 0.5s;
   color: #444444;
   scale: 1.5;
-
 }
 
 nav ul li:hover a .icon {
   color: white;
 }
 
-nav ul li:hover  {
+nav ul li:hover {
   background-color: #444444;
 }
 
 nav ul li:hover img {
-  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(203%) contrast(103%);
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(203%)
+    contrast(103%);
+}
+nav .router-link-active {
+  width: 60px;
+  height: 60px;
+  z-index: 1;
+  background-color: #444444;
+  border-radius: 10px;
+  padding-top: 0;
+  padding-left: 0;
+}
+
+nav .router-link-active .icon {
+  color: white;
+}
+
+nav .router-link-active img {
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(203%)
+    contrast(103%);
 }
 
 nav ul li a .text {
@@ -294,38 +323,33 @@ nav ul li a .text {
   transform: translateY(20px);
 }
 
-#fridgeIcon{
+#fridgeIcon {
   display: flex;
   width: 20px;
 }
 
-
-
-
-.current-fringe{
+.current-fringe {
   background-color: white;
   border-radius: 0;
 }
 
-
-.router-view-container{
+.router-view-container {
   z-index: 0;
 }
 
 @media only screen and (max-width: 1000px) {
-  .matprat-title{
+  .matprat-title {
     display: none;
   }
 }
 
-
-@media only screen and (min-width: 350px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 650px) {
   .break-line {
     height: 7px;
     background-color: black;
   }
 
-  #fridgeIcon{
+  #fridgeIcon {
   }
 
   .name-display {
@@ -347,12 +371,10 @@ nav ul li a .text {
     margin-left: 28%;
   }
 
-  .link-name{
+  .link-name {
     text-decoration: none;
     color: white;
   }
-
-
 
   .change-button {
     text-align: center;
@@ -461,12 +483,13 @@ nav ul li a .text {
     color: white;
   }
 
-  nav ul li:hover  {
+  nav ul li:hover {
     background-color: #444444;
   }
 
   nav ul li:hover img {
-    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg) brightness(203%) contrast(103%);
+    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg)
+      brightness(203%) contrast(103%);
   }
 
   nav ul li a .text {
@@ -502,14 +525,14 @@ nav ul li a .text {
   }
 
   .router-view-container {
-    padding-bottom: 80px;
+    padding-bottom: 70px;
   }
 
   header img {
     display: none;
   }
 
-  #fridgeIcon{
+  #fridgeIcon {
     display: flex;
   }
 
@@ -599,11 +622,11 @@ nav ul li a .text {
   nav ul li a .text {
     font-size: 0.6em;
   }
-  .matprat-title{
+  .matprat-title {
     display: none;
   }
 
-  #fridgeIcon{
+  #fridgeIcon {
     display: flex;
     width: 15px;
   }
@@ -613,7 +636,7 @@ nav ul li a .text {
     margin: 0;
   }
 
-  .icon{
+  .icon {
     scale: 2 !important;
 
   }
@@ -621,10 +644,10 @@ nav ul li a .text {
     padding: 5px 0px 0px 0px !important;
     height: 40px;
   }
-  header{
+  header {
     height: 0;
   }
-  .link-name{
+  .link-name {
     font-family: "Roboto", sans-serif;
     text-decoration: none;
     color: white;
@@ -633,12 +656,12 @@ nav ul li a .text {
     font-size: 20px;
   }
 
-  .break-line{
+  .break-line {
     height: 6px;
     background-color: white;
   }
 
-  .current-fringe{
+  .current-fringe {
     background-color: white;
     border-radius: 0;
   }
@@ -648,11 +671,8 @@ nav ul li a .text {
     width: 100%;
   }
 
-  .router-view-container{
+  .router-view-container {
     z-index: 0;
   }
-
 }
 </style>
-
-

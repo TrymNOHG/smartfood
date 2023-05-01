@@ -10,6 +10,8 @@ import FridgeView from "@/views/FridgeView.vue";
 import { useLoggedInStore, useFridgeStore } from '@/store/store';
 import itemView from "@/views/itemView.vue";
 import WelcomeComponent from "@/components/WelcomeComponent.vue";
+import MealView from "@/views/MealView.vue"
+import Swal from 'sweetalert2';
 
 
 const router = createRouter({
@@ -97,6 +99,18 @@ const router = createRouter({
             requiresAuth: true,
             requiresCurrentFridge: true
           }
+    },
+
+    {
+      path: '/dinner/meal',
+      name: 'mealView',
+      component: MealView,
+      props: true,
+      meta:
+          {
+            requiresAuth: true,
+            requiresCurrentFridge: true
+          }
 
     },
     {
@@ -119,7 +133,15 @@ router.beforeEach((to, from, next) => {
   const notRequiresAuth = to.matched.some(record => record.meta.requiresAuth === false);
   const requiresCurrentFridge = to.matched.some(record => record.meta.requiresCurrentFridge === true);
 
-  if (notRequiresAuth) {
+
+  if (to.matched.length === 0) {
+    Swal.fire(
+        'Page Not Found',
+        'The page you are looking for does not exist.',
+        'error'
+    );
+    next({ path: '/' });
+  } else if (notRequiresAuth) {
     if (['/', '/register', '/login'].includes(to.path) && isAuthenticated) {
       next({ path: '/fridges' });
     } else {

@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.ntnu.idatt2106_2023_06.backend.dto.stat.StatAddItemToFridgeDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.stat.StatDeleteFromFridgeDTO;
 import edu.ntnu.idatt2106_2023_06.backend.service.stat.StatService;
@@ -83,4 +84,75 @@ public class StatController {
                                                  Authentication authentication) {
         return ResponseEntity.ok(statService.getFridgeStats(fridgeId));
     }
+
+    /**
+     * Get the average percentage of items thrown per day by the user.
+     *
+     * @param authentication    The JWT token of the user.
+     */
+    @GetMapping(value="/get/user-stats/avg-thrown-per-day")
+    @Operation(summary = "Get the average percentage of items thrown per day by the user")
+    public ResponseEntity<Object> getUserAvgThrownPerDay(Authentication authentication) throws JsonProcessingException {
+        return ResponseEntity.ok(statService.getAverageThrownPerDayUser());
+    }
+
+    /**
+     * Get the average percentage of items thrown per day in the fridge.
+     *
+     * @param authentication    The JWT token of the user.
+     */
+    @GetMapping(value="/get/fridge-stats/avg-thrown-per-day/{fridgeId}")
+    @Operation(summary = "Get the average percentage of items thrown per day by users in a fridge")
+    public ResponseEntity<Object> getFridgeAvgThrownPerDay(@PathVariable Long fridgeId,
+            Authentication authentication) throws JsonProcessingException {
+        return ResponseEntity.ok(statService.getAverageThrownPerDayFridge(fridgeId));
+    }
+
+    /**
+     * Get the money wasted per day by the user.
+     *
+     * @param authentication    The JWT token of the user.
+     */
+    @GetMapping(value="/get/user-stats/money-wasted-per-day")
+    @Operation(summary = "Get the money thrown away per day by the user")
+    public ResponseEntity<Object> getUserMoneyWastedPerDay(Authentication authentication) throws JsonProcessingException {
+        return ResponseEntity.ok(statService.getMoneyWastedPerDayUser());
+    }
+
+    /**
+     * Get the money wasted in per dey in the fridge.
+     *
+     * @param authentication    The JWT token of the user.
+     * @param fridgeId          The id of the fridge.
+     */
+    @GetMapping(value="/get/fridge-stats/money-wasted-per-day/{fridgeId}")
+    @Operation(summary = "Get the average percentage of items thrown per day by users in a fridge")
+    public ResponseEntity<Object> getFridgeMoneyWastedPerDay(@PathVariable Long fridgeId,
+                                                           Authentication authentication) throws JsonProcessingException {
+        return ResponseEntity.ok(statService.getMoneyWastedPerDayFridge(fridgeId));
+    }
+
+    /**
+     * Get the money spent per day by the user.
+     *
+     * @param authentication    The JWT token of the user.
+     */
+    @GetMapping(value="/get/user-stats/money-used-per-day")
+    @Operation(summary = "Get the money spent per day by the user")
+    public ResponseEntity<Object> getUserMoneyUsedPerDay(Authentication authentication) throws JsonProcessingException {
+        return ResponseEntity.ok(statService.getMoneyUsedPerDayUser());
+    }
+
+    /**
+     * Get the money spent per day in a fridge.
+     *
+     * @param authentication    The JWT token of the user.
+     */
+    @GetMapping(value="/get/fridge-stats/money-used-per-day/{fridgeId}")
+    @Operation(summary = "Get the money spent per day by users in a fridge")
+    public ResponseEntity<Object> getFridgeMoneyUsedPerDay(@PathVariable Long fridgeId,
+                                                           Authentication authentication) throws JsonProcessingException {
+        return ResponseEntity.ok(statService.getMoneyUsedPerDayFridge(fridgeId));
+    }
+
 }
