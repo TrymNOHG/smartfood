@@ -152,7 +152,7 @@ export default {
   text-shadow: black 1px 1px 2px;
   display: flex;
   justify-content: space-evenly;
-  border-radius: 30px 30px 0px 0px;
+  border-radius: 30px 30px 0 0;
 }
 
 .fridge-name {

@@ -26,7 +26,7 @@ import {
     faPlus,
     faCrown,
     faCheck, faTableCells, faList, faFilter,
-  faReceipt,
+    faReceipt, faChartSimple, faCoins, faFlag,
 } from "@fortawesome/free-solid-svg-icons";
 
 /* Imports fr multiple languages */
@@ -34,27 +34,16 @@ import i18n from "@/locales/i18n";
 
 /* add icons to the library */
 library.add(
-    faUserCircle,
-    faHouse,
-    faKitchenSet,
-    faShoppingCart,
-    faEnvelope,
-    faLock,
-    faUtensils,
-    faUserCircle,
-    faPerson,
-    faSignature,
-    faPieChart,
-    faPenToSquare,
-    faTrash,
-    faCircleCheck,
-    faPlus,
-    faCrown,
-    faCheck,
-    faTableCells,
-    faList,
-    faFilter,
-    faReceipt
+    faUserCircle, faHouse,
+    faKitchenSet, faShoppingCart,
+    faEnvelope, faLock,
+    faUtensils, faUserCircle,
+    faPerson, faSignature,
+    faPieChart, faPenToSquare,
+    faTrash, faCircleCheck,
+    faPlus, faCrown, faCheck,
+    faTableCells, faList, faFilter,
+    faReceipt, faChartSimple, faCoins, faFlag
 )
 
 const pinia = createPinia();
