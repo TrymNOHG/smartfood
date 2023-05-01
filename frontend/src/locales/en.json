@@ -98,5 +98,7 @@
   "confirmButtonColorSuccess": "#4dce38",
   "confirmButtonText": "OK",
   "fridge_name_err": "Fridge name cannot be empty or null",
-  "new_fridge": "Fridge with the name: '{name}' was created"
+  "new_fridge": "Fridge with the name: '{name}' was created",
+  "login_error": "Wrong password or Email",
+  "register_error": "User already exists"
 }
