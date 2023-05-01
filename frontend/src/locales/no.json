@@ -91,5 +91,14 @@
   "percentage_thrown_last_day": "Prosent kastet siste dag",
   "money_wasted_last_day": "Penger kastet siste dag",
   "percentage_thrown": "Prosent kastet siste dag",
-  "money_wasted": "Penger brukt siste dag"
+  "money_wasted": "Penger brukt siste dag",
+  "errorTitle": "Feil",
+  "errorText": "Du har ikke superbruker-tilgang til dette kjøleskapet",
+  "updateTitle": "Oppdatering",
+  "updateText": "Du har endret navn fra: {oldName}\n til: {newName}",
+  "confirmButtonColorError": "#FF0000",
+  "confirmButtonColorSuccess": "#4dce38",
+  "confirmButtonText": "OK",
+  "fridge_name_err": "Navnet til kjøleskapet kan ikke være tomt eller null",
+  "new_fridge": "Kjøleskap med navnet: '{name}' ble lagt til"
 }

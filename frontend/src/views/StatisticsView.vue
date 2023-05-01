@@ -20,8 +20,8 @@
           <line-chart
               id="chart"
               :data="chartDataPercentage"
-              :ymin="percentageThrown"
-              :ymax="percentageThrown"
+              :ymin="percentageThrownPerPers"
+              :ymax="percentageThrownPerPers"
               :chart-label="$t('percentage_thrown')"
           />
         </div>

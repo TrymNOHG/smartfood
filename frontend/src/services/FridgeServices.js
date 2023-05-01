@@ -24,7 +24,7 @@ export const updateFridge = async (fridgeDTO) => {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         }
-    });
+    })
 }
 
 export const addUserToFridge = async (fridgeUserDTO) => {
