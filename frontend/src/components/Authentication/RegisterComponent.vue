@@ -144,7 +144,7 @@ export default {
             setTimeout(() => {
               submitMessage.value = "";
             }, 3000);
-            await router.push("/fridges");
+            await router.push("/fridges?init=true");
           } else {
             console.log('Something went wrong registering')
             submitMessage.value =
