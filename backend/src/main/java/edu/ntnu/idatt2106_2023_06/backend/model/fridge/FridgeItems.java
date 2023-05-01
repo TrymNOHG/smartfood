@@ -27,6 +27,7 @@ public class FridgeItems {
      * The composite primary key of the fridge items, consisting of the items id and the fridge id.
      */
     @EmbeddedId
+    @JsonIgnore
     private FridgeItemsId id;
 
     /**
