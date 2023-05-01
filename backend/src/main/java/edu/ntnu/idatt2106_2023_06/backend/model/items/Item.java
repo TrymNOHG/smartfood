@@ -78,6 +78,7 @@ public class Item {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
+    @JsonIgnore
     private List<RecipeItems> itemsInRecipe = new ArrayList<>();
 
     /**
@@ -86,6 +87,7 @@ public class Item {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
+    @JsonIgnore
     private List<ShoppingItems> itemsInShoppingList = new ArrayList<>();
 
     /**
@@ -94,6 +96,7 @@ public class Item {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
+    @JsonIgnore
     private List<FridgeItems> itemsInFridge = new ArrayList<>();
 
 }

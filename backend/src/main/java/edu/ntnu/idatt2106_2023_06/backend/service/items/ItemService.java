@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.items;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.*;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemUpdateDTO;
@@ -22,8 +23,7 @@ import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ShoppingItemsRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.store.StoreRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
-import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.SearchRequest;
-import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.SearchSpecification;
+import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -36,6 +36,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
 
@@ -47,6 +48,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemService implements IItemService {
 
+    ObjectMapper objectMapper = new ObjectMapper();
     private final ItemRepository itemRepository;
     private final FridgeItemsRepository fridgeItemsRepository;
     private final FridgeRepository fridgeRepository;
@@ -54,6 +56,8 @@ public class ItemService implements IItemService {
     private final ShoppingItemsRepository shoppingItemsRepository;
     private final Logger logger = LoggerFactory.getLogger(ItemService.class);
     private final UserRepository userRepository;
+
+
 
     //TODO: add
     //        if (itemDTO.quantity() <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
@@ -234,9 +238,32 @@ public class ItemService implements IItemService {
 
     @Override
     public Page<FridgeItems> searchFridgeItems(SearchRequest request) {
-        SearchSpecification<FridgeItems> specification = new SearchSpecification<>(request);
+        SearchSpecification<Item> specification1 = new SearchSpecification<>(request);
+        logger.info("1");
         Pageable pageable = SearchSpecification.getPageable(request.getPage(), request.getSize());
-        return fridgeItemsRepository.findAll(specification, pageable);
+        logger.info("2");
+        List<Item> items = itemRepository.findAll(specification1, pageable).getContent();
+        logger.info("test: " + items.size());
+
+        ArrayList<FilterRequest> filters = new ArrayList<>();
+        filters.add(FilterRequest.builder()
+                .key("item")
+                .operator(Operator.IN)
+                .fieldType(FieldType.LONG)
+                .values(items.stream().map(Item::getItemId).collect(Collectors.toList()))
+                .build());
+        logger.info("hello");
+        SearchRequest request2 = SearchRequest.builder()
+                .page(request.getPage())
+                .filters(filters)
+                .sorts(request.getSorts())
+                .size(request.getSize())
+                .build();
+        logger.info("hello2");
+        SearchSpecification<FridgeItems> specification2 = new SearchSpecification<>(request2);
+        logger.info("hello3");
+        Pageable pageable2 = SearchSpecification.getPageable(request2.getPage(), request2.getSize());
+        return fridgeItemsRepository.findAll(specification2, pageable2);
     }
 
     /**
