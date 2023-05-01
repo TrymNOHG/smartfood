@@ -4,15 +4,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.RecipeNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.recipe.RecipeMapper;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.*;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.recipe.*;
 import jakarta.transaction.Transactional;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -21,12 +23,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,13 +47,65 @@ public class RecipeService {
     private final ItemRepository itemRepository;
     private final ItemService itemService;
     private final RecipeItemsRepository recipeItemsRepository;
+    private final FridgeItemsRepository fridgeItemsRepository;
 
     public RecipeLoadDTO getRecipe(String recipeName) {
-        Recipe recipe = recipeRepository.findRecipeByRecipeName(recipeName)
+        Recipe recipe = recipeRepository.findRecipeByRecipeNameContainingIgnoreCase(recipeName)
                 .orElseThrow(() -> new RecipeNotFoundException("Name of the recipe" , recipeName));
         logger.info("Recipe found. Creating DTO");
         return RecipeMapper.toRecipeLoadDTO(recipe);
     }
+
+    public Page<RecipeLoadDTO> getRecipesByName(String recipeName, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Recipe> recipePage;
+        if(recipeName != null && !recipeName.isEmpty()) {
+            recipePage = recipeRepository.findByRecipeNameContainingIgnoreCase(recipeName, pageable)
+                    .orElseThrow(() -> new RecipeNotFoundException("Name of the recipe" , recipeName));
+        } else {
+            recipePage = recipeRepository.findAll(pageable);
+        }
+        List<RecipeLoadDTO> recipeLoadDTOs = recipePage.getContent()
+                .stream()
+                .map(RecipeMapper::toRecipeLoadDTO)
+                .collect(Collectors.toList());
+        return new PageImpl<>(recipeLoadDTOs, pageable, recipePage.getTotalElements());
+    }
+
+    //TODO: authenticate
+    public Page<RecipeLoadDTO> getRecipesByFridgeId(Long fridgeId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Recipe> recipes = recipeRepository.findAll(pageable);
+
+        List<RecipeLoadDTO> recipeLoadDTOs = recipes.getContent()
+                .stream()
+                .map(recipe ->
+                    RecipeMapper.toRecipeLoadDTO(recipe, countMatchingItems(recipe, fridgeId))
+                )
+                .sorted(Comparator.comparing(RecipeLoadDTO::numMatchingItems).reversed())
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(recipeLoadDTOs, pageable, recipes.getTotalElements());
+    }
+
+    private int countMatchingItems(Recipe recipe, Long fridgeId) {
+        Set<Long> fridgeItemIds = fridgeItemsRepository.findAllByFridge_FridgeId(fridgeId)
+                .orElseThrow(() -> new FridgeNotFoundException(fridgeId))
+                .stream()
+                .map(FridgeItems::getItem)
+                .map(Item::getItemId)
+                .collect(Collectors.toSet());
+
+        return recipe.getRecipeParts().stream()
+                .map(RecipePart::getItemsInRecipe)
+                .flatMap(Collection::stream)
+                .map(RecipeItems::getItem)
+                .map(Item::getItemId)
+                .filter(fridgeItemIds::contains)
+                .collect(Collectors.toSet())
+                .size();
+    }
+
 
     @Transactional
     public void scrapeRecipe(String recipePageURL) throws IOException {
