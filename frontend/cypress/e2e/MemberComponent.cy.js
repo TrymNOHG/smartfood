@@ -1,4 +1,4 @@
-describe("Adding and deleting items from fridge", () => {
+describe("Test for the member component and it features", () => {
     const base_url = "http://localhost:5173";
     const base_url_site = "http://localhost:5173";
     const base_url_endpoint = "http://localhost:8080";
@@ -264,11 +264,10 @@ describe("Adding and deleting items from fridge", () => {
         cy.wait("@isSuperUser");
     });
 
-    it("should add item to fridge from fridge-search", () => {
-        cy.get("#toggle-member").click();
+    it("member tester123 should be visible", () => {
+        cy.get(".toggle-members").click();
         cy.wait("@fetchUser");
         cy.wait("@loadUsersByFridgeId")
-
-
+        cy.contains("tester123").should("be.visible")
     });
 });

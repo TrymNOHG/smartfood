@@ -2,8 +2,8 @@
   <div class="grey-bar">
     <div class="members-fridge">
       <div
-        id="toggle-button toggle-member"
-        class="link"
+        id="toggle-button"
+        class="link toggle-members"
         @click="selectedTab = 'members'"
         :class="{ active: selectedTab === 'members' }"
       >

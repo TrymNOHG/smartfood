@@ -44,7 +44,6 @@ export const updateUserInFridge = async (fridgeUserDTO) => {
 };
 
 export const deleteUserFromFridge = async (fridgeUserDTO) => {
-    console.log(fridgeUserDTO);
     await axios.delete(`${BASE_LISTING_URL}/delete/user`, {
         data: fridgeUserDTO,
         headers: {
