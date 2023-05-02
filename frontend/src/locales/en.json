@@ -102,5 +102,6 @@
   "login_error": "Wrong password or Email",
   "register_error": "User already exists",
   "next_page": "Next Page",
-  "previous_page": "Previous Page"
+  "previous_page": "Previous Page",
+  "soon_expire": "is about to expire!"
 }

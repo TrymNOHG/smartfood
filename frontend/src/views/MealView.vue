@@ -10,15 +10,15 @@
       <meal-header :meal="meal"/>
       <meal-info :meal="meal"/>
       <div class="info-delete-wrapper">
-          <recipe-parts id="recipe-parts" :recipe-parts="meal.recipeParts"></recipe-parts>
-          <instructions id="instructions" :instructions="meal.instructions"></instructions>
+          <recipe-parts id="recipe-parts" :recipe-parts="meal.recipeParts"/>
+          <instructions id="instructions" :instructions="meal.instructions"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { useMealStore } from "../store/store";
+import { useMealStore } from "@/store/store";
 import mealHeader from "@/components/mealDescription/mealHeader.vue";
 import MealInfo from "../components/mealDescription/mealInfo.vue";
 import recipeParts from "../components/mealDescription/RecipeParts.vue";

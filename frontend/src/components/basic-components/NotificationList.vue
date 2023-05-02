@@ -2,7 +2,7 @@
   <div class="notification" :style="notification.border ? 'border: 2px solid red;' : 'border: 2px solid black;'">
     <div class="notification-header">
       <h3 class="notification-title">
-        {{notification.name}} går snart ut på dato!
+        {{notification.name}} {{ $t('soon_expire') }}
       </h3>
       <span class="notification-date">
         {{ $t('expire_date') }}: {{new Date(notification.expirationDate)
