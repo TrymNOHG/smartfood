@@ -533,6 +533,7 @@ export default {
   gap: 40px;
   background-color: white;
   border-radius: 8px;
+  overflow-x: hidden;
 }
 
 #toggle{

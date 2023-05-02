@@ -23,4 +23,5 @@ import java.util.Optional;
 @Repository
 public interface RecipeSuggestionRepository extends JpaRepository<RecipeSuggestion, RecipeSuggestionId>, JpaSpecificationExecutor<RecipeSuggestion> {
     Optional<List<RecipeSuggestion>> findAllByFridge(Fridge fridge);
+
 }

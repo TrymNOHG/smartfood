@@ -71,6 +71,7 @@ public class RecipeService {
         Fridge fridge = fridgeRepository.findByFridgeId(recipeSuggestionAddDTO.fridgeId()).orElseThrow(() -> new FridgeNotFoundException(recipeSuggestionAddDTO.fridgeId()));
         User user = userRepository.findUserByUserId(recipeSuggestionAddDTO.userId()).orElseThrow(() -> new UserNotFoundException(recipeSuggestionAddDTO.userId()));
         RecipeSuggestion recipeSuggestion = RecipeSuggestion.builder()
+                .id(new RecipeSuggestionId(recipeSuggestionAddDTO.recipeId(), recipeSuggestionAddDTO.fridgeId(), recipeSuggestionAddDTO.userId()))
                 .recipe(recipe)
                 .fridge(fridge)
                 .user(user)
@@ -91,6 +92,7 @@ public class RecipeService {
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new FridgeNotFoundException(fridgeId));
         User user = userRepository.findUserByUserId(userId).orElseThrow(() -> new UserNotFoundException(userId));
         RecipeSuggestion recipeSuggestion = RecipeSuggestion.builder()
+                .id(new RecipeSuggestionId(recipeId, fridgeId, userId))
                 .recipe(recipe)
                 .fridge(fridge)
                 .user(user)
