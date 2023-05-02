@@ -144,7 +144,6 @@
 
 <script lang="ts">
 
-
 import {
   VueCollapsiblePanelGroup,
   VueCollapsiblePanel,
@@ -216,8 +215,6 @@ export default {
       this.showNotifications = !this.showNotifications;
     },
 
-    listing(bool) {
-
     handleClick() {
         this.active = !this.active;
       },
@@ -262,7 +259,7 @@ export default {
             this.search = true;
           } else {
             console.log("Something went wrong");
-            submitMessage.value =
+            this.submitMessage =
               "Something went wrong. Please try again later.";
           }
         })
@@ -395,7 +392,6 @@ export default {
   },
 
   setup() {
-
     const notifications = ref([])
     const fridgeStore = useFridgeStore();
     const itemStore = useItemStore();
