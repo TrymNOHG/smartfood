@@ -118,5 +118,9 @@
   "20 - 40 min": "20 - 40 min",
   "40 - 60 min": "40 - 60 min",
   "Over 60 min:": "Over 60 min",
-  "suggest_dinner": "Foreslå middag"
+  "suggest_dinner": "Foreslå middag",
+  "Utløpsdato - Stigende": "Utløpsdato - Stigende",
+  "Kjøpsdato - Synkende": "Kjøpsdato - Synkende",
+  "Kjøpsdato - Stigende": "Kjøpsdato - Stigende",
+  "Utløpsdato - Synkende": "Utløpsdato - Synkende"
 }
