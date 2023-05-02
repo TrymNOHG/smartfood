@@ -77,8 +77,6 @@ export default {
   background-color: #570000;
 }
 
-@media only screen and (max-width: 800px) {
-}
 @media only screen and (min-width: 10px) and (max-width: 650px) {
   .cart-control {
     display: flex;

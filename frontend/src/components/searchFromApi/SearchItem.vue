@@ -68,7 +68,7 @@ img {
   font-weight: bold;
 }
 
-.item-info:hover {
+.search-item:hover {
   box-shadow: 0 0 5px #ccc;
   transform: scale(1.02);
   cursor: pointer;
