@@ -484,10 +484,10 @@ input[type="number"] {
   }
 }
 
-@media only screen and (max-width: 800px) {
-  .quantity {
+@media only screen and (min-width: 650px) and (max-width: 1000px) {
+  .buttons {
     position: relative;
-    transform: translateX(-200px);
+    transform: translateX(50px);
   }
   .description {
     word-break: break-all;

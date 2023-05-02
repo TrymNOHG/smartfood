@@ -86,13 +86,12 @@ export default {
 * {
   text-align: center;
 }
-
 .wrapper {
   z-index: 0;
   grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
   grid-row-gap: 30px;
   transition: 0.5s;
-  margin: auto;
+  margin: 2% 2% 2%;
 }
 
 .wrapper {
@@ -102,10 +101,5 @@ export default {
   transition: 0.5s;
   max-width: 80vw;
   margin: auto;
-}
-
-.wrapper > *:only-child,
-.wrapper > *:last-child:nth-child(odd) {
-  margin: 0 auto;
 }
 </style>

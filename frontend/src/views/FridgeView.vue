@@ -44,7 +44,7 @@
             {{ $t("search") }}
           </button>
         </div>
-        <div v-if="isCameraToggled">
+        <div v-if="scannerActive">
           <StreamBarcodeReader
             @decode="(a, b, c) => onDecode(a, b, c)"
             @loaded="() => onLoaded()"
@@ -154,7 +154,7 @@ export default {
       this.listView = bool;
     },
     toggleCamera() {
-      this.isCameraToggled = !this.isCameraToggled;
+      this.scannerActive = !this.scannerActive;
     },
 
     async addShopping(item) {
@@ -327,16 +327,18 @@ export default {
   setup() {
     const fridgeStore = useFridgeStore();
     const itemStore = useItemStore();
-    const selectedTab = ref(router.currentRoute.value.query.selectedTab || 'fridge');
+    const selectedTab = ref(
+      router.currentRoute.value.query.selectedTab || "fridge"
+    );
 
-    history.replaceState(null, null, '/fridge');
+    history.replaceState(null, null, "/fridge");
     const currentUrl = window.location.href;
 
     const searchItems = ref([]);
     const search = ref(false);
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
-    const isCameraToggled = ref(false);
+    const scannerActive = ref(false);
 
     itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
       fridgeItems.value = items;
@@ -357,7 +359,7 @@ export default {
       fridgeStore,
       search,
       itemStore,
-      isCameraToggled,
+      scannerActive,
     };
   },
 
@@ -447,6 +449,7 @@ export default {
   --bg-color-header: #6c6c6c !important;
   --bg-color-header-hover: #6c6c6c !important;
   --bg-color-header-active: #6c6c6c !important;
+  overflow-y: scroll;
   border-radius: 10px 10px 10px 10px;
 }
 
