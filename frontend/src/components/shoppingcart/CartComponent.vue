@@ -206,6 +206,7 @@ export default {
             searchItems.value = response.products;
             console.log(response.products);
             search.value = true;
+            scannerActive.value = false;
           } else {
             console.log("Something went wrong");
             submitMessage.value =

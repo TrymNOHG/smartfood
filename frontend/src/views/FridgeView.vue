@@ -121,13 +121,11 @@ import { addItemToShoppingList } from "@/services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
 import router from "../router/router";
-import { StreamBarcodeReader } from "vue-barcode-reader";
 import Quagga from "quagga";
 
 export default {
   name: "FridgeView",
   components: {
-    StreamBarcodeReader,
     BasicFridgeList,
     FilterBar,
     SearchItem,
@@ -176,33 +174,7 @@ export default {
         }
       );
     },
-    async onDecode(a, b, c) {
-      this.text = a;
-      const barcode = a;
-      console.log(barcode);
-      await getItemByBarcode(barcode)
-        .then((response) => {
-          if (response !== undefined) {
-            this.searchItems = response.products;
-            console.log(response.products);
-            this.search = true;
-          } else {
-            console.log("Something went wrong");
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
-          }
-        })
-        .catch((error) => {
-          console.warn("error1", error); //TODO: add exception handling
-        });
 
-      if (this.id) clearTimeout(this.id);
-      this.id = setTimeout(() => {
-        if (this.text === a) {
-          this.text = "";
-        }
-      }, 5000);
-    },
     handleSearch() {
       this.search = this.searchQuery.length >= 2;
       getItems(this.searchQuery)
@@ -213,9 +185,6 @@ export default {
         .catch((error) => {
           console.error(error);
         });
-    },
-    onLoaded() {
-      console.log("load");
     },
 
     async deleteItem(itemToDelete, deletePercentage) {
@@ -358,6 +327,7 @@ export default {
             this.searchItems = response.products;
             console.log(response.products);
             this.search = true;
+            this.scannerActive = false;
           } else {
             console.log("Something went wrong");
             submitMessage.value =
