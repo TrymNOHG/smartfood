@@ -1,6 +1,12 @@
 import {defineStore} from 'pinia'
 import {checkSuperUserStatus, getUser} from "@/services/UserService"
-import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
+import {
+    addNewFridge,
+    deleteUserFromFridge,
+    getAllFridges,
+    getNotifications,
+    updateFridge
+} from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
 import {addItemToFridge, deleteItemFromFridge, getItemsFromFridge} from "@/services/ItemService";
 import {
@@ -96,6 +102,21 @@ export const useFridgeStore = defineStore('fridgeStore', {
     },
 
     actions: {
+       async fetchNotifications (fridgeId) {
+           let notifications = []
+           await getNotifications(fridgeId).then((response) => {
+               for (const notification in response.data) {
+                   const {name, expirationDate} = notification
+                   notifications.push({name, expirationDate})
+               }
+           })
+           return notifications;
+        },
+
+        async deleteNotificationUsingId (notification, fridgeId) {
+           await deleteNotification(notification, fridgeId)
+        },
+
         async addNewFridgeByFridgeNameAndUsername(fridgename) {
             await addNewFridge(fridgename);
         },

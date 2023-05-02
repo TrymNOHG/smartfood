@@ -18,13 +18,26 @@
         {{ $t("fridge") }}
       </div>
     </div>
-    <div class="information-button">
-      <img
-        src="@/assets/images/info.svg"
-        id="info-picture"
-        @click="showInformation"
-        :alt="$t('alt_info_button')"
-      />
+
+    <div id="info-and-bell">
+      <div>
+        <font-awesome-icon icon="fa-solid fa-bell" class="bell-icon" @click="changeNotifications"/>
+        <div style="overflow-y: auto; max-height: 250px; background-color: white">
+          <NotificationList v-if="showNotifications" id="notification-list"
+          v-for="notification in notifications" :notification="notification"
+          @delete-notification="deleteNotification(notification)"/>
+        </div>
+
+        <div class="redd-dot" v-if="!showNotifications && notifications.length !== 0">{{notifications.length}}</div>
+      </div>
+      <div class="information-button">
+        <img
+            src="@/assets/images/info.svg"
+            id="info-picture"
+            @click="showInformation"
+            :alt="$t('alt_info_button')"
+        />
+      </div>
     </div>
   </div>
 
@@ -125,10 +138,14 @@ import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
 import router from "../router/router";
 import { StreamBarcodeReader } from "vue-barcode-reader";
+import NotificationList from "@/components/basic-components/NotificationList.vue";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 export default {
   name: "FridgeView",
   components: {
+    FontAwesomeIcon,
+    NotificationList,
     StreamBarcodeReader,
     BasicFridgeList,
     FilterBar,
@@ -141,7 +158,7 @@ export default {
   },
 
   computed: {
-    marginTopStyle() {
+        marginTopStyle() {
       return this.isExpanded ? "1%" : "1%";
     },
     isCurrentUserSuperUser() {
@@ -150,6 +167,14 @@ export default {
   },
 
   methods: {
+    deleteNotification(notification) {
+      this.fridgeStore.deleteNotificationUsingId(notification, this.fridge.fridgeId);
+    },
+
+    changeNotifications() {
+      this.showNotifications = !this.showNotifications;
+    },
+
     listing(bool) {
       this.listView = bool;
     },
@@ -325,12 +350,12 @@ export default {
   },
 
   setup() {
+    const notifications = ref([])
     const fridgeStore = useFridgeStore();
     const itemStore = useItemStore();
     const selectedTab = ref(router.currentRoute.value.query.selectedTab || 'fridge');
 
     history.replaceState(null, null, '/fridge');
-    const currentUrl = window.location.href;
 
     const searchItems = ref([]);
     const search = ref(false);
@@ -342,12 +367,43 @@ export default {
       fridgeItems.value = items;
     });
 
+    /*
+    fridgeStore.fetchNotifications(fridge.fridgeId).then((notification) => {
+      notifications.value = notification;
+    });
+
+     */
+
+    notifications.value = [
+      {
+        name: "bruhh",
+        expirationDate: "123123123"
+      },
+      {
+        name: "bruhh",
+        expirationDate: "123123123"
+      },
+      {
+        name: "bruhh",
+        expirationDate: "123123123"
+      },
+      {
+        name: "bruhh",
+        expirationDate: "123123123"
+      },
+      {
+        name: "bruhh",
+        expirationDate: "123123123"
+      },
+        ]
+
     const itemAmount = ref(1);
     const submitMessage = ref("norvegia");
     const searchQuery = ref("");
 
     return {
       fridge,
+      notifications,
       searchItems,
       fridgeItems,
       selectedTab,
@@ -365,12 +421,55 @@ export default {
     return {
       isExpanded: false,
       listView: false,
+      showNotifications: false,
     };
   },
 };
 </script>
 
 <style scoped>
+
+#info-and-bell {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 5%;
+}
+
+#notification-list  {
+  z-index: 998;
+  background-color: white;
+}
+
+.bell-icon {
+  color: white;
+  grid-column: 3;
+  text-align: right;
+  padding: 2px 5%;
+  height: 100%;
+  max-height: 25px;
+  cursor: pointer;
+}
+
+.redd-dot {
+  background-color: red;
+  color: white;
+  width: 20px;
+  height: 20px;
+  bottom: 80%;
+  left: 50%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.bell-icon:hover {
+  transition: .5s;
+  transform: rotate(45deg);
+}
+
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.25s ease;
