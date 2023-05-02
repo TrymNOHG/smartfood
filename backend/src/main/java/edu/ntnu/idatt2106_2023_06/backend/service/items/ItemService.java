@@ -3,8 +3,10 @@ package edu.ntnu.idatt2106_2023_06.backend.service.items;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.*;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemUpdateDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.RecipeShoppingDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.ShoppingItemUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.ShoppingListLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.*;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.FridgeItemMapper;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.ItemMapper;
@@ -17,6 +19,7 @@ import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeMemberRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ShoppingItemsRepository;
@@ -50,6 +53,7 @@ public class ItemService implements IItemService {
     private final ShoppingItemsRepository shoppingItemsRepository;
     private final Logger logger = LoggerFactory.getLogger(ItemService.class);
     private final UserRepository userRepository;
+    private final FridgeMemberRepository fridgeMemberRepository;
 
     //TODO: add
     //        if (itemDTO.quantity() <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
@@ -149,6 +153,35 @@ public class ItemService implements IItemService {
             shoppingItem.setQuantity(shoppingItem.getQuantity() + itemDTO.quantity());
         }
         shoppingItemsRepository.save(shoppingItem);
+    }
+
+    //TODO: add if
+    @Transactional
+    public void addIngredientsToShoppingList(RecipeShoppingDTO recipeShoppingDTO, String username) {
+        boolean isSuperUser = fridgeMemberRepository.findFridgeMemberByFridge_FridgeIdAndUser_Username(recipeShoppingDTO.fridgeId(), username)
+                .orElseThrow(() -> new UnauthorizedException(username)).isSuperUser();
+
+        Fridge fridge = fridgeRepository.findByFridgeId(recipeShoppingDTO.fridgeId())
+                .orElseThrow(() -> new FridgeNotFoundException(recipeShoppingDTO.fridgeId()));
+
+        for(Long itemId : recipeShoppingDTO.itemIds()) {
+            Item item = itemRepository.findById(itemId)
+                    .orElseThrow(() -> new ItemNotFoundException(itemId));
+            ShoppingItems shoppingItem = shoppingItemsRepository.findByItemAndFridgeAndSuggestion(item, fridge, !isSuperUser).orElse(null);
+            if(shoppingItem == null){
+                shoppingItem = ShoppingItems.builder()
+                        .id(new FridgeItemsId(item.getItemId(), fridge.getFridgeId()))
+                        .item(item)
+                        .fridge(fridge)
+                        .quantity(1)
+                        .suggestion(!isSuperUser)
+                        .build();
+            }
+            else {
+                shoppingItem.setQuantity(shoppingItem.getQuantity() + 1);
+            }
+            shoppingItemsRepository.save(shoppingItem);
+        }
     }
 
     /**
