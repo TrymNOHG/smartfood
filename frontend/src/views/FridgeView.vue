@@ -172,6 +172,7 @@ export default {
         purchaseDate: date,
         expirationDate: expirationDate,
         image: item.image,
+        EAN: item.ean,
         quantity: 1,
       };
 
@@ -285,6 +286,7 @@ export default {
         purchaseDate: date,
         expirationDate: expirationDate,
         image: item.image,
+        EAN: item.ean,
         quantity: 1,
       };
 
