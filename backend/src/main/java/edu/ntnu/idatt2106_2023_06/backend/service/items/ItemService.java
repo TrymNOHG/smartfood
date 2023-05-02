@@ -263,7 +263,7 @@ public class ItemService implements IItemService {
             throw new UnauthorizedException(jwtService.getAuthenticatedUserEmail());
         }
         if (!fridgeItemSearchDTO.sortField().equals("expirationDate") && !fridgeItemSearchDTO.sortField().equals("purchaseDate"))
-            throw new IllegalArgumentException("Sort field must be either expirationDate or purchaseDate");
+            throw new IllegalArgumentException("Sort field must be either expirationDate or purchaseDate"); // TODO: global exception handler
         if (!fridgeItemSearchDTO.sortOrder().equalsIgnoreCase("ASC") && !fridgeItemSearchDTO.sortOrder().equalsIgnoreCase("DESC"))
             throw new IllegalArgumentException("Sort order must be either ASC or DESC");
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeItemSearchDTO.fridgeId()).orElseThrow(
