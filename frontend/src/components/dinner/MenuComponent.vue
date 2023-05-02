@@ -1,47 +1,39 @@
 <template>
   <div class="cards-container">
     <router-link
-      to="/fridge/item"
-      @click="storeCurrentItem(menu)"
+      to="/dinner/meal"
+      @click="storeCurrentMeal(meal)"
       id="item-link"
     >
       <div class="card">
         <div class="front-side">
-          <img :src="menu.image" alt="item picture" />
+          <img :src="meal.thumbnailLink" alt="item picture" />
+          <div class="recipe-name-desktop">
+            <h2>{{ meal.recipeName }}</h2>
+          </div>
         </div>
         <div class="back-side">
           <div class="item-detail">
+            <div class="item-description">
+              <p>{{ meal.description }}</p>
+            </div>
             <div class="item-name">
-              <h2 id="item-name-h2">{{ menu.day }}</h2>
-              <h2 id="item-name-h2">{{ menu.name }}</h2>
+              <h2 id="item-name-h2">{{ meal.recipeName }}</h2>
               <br />
             </div>
-            <h4 id="item-price">{{ $t("price") }} {{ menu.price }}; kr</h4>
-            <button
-              v-if="isSuperUser"
-              class="delete-btn"
-              @click.prevent="deleteCard(menu)"
-            >
-              <span>
-                <font-awesome-icon
-                  icon="fa-solid fa-trash"
-                  class="icon delete-icon"
-                />
-              </span>
-            </button>
-            <button
-              v-if="isSuperUser"
-              class="buy-btn"
-              @click.prevent="deleteCard(menu)"
-            >
-              <span>
-                <font-awesome-icon
-                  icon="fa-solid fa-shopping-cart"
-                  class="icon buy-icon"
-                />
-              </span>
-            </button>
           </div>
+          <button
+            v-if="isSuperUser"
+            class="delete-btn"
+            @click.prevent="deleteCard(meal)"
+          >
+            <span>
+              <font-awesome-icon
+                icon="fa-solid fa-trash"
+                class="icon delete-icon"
+              />
+            </span>
+          </button>
         </div>
       </div>
     </router-link>
@@ -54,20 +46,15 @@ import { number } from "yup";
 import swal from "sweetalert2";
 import { useItemStore } from "@/store/store";
 import Swal from "sweetalert2";
+import { useMealStore } from "../../store/store";
 
 export default {
   name: "BasicFridgeItem",
   components: { FontAwesomeIcon },
 
   props: {
-    menu: {
+    meal: {
       type: Object,
-      default: () => ({
-        description: String,
-        image: String,
-        name: String,
-        price: String,
-      }),
     },
     isSuperUser: {
       type: Boolean,
@@ -76,8 +63,8 @@ export default {
   },
 
   methods: {
-    storeCurrentItem(item) {
-      this.itemStore.setCurrentItem(item);
+    storeCurrentMeal(meal) {
+      this.mealStore.setCurrentMeal(meal);
     },
 
     deleteCard(item) {
@@ -147,10 +134,10 @@ export default {
   },
 
   setup(props) {
-    console.log(props.menu);
-    const itemStore = useItemStore();
+    console.log(props.meal);
+    const mealStore = useMealStore();
     return {
-      itemStore,
+      mealStore,
     };
   },
 };
@@ -223,23 +210,7 @@ img {
 
 .delete-btn {
   position: absolute;
-  top: 20px;
-  right: 5px;
-  background-color: white;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  opacity: 100%;
-}
-
-.buy-btn {
-  position: absolute;
-  top: 60px;
+  top: 5px;
   right: 5px;
   background-color: white;
   color: white;
@@ -258,11 +229,6 @@ img {
   background-color: red;
 }
 
-.buy-btn:hover {
-  transform: scale(1.2);
-  background-color: red;
-}
-
 .icon {
   color: black;
 }
@@ -271,15 +237,49 @@ img {
   color: white;
 }
 
+.recipe-name-desktop {
+  display: none;
+}
+
+.item-name {
+  display: none;
+}
+
+.item-description {
+  display: none;
+}
+
+@media (min-width: 651px) {
+  .recipe-name-desktop {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 5px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .item-description {
+    display: block;
+  }
+}
+
 @media (max-width: 650px) {
+  .item-name {
+    display: block;
+  }
+
   body {
     height: 80px;
   }
-
   .card {
     display: flex;
     justify-content: end;
-    width: 95vw;
+    width: 350px;
     height: 80px;
     background-color: #eee;
     border: 1px solid #ccc;
@@ -310,18 +310,11 @@ img {
 
   .delete-btn {
     background-color: white;
-    top: 10px;
     width: 25px;
     height: 25px;
+    top: 13px;
+    right: 2px;
   }
-
-  .buy-btn {
-    background-color: white;
-    width: 25px;
-    height: 25px;
-    top: 60px;
-  }
-
   .icon {
     color: black;
     font-size: 15px;
@@ -361,7 +354,7 @@ img {
   }
 }
 
-@media only screen and (min-width: 10px) and (max-width: 650px) {
+@media only screen and (min-width: 350px) and (max-width: 480px) {
   body {
     height: 100%;
   }
@@ -372,11 +365,10 @@ img {
     padding-top: 10px;
     padding-bottom: 10px;
   }
-
   .card {
     display: flex;
     justify-content: end;
-    width: 90vw;
+    width: 350px;
     height: 100px;
     background-color: white;
     border: 2px solid #ccc;
@@ -410,15 +402,9 @@ img {
     background-color: white;
     width: 25px;
     height: 25px;
+    top: 5px;
     right: 5px;
   }
-
-  buy-btn {
-    background-color: white;
-    width: 25px;
-    height: 25px;
-  }
-
   .icon {
     color: black;
     font-size: 15px;
