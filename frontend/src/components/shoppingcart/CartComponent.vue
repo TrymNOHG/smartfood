@@ -632,27 +632,25 @@ input[type="number"] {
 }
 
 .dropper {
-  width: 70%;
-  color: white;
-  margin: auto;
-  margin-bottom: 20px;
-}
-
-.dropper {
   display: flex;
-  width: 100vw;
+  width: 98vw;
   justify-content: space-evenly;
   overflow-y: scroll;
+  overflow-x: hidden;
   margin-bottom: 20px;
   margin: auto;
   color: white;
 }
-
+.dropper::-webkit-scrollbar {
+  display: none;
+}
+.dropper:hover {
+  color: #5e6977;
+}
 .vcpg {
   --bg-color-header: transparent !important;
   border: transparent;
   width: 100%;
-  overflow-y: scroll;
   color: black;
   background-color: white;
   border-radius: 0;
