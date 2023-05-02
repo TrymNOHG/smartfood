@@ -395,9 +395,7 @@ export default {
     const sort = ref(sortOptions.value[0]);
 
 
-    itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
-      fridgeItems.value = items;
-    });
+
 
     const loadMore = () => {
       if (!isLoading.value) {

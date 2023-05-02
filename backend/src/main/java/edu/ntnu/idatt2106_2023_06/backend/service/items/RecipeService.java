@@ -3,18 +3,22 @@ package edu.ntnu.idatt2106_2023_06.backend.service.items;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeItemDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeLoadDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipePartDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.*;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.RecipeNotFoundException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.RecipeSuggestionNotFoundException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.recipe.RecipeMapper;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.*;
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.recipe.*;
+import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.*;
 import okhttp3.OkHttpClient;
@@ -51,12 +55,47 @@ public class RecipeService {
     private final ItemService itemService;
     private final RecipeItemsRepository recipeItemsRepository;
     private final FridgeItemsRepository fridgeItemsRepository;
+    private final FridgeRepository fridgeRepository;
+    private final UserRepository userRepository;
+    private final RecipeSuggestionRepository recipeSuggestionRepository;
 
     public RecipeLoadDTO getRecipe(String recipeName) {
         Recipe recipe = recipeRepository.findRecipeByRecipeNameContainingIgnoreCase(recipeName)
                 .orElseThrow(() -> new RecipeNotFoundException("Name of the recipe" , recipeName));
         logger.info("Recipe found. Creating DTO");
         return RecipeMapper.toRecipeLoadDTO(recipe);
+    }
+
+    public void addRecipeSuggestion(RecipeSuggestionAddDTO recipeSuggestionAddDTO){
+        Recipe recipe = recipeRepository.findByRecipeId(recipeSuggestionAddDTO.recipeId()).orElseThrow(() -> new RecipeNotFoundException("Name of the recipe" , recipeSuggestionAddDTO.recipeId()));
+        Fridge fridge = fridgeRepository.findByFridgeId(recipeSuggestionAddDTO.fridgeId()).orElseThrow(() -> new FridgeNotFoundException(recipeSuggestionAddDTO.fridgeId()));
+        User user = userRepository.findUserByUserId(recipeSuggestionAddDTO.userId()).orElseThrow(() -> new UserNotFoundException(recipeSuggestionAddDTO.userId()));
+        RecipeSuggestion recipeSuggestion = RecipeSuggestion.builder()
+                .recipe(recipe)
+                .fridge(fridge)
+                .user(user)
+                .build();
+        recipeSuggestionRepository.save(recipeSuggestion);
+    }
+
+    public List<RecipeSuggestionLoad> loadRecipeSuggestion(Long fridgeId){
+        Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new FridgeNotFoundException(fridgeId));
+        List<RecipeSuggestion> recipeSuggestionList = recipeSuggestionRepository.findAllByFridge(fridge).orElseThrow(() -> new RecipeSuggestionNotFoundException(fridgeId));
+        return recipeSuggestionList.stream().map(i -> {
+            return RecipeMapper.toRecipeSuggestionLoadDTO(i.getRecipe(), i.getUser().getUserId());
+        }).toList();
+    }
+
+    public void deleteRecipeSuggestion(Long recipeId, Long fridgeId, Long userId) {
+        Recipe recipe = recipeRepository.findByRecipeId(recipeId).orElseThrow(() -> new RecipeNotFoundException("Name of the recipe" ,recipeId));
+        Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new FridgeNotFoundException(fridgeId));
+        User user = userRepository.findUserByUserId(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        RecipeSuggestion recipeSuggestion = RecipeSuggestion.builder()
+                .recipe(recipe)
+                .fridge(fridge)
+                .user(user)
+                .build();
+        recipeSuggestionRepository.delete(recipeSuggestion);
     }
 
     public Page<RecipeLoadDTO> getRecipesByName(String recipeName, int page, int size) {
@@ -378,4 +417,6 @@ public class RecipeService {
         }
         return null;
     }
+
+
 }

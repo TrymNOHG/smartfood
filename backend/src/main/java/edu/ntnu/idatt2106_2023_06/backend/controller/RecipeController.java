@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.RecipeShoppingDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeSuggestionAddDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeSuggestionLoad;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Recipe;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemRecipeScoreService;
@@ -27,6 +29,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @CrossOrigin("*")
@@ -154,5 +157,80 @@ public class RecipeController {
         logger.info("Ingredients have been added.");
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping(value="/suggestion/accept")
+    @Operation(summary = "Accept dinner suggestion")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "This endpoint accepts a dinner suggestion",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Object.class)) })}
+    )
+    public ResponseEntity<Object> acceptSuggestion(@ParameterObject @RequestBody RecipeShoppingDTO recipeShoppingDTO,
+                                                   @ParameterObject @RequestParam(name="recipe") Long recipeId,
+                                                   @ParameterObject @RequestParam(name="user") Long userId,
+                                                Authentication authentication) {
+        if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
+
+        logger.info("Attempting to accept suggestion.");
+        itemService.addIngredientsToShoppingList(recipeShoppingDTO, authentication.getName());
+        recipeService.deleteRecipeSuggestion(recipeId, recipeShoppingDTO.fridgeId(), userId);
+        logger.info("Suggestion has been accepted.");
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value="/suggestion/deny")
+    @Operation(summary = "Deny dinner suggestion")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "This endpoint denies a dinner suggestion",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Object.class)) })}
+    )
+    public ResponseEntity<Object> denySuggestion(@ParameterObject @RequestParam(name="recipe") Long fridgeId,
+                                                   @ParameterObject @RequestParam(name="recipe") Long recipeId,
+                                                   @ParameterObject @RequestParam(name="user") Long userId,
+                                                   Authentication authentication) {
+        if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
+
+        logger.info("Attempting to deny suggestion.");
+        recipeService.deleteRecipeSuggestion(recipeId, fridgeId, userId);
+        logger.info("Suggestion has been denied.");
+        return ResponseEntity.ok().build();
+    }
+
+    //TODO: add more recipe load things, including pagination of random recipes.
+
+    @PostMapping(value="/suggestion/add")
+    @Operation(summary = "Add dinner suggestion")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "This endpoint adds dinner suggestion",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Object.class)) })}
+    )
+    public ResponseEntity<Object> addSuggestion(@ParameterObject @RequestBody RecipeSuggestionAddDTO recipeSuggestionAddDTO,
+                                                              Authentication authentication) {
+        if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
+
+        logger.info("Attempting to add suggestion.");
+        recipeService.addRecipeSuggestion(recipeSuggestionAddDTO);
+        logger.info("Suggestion has been added.");
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value="/suggestion/load")
+    @Operation(summary = "Add dinner suggestion")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "This endpoint loads dinner suggestions",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RecipeSuggestionLoad.class)) })}
+    )
+    public ResponseEntity<Object> loadSuggestion(@ParameterObject @RequestParam(name = "fridge") Long fridgeId) {
+
+        logger.info("Attempting to load suggestions.");
+        List<RecipeSuggestionLoad> recipeSuggestionLoadList = recipeService.loadRecipeSuggestion(fridgeId);
+        logger.info("Suggestions has been loaded.");
+        return ResponseEntity.ok(recipeSuggestionLoadList);
+    }
+
+
 
 }
