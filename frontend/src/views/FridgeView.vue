@@ -33,6 +33,9 @@
     <div id="myDropdown" class="dropdown-content">
       <figure id="backBlack"></figure>
       <div id="backGreen">
+        <div id="barcode-scanner">
+          <div v-show="scannerActive" id="interactive" class="viewport"></div>
+        </div>
         <div id="searchbar">
           <SearchInput
             v-model="searchQuery"
@@ -43,12 +46,6 @@
           <button id="searchbtn" @click="handleSearch">
             {{ $t("search") }}
           </button>
-        </div>
-        <div v-if="scannerActive">
-          <StreamBarcodeReader
-            @decode="(a, b, c) => onDecode(a, b, c)"
-            @loaded="() => onLoaded()"
-          ></StreamBarcodeReader>
         </div>
       </div>
 
@@ -125,6 +122,7 @@ import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
 import router from "../router/router";
 import { StreamBarcodeReader } from "vue-barcode-reader";
+import Quagga from "quagga";
 
 export default {
   name: "FridgeView",
@@ -152,9 +150,6 @@ export default {
   methods: {
     listing(bool) {
       this.listView = bool;
-    },
-    toggleCamera() {
-      this.scannerActive = !this.scannerActive;
     },
 
     async addShopping(item) {
@@ -322,6 +317,65 @@ export default {
         //TODO: INFORMATION MEMBERS put information API in here
       }
     },
+
+    initScanner() {
+      Quagga.init(
+        {
+          inputStream: {
+            name: "Live",
+            type: "LiveStream",
+            target: document.querySelector("#interactive.viewport"),
+          },
+          decoder: {
+            readers: ["ean_reader", "code_128_reader", "code_39_reader"],
+          },
+        },
+        (err) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+          this.scannerActive = true;
+          Quagga.start();
+        }
+      );
+
+      Quagga.onDetected(this.onDetected);
+    },
+
+    stopScanner() {
+      Quagga.offDetected(this.onDetected);
+      Quagga.stop();
+      this.scannerActive = false;
+    },
+    async onDetected(result) {
+      const code = result.codeResult.code;
+      console.log("Detected barcode:", code);
+
+      await getItemByBarcode(code)
+        .then((response) => {
+          if (response !== undefined) {
+            this.searchItems = response.products;
+            console.log(response.products);
+            this.search = true;
+          } else {
+            console.log("Something went wrong");
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+          }
+        })
+        .catch((error) => {
+          console.warn("error1", error); //TODO: add exception handling
+        });
+    },
+    toggleCamera() {
+      console.log("toggling", this.scannerActive, this.scannerActive);
+      if (this.scannerActive == true) {
+        this.stopScanner();
+      } else {
+        this.initScanner();
+      }
+    },
   },
 
   setup() {
@@ -338,7 +392,7 @@ export default {
     const search = ref(false);
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
-    const scannerActive = ref(false);
+    let scannerActive = ref(false);
 
     itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
       fridgeItems.value = items;
@@ -373,6 +427,24 @@ export default {
 </script>
 
 <style scoped>
+#barcode-scanner {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+#interactive {
+  text-align: center;
+  width: 95vw;
+  height: 380px;
+  margin: auto;
+
+  transform: translate(25%);
+}
+
+.viewport video {
+  width: 400px;
+  height: 300px;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.25s ease;
@@ -542,6 +614,13 @@ input[type="text"]:not(:focus) {
   background-color: #6c6c6c;
 }
 
+@media (max-width: 1350px) {
+  #interactive {
+    transform: none;
+    position: relative;
+    overflow: hidden;
+  }
+}
 @media (max-width: 860px) {
   .list-wrapper {
     display: grid;

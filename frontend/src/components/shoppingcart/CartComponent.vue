@@ -630,9 +630,6 @@ export default {
   text-align: center;
 }
 
-.drawingBuffer {
-  display: none !important;
-}
 #barcode-scanner {
   overflow-x: hidden;
   overflow-y: hidden;
