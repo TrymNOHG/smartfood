@@ -3,7 +3,7 @@
     <router-link to="/dinner/meal" @click="storeCurrentMeal(meal)" id="item-link">
       <div class="card">
         <div class="front-side">
-          <img :src="meal.thumbnailLink" alt="item picture">
+          <img :src="meal.thumbnail" alt="item picture">
           <div class="recipe-name-desktop">
             <h2>{{ meal.recipeName }}</h2>
           </div>

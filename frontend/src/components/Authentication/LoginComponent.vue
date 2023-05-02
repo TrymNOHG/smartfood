@@ -31,7 +31,7 @@
         </div>
 
         <h5 v-if="submitMessage" class="submit-message">
-          {{ submitMessage }}
+          {{ $t( submitMessage ) }}
         </h5>
 
         <div class="remember-forgot">
@@ -95,21 +95,14 @@ export default {
           if (response !== undefined) {
             store.setSessionToken(response.data.token);
             await store.fetchUser();
-            submitMessage.value = "Login Successful";
-            setTimeout(() => {
-              submitMessage.value = "";
-            }, 3000);
             await router.push("/fridges");
-          } else {
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
-            setTimeout(() => {
-              submitMessage.value = "";
-            }, 3000);
           }
         })
         .catch((error) => {
-          submitMessage.value = error.response.data["Message:"];
+          submitMessage.value = 'login_error';
+          setTimeout(() => {
+            submitMessage.value = "";
+          }, 2000);
           console.warn("error", error);
         });
     });

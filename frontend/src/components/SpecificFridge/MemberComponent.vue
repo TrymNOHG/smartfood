@@ -18,8 +18,9 @@
             <h3>{{ $t('search_Members_Title') }}</h3>
 
             <div class="search-input">
-                <input type="text" v-model="searchText" :placeholder="$t('enter_username')" />
+                <input type="text"  class="user-input" v-model="searchText" :placeholder="$t('enter_username')" />
                 <basic-button
+                    class="search-button"
                     :button-text="$t('search_MembersButton_Text')"
                     type="submit"
                     @click="searchMembers"
@@ -166,6 +167,7 @@ export default {
                 await addUserToFridge(fridgeUserDTO);
                 this.changeModal()
                 await this.fetchUsers()
+                this.searchResults = []
             } catch (error) {
             }
         },
