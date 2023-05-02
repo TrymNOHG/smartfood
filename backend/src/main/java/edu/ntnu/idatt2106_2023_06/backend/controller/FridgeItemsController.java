@@ -3,10 +3,13 @@ package edu.ntnu.idatt2106_2023_06.backend.controller;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemSearchDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemService;
 import edu.ntnu.idatt2106_2023_06.backend.service.users.UserService;
+import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.SearchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -117,6 +121,20 @@ public class FridgeItemsController implements IFridgeItemsController{
         logger.info("User wants to get items from fridge");
         List<FridgeItemLoadDTO> itemList = itemService.getFridgeItems(fridgeId);
         //TODO: use FridgeItemLoadDTO
+        logger.info("Items have been retrieved!");
+        return ResponseEntity.ok(itemList);
+    }
+
+    /**
+     * Search and filter items from a fridge.
+     *
+     * @param fridgeItemSearchDTO The search request containing the search parameters.
+     */
+    @PostMapping(value="/search")
+    @Operation(summary = "Search items from fridge")
+    public ResponseEntity<Object> searchFridgeItems(@RequestBody FridgeItemSearchDTO fridgeItemSearchDTO) {
+        logger.info("User wants to search items from fridge");
+        Page<FridgeItemLoadDTO> itemList = itemService.searchFridgeItems(fridgeItemSearchDTO);
         logger.info("Items have been retrieved!");
         return ResponseEntity.ok(itemList);
     }
