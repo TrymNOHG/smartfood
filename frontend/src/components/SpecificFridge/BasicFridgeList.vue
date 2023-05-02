@@ -1,24 +1,39 @@
 <template>
   <div class="card-container" :style="{ 'border-color': borderColor }">
-    <router-link to="/fridge/item" @click="storeCurrentItem(item)" id="item-link">
+    <router-link
+      to="/fridge/item"
+      @click="storeCurrentItem(item)"
+      id="item-link"
+    >
       <div class="card">
-        <img class="item-img" :src="item.image" alt="item image"/>
-        <h3 class="item-name">{{item.name}}</h3>
+        <img class="item-img" :src="item.image" alt="item image" />
+        <h3 class="item-name">{{ item.name }}</h3>
         <div class="item-info">
-          <h4>{{ $t('expire_date') }}: {{new Date(item.expirationDate)
-              .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
-          <h4 class="price-text">{{ $t('price') }}   {{item.price}}</h4>
+          <h4>
+            {{ $t("expire_date") }}:
+            {{
+              new Date(item.expirationDate).toLocaleDateString("nb-NO", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })
+            }}
+          </h4>
+          <h4 class="price-text">{{ $t("price") }} {{ item.price }}</h4>
         </div>
-        <font-awesome-icon icon="fa-solid fa-trash"  @click="deleteItem" class="delete-icon icons"/>
+        <font-awesome-icon
+          icon="fa-solid fa-trash"
+          @click="deleteItem"
+          class="delete-icon icons"
+        />
       </div>
     </router-link>
   </div>
 </template>
 
-
 <script>
-import {number} from "yup";
-import {useItemStore} from "@/store/store";
+import { number } from "yup";
+import { useItemStore } from "@/store/store";
 import swal from "sweetalert2";
 import Swal from "sweetalert2";
 
@@ -36,114 +51,125 @@ export default {
         price: String,
         purchaseDate: String,
         quantity: number,
-        store: String
-      })
+        store: String,
+      }),
     },
   },
 
   methods: {
-    storeCurrentItem(item){
+    storeCurrentItem(item) {
       this.itemStore.setCurrentItem(item);
     },
 
     deleteCard(item) {
       let deletePercentage = null;
 
-      swal.fire({
-        title: this.$t('confirm_title'),
-        text: this.$t('confirm_text'),
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#4dce38',
-        cancelButtonColor: '#d33',
-        confirmButtonText: this.$t('confirm_button'),
-        cancelButtonText: this.$t('cancel_button'),
-        customClass: {
-          container: 'my-swal-dialog-container'
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire({
-            html: `
+      swal
+        .fire({
+          title: this.$t("confirm_title"),
+          text: this.$t("confirm_text"),
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#4dce38",
+          cancelButtonColor: "#d33",
+          confirmButtonText: this.$t("confirm_button"),
+          cancelButtonText: this.$t("cancel_button"),
+          customClass: {
+            container: "my-swal-dialog-container",
+          },
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            Swal.fire({
+              html: `
           <div class="swal2-content">
             <div class="swal2-text">
-              ${this.$t('Percent-wise, how much was left?')}
+              ${this.$t("Percent-wise, how much was left?")}
             </div>
             <div id="range-value-text" class="swal2-text"></div>
           </div>
         `,
-            input: 'range',
-            inputAttributes: {
-              min: 0,
-              max: 100,
-              step: 1
-            },
-            didOpen: () => {
-              deletePercentage = Swal.getInput()
-              const inputNumber = Swal.getHtmlContainer().querySelector('#range-value')
-              const rangeValueText = Swal.getHtmlContainer().querySelector('#range-value-text')
+              input: "range",
+              inputAttributes: {
+                min: 0,
+                max: 100,
+                step: 1,
+              },
+              didOpen: () => {
+                deletePercentage = Swal.getInput();
+                const inputNumber =
+                  Swal.getHtmlContainer().querySelector("#range-value");
+                const rangeValueText =
+                  Swal.getHtmlContainer().querySelector("#range-value-text");
 
-              deletePercentage.nextElementSibling.style.display = 'none'
-              deletePercentage.style.width = '100%'
+                deletePercentage.nextElementSibling.style.display = "none";
+                deletePercentage.style.width = "100%";
 
-              deletePercentage.addEventListener('input', () => {
-                inputNumber.value = deletePercentage.value
-                rangeValueText.innerText = `${deletePercentage.value}%`
-              })
-            },
-            showCancelButton: true,
-            confirmButtonText: this.$t('confirm_button'),
-            cancelButtonText: this.$t('cancel_button'),
-            customClass: {
-              container: 'my-swal-dialog-container'
-            }
-          }).then((result) => {
-            if (result.isConfirmed) {
-              swal.fire({
-                title: "Vil du kjøpe den på nytt",
-                text: this.$t('confirm_text'),
-                icon: 'success',
-                showCancelButton: true,
-                confirmButtonColor: '#4dce38',
-                cancelButtonColor: '#d33',
-                confirmButtonText: "Yes",
-                cancelButtonText: "No",
-                customClass: {
-                  container: 'my-swal-dialog-container'
-                }
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  this.$emit('add-shopping', item)
-                }
-                this.$emit('delete-item', item, deletePercentage.value);
-              })
-            }
-          })
-        }
-      })
-    }
+                deletePercentage.addEventListener("input", () => {
+                  inputNumber.value = deletePercentage.value;
+                  rangeValueText.innerText = `${deletePercentage.value}%`;
+                });
+              },
+              showCancelButton: true,
+              confirmButtonText: this.$t("confirm_button"),
+              cancelButtonText: this.$t("cancel_button"),
+              customClass: {
+                container: "my-swal-dialog-container",
+              },
+            }).then((result) => {
+              if (result.isConfirmed) {
+                swal
+                  .fire({
+                    title: "Vil du kjøpe den på nytt",
+                    text: this.$t("confirm_text"),
+                    icon: "success",
+                    showCancelButton: true,
+                    confirmButtonColor: "#4dce38",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    customClass: {
+                      container: "my-swal-dialog-container",
+                    },
+                  })
+                  .then((result) => {
+                    if (result.isConfirmed) {
+                      this.$emit("add-shopping", item);
+                    }
+                    this.$emit("delete-item", item, deletePercentage.value);
+                  });
+              }
+            });
+          }
+        });
+    },
   },
 
   setup(props) {
     const itemStore = useItemStore();
 
-    let borderColor = calculateExpirationDate(props.item.purchaseDate, props.item.expirationDate);
-    console.log(props.item)
+    let borderColor = calculateExpirationDate(
+      props.item.purchaseDate,
+      props.item.expirationDate
+    );
+    console.log(props.item);
     function calculateExpirationDate(purchaseDate, expirationDate) {
       const currentDate = new Date();
       const purchase = new Date(purchaseDate);
       const expiration = new Date(expirationDate);
 
-      const remainingDays = Math.ceil((expiration.getTime() - currentDate.getTime()) / (1000 * 3600 * 24));
+      const remainingDays = Math.ceil(
+        (expiration.getTime() - currentDate.getTime()) / (1000 * 3600 * 24)
+      );
 
       let borderColor;
 
       if (remainingDays >= 5) {
-        borderColor = 'green'; // Green for 7 or more days left
+        borderColor = "green"; // Green for 7 or more days left
       } else if (remainingDays >= 3 && remainingDays < 5) {
-        borderColor = 'orange'; // Orange for 1 to 2 days left
+        borderColor = "orange"; // Orange for 1 to 2 days left
       } else {
-        borderColor = 'red'; // Red for less than 1 day left
+        borderColor = "red"; // Red for less than 1 day left
       }
 
       return borderColor;
@@ -152,9 +178,9 @@ export default {
     return {
       borderColor,
       itemStore,
-    }
-  }
-}
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -187,7 +213,7 @@ export default {
   margin-left: auto;
 }
 
-.item-name{
+.item-name {
   margin-left: auto;
 }
 
@@ -255,7 +281,7 @@ export default {
 }
 
 @media (max-width: 650px) {
-  .item-img{
+  .item-img {
     margin-right: auto;
     width: 80px;
     height: 80px;
@@ -264,10 +290,8 @@ export default {
     color: #eee;
   }
 
-  .price-text{
+  .price-text {
     display: none;
   }
 }
-
-
 </style>
