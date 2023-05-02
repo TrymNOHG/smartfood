@@ -102,5 +102,19 @@
   "login_error": "Wrong password or Email",
   "register_error": "User already exists",
   "next_page": "Next Page",
-  "previous_page": "Previous Page"
+  "previous_page": "Previous Page",
+  "add_missing_items": "Add missing items",
+  "tips": "Tips",
+  "serving_size": "Serving size",
+  "cook_time": "Cook time",
+  "difficulty": "Difficulty",
+  "author": "Author",
+  "allergens": "Allergens",
+  "instructions": "Instructions",
+  "step": "Step",
+  "Under 20 min": "Under 20 min",
+  "20 - 40 min": "20 - 40 min",
+  "40 - 60 min": "40 - 60 min",
+  "Over 60 min:": "Over 60 min",
+  "suggest_dinner": "Suggest dinner"
 }

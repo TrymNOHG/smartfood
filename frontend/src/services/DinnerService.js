@@ -26,3 +26,55 @@ export const addIngredientsToShoppingList = async (recipeShoppingDTO) => {
         },
     });
 };
+
+export const loadRecipeSuggestions = async (fridgeId) => {
+    const token = await SessionToken();
+    const response = await axios.get(`${BASE_LISTING_URL}/suggestion/load`, {
+        params: {
+            fridge: fridgeId,
+        },
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+};
+
+export const addRecipeSuggestion = async (recipeSuggestionAddDTO) => {
+    const token = await SessionToken();
+    const response = await axios.post(`${BASE_LISTING_URL}/suggestion/add`, recipeSuggestionAddDTO, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+};
+
+export const denyRecipeSuggestion = async (fridgeId, recipeId, userId) => {
+    const token = await SessionToken();
+    const response = await axios.post(`${BASE_LISTING_URL}/suggestion/deny`, null, {
+        params: {
+            fridge: fridgeId,
+            recipe: recipeId,
+            user: userId,
+        },
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+};
+
+export const acceptRecipeSuggestion = async (recipeShoppingDTO, recipeId, userId) => {
+    const token = await SessionToken();
+    const response = await axios.post(`${BASE_LISTING_URL}/suggestion/accept`, recipeShoppingDTO, {
+        params: {
+            recipe: recipeId,
+            user: userId,
+        },
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+};
