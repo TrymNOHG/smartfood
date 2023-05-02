@@ -602,8 +602,14 @@ export default {
 #notification-list  {
   z-index: 998;
   overflow-y: auto;
-  max-height: 250px;
-  background-color: white
+  max-height: 320px;
+  -ms-overflow-style: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 125%;
+}
+
+#notification-list::-webkit-scrollbar {
+  display: none;
 }
 
 .bell-icon {
@@ -674,7 +680,6 @@ margin-top: 10px;
   justify-content: center;
   gap: 25px;
   padding: 16px;
-  background-color: #f8f8f8;
   margin-top: 10px;
   border-radius: 50px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
