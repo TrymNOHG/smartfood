@@ -1,9 +1,13 @@
 package edu.ntnu.idatt2106_2023_06.backend.repo.recipe;
 
-import edu.ntnu.idatt2106_2023_06.backend.model.items.Recipe;
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Recipe;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 /**
 
@@ -16,5 +20,20 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Long>, JpaSpecificationExecutor<Recipe> {
+
+    /**
+     * This method retrieves a recipe by its name.
+     * @param recipeName    Name of the recipe, given as a String.
+     * @return              An optional of the recipe.
+     */
+    Optional<Recipe> findRecipeByRecipeNameContainingIgnoreCase(String recipeName);
+
+    /**
+     * This method retrieves a page of recipes by recipe name.
+     * @param recipeName Name of recipe, given as a String
+     * @param pageable   The paging information, given as a Pageable object.
+     * @return           An optional containing the page of recipes.
+     */
+    Optional<Page<Recipe>> findByRecipeNameContainingIgnoreCase(String recipeName, Pageable pageable);
 
 }

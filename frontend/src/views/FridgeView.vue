@@ -3,7 +3,7 @@
     <div class="members-fridge">
       <div
         id="toggle-button"
-        class="link"
+        class="link toggle-members"
         @click="selectedTab = 'members'"
         :class="{ active: selectedTab === 'members' }"
       >
@@ -38,11 +38,17 @@
             v-model="searchQuery"
             @input="handleSearch"
             :label="$t('add_item')"
-            @receipt-upload="handleReceiptUpload"
+            @receipt-upload="toggleCamera"
           ></SearchInput>
           <button id="searchbtn" @click="handleSearch">
             {{ $t("search") }}
           </button>
+        </div>
+        <div v-if="isCameraToggled">
+          <StreamBarcodeReader
+            @decode="(a, b, c) => onDecode(a, b, c)"
+            @loaded="() => onLoaded()"
+          ></StreamBarcodeReader>
         </div>
       </div>
 
@@ -88,32 +94,36 @@
       </div>
 
     </div>
-
     <transition name="fade">
-      <div v-if="!listView" class="wrapper" :style="{ marginTop: marginTopStyle }">
+      <div
+        v-if="!listView"
+        class="wrapper"
+        :style="{ marginTop: marginTopStyle }"
+      >
         <basic-fridge-item
-            :isSuperUser="isCurrentUserSuperUser"
-            v-for="(item, index) in fridgeItems"
-            :key="index"
-            :item="item"
-            :currenFridge="fridge"
-            @delete-item="deleteItem"
-            @add-shopping="addShopping"
+          :isSuperUser="isCurrentUserSuperUser"
+          v-for="(item, index) in fridgeItems"
+          :key="index"
+          :item="item"
+          :currenFridge="fridge"
+          @delete-item="deleteItem"
+          @add-shopping="addShopping"
         />
       </div>
       <div v-else class="list-wrapper">
         <basic-fridge-list
-            v-for="(item, index) in fridgeItems"
-            :key="index" :item="item"
-            :currenFridge="fridge"
-            @delete-item="deleteItem"
-            @add-shopping="addShopping"
+          v-for="(item, index) in fridgeItems"
+          :key="index"
+          :item="item"
+          :currenFridge="fridge"
+          @delete-item="deleteItem"
+          @add-shopping="addShopping"
         />
       </div>
     </transition>
-    <div class="members-wrapper" v-show="selectedTab === 'members'">
-      <member-component />
-    </div>
+  </div>
+  <div class="members-wrapper" v-show="selectedTab === 'members'">
+    <member-component />
   </div>
   <div id="bottom-element"></div>
 </template>
@@ -125,18 +135,19 @@ import {
   VueCollapsiblePanelGroup,
   VueCollapsiblePanel,
 } from "@dafcoe/vue-collapsible-panel";
-import { useRoute } from "vue-router";
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import { useFridgeStore, useItemStore } from "@/store/store";
 import {onMounted, onUnmounted, ref} from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
-import { getItems } from "@/services/ApiService";
+import { getItemByBarcode, getItems } from "@/services/ApiService";
 import Swal from "sweetalert2";
 import { addItemToShoppingList } from "@/services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
+import router from "../router/router";
+import { StreamBarcodeReader } from "vue-barcode-reader";
 
 interface Filter {
   key: string;
@@ -148,6 +159,7 @@ interface Filter {
 export default {
   name: "FridgeView",
   components: {
+    StreamBarcodeReader,
     BasicFridgeList,
     FilterBar,
     SearchItem,
@@ -176,6 +188,9 @@ export default {
     listing(bool){
       this.listView = bool;
     },
+    toggleCamera() {
+      this.isCameraToggled = !this.isCameraToggled;
+    },
 
     async addShopping(item) {
       const date = new Date();
@@ -184,24 +199,50 @@ export default {
       const fridge = this.fridgeStore.getCurrentFridge;
 
       const itemDTO = {
-        "name": item.name,
-        "description": item.description,
-        "store": item.store,
-        "price": item.price,
-        "purchaseDate": date,
-        "expirationDate": expirationDate,
-        "image": item.image,
-        "quantity": 1,
-      }
+        name: item.name,
+        description: item.description,
+        store: item.store,
+        price: item.price,
+        purchaseDate: date,
+        expirationDate: expirationDate,
+        image: item.image,
+        EAN: item.ean,
+        quantity: 1,
+      };
 
       await addItemToShoppingList(itemDTO, fridge.fridgeId, false).then(
-          async (response) => {
-            console.log("response", response);
-          }
+        async (response) => {
+          console.log("response", response);
+        }
       );
     },
+    async onDecode(a, b, c) {
+      this.text = a;
+      const barcode = a;
+      console.log(barcode);
+      await getItemByBarcode(barcode)
+        .then((response) => {
+          if (response !== undefined) {
+            this.searchItems = response.products;
+            console.log(response.products);
+            this.search = true;
+          } else {
+            console.log("Something went wrong");
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+          }
+        })
+        .catch((error) => {
+          console.warn("error1", error); //TODO: add exception handling
+        });
 
-    handleReceiptUpload() {},
+      if (this.id) clearTimeout(this.id);
+      this.id = setTimeout(() => {
+        if (this.text === a) {
+          this.text = "";
+        }
+      }, 5000);
+    },
     handleSearch() {
       this.search = this.searchQuery.length >= 2;
       getItems(this.searchQuery)
@@ -212,6 +253,9 @@ export default {
         .catch((error) => {
           console.error(error);
         });
+    },
+    onLoaded() {
+      console.log("load");
     },
 
     async deleteItem(itemToDelete, deletePercentage) {
@@ -276,8 +320,17 @@ export default {
         purchaseDate: date,
         expirationDate: expirationDate,
         image: item.image,
+        EAN: item.ean,
         quantity: 1,
       };
+
+      if (typeof item.current_price.price === "number" && itemDTO) {
+        itemDTO.price = item.current_price.price;
+        if (statAddItemToFridgeDTO) {
+          statAddItemToFridgeDTO.price = item.current_price.price;
+          console.log(itemDTO.price);
+        }
+      }
 
       if (!this.isCurrentUserSuperUser) {
         await addItemToShoppingList(itemDTO, fridgeId, true).then(
@@ -312,11 +365,16 @@ export default {
 
     const fridgeStore = useFridgeStore();
     const itemStore = useItemStore();
-    const selectedTab = ref("fridge");
+    const selectedTab = ref(router.currentRoute.value.query.selectedTab || 'fridge');
+
+    history.replaceState(null, null, '/fridge');
+    const currentUrl = window.location.href;
+
     const searchItems = ref([]);
     const search = ref(false);
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
+    const isCameraToggled = ref(false);
     const isLoading = ref(false);
     const page = ref(0);
     const searchText = ref('');
@@ -428,6 +486,7 @@ export default {
       fridgeStore,
       search,
       itemStore,
+      isCameraToggled,
       searchText,
       searchHandler,
       selectedCategory,
@@ -443,16 +502,21 @@ export default {
     return {
       isExpanded: false,
       listView: false,
-      active: false,
-    }
+        active: false,
+    };
   },
 };
 </script>
 
 <style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
+}
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .25s ease;
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
 }
 
 .searchbar-wrapper {
@@ -586,15 +650,17 @@ select {
   width: 250px;
   appearance: none; /* Remove default styling for consistent appearance */
 }
-.fade-enter, .fade-leave-to {
-  opacity: 0;
+
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
 }
 
 .list-wrapper {
   display: grid;
   grid-template-columns: 50% 50%;
-  margin: 2%;
   z-index: 0;
+  margin: 2% 2% 80px;
 }
 
 .grey-bar {
@@ -748,19 +814,13 @@ input[type="text"]:focus {
 
 
 @media (max-width: 860px) {
-
   .list-wrapper {
     display: grid;
     grid-template-columns: 1fr;
   }
-
-
-
 }
 
-
 @media (max-width: 650px) {
-
   #filter-component {
     width: 100%;
   }
@@ -783,7 +843,7 @@ input[type="text"]:focus {
   }
 }
 
-@media only screen and (min-width: 350px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 650px) {
   #searchbtn {
     display: none;
   }
@@ -793,8 +853,7 @@ input[type="text"]:focus {
     overflow-y: scroll;
   }
 
-
-  #searchbtn{
+  #searchbtn {
     display: none;
   }
 
@@ -873,7 +932,7 @@ input[type="text"]:focus {
     display: flex;
     width: 100%;
     z-index: 0;
-    margin-bottom: 150px;
+    margin-bottom: 70px;
   }
 }
 </style>

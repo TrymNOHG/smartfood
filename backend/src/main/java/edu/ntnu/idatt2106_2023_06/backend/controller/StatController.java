@@ -93,6 +93,7 @@ public class StatController {
     @GetMapping(value="/get/user-stats/avg-thrown-per-day")
     @Operation(summary = "Get the average percentage of items thrown per day by the user")
     public ResponseEntity<Object> getUserAvgThrownPerDay(Authentication authentication) throws JsonProcessingException {
+        logger.info(statService.getAverageThrownPerDayUser());
         return ResponseEntity.ok(statService.getAverageThrownPerDayUser());
     }
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 import SessionToken from "@/features/SessionToken";
 
-const BASE_LISTING_URL = "http://localhost:8080/stat";
+const BASE_LISTING_URL = "http://localhost:8089/api/stat";
 export const deleteItemStats = async (statDeleteFromFridgeDTO) => {
     return await axios.post(`${BASE_LISTING_URL}/add/delete-item`, statDeleteFromFridgeDTO, {
         headers: {
@@ -18,20 +18,35 @@ export const addItemStats = async (statAddItemToFridgeDTO) => {
     });
 };
 
-export const getUserStats = async () => {
-    const response = await axios.get(`${BASE_LISTING_URL}/get/user-stats`, {
+export const getUserPercentageStats = async () => {
+    return await axios.get(`${BASE_LISTING_URL}/get/user-stats/avg-thrown-per-day`, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         },
     });
-    console.log("get user response: ", response)
-    return response;
 };
 
-export const getFridgeStats = async (fridgeId) => {
-    return await axios.get(`${BASE_LISTING_URL}/get/fridge-stats/${fridgeId}`, {
+export const getUserMoneyStats = async () => {
+    return await axios.get(`${BASE_LISTING_URL}/get/user-stats/money-wasted-per-day`, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         },
     });
 };
+
+export const getFridgePercentageStats = async (fridgeId) => {
+    return await axios.get(`${BASE_LISTING_URL}/get/fridge-stats/avg-thrown-per-day/${fridgeId}`, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
+
+export const getFridgeMoneyStats = async (fridgeId) => {
+    return await axios.get(`${BASE_LISTING_URL}/get/fridge-stats/money-wasted-per-day/${fridgeId}`, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};
+

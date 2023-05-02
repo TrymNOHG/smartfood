@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106_2023_06.backend.model.items;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipeItems;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -71,6 +72,12 @@ public class Item {
      */
     @Column(name = "picture_link")
     private String pictureLink;
+
+    /**
+     * The ean code of the item, can be null
+     */
+    @Column(name = "ean")
+    private String ean;
 
     /**
      * The items in the recipe.

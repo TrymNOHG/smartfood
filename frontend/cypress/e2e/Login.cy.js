@@ -1,9 +1,9 @@
-describe('Start to end: ', () => {
+describe('Testing the login: ', () => {
     const base_url_site = "http://localhost:5173";
-    const base_url_endpoint = "http://localhost:8080";
+    const base_url_endpoint = "http://localhost:8089/api";
 
     beforeEach(() => {
-        cy.intercept('POST', 'http://localhost:8080/user/login', {
+        cy.intercept('POST', 'http://localhost:8089/api/user/login', {
             statusCode: 200,
             body: {
                 token: 'my-user-token'
@@ -11,19 +11,19 @@ describe('Start to end: ', () => {
         }).as('loginRequest')
 
         cy.intercept('GET', `${base_url_endpoint}/user/get/info`, (req) => {
-            //req.headers['Authorization'] = `Bearer my-user-token`
             req.reply({
                 statusCode: 200,
                 body: {
                     userId: 123,
-                    username: 'johndoe',
-                    firstName: 'John',
-                    lastName: 'Doe', email: 'johndoe@example.com'
+                    username: 'tomaber',
+                    firstName: 'Tomas',
+                    lastName: 'Beranek',
+                    email: 'tomaber@gmail.com'
                 }
             })
         }).as('fetchUser')
 
-        cy.intercept('GET', `${base_url_endpoint}/fridge/loadAll?user=johndoe`, (req) => {
+        cy.intercept('GET', `${base_url_endpoint}/fridge/loadAll?user=tomaber`, (req) => {
             req.reply({
                 statusCode: 200,
                 body: {
@@ -60,5 +60,67 @@ describe('Start to end: ', () => {
         cy.contains('Home Fridge').should('be.visible');
     });
 });
+
+
+describe('Testin Errors: ', () => {
+    const base_url_site = "http://localhost:5173";
+    const base_url_endpoint = "http://localhost:8089/api";
+
+    beforeEach(() => {
+        cy.intercept('POST', 'http://localhost:8089/api/user/login', {
+            statusCode: 200,
+            body: {
+                token: 'my-user-token'
+            }
+        }).as('loginRequest')
+
+        cy.intercept('GET', `${base_url_endpoint}/user/get/info`, (req) => {
+            req.reply({
+                statusCode: 200,
+                body: {
+                    userId: 123,
+                    username: 'tomaber',
+                    firstName: 'Tomas',
+                    lastName: 'Beranek',
+                    email: 'tomaber@gmail.com'
+                }
+            })
+        }).as('fetchUser')
+
+        cy.intercept('GET', `${base_url_endpoint}/fridge/loadAll?user=tomaber`, (req) => {
+            req.reply({
+                statusCode: 200,
+                body: {
+                    fridgeDTOS: [
+                        {
+                            fridgeId: 88,
+                            fridgeName: 'Home Fridge'
+                        }
+                    ]
+                }
+            })
+        }).as('loadAllFridges')
+
+        cy.visit(`${base_url_site}`)
+
+        cy.contains('a', 'Logg inn').click()
+
+
+    })
+
+    it('error displayed when username missing', () => {
+        cy.get('input[name="password"]').type('12345678')
+
+        cy.get('button[type="submit"]').click()
+        cy.get('.has-errors').should('exist')
+    });
+
+    it('error displayed when password missing', () => {
+        cy.get('input[name="password"]').type('12345678')
+
+        cy.get('button[type="submit"]').click()
+        cy.get('.has-errors').should('exist')
+    });
+})
 
 

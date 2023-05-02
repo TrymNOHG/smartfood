@@ -1,23 +1,28 @@
 <template>
   <div class="cards-container">
-    <router-link to="/dinner/meal" @click="storeCurrentItem(meal)" id="item-link">
+    <router-link to="/dinner/meal" @click="storeCurrentMeal(meal)" id="item-link">
       <div class="card">
         <div class="front-side">
-          <img :src="meal.image" alt="item picture">
+          <img :src="meal.thumbnail" alt="item picture">
+          <div class="recipe-name-desktop">
+            <h2>{{ meal.recipeName }}</h2>
+          </div>
         </div>
         <div class="back-side">
           <div class="item-detail">
+            <div class="item-description">
+              <p>{{ meal.description }}</p>
+            </div>
             <div class="item-name">
-              <h2 id="item-name-h2">{{ meal.name }}</h2>
+              <h2 id="item-name-h2">{{ meal.recipeName }}</h2>
               <br>
             </div>
-            <h4 id="item-price">{{ $t('price') }} {{ meal.price }}; kr</h4>
-            <button v-if="isSuperUser" class="delete-btn" @click.prevent="deleteCard(meal)">
+          </div>
+          <button v-if="isSuperUser" class="delete-btn" @click.prevent="deleteCard(meal)">
               <span>
                 <font-awesome-icon icon="fa-solid fa-trash" class="icon delete-icon" />
               </span>
-            </button>
-          </div>
+          </button>
         </div>
       </div>
     </router-link>
@@ -30,6 +35,7 @@ import {number} from "yup";
 import swal from "sweetalert2";
 import {useItemStore} from "@/store/store";
 import Swal from "sweetalert2";
+import {useMealStore} from "../../store/store";
 
 export default {
   name: "BasicFridgeItem",
@@ -38,12 +44,6 @@ export default {
   props: {
     meal: {
       type: Object,
-      default: () => ({
-        description: String,
-        image: String,
-        name: String,
-        price: String,
-      })
     },
     isSuperUser: {
       type: Boolean,
@@ -53,8 +53,8 @@ export default {
 
   methods: {
 
-    storeCurrentItem(item){
-      this.itemStore.setCurrentItem(item);
+    storeCurrentMeal(meal){
+      this.mealStore.setCurrentMeal(meal);
     },
 
     deleteCard(item) {
@@ -125,9 +125,9 @@ export default {
 
   setup(props) {
     console.log(props.meal)
-    const itemStore = useItemStore()
+    const mealStore = useMealStore()
     return {
-      itemStore,
+      mealStore,
     }
   },
 }
@@ -228,7 +228,44 @@ img {
   color: white;
 }
 
+.recipe-name-desktop {
+  display: none;
+}
+
+.item-name {
+  display: none;
+}
+
+.item-description{
+  display: none;
+}
+
+@media (min-width: 651px) {
+  .recipe-name-desktop {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 5px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .item-description {
+    display: block;
+  }
+}
+
 @media (max-width: 650px) {
+
+    .item-name {
+      display: block;
+    }
+
+
   body{
     height: 80px;
   }

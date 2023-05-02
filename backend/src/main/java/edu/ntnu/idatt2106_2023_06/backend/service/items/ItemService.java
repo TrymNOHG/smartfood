@@ -96,6 +96,7 @@ public class ItemService implements IItemService {
             return item;
         }
 
+        System.out.println(itemDTO);
         Item i = ItemMapper.toItem(itemDTO, store);
         itemRepository.save(i);
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 import SessionToken from '@/features/SessionToken.js'
 
-const BASE_LISTING_URL = "http://localhost:8080/fridge";
+const BASE_LISTING_URL = "http://localhost:8089/api/fridge";
 
 export const getAllFridges = async (username) => {
     return await axios.get(`${BASE_LISTING_URL}/loadAll?user=${username}`);
@@ -24,7 +24,7 @@ export const updateFridge = async (fridgeDTO) => {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         }
-    });
+    })
 }
 
 export const addUserToFridge = async (fridgeUserDTO) => {
@@ -44,7 +44,6 @@ export const updateUserInFridge = async (fridgeUserDTO) => {
 };
 
 export const deleteUserFromFridge = async (fridgeUserDTO) => {
-    console.log(fridgeUserDTO);
     await axios.delete(`${BASE_LISTING_URL}/delete/user`, {
         data: fridgeUserDTO,
         headers: {

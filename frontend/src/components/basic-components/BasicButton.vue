@@ -18,6 +18,7 @@ export default {
 </script>
 
 <style scoped>
+
 button {
   width: 100%;
   height: 40px;
@@ -34,4 +35,5 @@ button:hover {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   background-color: #1e2eff;
 }
+
 </style>
