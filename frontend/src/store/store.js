@@ -8,7 +8,7 @@ import {
     updateFridge
 } from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
-import {addItemToFridge, deleteItemFromFridge, getItemsFromFridge} from "@/services/ItemService";
+import {addItemToFridge, deleteItemFromFridge, getItemsFromFridge, filterFridge} from "@/services/ItemService";
 import {
     addItemStats,
     deleteItemStats, getFridgeMoneyStats,
@@ -17,6 +17,7 @@ import {
     getUserPercentageStats
 } from "@/services/StatsService";
 import {keys} from "@dafcoe/vue-collapsible-panel";
+
 
 const storeUUID = UniqueId();
 
@@ -225,7 +226,15 @@ export const useItemStore = defineStore('itemStore', {
                 this.allItems = response.data;
             })
             return this.allItems;
-        }
+        },
+
+        async filterItemsInFridge(fridgeItemSearchDTO){
+            await filterFridge(fridgeItemSearchDTO).then(response => {
+                this.allItems = []
+                this.allItems = response.data.content;
+            })
+            return this.allItems
+        },
     },
 });
 
