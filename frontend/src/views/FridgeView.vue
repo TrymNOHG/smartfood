@@ -330,7 +330,6 @@ export default {
     const selectedTab = ref(router.currentRoute.value.query.selectedTab || 'fridge');
 
     history.replaceState(null, null, '/fridge');
-    const currentUrl = window.location.href;
 
     const searchItems = ref([]);
     const search = ref(false);

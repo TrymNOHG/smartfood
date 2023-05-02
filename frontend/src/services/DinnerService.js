@@ -18,3 +18,11 @@ export const loadRecipeByFridgeItems = async (fridgeId, page = 0, size = 10) => 
     });
     return response.data;
 };
+
+export const addIngredientsToShoppingList = async (recipeShoppingDTO) => {
+    return await axios.post(`${BASE_LISTING_URL}/addIngredients`, recipeShoppingDTO, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+};

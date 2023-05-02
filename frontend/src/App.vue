@@ -9,7 +9,7 @@
     <nav :class="{ 'center-profile': !hasCurrentFridge }">
       <ul v-if="!isOnAuthPage">
         <li v-if="hasCurrentFridge">
-          <RouterLink to="/fridge">
+          <RouterLink to="/fridge" :class="{ 'router-link-active': isFridgeRouteActive }">
             <img
               id="fridgeIcon"
               class="icon"
@@ -26,7 +26,7 @@
           </RouterLink>
         </li>
         <li v-if="hasCurrentFridge">
-          <RouterLink to="/dinner">
+          <RouterLink to="/dinner" :class="{ 'router-link-active': isDinnerRouteActive }">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-utensils" />
             </span>
@@ -102,6 +102,15 @@ export default {
     const currentFridge = computed(() => fridgeStore.getCurrentFridge);
     const hasCurrentFridge = computed(() => fridgeStore.hasCurrentFridge);
 
+    const isFridgeRouteActive = computed(() => {
+      return route.path.startsWith('/fridge');
+    });
+
+    const isDinnerRouteActive = computed(() => {
+      return route.path.startsWith('/dinner');
+    });
+
+
     const isOnRootPage = computed(() => {
       return route.path === "/";
     });
@@ -123,6 +132,8 @@ export default {
     const language = ref("NO");
 
     return {
+      isFridgeRouteActive,
+      isDinnerRouteActive,
       isOnAuthPage,
       language,
       changeLanguage,
