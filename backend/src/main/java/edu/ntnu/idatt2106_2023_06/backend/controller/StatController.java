@@ -155,4 +155,24 @@ public class StatController {
         return ResponseEntity.ok(statService.getMoneyUsedPerDayFridge(fridgeId));
     }
 
+    /**
+     * Get the average percentage of items thrown in total by the user.
+     */
+    @GetMapping(value="/get/user-stats/avg-thrown-total")
+    @Operation(summary = "Get the average percentage of items thrown in total by the user")
+    public ResponseEntity<Object> getUserAvgThrownTotal() throws JsonProcessingException {
+        return ResponseEntity.ok(statService.getAverageThrownTotalUser());
+    }
+
+    /**
+     * Get the average percentage of items thrown in total in a fridge.
+     *
+     * @param fridgeId          The id of the fridge.
+     */
+    @GetMapping(value="/get/fridge-stats/avg-thrown-total/{fridgeId}")
+    @Operation(summary = "Get the average percentage of items thrown in total by users in a fridge")
+    public ResponseEntity<Object> getFridgeAvgThrownTotal(@PathVariable Long fridgeId) throws JsonProcessingException {
+        return ResponseEntity.ok(statService.getAverageThrownTotalFridge(fridgeId));
+    }
+
 }

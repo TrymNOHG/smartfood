@@ -158,12 +158,18 @@ public class StatService implements IStatService {
     @Override
     public String getAverageThrownTotalUser() throws JsonProcessingException {
         Long userId = checkUserIsAuthenticated();
-
-        return null;
+        List<Statistics> stats = statRepository.findAllByUserAndStatType(userId, 1L);
+        return statisticsToJsonTotalThrowRate(stats);
     }
 
     @Override
     public String getAverageThrownTotalFridge(long fridgeId) throws JsonProcessingException {
+        checkValidUserInFridge(fridgeId);
+        List<Statistics> stats = statRepository.findAllByFridgeAndStatType(fridgeId, 1L);
+        return statisticsToJsonTotalThrowRate(stats);
+    }
+
+    private void checkValidUserInFridge(long fridgeId) {
         Long userId = checkUserIsAuthenticated();
         fridgeRepository.findByFridgeId(fridgeId).orElseThrow(
                 () -> new FridgeNotFoundException(fridgeId)
@@ -174,7 +180,6 @@ public class StatService implements IStatService {
         if(!fridgeService.userExistsInFridge(fridgeId, user.getUsername())) {
             throw new UnauthorizedException(user.getUsername());
         }
-        return null;
     }
 
     @Override
@@ -294,30 +299,13 @@ public class StatService implements IStatService {
     }
 
     private String statisticsToJsonTotalThrowRate(List<Statistics> stats) throws JsonProcessingException {
-        HashMap<String, Pair<Double, Integer>> averageThrownPerDayPair = new HashMap<>();
+        Pair<Double, Integer> pair = new Pair<>(0.0, 0);
         for(Statistics stat : stats) {
-            String date = stat.getTimestamp().toString().substring(0, 10);
-            if(!averageThrownPerDayPair.containsKey(date)) {
-                averageThrownPerDayPair.put(date, new Pair<>(stat.getStatValue()*stat.getQuantity(), stat.getQuantity()));
-            } else {
-                Pair<Double, Integer> pair = averageThrownPerDayPair.get(date);
-                averageThrownPerDayPair.put(date, new Pair<>(pair.getFirst() + stat.getStatValue()*stat.getQuantity(), (int) pair.getSecond() + stat.getQuantity()));
-            }
+            pair.setFirst(pair.getFirst() + stat.getStatValue()*stat.getQuantity());
+            pair.setSecond(pair.getSecond() + stat.getQuantity());
         }
 
-        ArrayList<Pair<String, Double>> averageThrownPerDaySortedByDate = new ArrayList<>();
-        HashSet<String> processedDates = new HashSet<>();
-
-        for(Statistics stat : stats) {
-            String date = stat.getTimestamp().toString().substring(0, 10);
-            if (!processedDates.contains(date)) {
-                Pair<Double, Integer> pair = averageThrownPerDayPair.get(date);
-                averageThrownPerDaySortedByDate.add(new Pair<>(date, pair.getFirst() / pair.getSecond()));
-                processedDates.add(date);
-            }
-        }
-
-        return objectMapper.writeValueAsString(averageThrownPerDaySortedByDate);
+        return Double.toString(pair.getFirst() / pair.getSecond());
     }
 }
 
