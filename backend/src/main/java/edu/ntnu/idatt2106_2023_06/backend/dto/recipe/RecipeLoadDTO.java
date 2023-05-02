@@ -1,16 +1,23 @@
 package edu.ntnu.idatt2106_2023_06.backend.dto.recipe;
 
-import lombok.Builder;
-import lombok.NonNull;
+import lombok.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 //TODO: make sure instructions and parts arrive in the correct order.
 @Builder
-public record RecipeLoadDTO(@NonNull String recipeName, String description,
-        String author, int servingSize, int difficulty,
-        String thumbnail, double cookingTime, int numMatchingItems,
-        @NonNull List<InstructionDTO> instructions,
-        @NonNull List<RecipePartDTO> recipeParts,
-        @NonNull List<RecipeAllergenDTO> allergens) {
+@AllArgsConstructor
+@RequiredArgsConstructor
+@Getter
+@Setter
+public class RecipeLoadDTO{
+    @NonNull private String recipeName;
+    private String description, author, thumbnail;
+    private int servingSize, difficulty, numMatchingItems;
+    private double cookingTime;
+    @NonNull private List<InstructionDTO> instructions;
+    @NonNull private List<RecipePartDTO> recipeParts;
+    @NonNull private List<RecipeAllergenDTO> allergens;
+
 }
