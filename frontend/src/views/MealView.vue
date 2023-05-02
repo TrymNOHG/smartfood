@@ -9,6 +9,7 @@
     <div class="item">
       <meal-header :meal="meal"/>
       <meal-info :meal="meal"/>
+      <button @click="addMissingItemsToShoppingList" class="add-missing-items-btn">{{ $t('add_missing_items') }}</button>
       <div class="info-delete-wrapper">
           <recipe-parts id="recipe-parts" :recipe-parts="meal.recipeParts"></recipe-parts>
           <instructions id="instructions" :instructions="meal.instructions"></instructions>
@@ -23,6 +24,9 @@ import mealHeader from "@/components/mealDescription/mealHeader.vue";
 import MealInfo from "../components/mealDescription/mealInfo.vue";
 import recipeParts from "../components/mealDescription/RecipeParts.vue";
 import Instructions from "../components/mealDescription/Instructions.vue";
+import router from "../router/router";
+import {addItemToShoppingList} from "../services/ItemService";
+import swal from "sweetalert2";
 
 
 export default {
@@ -38,11 +42,67 @@ export default {
     return {
       meal
     };
-  }
+  },
+  computed: {
+    missingItemIds() {
+      const ids = [];
+
+      this.meal.recipeParts.forEach(part => {
+        part.ingredients.forEach(ingredient => {
+          if (!ingredient.hasItem) {
+            ids.push(ingredient.itemId);
+          }
+        });
+      });
+
+      return ids;
+    },
+  },
+  methods: {
+    async addMissingItemsToShoppingList() {
+      try {
+
+        for (const id of this.missingItemIds) {
+          await addItemToShoppingList(id);
+        }
+        swal.fire({
+          title: this.$t('success'),
+          text: this.$t('success_add_missing_items'),
+          icon: 'success',
+          confirmButtonText: this.$t('ok')
+        });
+        router.push({name: 'cart'});
+      } catch (e) {
+        swal.fire({
+          title: this.$t('error'),
+          text: this.$t('error_add_missing_items'),
+          icon: 'error',
+          confirmButtonText: this.$t('ok')
+        });
+      }
+      console.log("Adding missing items to shopping list:", this.missingItemIds);
+    },
+  },
 };
 </script>
 
 <style scoped>
+
+.add-missing-items-btn {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+
 .item {
   margin-top: 5%;
   grid-column: 2;
