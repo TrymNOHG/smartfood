@@ -2,7 +2,7 @@ import {defineStore} from 'pinia'
 import {checkSuperUserStatus, getUser} from "@/services/UserService"
 import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
-import {addItemToFridge, deleteItemFromFridge, getItemsFromFridge} from "@/services/ItemService";
+import {addItemToFridge, deleteItemFromFridge, getItemsFromFridge, filterFridge} from "@/services/ItemService";
 import {
     addItemStats,
     deleteItemStats, getFridgeMoneyStats,
@@ -10,6 +10,7 @@ import {
     getUserMoneyStats,
     getUserPercentageStats
 } from "@/services/StatsService";
+
 
 const storeUUID = UniqueId();
 
@@ -199,7 +200,15 @@ export const useItemStore = defineStore('itemStore', {
                 this.allItems = response.data;
             })
             return this.allItems;
-        }
+        },
+
+        async filterItemsInFridge(fridgeItemSearchDTO){
+            await filterFridge(fridgeItemSearchDTO).then(response => {
+                this.allItems = []
+                this.allItems = response.data.content;
+            })
+            return this.allItems
+        },
     },
 });
 

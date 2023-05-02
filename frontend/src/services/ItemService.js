@@ -92,4 +92,15 @@ export const updateShoppingListItem = async (shoppingItemUpdateDTO) => {
     });
 };
 
+export const filterFridge = async (fridgeItemSearchDTO) => {
+    const token = await SessionToken();
+    return await axios.post( `${BASE_LISTING_URL}/fridge/search`,fridgeItemSearchDTO,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+
+        });
+}
+
 
