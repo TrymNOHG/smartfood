@@ -1,24 +1,26 @@
 <template>
   <div class="meal-header">
     <div class="meal-image">
-      <img :src="meal.thumbnailLink" alt="meal picture">
+      <img :src="meal.thumbnail" alt="meal picture">
     </div>
-    <h1 class="meal-name">{{ meal.recipeName }}</h1>
+
+    <div class="meal-info">
+      <h1 class="meal-name">{{ meal.recipeName }}</h1>
+      <hr>
+      <p id="description">{{ meal.description }}</p>
+    </div>
   </div>
 </template>
 
 <script>
-import {number} from "yup";
-
 export default {
   name: "mealHeader",
-
   props: {
     meal: {
       type: Object,
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
@@ -28,52 +30,64 @@ export default {
   margin-bottom: 20px;
 }
 
-
 .meal-image {
-  width: 200px;
-  height: 150px;
   margin-right: 50px;
-
-  position: relative;
 }
 
 .meal-image img {
-  width: 95%;
-  height: 95%;
   object-fit: contain;
-  position: absolute;
-  bottom: 0;
-  right: 0;
+  width: 100%;
+}
+
+.meal-info {
+  display: flex;
+  flex-direction: column;
 }
 
 .meal-name {
   font-size: 24px;
   font-weight: bold;
-  border-bottom: 2px solid black;
-  padding-bottom: 5px;
   display: flex;
-  flex-direction: row-reverse;
   justify-content: flex-start;
 }
 
-@media only screen and (max-width: 768px) {
-  .meal-header {
-    margin-bottom: 10px;
-  }
-
-  .meal-image {
-    width: 200px;
-    height: 150px
-  }
-
-  .meal-name {
-    font-size: 20px;
-  }
+hr {
+  border: 0;
+  border-bottom: 2px solid black;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
+#description {
+  font-size: 18px;
+}
+
+  @media only screen and (max-width: 768px) {
+    .meal-header {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .meal-image {
+      margin-right: 0;
+      margin-bottom: 10px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .meal-name {
+      font-size: 20px;
+      text-align: center;
+    }
+
+    #description {
+      font-size: 16px;
+      text-align: center;
+    }
+  }
+
 @media only screen and (min-width: 350px) and (max-width: 480px) {
-
-
 
 }
 </style>

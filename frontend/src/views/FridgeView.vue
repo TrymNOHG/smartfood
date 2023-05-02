@@ -3,7 +3,7 @@
     <div class="members-fridge">
       <div
         id="toggle-button"
-        class="link"
+        class="link toggle-members"
         @click="selectedTab = 'members'"
         :class="{ active: selectedTab === 'members' }"
       >
@@ -112,7 +112,6 @@ import {
   VueCollapsiblePanelGroup,
   VueCollapsiblePanel,
 } from "@dafcoe/vue-collapsible-panel";
-import { useRoute } from "vue-router";
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import { useFridgeStore, useItemStore } from "@/store/store";
@@ -385,8 +384,8 @@ export default {
 .list-wrapper {
   display: grid;
   grid-template-columns: 50% 50%;
-  margin: 2%;
   z-index: 0;
+  margin: 2% 2% 80px;
 }
 
 .grey-bar {
@@ -659,7 +658,7 @@ input[type="text"]:not(:focus) {
     display: flex;
     width: 100%;
     z-index: 0;
-    margin-bottom: 150px;
+    margin-bottom: 70px;
   }
 }
 </style>

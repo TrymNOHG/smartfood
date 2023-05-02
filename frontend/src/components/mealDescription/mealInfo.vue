@@ -1,18 +1,26 @@
 <template>
-  <div>
+  <div class="meal-info-container">
     <div class="meal-info">
-      <h3>{{ $t('serving_size') }}: {{ meal.servingSize }}</h3>
-      <h3>{{ $t('cook_time') }}: {{ meal.cookTime }} {{ $t('minutes') }}</h3>
-      <h3>{{ $t('difficulty') }}: <span class="difficulty-stars">{{ difficultyEmojis }}</span></h3>
+      <h3>{{ $t('serving_size') }}:</h3>
+      <span class="serving-size">{{ meal.servingSize }}</span>
+      <h3>{{ $t('cook_time') }}:</h3>
+      <span class="cooking-time"> {{ meal.cookingTime }} {{ $t('minutes') }}</span>
+      <h3>{{ $t('difficulty') }}:</h3>
+      <span class="difficulty-stars">{{ difficultyEmojis }}</span>
+      <h3>{{ $t('author') }}:</h3>
+      <span id="meal-auther">{{ meal.author }}</span>
     </div>
-    <div class="allergens">
+    <div class="allergens-container">
       <h3>{{ $t('allergens') }}:</h3>
       <ul>
-        <li v-for="allergen in meal.allergens" :key="allergen">{{ allergen }}</li>
+        <li v-for="allergen in meal.allergens" :key="allergen.displayName">
+          {{ allergen.displayName }}
+        </li>
       </ul>
     </div>
   </div>
 </template>
+
 <script>
 export default {
   name: 'MealInfo',
@@ -37,25 +45,23 @@ export default {
   },
 };
 </script>
+
 <style scoped>
+.meal-info-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
 .meal-info,
-.recipe-parts,
-.allergens {
+.allergens-container {
   padding: 20px;
 }
 
-.meal-info h3,
-.allergens h3 {
-  margin: 1em 0;
+.meal-info{
+
 }
 
-.recipe-parts h3 {
-  margin-top: 1em;
-}
-
-.item-info {
-  margin: 1em 0;
-}
 
 .difficulty-stars {
   font-size: 1.2em;
