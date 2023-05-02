@@ -150,10 +150,13 @@ import router from "../router/router";
 import { StreamBarcodeReader } from "vue-barcode-reader";
 
 interface Filter {
-  key: string;
-  operator: string;
-  field_type: string;
-  value: string | number;
+  fridgeId: number;
+  productName: string;
+  sortField: string;
+  sortOrder: string;
+  page: number;
+  pageSize: number;
+
 }
 
 export default {
@@ -212,19 +215,16 @@ export default {
 
       await addItemToShoppingList(itemDTO, fridge.fridgeId, false).then(
         async (response) => {
-          console.log("response", response);
         }
       );
     },
     async onDecode(a, b, c) {
       this.text = a;
       const barcode = a;
-      console.log(barcode);
       await getItemByBarcode(barcode)
         .then((response) => {
           if (response !== undefined) {
             this.searchItems = response.products;
-            console.log(response.products);
             this.search = true;
           } else {
             console.log("Something went wrong");
@@ -275,7 +275,6 @@ export default {
         quantity: itemToDelete.quantity,
       };
 
-      console.log(statDeleteFromFridgeDTO);
       await this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO);
       await this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO);
       await this.itemStore
@@ -328,7 +327,6 @@ export default {
         itemDTO.price = item.current_price.price;
         if (statAddItemToFridgeDTO) {
           statAddItemToFridgeDTO.price = item.current_price.price;
-          console.log(itemDTO.price);
         }
       }
 
@@ -402,24 +400,36 @@ export default {
     });
 
     const loadMore = () => {
-      console.log(sort);
       if (!isLoading.value) {
         isLoading.value = true;
 
 
         const filters: Filter[] = [
           {
-            key: selectedSearchParam.value,
-            operator: 'LIKE',
-            field_type: 'STRING',
-            value: searchText.value,
+            fridgeId: fridge.fridgeId,
+            productName: searchText.value,
+            sortField: sort.value.key,
+            sortOrder: sort.value.direction,
+            page: page.value,
+            pageSize: 15,
           },
         ];
 
-        itemStore.filterItemsInFridge(filters, sort, page).then(response => {
-          console.log(response.data);
+        const itemSearch = {
+          fridgeId: fridge.fridgeId,
+          productName: searchText.value,
+          sortField: sort.value.key,
+          sortOrder: sort.value.direction,
+          page: page.value,
+          pageSize: 15,
+        }
+
+
+
+        itemStore.filterItemsInFridge(itemSearch).then(response => {
+
           page.value++;
-          fridgeItems.value = response.data;
+          fridgeItems.value = [ ...fridgeItems.value, ...response];
           isLoading.value = false;
         })
             .catch((error) => {
@@ -550,7 +560,7 @@ margin-top: 10px;
   padding: 16px;
   background-color: #f8f8f8;
   margin-top: 10px;
-  border-radius: 8px;
+  border-radius: 50px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 0;
   width: 70%;
@@ -564,12 +574,12 @@ margin-top: 10px;
   transform: translateX(2000px);
   -webkit-transform: translateX(2000px);
 margin-top: 10px;
-  height: 90%;
-  width: 10%;
+  height: 86%;
+  width: 13%;
   margin-left: auto;
   margin-right: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  border-radius: 50px;
   background-color: transparent;
 
 }
@@ -584,6 +594,7 @@ margin-top: 10px;
 
 #search-wrapper input{
   width: 100%;
+  border-radius: 50px;
 }
 #sort-wrapper {
   display: flex;
@@ -593,6 +604,10 @@ margin-top: 10px;
   border-radius: 20px;
 }
 
+#sort-wrapper select{
+  width: 100%;
+  border-radius: 50px;
+}
 
 .slide-in {
   animation: slide-in 0.5s forwards;
@@ -813,6 +828,7 @@ input[type="text"]:focus {
 
 
 
+
 @media (max-width: 860px) {
   .list-wrapper {
     display: grid;
@@ -868,7 +884,61 @@ input[type="text"]:focus {
     height: 60px;
     border-radius: 20px 20px 0 0;
   }
+  .slide-in{
+    display: block !important;
 
+  }
+  .slide-out{
+    display: none !important;
+  }
+
+  #filter{
+    all: unset;
+    width: 100%;
+    margin: 10px;
+    padding: 10px;
+    background-color: #31c48d;
+    border-radius: 20px;
+  }
+
+  #filter input{
+    width: 100%;
+    border-radius: 50px;
+  }
+
+  #filter select{
+    width: 100%;
+    border-radius: 50px;
+  }
+
+
+
+
+
+
+  #search-wrapper{
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  #sort-wrapper{
+    width: 100%;
+  }
+
+  #filter-component{
+    display: none !important;
+  }
+
+  .searchbar-wrapper{
+    gap: 0;
+    flex-wrap: wrap;
+  }
+
+  #toggle{
+    width: 100%;
+    margin-left: 20%;
+    margin-right: 20%;
+  }
   .wrapper {
     z-index: -1;
     grid-template-rows: 1fr;
