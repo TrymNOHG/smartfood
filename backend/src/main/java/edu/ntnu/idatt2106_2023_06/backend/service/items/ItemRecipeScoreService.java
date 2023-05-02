@@ -80,8 +80,24 @@ public class ItemRecipeScoreService {
     private double getScore(Item item, RecipeItems ingredient) {
         if(item.getEan().equals(ingredient.getItem().getEan())) return 1.0;
         else {
-            return new JaroWinklerDistance().apply(item.getProductName(), ingredient.getItem().getProductName());
+            String regex = "\\b\\d+\\s*g\\b|\\b\\d+%\\b|\\b[A-Za-z]{2,}\\b";
+            String coreProductName = item.getProductName().replaceAll(regex, "").trim();
+            String coreIngredientName = ingredient.getItem().getProductName().replaceAll(regex, "").trim();
+
+            double nameSimilarity = new JaroWinklerDistance()
+                    .apply(coreProductName.toLowerCase(), coreIngredientName.toLowerCase());
+
+            double descSimilarity = 0;
+            if (item.getDesc() != null && ingredient.getItem().getDesc() != null) {
+                descSimilarity = new JaroWinklerDistance()
+                        .apply(item.getDesc().toLowerCase(), ingredient.getItem().getDesc().toLowerCase());
+            }
+
+            double score = ((nameSimilarity + 0.5 * descSimilarity) / 1.5);
+            return Math.pow(score, 1.5);
         }
     }
+
+
 
 }

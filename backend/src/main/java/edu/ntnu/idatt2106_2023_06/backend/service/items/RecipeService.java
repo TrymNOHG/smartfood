@@ -172,6 +172,7 @@ public class RecipeService {
             JsonNode rootNode = new ObjectMapper().readTree(responseBody);
 
             Recipe tempRecipe = createRecipeFromJsonNode(rootNode);
+            if(tempRecipe == null) return;
 
             logger.info("Saving recipe to database.");
             final Recipe recipe = recipeRepository.save(tempRecipe);
@@ -208,6 +209,14 @@ public class RecipeService {
         logger.info("Creating recipe");
         String recipeName = rootNode.at("/_source/name").asText();
         String recipeDesc = rootNode.at("/_source/description").asText();
+
+        Recipe recipe = recipeRepository.findRecipeByRecipeNameContainingIgnoreCase(recipeName)
+                .orElse(null);
+
+        if(recipe != null && recipe.getDescription().equals(recipeDesc)) {
+            return null;
+        }
+
         String author = "Meny";
         int servingSize = rootNode.at("/_source/numberOfPersons").asInt();
         int difficultyEstimate = rootNode.at("/_source/difficultyEstimate").asInt();
