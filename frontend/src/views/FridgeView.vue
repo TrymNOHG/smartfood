@@ -59,7 +59,11 @@
                 :image="item.image"
                 :text="item.name"
                 :store="item.store.name"
-                :price="item.current_price"
+                :price="
+                  typeof item.current_price === 'number'
+                    ? item.current_price
+                    : item.current_price.price
+                "
                 style="text-align: center"
                 @click="addItemToFridge(this.fridge.fridgeId, item)"
               />

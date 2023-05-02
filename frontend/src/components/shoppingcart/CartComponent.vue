@@ -204,9 +204,10 @@ export default {
         .then((response) => {
           if (response !== undefined) {
             searchItems.value = response.products;
+
             console.log(response.products);
             search.value = true;
-            scannerActive.value = false;
+            stopScanner();
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -322,7 +323,7 @@ export default {
           fridgeId: currentFridge.fridgeId,
         };
 
-        itemStatDTOList.push(statAddItemToFridgeDTO);
+        itemStatDTOList.push(statAddItemToFridgDTO);
         itemRemoveDTOList.push(ItemRemoveDTO);
       });
 
