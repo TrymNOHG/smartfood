@@ -3,7 +3,9 @@ package edu.ntnu.idatt2106_2023_06.backend.service.items;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipePartDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.RecipeNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.recipe.RecipeMapper;
@@ -79,16 +81,19 @@ public class RecipeService {
 
         List<RecipeLoadDTO> recipeLoadDTOs = recipes.getContent()
                 .stream()
-                .map(recipe ->
-                    RecipeMapper.toRecipeLoadDTO(recipe, countMatchingItems(recipe, fridgeId))
+                .map(recipe -> {
+                            RecipeLoadDTO recipeLoadDTO = RecipeMapper.toRecipeLoadDTO(recipe);
+                            recipeLoadDTO.setNumMatchingItems(countMatchingItems(recipeLoadDTO, fridgeId));
+                            return recipeLoadDTO;
+                        }
                 )
-                .sorted(Comparator.comparing(RecipeLoadDTO::numMatchingItems).reversed())
+                .sorted(Comparator.comparing(RecipeLoadDTO::getNumMatchingItems).reversed())
                 .collect(Collectors.toList());
 
         return new PageImpl<>(recipeLoadDTOs, pageable, recipes.getTotalElements());
     }
 
-    private int countMatchingItems(Recipe recipe, Long fridgeId) {
+    private int countMatchingItems(RecipeLoadDTO recipeDTO, Long fridgeId) {
         Set<Long> fridgeItemIds = fridgeItemsRepository.findAllByFridge_FridgeId(fridgeId)
                 .orElseThrow(() -> new FridgeNotFoundException(fridgeId))
                 .stream()
@@ -96,14 +101,13 @@ public class RecipeService {
                 .map(Item::getItemId)
                 .collect(Collectors.toSet());
 
-        return recipe.getRecipeParts().stream()
-                .map(RecipePart::getItemsInRecipe)
+        return ((Long) recipeDTO.getRecipeParts().stream()
+                .map(RecipePartDTO::ingredients)
                 .flatMap(Collection::stream)
-                .map(RecipeItems::getItem)
-                .map(Item::getItemId)
-                .filter(fridgeItemIds::contains)
-                .collect(Collectors.toSet())
-                .size();
+                .filter(recipeItemDTO -> fridgeItemIds.contains(recipeItemDTO.getItemId()))
+                .peek(recipeItemDTO -> recipeItemDTO.setHasItem(true))
+                .count())
+                .intValue();
     }
 
 
