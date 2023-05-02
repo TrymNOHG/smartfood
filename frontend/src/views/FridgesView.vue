@@ -341,7 +341,7 @@ export default {
           },
             {
                 id: 'Welcome',
-                text:  `${$t("welcome")}` ,
+                text:  `` ,
                 buttons:[
                     {
                         action: function () {
