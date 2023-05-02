@@ -69,27 +69,46 @@
       </div>
     </div>
     <div class="searchbar-wrapper">
-
       <button id="toggle" @click="handleClick">Filter</button>
-      <div id="filter" class="slide-in" :class="active ? 'slide-in': 'slide-out'">
-      <div id="search-wrapper">
-        <input type="text" v-model="searchText" @input="searchHandler()" :placeholder="$t('search')+'...'" />
+      <div
+        id="filter"
+        class="slide-in"
+        :class="active ? 'slide-in' : 'slide-out'"
+      >
+        <div id="search-wrapper">
+          <input
+            type="text"
+            v-model="searchText"
+            @input="searchHandler()"
+            :placeholder="$t('search') + '...'"
+          />
+        </div>
+
+        <div id="sort-wrapper">
+          <select v-model="sort" @change="searchHandler()">
+            <option :value="sortOptions[0]">
+              {{ $t("Utløpsdato - Synkende") }}
+            </option>
+            <option :value="sortOptions[1]">
+              {{ $t("Utløpsdato - Stigende") }}
+            </option>
+            <option :value="sortOptions[2]">
+              {{ $t("Kjøpsdato - Synkende") }}
+            </option>
+            <option :value="sortOptions[3]">
+              {{ $t("Kjøpsdato - Stigende") }}
+            </option>
+          </select>
+        </div>
       </div>
 
-      <div id="sort-wrapper">
-        <select v-model="sort" @change="searchHandler()">
-          <option :value=sortOptions[0]>{{ $t('Utløpsdato - Synkende') }}</option>
-          <option :value=sortOptions[1]>{{ $t('Utløpsdato - Stigende') }}</option>
-          <option :value=sortOptions[2]>{{ $t('Kjøpsdato - Synkende') }}</option>
-          <option :value=sortOptions[3]>{{ $t('Kjøpsdato - Stigende') }}</option>
-        </select>
+      <div
+        id="filter-component"
+        class="slide-in"
+        :class="active ? 'slide-in' : 'slide-out'"
+      >
+        <filter-bar @listing="listing" />
       </div>
-      </div>
-
-      <div id="filter-component" class="slide-in" :class="active ? 'slide-in': 'slide-out'">
-        <filter-bar  @listing="listing"/>
-      </div>
-
     </div>
     <transition name="fade">
       <div
@@ -125,8 +144,6 @@
 </template>
 
 <script lang="ts">
-
-
 import {
   VueCollapsiblePanelGroup,
   VueCollapsiblePanel,
@@ -134,7 +151,7 @@ import {
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import { useFridgeStore, useItemStore } from "@/store/store";
-import {onMounted, onUnmounted, ref} from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import { getItemByBarcode, getItems } from "@/services/ApiService";
@@ -152,7 +169,6 @@ interface Filter {
   sortOrder: string;
   page: number;
   pageSize: number;
-
 }
 
 export default {
@@ -178,12 +194,11 @@ export default {
   },
 
   methods: {
-
     handleClick() {
-        this.active = !this.active;
-      },
+      this.active = !this.active;
+    },
 
-    listing(bool){
+    listing(bool) {
       this.listView = bool;
     },
 
@@ -206,8 +221,7 @@ export default {
       };
 
       await addItemToShoppingList(itemDTO, fridge.fridgeId, false).then(
-        async (response) => {
-        }
+        async (response) => {}
       );
     },
 
@@ -321,8 +335,6 @@ export default {
       }
     },
 
-
-
     initScanner() {
       Quagga.init(
         {
@@ -385,12 +397,13 @@ export default {
   },
 
   setup() {
-
     const fridgeStore = useFridgeStore();
     const itemStore = useItemStore();
-    const selectedTab = ref(router.currentRoute.value.query.selectedTab || 'fridge');
+    const selectedTab = ref(
+      router.currentRoute.value.query.selectedTab || "fridge"
+    );
 
-    history.replaceState(null, null, '/fridge');
+    history.replaceState(null, null, "/fridge");
     const currentUrl = window.location.href;
 
     const searchItems = ref([]);
@@ -401,7 +414,7 @@ export default {
     const isCameraToggled = ref(false);
     const isLoading = ref(false);
     const page = ref(0);
-    const searchText = ref('');
+    const searchText = ref("");
     const selectedCategory = ref(0);
     const categories = ref<Array<{ id: number; name: string }>>([]);
 
@@ -412,14 +425,11 @@ export default {
       { key: "purchaseDate", direction: "ASC" },
     ]);
 
-    const searchParamOptions = ref([
-      "productName",
-    ]);
+    const searchParamOptions = ref(["productName"]);
 
     const selectedSearchParam = ref(searchParamOptions.value[0]);
 
     const sort = ref(sortOptions.value[0]);
-
 
     itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
       fridgeItems.value = items;
@@ -428,7 +438,6 @@ export default {
     const loadMore = () => {
       if (!isLoading.value) {
         isLoading.value = true;
-
 
         const filters: Filter[] = [
           {
@@ -448,23 +457,21 @@ export default {
           sortOrder: sort.value.direction,
           page: page.value,
           pageSize: 15,
-        }
+        };
 
-
-
-        itemStore.filterItemsInFridge(itemSearch).then(response => {
-
-          page.value++;
-          fridgeItems.value = [ ...fridgeItems.value, ...response];
-          isLoading.value = false;
-        })
-            .catch((error) => {
-              console.error(error);
-              isLoading.value = false;
-            });
+        itemStore
+          .filterItemsInFridge(itemSearch)
+          .then((response) => {
+            page.value++;
+            fridgeItems.value = [...fridgeItems.value, ...response];
+            isLoading.value = false;
+          })
+          .catch((error) => {
+            console.error(error);
+            isLoading.value = false;
+          });
       }
     };
-
 
     const searchHandler = () => {
       page.value = 0;
@@ -472,19 +479,17 @@ export default {
       loadMore();
     };
 
-
-
     const observeBottom = () => {
       const bottomElement = document.querySelector("#bottom-element");
       const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                loadMore();
-              }
-            });
-          },
-          { threshold: 1 }
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              loadMore();
+            }
+          });
+        },
+        { threshold: 1 }
       );
       if (bottomElement) {
         observer.observe(bottomElement);
@@ -504,14 +509,13 @@ export default {
       }
     });
 
-
     const itemAmount = ref(1);
     const submitMessage = ref("norvegia");
     const searchQuery = ref("");
-
-
+    const active = ref(false);
 
     return {
+      active,
       fridge,
       searchItems,
       fridgeItems,
@@ -569,7 +573,7 @@ export default {
 
 .fade-enter,
 .fade-leave-to {
-    opacity: 0;
+  opacity: 0;
 }
 
 .searchbar-wrapper {
@@ -580,8 +584,8 @@ export default {
   border-radius: 8px;
 }
 
-#toggle{
-margin-top: 10px;
+#toggle {
+  margin-top: 10px;
   margin-left: 10px;
   height: 40px;
   width: 8%;
@@ -590,12 +594,12 @@ margin-top: 10px;
   border: 0;
 }
 
-#toggle:hover{
+#toggle:hover {
   background-color: #238b65;
   cursor: pointer;
 }
 
-#filter{
+#filter {
   display: flex;
   align-content: center;
   justify-content: center;
@@ -610,13 +614,12 @@ margin-top: 10px;
   background-color: #31c48d;
   transform: translateX(2000px);
   -webkit-transform: translateX(2000px);
-
 }
 
-#filter-component{
+#filter-component {
   transform: translateX(2000px);
   -webkit-transform: translateX(2000px);
-margin-top: 10px;
+  margin-top: 10px;
   height: 86%;
   width: 13%;
   margin-left: auto;
@@ -624,10 +627,9 @@ margin-top: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 50px;
   background-color: transparent;
-
 }
 
-#search-wrapper{
+#search-wrapper {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -635,7 +637,7 @@ margin-top: 10px;
   border-radius: 20px;
 }
 
-#search-wrapper input{
+#search-wrapper input {
   width: 100%;
   border-radius: 50px;
 }
@@ -647,7 +649,7 @@ margin-top: 10px;
   border-radius: 20px;
 }
 
-#sort-wrapper select{
+#sort-wrapper select {
   width: 100%;
   border-radius: 50px;
 }
@@ -655,7 +657,6 @@ margin-top: 10px;
 .slide-in {
   animation: slide-in 0.5s forwards;
   -webkit-animation: slide-in 0.5s forwards;
-
 }
 
 .slide-out {
@@ -664,30 +665,38 @@ margin-top: 10px;
 }
 
 @keyframes slide-in {
-  100% { transform: translateX(0%);
+  100% {
+    transform: translateX(0%);
     opacity: 1;
-  pointer-events: all}
+    pointer-events: all;
+  }
 }
 
 @-webkit-keyframes slide-in {
-  100% { -webkit-transform: translateX(0%);
+  100% {
+    -webkit-transform: translateX(0%);
     opacity: 1;
-    pointer-events: all}
+    pointer-events: all;
+  }
 }
 
 @keyframes slide-out {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(2000px); }
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(2000px);
+  }
 }
 
 @-webkit-keyframes slide-out {
-  0% { -webkit-transform: translateX(0%); }
-  100% { -webkit-transform: translateX(2000px); }
+  0% {
+    -webkit-transform: translateX(0%);
+  }
+  100% {
+    -webkit-transform: translateX(2000px);
+  }
 }
-
-
-
-
 
 input[type="text"],
 select {
@@ -711,7 +720,7 @@ select {
 
 .fade-enter,
 .fade-leave-to {
-    opacity: 0;
+  opacity: 0;
 }
 
 .list-wrapper {
@@ -798,7 +807,6 @@ input[type="text"]:focus {
   display: block;
 }
 
-
 .dropdown a:hover {
   background-color: #ddd;
 }
@@ -877,8 +885,6 @@ input[type="text"]:focus {
   }
 }
 
-
-
 @media (max-width: 860px) {
   .list-wrapper {
     display: grid;
@@ -934,15 +940,14 @@ input[type="text"]:focus {
     height: 60px;
     border-radius: 20px 20px 0 0;
   }
-  .slide-in{
+  .slide-in {
     display: block !important;
-
   }
-  .slide-out{
+  .slide-out {
     display: none !important;
   }
 
-  #filter{
+  #filter {
     all: unset;
     width: 100%;
     margin: 10px;
@@ -951,40 +956,35 @@ input[type="text"]:focus {
     border-radius: 20px;
   }
 
-  #filter input{
+  #filter input {
     width: 100%;
     border-radius: 50px;
   }
 
-  #filter select{
+  #filter select {
     width: 100%;
     border-radius: 50px;
   }
 
-
-
-
-
-
-  #search-wrapper{
+  #search-wrapper {
     width: 100%;
     margin-bottom: 10px;
   }
 
-  #sort-wrapper{
+  #sort-wrapper {
     width: 100%;
   }
 
-  #filter-component{
+  #filter-component {
     display: none !important;
   }
 
-  .searchbar-wrapper{
+  .searchbar-wrapper {
     gap: 0;
     flex-wrap: wrap;
   }
 
-  #toggle{
+  #toggle {
     width: 100%;
     margin-left: 20%;
     margin-right: 20%;
