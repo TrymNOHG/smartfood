@@ -820,6 +820,7 @@ input[type="text"]:focus {
   color: black;
   background-color: white;
   border-radius: 0;
+  overflow-y: scroll;
 }
 
 #backGreen {
@@ -860,13 +861,10 @@ input[type="text"]:focus {
 }
 
 @media only screen and (min-width: 10px) and (max-width: 650px) {
-  #searchbtn {
-    display: none;
-  }
+
 
   .list-wrapper {
     z-index: -1;
-    overflow-y: scroll;
   }
 
   #searchbtn {
@@ -943,7 +941,6 @@ input[type="text"]:focus {
     z-index: -1;
     grid-template-rows: 1fr;
     margin-bottom: 0;
-    overflow-y: scroll;
   }
 
   .members-fridge {
@@ -1004,5 +1001,17 @@ input[type="text"]:focus {
     z-index: 0;
     margin-bottom: 70px;
   }
+
+  .vcpg {
+    --bg-color-header: transparent !important;
+    border: transparent;
+    width: 100%;
+    overflow-y: scroll;
+    max-height: 150vw;
+    color: black;
+    background-color: white;
+  }
+
+
 }
 </style>
