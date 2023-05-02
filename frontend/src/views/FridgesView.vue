@@ -369,7 +369,6 @@ export default {
       return {
         applicationTour,
         tour: fridgesTour,
-        firstLogginTour,
         stepTour,
         installElement,
         usageElement,
