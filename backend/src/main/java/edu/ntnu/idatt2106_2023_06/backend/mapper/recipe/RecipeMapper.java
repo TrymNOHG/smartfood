@@ -8,6 +8,10 @@ import java.util.stream.Collectors;
 public class RecipeMapper {
 
     public static RecipeLoadDTO toRecipeLoadDTO(Recipe recipe) {
+        return toRecipeLoadDTO(recipe, 0);
+    }
+
+    public static RecipeLoadDTO toRecipeLoadDTO(Recipe recipe, int numMatchingItems) {
         return RecipeLoadDTO
                 .builder()
                 .recipeName(recipe.getRecipeName())
@@ -17,6 +21,7 @@ public class RecipeMapper {
                 .servingSize(recipe.getServingSize())
                 .thumbnail(recipe.getThumbnailLink())
                 .cookingTime(recipe.getCookTime())
+                .numMatchingItems(numMatchingItems)
                 .instructions(recipe.getInstructions()
                         .stream()
                         .map(InstructionMapper::toInstructionDTO)

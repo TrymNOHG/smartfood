@@ -12,10 +12,6 @@
     </div>
   </div>
 
-  <!--  <div ref="el">-->
-  <!--    Testing-->
-  <!--  </div>-->
-
 </template>
 
 <script>

@@ -132,26 +132,6 @@ export default {
               });
             });
           });
-        } else {
-          const statDeleteFromFridgeDTO = {
-            "percentageThrown": parseFloat(deletePercentage),
-            "price": item.price,
-            "quantity": parseFloat(item.quantity),
-            "itemName": item.name,
-            "storeName": item.store,
-            "fridgeId": this.fridge.fridgeId
-          };
-          const itemRemoveDTO = {
-            "itemName": item.name,
-            "store": item.store,
-            "fridgeId": this.fridge.fridgeId,
-            "quantity": item.quantity
-          };
-          this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO).then(() => {
-            this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO).then(() => {
-              router.push('/fridge');
-            });
-          });
         }
       });
     }
@@ -258,21 +238,6 @@ export default {
     grid-template-columns: 100%;
     grid-template-rows: 45% 5% 45%;
     align-items: center;
-  }
-
-  .fridge-name {
-    margin-left: 30%;
-    font-size: 18px;
-  }
-
-  .change-button {
-    width: 20%;
-    top: 20%;
-    font-size: 0.7rem;
-  }
-
-  .name-display {
-    font-size: 1.2rem;
   }
 
 }

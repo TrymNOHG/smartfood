@@ -4,11 +4,12 @@ import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
+import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +56,13 @@ public interface FridgeItemsRepository extends JpaRepository<FridgeItems, Fridge
      * @param purchaseDate Date of purchase.
      * @return An optional list of items with purchase dates before a given items.
      */
-    Optional<List<FridgeItems>> findFridgeItemsByPurchaseDateBefore(Date purchaseDate);
+    Optional<List<FridgeItems>> findFridgeItemsByPurchaseDateBefore(@NonNull LocalDateTime purchaseDate);
+
+    /**
+     * This method retrieves a list of all the fridge items from a given fridge.
+     * @param fridgeId  The ID of the fridge, given as a Long
+     * @return          An optional containing the list of fridge items.
+     */
+    Optional<List<FridgeItems>> findAllByFridge_FridgeId(Long fridgeId);
 }
 
