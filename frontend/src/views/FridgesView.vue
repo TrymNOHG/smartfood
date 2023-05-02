@@ -23,7 +23,7 @@ import 'shepherd.js/dist/css/shepherd.css';
 import {computed, ref} from 'vue';
 import {useFridgeStore} from "@/store/store";
 import { useRoute } from 'vue-router'
-import {offset} from "@floating-ui/vue";
+import {offset, computePosition, autoPlacement} from "@floating-ui/vue";
 
 
 export default {
@@ -45,14 +45,14 @@ export default {
       const applicationTour = new Shepherd.Tour({
           useModalOverlay: true,
           defaultStepOptions: {
-              classes: 'shepherd-theme-arrows class-1 class-2',
+              classes: 'class-1 class-2',
 
           }
       });
       const fridgesTour = new Shepherd.Tour({
         useModalOverlay: true,
         defaultStepOptions: {
-          classes: 'shepherd-theme-arrows',
+          classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled',
           arrow: true,
           cancelIcon: {
               enabled: true
@@ -72,7 +72,7 @@ export default {
               element: '#profile',
               on: 'left',
             },
-            classes:'shepherd',
+            classes:'reg-shepherd-steps',
             floatingUIOptions: {
                 middleware: [offset(20)]
             },
@@ -339,29 +339,14 @@ export default {
               },
             ]
           },
-
-        ]);
-        fridgesTour.start()
-      }
-
-      function firstLogginTour(){
-        applicationTour.addSteps([
-            //Information of profile button
             {
                 id: 'Welcome',
-                text: 'This is the profile button',
-                attachTo: {
-                    element: '#profile',
-                    on: 'left',
-                    offset: {x: 40, y: 0},
-                },
-                classes:'shepherd-theme-arrows',
+                text:  `${$t("welcome")}` ,
                 buttons:[
                     {
                         action: function () {
                             return this.cancel();
                         },
-                        classes: 'shepherd-button-secondary',
                         secondary: true,
                         text: 'Cancel',
                     },
@@ -369,19 +354,21 @@ export default {
                         action: function () {
                             return this.next();
                         },
-                        text: 'Take a tour',
+                        text: 'Take the tour',
                     },
                 ]
             },
-        ])
+        ]);
+        fridgesTour.start()
       }
 
-      if(init) {
-          firstLogginTour();
-      }
+
+
+
 
       return {
-        //tour: fridgesTour,
+        applicationTour,
+        tour: fridgesTour,
         firstLogginTour,
         stepTour,
         installElement,
@@ -389,18 +376,49 @@ export default {
         hasCurrentFridge,
 
       }
-  },
+
+    },
+
+    created() {
+        if(this.init) {
+            this.firstLogginTour();
+        }
+    },
 
     methods: {
-    /*showInformation(){
-      this.tour.start();
-      //TODO: INFORMATION FRIDGES put information API in here
-    },*/
+      showInformation(){
+        this.tour.start();
+        //TODO: INFORMATION FRIDGES put information API in here
+      },
+      firstLogginTour(){
+        this.applicationTour.addSteps([
+            {
+                id: 'Welcome',
+                text: `${$t("welcome")}`,
+                buttons:[
+                    {
+                        action: function () {
+                            return this.cancel();
+                        },
+                        secondary: true,
+                        text: 'Cancel',
+                    },
+                    {
+                        action: function () {
+                            return this.next();
+                        },
+                        text: 'Take the tour',
+                    },
+                ]
+            },
+        ])
+          this.applicationTour.start()
+      }
   }
 }
 </script>
 
-<style>
+<style scoped>
 
 template {
   display: flex;
@@ -408,11 +426,13 @@ template {
   align-items: center;
 }
 
+
 .wrapper {
   display: grid;
   grid-template-columns: 25% 50% 25%;
   z-index: 0;
 }
+
 
 .fridgeList {
   display: flex;
