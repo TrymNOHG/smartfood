@@ -375,13 +375,16 @@ export default {
       fridgeItems.value = items;
     });
 
+    /*
     const getNotifications = async () => {
       fridgeStore.fetchNotifications(fridge.fridgeId).then((notification) => {
         notifications.value = notification;
       });
     }
 
-    getNotifications();
+     */
+
+    //getNotifications();
     notifications.value = [
       {
         name: "bruhh",
@@ -427,7 +430,7 @@ export default {
       search,
       itemStore,
       isCameraToggled,
-      getNotifications
+      //getNotifications
     };
   },
 
