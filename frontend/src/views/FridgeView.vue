@@ -22,12 +22,13 @@
     <div id="info-and-bell">
       <div>
         <font-awesome-icon icon="fa-solid fa-bell" class="bell-icon" @click="changeNotifications"/>
-        <div style="overflow-y: auto; max-height: 250px; background-color: white">
-          <NotificationList v-if="showNotifications" id="notification-list"
-          v-for="notification in notifications" :notification="notification"
-          @delete-notification="deleteNotification(notification)"/>
+        <div id="notification-list">
+          <NotificationList
+              v-if="showNotifications"
+              v-for="notification in notifications" :notification="notification"
+              @delete-notification="deleteNotification(notification)"
+              @remove-border="removeBorder(notification)"/>
         </div>
-
         <div class="redd-dot" v-if="!showNotifications && notifications.length !== 0">{{notifications.length}}</div>
       </div>
       <div class="information-button">
@@ -167,8 +168,15 @@ export default {
   },
 
   methods: {
+    removeBorder(notification) {
+      console.log(notification)
+      //this.fridgeStore.removeBorderForNotification(notification, this.fridge.fridgeId);
+      //this.getNotifications();
+    },
+
     deleteNotification(notification) {
-      this.fridgeStore.deleteNotificationUsingId(notification, this.fridge.fridgeId);
+      console.log(notification)
+      //this.fridgeStore.deleteNotificationUsingId(notification, this.fridge.fridgeId);
     },
 
     changeNotifications() {
@@ -367,33 +375,38 @@ export default {
       fridgeItems.value = items;
     });
 
-    /*
-    fridgeStore.fetchNotifications(fridge.fridgeId).then((notification) => {
-      notifications.value = notification;
-    });
+    const getNotifications = async () => {
+      fridgeStore.fetchNotifications(fridge.fridgeId).then((notification) => {
+        notifications.value = notification;
+      });
+    }
 
-     */
-
+    getNotifications();
     notifications.value = [
       {
         name: "bruhh",
-        expirationDate: "123123123"
+        expirationDate: "123123123",
+        border: true
       },
       {
         name: "bruhh",
-        expirationDate: "123123123"
+        expirationDate: "123123123",
+        border: true
+      },
+      {
+        name: "Naan Håndlagde m/Hvitløk 260g Nirus\n",
+        expirationDate: "123123123",
+        border: false
       },
       {
         name: "bruhh",
-        expirationDate: "123123123"
+        expirationDate: "123123123",
+        border: false
       },
       {
         name: "bruhh",
-        expirationDate: "123123123"
-      },
-      {
-        name: "bruhh",
-        expirationDate: "123123123"
+        expirationDate: "123123123",
+        border: false
       },
         ]
 
@@ -414,6 +427,7 @@ export default {
       search,
       itemStore,
       isCameraToggled,
+      getNotifications
     };
   },
 
@@ -438,7 +452,9 @@ export default {
 
 #notification-list  {
   z-index: 998;
-  background-color: white;
+  overflow-y: auto;
+  max-height: 250px;
+  background-color: white
 }
 
 .bell-icon {
@@ -646,6 +662,23 @@ input[type="text"]:not(:focus) {
 }
 
 @media (max-width: 650px) {
+  #notification-list {
+    z-index: 998;
+    position: absolute;
+    overflow-y: auto;
+    max-height: 250px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    right: -60px;
+  }
+
+  #info-and-bell {
+    top: 25%;
+    left: 5%;
+  }
+
   .filter-component {
     width: 100%;
   }
@@ -669,6 +702,7 @@ input[type="text"]:not(:focus) {
 }
 
 @media only screen and (min-width: 10px) and (max-width: 650px) {
+
   #searchbtn {
     display: none;
   }
@@ -685,7 +719,6 @@ input[type="text"]:not(:focus) {
   .grey-bar {
     display: flex;
     align-content: center;
-    align-items: center;
     justify-content: center;
     margin-top: 5px;
     background-color: #31c48d;
@@ -703,13 +736,13 @@ input[type="text"]:not(:focus) {
 
   .members-fridge {
     background-color: #31c48d;
-    margin-top: 0;
-    padding-top: 0;
-    padding-right: 10px;
-    text-align: center;
-    align-items: center;
-    align-content: center;
-    justify-content: center;
+    color: white;
+    font-size: 1.25em;
+    padding-top: 5px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 10px;
+    grid-column: 2;
   }
 
   .link {
@@ -724,8 +757,7 @@ input[type="text"]:not(:focus) {
     text-decoration: none;
     text-shadow: none;
     color: black;
-    margin-top: 20px;
-    padding-top: 10px;
+    margin-top: 10px;
   }
 
   #searchbar {

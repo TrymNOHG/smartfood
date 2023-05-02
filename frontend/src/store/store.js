@@ -1,10 +1,10 @@
 import {defineStore} from 'pinia'
 import {checkSuperUserStatus, getUser} from "@/services/UserService"
 import {
-    addNewFridge,
+    addNewFridge, deleteNotification,
     deleteUserFromFridge,
     getAllFridges,
-    getNotifications,
+    getNotifications, removeBorder,
     updateFridge
 } from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
@@ -16,6 +16,7 @@ import {
     getUserMoneyStats,
     getUserPercentageStats
 } from "@/services/StatsService";
+import {keys} from "@dafcoe/vue-collapsible-panel";
 
 const storeUUID = UniqueId();
 
@@ -117,8 +118,12 @@ export const useFridgeStore = defineStore('fridgeStore', {
            await deleteNotification(notification, fridgeId)
         },
 
-        async addNewFridgeByFridgeNameAndUsername(fridgename) {
-            await addNewFridge(fridgename);
+        async removeBorderForNotification(notification, fridgeId){
+           await removeBorder(notification, fridgeId)
+        },
+
+        async addNewFridgeByFridgeNameAndUsername(fridgeName) {
+            await addNewFridge(fridgeName);
         },
         async fetchFridgesByUsername(username) {
             await getAllFridges(username).then(response => {
@@ -138,7 +143,7 @@ export const useFridgeStore = defineStore('fridgeStore', {
         },
         async setCurrentFridgeById(fridgeId) {
             for(let fridge of this.allFridges) {
-                if(fridge.fridgeId == fridgeId) {
+                if(fridge.fridgeId === fridgeId) {
                     this.currentFridge = fridge;
                     this.isSuperUser = await this.checkSuperUserStatus(fridgeId)
                     console.log(this.isSuperUser)
@@ -259,7 +264,6 @@ export const useStatStore = defineStore('statStore', {
         async fetchUserStatsPercentage() {
             this.percentageChart = []
             await getUserPercentageStats().then((response) => {
-                console.log("response: ", response)
                 for (const dataSet of response.data) {
                     const { first, second } = dataSet
                     this.percentageChart.push({first, second});
@@ -272,7 +276,7 @@ export const useStatStore = defineStore('statStore', {
             await getUserMoneyStats()
                 .then((response) => {
                     for (const key in response.data) {
-                        this.moneyChart[key] = response.data[key]
+                        this.moneyChart[key] = response.data[key];
                     }
                 });
         },
