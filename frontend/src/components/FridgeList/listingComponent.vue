@@ -275,5 +275,24 @@ export default {
   }
 }
 
+@media only screen and (min-width: 10px) and (max-width: 650px) {
+  .icons{
+    gap: 15px;
+    height: 30px;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0;
+  }
+
+
+
+  .edit-conf-icon{
+    margin: 0;
+    height: 24px;
+  }
+
+}
+
 
 </style>

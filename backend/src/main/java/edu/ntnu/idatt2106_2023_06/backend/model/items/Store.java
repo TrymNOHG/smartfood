@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.model.items;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,6 +29,7 @@ public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id")
+    @JsonIgnore
     private Long storeId;
 
     /**
@@ -42,6 +44,7 @@ public class Store {
      */
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonIgnore
     private List<Item> itemsInStore = new ArrayList<>();
 
 

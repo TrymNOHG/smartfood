@@ -150,6 +150,10 @@ export default {
 
 <style>
 
+*{
+  font-family: Roboto, sans-serif;
+}
+
 .listing {
   margin-top: 5%;
 }

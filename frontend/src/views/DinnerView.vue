@@ -1,13 +1,13 @@
 <template>
   <div class="grey-bar">
-    <div class="suggestion-weekMenu">
+    <div class="tips-weekMenu">
       <div
         id="toggle-button"
         class="link"
-        @click="selectedTab = 'suggestion'"
-        :class="{ active: selectedTab === 'suggestion' }"
+        @click="selectedTab = 'tips'"
+        :class="{ active: selectedTab === 'tips' }"
       >
-        {{ $t("suggestion") }}
+        {{ $t("tips") }}
       </div>
       <div
         id="toggle-button"
@@ -27,7 +27,7 @@
       />
     </div>
   </div>
-  <div class="suggestion-wrapper" v-show="selectedTab === 'suggestion'">
+  <div class="tips-wrapper" v-show="selectedTab === 'tips'">
     <dinner-suggestion />
   </div>
   <div class="weekMenu-wrapper" v-show="selectedTab === 'weekMenu'">
@@ -40,6 +40,7 @@ import DinnerSuggestion from "../components/dinner/DinnerSuggestionComponent.vue
 import WeekMenu from "../components/dinner/WeekMenuComponent.vue";
 
 import { ref } from "vue";
+import router from "../router/router";
 export default {
   name: "DinnerView",
   components: {
@@ -47,7 +48,9 @@ export default {
     WeekMenu,
   },
   setup() {
-    const selectedTab = ref("suggestion");
+    const selectedTab = ref(router.currentRoute.value.query.selectedTab || 'tips');
+
+    history.replaceState(null, null, '/dinner');
 
     return {
       selectedTab,
@@ -62,7 +65,7 @@ export default {
 </script>
 
 <style scoped>
-.suggestion-weekMenu {
+.tips-weekMenu {
   background-color: #6c6c6c;
   height: 35px;
   color: white;
@@ -104,7 +107,6 @@ export default {
 
 .grey-bar {
   background-color: #6c6c6c;
-  max-height: 35px;
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -116,9 +118,11 @@ export default {
 }
 
 .information-button {
+  display: flex;
   grid-column: 3;
   text-align: right;
-  padding: 2px 5px;
+  margin-left: auto;
+
 }
 
 #info-picture {
@@ -140,7 +144,7 @@ export default {
     border-radius: 20px 20px 0 0;
   }
 
-  .suggestion-weekMenu {
+  .tips-weekMenu {
     background-color: #31c48d;
     margin-top: 0px;
     padding-top: 0;
@@ -149,6 +153,7 @@ export default {
     align-items: center;
     align-content: center;
     justify-content: center;
+    margin-left: 10px;
   }
 
   .link {
@@ -166,5 +171,6 @@ export default {
     margin-top: 20px;
     padding-top: 10px;
   }
+
 }
 </style>

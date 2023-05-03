@@ -26,11 +26,11 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
   .grey-bar {
     background-color: #6C6C6C;
-    max-height : 35px;
+
     text-align: center;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -42,15 +42,49 @@ export default {
   }
 
   .information-button{
+    display: flex;
     grid-column: 3;
     text-align: right;
-    padding: 2px 5px;
+    margin-left: auto;
   }
 
   #info-picture{
     height: 30px;
     width: 30px;
     cursor: pointer;
+
+  }
+
+  @media only screen and (min-width: 10px) and (max-width: 650px) {
+
+    .grey-bar{
+      display: flex;
+      align-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      text-align: center;
+      margin-top: 5px;
+      background-color: #31c48d;
+      max-height: 60px;
+      height: 60px;
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+    }
+
+    #grey-header{
+      margin-left: 25%;
+      height: 60px !important;
+      background-color: white;
+      border-radius: 20px 20px 0 0;
+      font-weight: bold;
+      text-decoration: none;
+      text-shadow: none;
+      color: black;
+      margin-top: 20px;
+      padding-top: 10px;
+      width: 50%;
+    }
   }
 
 </style>

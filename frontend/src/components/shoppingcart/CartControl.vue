@@ -4,7 +4,7 @@
       {{ $t("mark_all") }}
     </button>
 
-    <button class="control-buttons" type="button" @click="handleBuy">
+    <button class="control-buttons" id="buy" type="button" @click="handleBuy">
       {{ $t("buy") }}
     </button>
 
@@ -57,6 +57,11 @@ export default {
   cursor: pointer;
 }
 
+#buy{
+  margin-left: auto;
+  margin-right: 3%;
+}
+
 .control-buttons:hover {
   background-color: #0061b5;
 }
@@ -77,8 +82,6 @@ export default {
   background-color: #570000;
 }
 
-@media only screen and (max-width: 800px) {
-}
 @media only screen and (min-width: 10px) and (max-width: 650px) {
   .cart-control {
     display: flex;

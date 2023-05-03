@@ -1,10 +1,16 @@
 <template>
   <div class="meal-info-container">
     <div class="meal-info">
+
+
       <h3>{{ $t('serving_size') }}:</h3>
-      <span class="serving-size">{{ meal.servingSize }}</span>
+      <span class="serving-size">
+        <select v-model="adjustedServingSize" @change="adjustServingSize">
+          <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
+        </select>
+      </span>
       <h3>{{ $t('cook_time') }}:</h3>
-      <span class="cooking-time"> {{ meal.cookingTime }} {{ $t('minutes') }}</span>
+      <span class="cooking-time"> {{ $t(cookingTimeRange)  }}</span>
       <h3>{{ $t('difficulty') }}:</h3>
       <span class="difficulty-stars">{{ difficultyEmojis }}</span>
       <h3>{{ $t('author') }}:</h3>
@@ -30,6 +36,16 @@ export default {
   props: {
     meal: Object,
   },
+  data() {
+    return {
+      adjustedServingSize: this.meal.servingSize,
+    };
+  },
+  methods: {
+    adjustServingSize() {
+      this.$emit("serving-size-adjusted", this.adjustedServingSize);
+    },
+  },
 
   computed: {
     difficultyEmojis() {
@@ -41,6 +57,15 @@ export default {
       } else {
         return ''; // Return an empty string if the difficulty level is out of range
       }
+    },
+    cookingTimeRange() {
+      const timeRanges = {
+        1: 'Under 20 min',
+        2: '20 - 40 min',
+        3: '40 - 60 min',
+        4: 'Over 60 min',
+      };
+      return timeRanges[this.meal.cookingTime] || 'Unknown';
     },
   },
 };

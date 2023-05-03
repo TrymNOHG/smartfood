@@ -45,7 +45,7 @@
   "addNewFridgeTitle": "Legg til nytt kjøleskap",
   "fridgeNameLabel": "Hva er navnet på det nye kjøleskapet ditt?",
   "addFridgeButtonText": "Legg til kjøleskap",
-  "fridges": "Liste over dine kjøleskap",
+  "fridges": "Dine kjøleskap",
   "edit": "Rediger",
   "changePassword": "Endre passord",
   "logout": "Logg ut",
@@ -105,11 +105,24 @@
   "register_error": "Brukeren eksisterer allerede",
   "next_page": "Neste Side",
   "previous_page": "Forrige Side",
-
-
-
-  "tour: view:fridgesView method: firstLogginTour id:welcome": "HeyHo!",
-  "tour: view:fridgesView method: fridgesStepTour id:profile-tour": "Dette er profil-knappen som tar deg til din profil",
+  "expiry-desc": "Utløpsdato - Synkende",
+  "expiry-asc": "Utløpsdato - Stigende",
+  "purchase-desc": "Kjøpsdato - Synkende",
+  "purchase-asc": "Kjøpsdato - Stigende",
+  "add_missing_items": "Legg til manglende varer",
+  "tips": "Tips",
+  "serving_size": "Porsjonsstørrelse",
+  "cook_time": "Tilberedningstid",
+  "difficulty": "Vanskelighetsgrad",
+  "author": "Forfatter",
+  "allergens": "Allergener",
+  "instructions": "Instruksjoner",
+  "step": "Steg",
+  "Under 20 min": "Under 20 min",
+  "20 - 40 min": "20 - 40 min",
+  "40 - 60 min": "40 - 60 min",
+  "Over 60 min:": "Over 60 min",
+  "suggest_dinner": "Foreslå middag",
 
   "__Tour__":"Under er all oversetting for alle gjennomganger/tours av appen",
 
@@ -151,4 +164,3 @@
 
 
 }
-
