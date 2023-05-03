@@ -167,8 +167,6 @@ public class ItemRecipeScoreService {
 
 
     public double getWeightedScore(ItemRecipeScore itemRecipeScore, FridgeItems fridgeItem) {
-        double score = itemRecipeScore.getScore();
-
         long daysLeft = ChronoUnit.DAYS.between(LocalDateTime.now(), fridgeItem.getExpirationDate());
         double weight = 1 / Math.sqrt(daysLeft);
 
