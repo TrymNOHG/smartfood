@@ -141,6 +141,7 @@
   <div class="members-wrapper" v-show="selectedTab === 'members'">
     <member-component />
   </div>
+  <div id="bottom-element"></div>
 </template>
 
 <script lang="ts">
@@ -403,8 +404,7 @@ export default {
       router.currentRoute.value.query.selectedTab || "fridge"
     );
 
-    history.replaceState(null, null, "/fridge");
-    const currentUrl = window.location.href;
+    history.replaceState(null, null, '/fridge');
 
     const searchItems = ref([]);
     const search = ref(false);
@@ -431,9 +431,8 @@ export default {
 
     const sort = ref(sortOptions.value[0]);
 
-    itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
-      fridgeItems.value = items;
-    });
+
+
 
     const loadMore = () => {
       if (!isLoading.value) {
@@ -582,6 +581,7 @@ export default {
   gap: 40px;
   background-color: white;
   border-radius: 8px;
+  overflow-x: hidden;
 }
 
 #toggle {
@@ -871,6 +871,7 @@ input[type="text"]:focus {
   color: black;
   background-color: white;
   border-radius: 0;
+  overflow-y: scroll;
 }
 
 #backGreen {
@@ -916,13 +917,10 @@ input[type="text"]:focus {
 }
 
 @media only screen and (min-width: 10px) and (max-width: 650px) {
-  #searchbtn {
-    display: none;
-  }
+
 
   .list-wrapper {
     z-index: -1;
-    overflow-y: scroll;
   }
 
   #searchbtn {
@@ -1054,5 +1052,17 @@ input[type="text"]:focus {
     z-index: 0;
     margin-bottom: 70px;
   }
+
+  .vcpg {
+    --bg-color-header: transparent !important;
+    border: transparent;
+    width: 100%;
+    overflow-y: scroll;
+    max-height: 150vw;
+    color: black;
+    background-color: white;
+  }
+
+
 }
 </style>

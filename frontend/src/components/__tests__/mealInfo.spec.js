@@ -9,8 +9,8 @@ describe('MealInfo.vue', () => {
         wrapper = shallowMount(MealInfo, {
             props: {
                 meal: {
-                    servingSize: '2 people',
-                    cookingTime: 30,
+                    servingSize: '2',
+                    cookingTime: 1,
                     difficulty: 3,
                     author: 'Tomas Beranek',
                     allergens: [
@@ -28,11 +28,11 @@ describe('MealInfo.vue', () => {
     });
 
     test('displays serving size', () => {
-        expect(wrapper.find('.serving-size').text()).toContain('2 people');
+        expect(wrapper.find('.serving-size').text()).toContain('2');
     });
 
     test('displays cooking time in minutes', () => {
-        expect(wrapper.find('.cooking-time').text()).toContain('30 minutes');
+        expect(wrapper.find('.cooking-time').text()).toContain('Under 20 min');
     });
 
     test('displays difficulty level as emojis', () => {

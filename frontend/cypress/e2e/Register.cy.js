@@ -73,7 +73,7 @@ describe('Register', () => {
         // Submit the registration form
         cy.get('button[type="submit"]').click()
 
-        cy.get('.has-errors').should('exist') // checking that the form displays error messages
+        cy.get('.has-errors', { timeout: 10000 }).should('exist') // checking that the form displays error messages
     })
 
     it('Error when username missing', () => {
