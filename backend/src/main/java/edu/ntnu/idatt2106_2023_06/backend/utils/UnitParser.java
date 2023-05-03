@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106_2023_06.backend.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 /**
  * This class contains methods to extract the amount and unit of an item from its product name. It does so using a complex
  * regex, as well as through a lot of parsing. Furthermore, it uses the {@link UnitType} class in order to handle
@@ -12,7 +13,7 @@ import java.util.regex.Pattern;
  */
 public class UnitParser {
 
-    private static final Pattern PATTERN = Pattern.compile("(\\d+[.,]?\\d*(?:\\s*[x*]\\s*\\d+[.,]?\\d*)?)\\s*(\\p{L}+)?");
+    private static final Pattern PATTERN = Pattern.compile("(\\d+[.,]?\\d*(?:\\s*[x*/]\\s*\\d+[.,]?\\d*)?)\\s*(\\p{L}+)?");
     public static void parse(String productName) {
         double amount = 0;
         UnitType unit = UnitType.PIECES;
@@ -50,9 +51,7 @@ public class UnitParser {
                             amount = parseAmount(match);
                         }
                     }
-                    default -> {
-                        amount = parseAmount(match);
-                    }
+                    default -> amount = parseAmount(match);
                 }
             } else {
                 amount = 1;

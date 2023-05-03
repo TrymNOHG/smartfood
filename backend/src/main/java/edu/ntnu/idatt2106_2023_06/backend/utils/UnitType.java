@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106_2023_06.backend.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * This enumeration contains all the important unit types that items may have. It also contains a way to check if a
  * string represents an accepted type or not. A hashmap is used in order for efficient look up of the different unit types.
