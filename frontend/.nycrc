@@ -1,0 +1,14 @@
+{
+  "extension": [
+    ".js",
+    ".vue"
+  ],
+  "include": [
+    "src/**/*"
+  ],
+  "reporter": [
+    "html",
+    "text-summary"
+  ],
+  "all": true
+}

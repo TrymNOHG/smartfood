@@ -15,11 +15,8 @@
             />
           </div>
         </div>
-        <div v-if="isCameraToggled">
-          <StreamBarcodeReader
-            @decode="(a, b, c) => onDecode(a, b, c)"
-            @loaded="() => onLoaded()"
-          ></StreamBarcodeReader>
+        <div id="barcode-scanner">
+          <div v-show="scannerActive" id="interactive" class="viewport"></div>
         </div>
 
         <div id="searchbar">
@@ -132,7 +129,7 @@ import { useLoggedInStore, useFridgeStore, useItemStore } from "@/store/store";
 import { ref, onMounted, computed, watch } from "vue";
 import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert2";
-import { StreamBarcodeReader } from "vue-barcode-reader";
+import Quagga from "quagga";
 
 export default {
   name: "Cart",
@@ -147,7 +144,6 @@ export default {
     CartControl,
     BasicCheckBox,
     CartSuggestion,
-    StreamBarcodeReader,
   },
   computed: {
     isCurrentUserSuperUser() {
@@ -167,25 +163,50 @@ export default {
     let checkAll_b = ref(false);
     const suggestedItems = ref([]);
     const itemStore = useItemStore();
-    let isCameraToggled = ref(false);
-    let barcode = ref("");
+    let scannerActive = ref(false);
 
-    //console log items every 3 seconds
-    /**function callEveryThreeSeconds() {
-            console.log(items.value);
+    function initScanner() {
+      Quagga.init(
+        {
+          inputStream: {
+            name: "Live",
+            type: "LiveStream",
+            target: document.querySelector("#interactive.viewport"),
+          },
+          decoder: {
+            readers: ["ean_reader", "code_128_reader", "code_39_reader"],
+          },
+        },
+        (err) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+          scannerActive.value = true;
+          Quagga.start();
         }
-         setInterval(callEveryThreeSeconds, 3000);*/
+      );
 
-    async function onDecode(a, b, c) {
-      this.text = a;
-      barcode.value = a;
-      console.log(barcode.value);
-      await getItemByBarcode(barcode.value)
+      Quagga.onDetected(onDetected);
+    }
+
+    function stopScanner() {
+      Quagga.offDetected(onDetected);
+      Quagga.stop();
+      scannerActive.value = false;
+    }
+
+    async function onDetected(result) {
+      const code = result.codeResult.code;
+      console.log("Detected barcode:", code);
+
+      await getItemByBarcode(code)
         .then((response) => {
           if (response !== undefined) {
             searchItems.value = response.products;
             console.log(response.products);
             search.value = true;
+            scannerActive.value = false;
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -195,26 +216,15 @@ export default {
         .catch((error) => {
           console.warn("error1", error); //TODO: add exception handling
         });
-
-      if (this.id) clearTimeout(this.id);
-      this.id = setTimeout(() => {
-        if (this.text === a) {
-          this.text = "";
-        }
-      }, 5000);
-    }
-
-    function onDecodeImage(result) {
-      console.log(aaaaaaa);
-      console.log(result);
-    }
-
-    function onLoaded() {
-      console.log("load");
     }
 
     function toggleCamera() {
-      isCameraToggled.value = !isCameraToggled.value;
+      console.log("toggling", scannerActive.value, scannerActive);
+      if (scannerActive.value == true) {
+        stopScanner();
+      } else {
+        initScanner();
+      }
     }
 
     async function handleAcceptSuggestion(item) {
@@ -606,11 +616,11 @@ export default {
       handleAcceptSuggestion,
       handleDeleteSuggestion,
       set_CartItemAmount,
-      isCameraToggled,
+      scannerActive,
       toggleCamera,
-      onLoaded,
-      onDecode,
-      onDecodeImage,
+      onDetected,
+      initScanner,
+      stopScanner,
     };
   },
 };
@@ -619,6 +629,24 @@ export default {
 <style scoped>
 * {
   text-align: center;
+}
+
+#barcode-scanner {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+#interactive {
+  text-align: center;
+  width: 95vw;
+  height: 380px;
+  margin: auto;
+
+  transform: translate(25%);
+}
+
+.viewport video {
+  width: 400px;
+  height: 300px;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -632,27 +660,28 @@ input[type="number"] {
 }
 
 .dropper {
-  width: 70%;
-  color: white;
-  margin: auto;
-  margin-bottom: 20px;
-}
-
-.dropper {
   display: flex;
-  width: 100vw;
+  width: 98vw;
   justify-content: space-evenly;
   overflow-y: scroll;
+  overflow-x: hidden;
   margin-bottom: 20px;
   margin: auto;
   color: white;
+}
+
+.dropper::-webkit-scrollbar {
+  display: none;
+}
+
+.dropper:hover {
+  color: #5e6977;
 }
 
 .vcpg {
   --bg-color-header: transparent !important;
   border: transparent;
   width: 100%;
-  overflow-y: scroll;
   color: black;
   background-color: white;
   border-radius: 0;
@@ -920,7 +949,13 @@ button:focus,
 input:focus {
   outline: 0;
 }
-
+@media (max-width: 1350px) {
+  #interactive {
+    transform: none;
+    position: relative;
+    overflow: hidden;
+  }
+}
 @media only screen and (min-width: 50px) and (max-width: 650px) {
   .buttons {
     position: relative;
