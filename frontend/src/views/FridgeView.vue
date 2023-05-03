@@ -947,6 +947,8 @@ input[type="text"]:focus {
     display: none;
   }
 
+
+
   .grey-bar {
     display: flex;
     align-content: center;
@@ -1007,6 +1009,8 @@ input[type="text"]:focus {
     width: 100%;
     margin-left: 20%;
     margin-right: 20%;
+    color: black;
+    font-size: 15px;
   }
   .wrapper {
     z-index: -1;
@@ -1026,6 +1030,7 @@ input[type="text"]:focus {
     justify-content: center;
     margin-left: 10px;
   }
+
 
   .link {
     margin: 0;
