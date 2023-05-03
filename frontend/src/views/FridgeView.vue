@@ -75,6 +75,7 @@
     <div class="searchbar-wrapper">
       <button id="toggle" @click="handleClick">Filter</button>
       <div
+          v-if="click"
         id="filter"
         class="slide-in"
         :class="active ? 'slide-in' : 'slide-out'"
@@ -91,22 +92,23 @@
         <div id="sort-wrapper">
           <select v-model="sort" @change="searchHandler()">
             <option :value="sortOptions[0]">
-              {{ $t("Utløpsdato - Synkende") }}
+              {{ $t("expiry-desc") }}
             </option>
             <option :value="sortOptions[1]">
-              {{ $t("Utløpsdato - Stigende") }}
+              {{ $t("expiry-asc") }}
             </option>
             <option :value="sortOptions[2]">
-              {{ $t("Kjøpsdato - Synkende") }}
+              {{ $t("purchase-desc") }}
             </option>
             <option :value="sortOptions[3]">
-              {{ $t("Kjøpsdato - Stigende") }}
+              {{ $t("purchase-asc") }}
             </option>
           </select>
         </div>
       </div>
 
       <div
+          v-if="click"
         id="filter-component"
         class="slide-in"
         :class="active ? 'slide-in' : 'slide-out'"
@@ -206,7 +208,9 @@ export default {
 
   methods: {
     handleClick() {
+      if(this.click != true) this.click = true
       this.active = !this.active;
+
     },
 
     listing(bool) {
@@ -535,9 +539,11 @@ export default {
     const submitMessage = ref("norvegia");
     const searchQuery = ref("");
     const active = ref(false);
+    const click = ref(false);
 
     return {
       active,
+      click,
       fridge,
       searchItems,
       fridgeItems,
@@ -570,6 +576,10 @@ export default {
 </script>
 
 <style scoped>
+
+*{
+  font-family: Roboto, sans-serif;
+}
 #barcode-scanner {
   overflow-x: hidden;
   overflow-y: hidden;
@@ -606,6 +616,7 @@ export default {
   background-color: white;
   border-radius: 8px;
   overflow-x: hidden;
+  height: 79px;
 }
 
 #toggle {
@@ -757,7 +768,7 @@ select {
 
 .grey-bar {
   background-color: #6c6c6c;
-  max-height: 35px;
+
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -788,16 +799,22 @@ select {
   cursor: pointer;
 }
 
+#searchbtn:hover{
+  cursor: pointer;
+  background-color: #238b65;
+
+}
+
 #grey-header {
   grid-column: 2;
   color: white;
 }
 
 .information-button {
+  display: flex;
   grid-column: 3;
   text-align: right;
-  padding: 2px 5px;
-  max-height: 35px;
+  margin-left: auto;
 }
 
 #info-picture {
@@ -943,10 +960,13 @@ input[type="text"]:focus {
 }
 
 @media only screen and (min-width: 10px) and (max-width: 650px) {
-
+  #searchbtn {
+    display: none;
+  }
 
   .list-wrapper {
     z-index: -1;
+    overflow-y: scroll;
   }
 
   #searchbtn {
@@ -1008,6 +1028,7 @@ input[type="text"]:focus {
   .searchbar-wrapper {
     gap: 0;
     flex-wrap: wrap;
+    height: unset;
   }
 
   #toggle {
@@ -1032,10 +1053,13 @@ input[type="text"]:focus {
     align-items: center;
     align-content: center;
     justify-content: center;
+    margin-left: 10px;
   }
 
   .link {
     margin: 0;
+    padding-left: 5px;
+    padding-right: 5px;
   }
 
   .link.active {
@@ -1048,6 +1072,9 @@ input[type="text"]:focus {
     color: black;
     margin-top: 20px;
     padding-top: 10px;
+    padding-right: 5px;
+    padding-left: 5px;
+
   }
 
   #searchbar {
@@ -1081,17 +1108,5 @@ input[type="text"]:focus {
     z-index: 0;
     margin-bottom: 70px;
   }
-
-  .vcpg {
-    --bg-color-header: transparent !important;
-    border: transparent;
-    width: 100%;
-    overflow-y: scroll;
-    max-height: 150vw;
-    color: black;
-    background-color: white;
-  }
-
-
 }
 </style>
