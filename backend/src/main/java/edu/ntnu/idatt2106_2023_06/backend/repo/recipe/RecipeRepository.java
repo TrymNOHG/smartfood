@@ -5,8 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,5 +37,22 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long>, JpaSpecif
      * @return           An optional containing the page of recipes.
      */
     Optional<Page<Recipe>> findByRecipeNameContainingIgnoreCase(String recipeName, Pageable pageable);
+
+    /**
+     * This method retrieves a recipe by recipe id.
+     * @param recipeId   Id of the recipe.
+     * @return           An optional containing the recipe.
+     */
+    Optional<Recipe> findByRecipeId(Long recipeId);
+
+
+
+    /**
+     * This method retrieves a random list of recipe objects given paging details.
+     * @param pageable  Paging details, given as a Pageable object.
+     * @return          A list of random recipes.
+     */
+    @Query(value = "SELECT r FROM Recipe r ORDER BY RAND()")
+    List<Recipe> findRandomSubset(Pageable pageable);
 
 }

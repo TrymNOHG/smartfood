@@ -126,7 +126,7 @@ import CartSuggestion from "@/components/shoppingcart/CartSuggestion.vue";
 import CartControl from "@/components/shoppingcart/CartControl.vue";
 import BasicCheckBox from "@/components/basic-components/BasicCheckbox.vue";
 import { useLoggedInStore, useFridgeStore, useItemStore } from "@/store/store";
-import { ref, onMounted, computed, watch, onBeforeUnmount } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert2";
 import Quagga from "quagga";
@@ -318,13 +318,13 @@ export default {
           fridgeId: currentFridge.fridgeId,
         };
 
-        const ItemMoveDTO = {
+        const ItemRemoveDTO = {
           itemId: item.itemId,
           fridgeId: currentFridge.fridgeId,
         };
 
-        itemStatDTOList.push(statAddItemToFridgDTO);
-        itemRemoveDTOList.push(ItemMoveDTO);
+        itemStatDTOList.push(statAddItemToFridgeDTO);
+        itemRemoveDTOList.push(ItemRemoveDTO);
       });
 
       try {
@@ -333,10 +333,10 @@ export default {
 
         await itemStore.statAddItemListToFridge(itemStatDTOList);
         await buyItemsFromShoppingList(itemRemoveDTOList);
+        await loadItemsFromCart();
       } catch (error) {
         await swal.fire(error.response.data["Message:"], "", "error");
       }
-      location.reload();
     }
 
     async function handleBuy() {
@@ -737,8 +737,6 @@ input[type="number"] {
 
 .grey-bar {
   background-color: #6c6c6c;
-  max-height: 35px;
-  min-height: 35px;
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -751,10 +749,10 @@ input[type="number"] {
 }
 
 .information-button {
+  display: flex;
   grid-column: 3;
   text-align: right;
-  padding: 2px 5px;
-  height: 35px;
+  margin-left: auto;
 }
 
 #info-picture {
@@ -974,12 +972,29 @@ input:focus {
     display: none !important;
   }
 
+
+
   .grey-bar {
+    all: unset;
+    text-align: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     background-color: #31c48d;
+    height: 50px;
+    align-content: center;
+
+  }
+
+  #grey-header{
+    all: unset;
+    grid-column: 2;
+    color: white;
+    font-size: 25px;
+    margin-top: 10px;
   }
 
   #backBlack {
-    height: 6px;
+    height: 0px;
     background-color: white;
   }
 
@@ -987,7 +1002,7 @@ input:focus {
     background-color: #31c48d;
 
     width: 100%;
-    padding: 10px 10px 10px 10px;
+    padding: 5px 10px 10px 10px;
     border-radius: 20px 20px 20px 20px;
   }
 
@@ -1213,7 +1228,7 @@ input:focus {
   .dropdown-content {
     top: 100%;
     position: relative;
-    background-color: #f6f6f6;
+    background-color: white;
     min-width: 230px;
     overflow: auto;
     border: 1px solid #ddd;

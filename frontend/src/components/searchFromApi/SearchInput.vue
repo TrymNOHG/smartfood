@@ -11,7 +11,6 @@
   <font-awesome-icon
     id="receipt-btn"
     icon="fa-solid fa-barcode"
-    style="color: #36454f; scale: 2"
     @click="uploadReceiptButton"
   />
 
@@ -48,11 +47,14 @@ export default {
 <style scoped>
 #receipt-btn {
   transform: translate(-100%, 45%);
+  color: black;
+  scale: 2
 }
 
 #receipt-btn:hover {
-  transform: translate(-100%, 45%);
   cursor: pointer;
+  color: #6C6C6C;
+
 }
 
 #searchbar {

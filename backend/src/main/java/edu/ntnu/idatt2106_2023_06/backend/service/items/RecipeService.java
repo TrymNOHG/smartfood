@@ -3,16 +3,22 @@ package edu.ntnu.idatt2106_2023_06.backend.service.items;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
-import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.*;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.RecipeNotFoundException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.RecipeSuggestionNotFoundException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.recipe.RecipeMapper;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.*;
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.recipe.*;
+import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.*;
 import okhttp3.OkHttpClient;
@@ -23,10 +29,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -46,14 +49,52 @@ public class RecipeService {
     private final RecipePartRepository recipePartRepository;
     private final ItemRepository itemRepository;
     private final ItemService itemService;
+    private final ItemRecipeScoreService itemRecipeScoreService;
     private final RecipeItemsRepository recipeItemsRepository;
     private final FridgeItemsRepository fridgeItemsRepository;
+    private final FridgeRepository fridgeRepository;
+    private final UserRepository userRepository;
+    private final RecipeSuggestionRepository recipeSuggestionRepository;
 
     public RecipeLoadDTO getRecipe(String recipeName) {
         Recipe recipe = recipeRepository.findRecipeByRecipeNameContainingIgnoreCase(recipeName)
                 .orElseThrow(() -> new RecipeNotFoundException("Name of the recipe" , recipeName));
         logger.info("Recipe found. Creating DTO");
         return RecipeMapper.toRecipeLoadDTO(recipe);
+    }
+
+    public void addRecipeSuggestion(RecipeSuggestionAddDTO recipeSuggestionAddDTO){
+        Recipe recipe = recipeRepository.findByRecipeId(recipeSuggestionAddDTO.recipeId()).orElseThrow(() -> new RecipeNotFoundException("Name of the recipe" , recipeSuggestionAddDTO.recipeId()));
+        Fridge fridge = fridgeRepository.findByFridgeId(recipeSuggestionAddDTO.fridgeId()).orElseThrow(() -> new FridgeNotFoundException(recipeSuggestionAddDTO.fridgeId()));
+        User user = userRepository.findUserByUserId(recipeSuggestionAddDTO.userId()).orElseThrow(() -> new UserNotFoundException(recipeSuggestionAddDTO.userId()));
+        RecipeSuggestion recipeSuggestion = RecipeSuggestion.builder()
+                .id(new RecipeSuggestionId(recipeSuggestionAddDTO.recipeId(), recipeSuggestionAddDTO.fridgeId(), recipeSuggestionAddDTO.userId()))
+                .recipe(recipe)
+                .fridge(fridge)
+                .user(user)
+                .build();
+        recipeSuggestionRepository.save(recipeSuggestion);
+    }
+
+    public List<RecipeSuggestionLoad> loadRecipeSuggestion(Long fridgeId){
+        Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new FridgeNotFoundException(fridgeId));
+        List<RecipeSuggestion> recipeSuggestionList = recipeSuggestionRepository.findAllByFridge(fridge).orElseThrow(() -> new RecipeSuggestionNotFoundException(fridgeId));
+        return recipeSuggestionList.stream().map(i -> {
+            return RecipeMapper.toRecipeSuggestionLoadDTO(i.getRecipe(), i.getUser().getUserId());
+        }).toList();
+    }
+
+    public void deleteRecipeSuggestion(Long recipeId, Long fridgeId, Long userId) {
+        Recipe recipe = recipeRepository.findByRecipeId(recipeId).orElseThrow(() -> new RecipeNotFoundException("Name of the recipe" ,recipeId));
+        Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new FridgeNotFoundException(fridgeId));
+        User user = userRepository.findUserByUserId(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        RecipeSuggestion recipeSuggestion = RecipeSuggestion.builder()
+                .id(new RecipeSuggestionId(recipeId, fridgeId, userId))
+                .recipe(recipe)
+                .fridge(fridge)
+                .user(user)
+                .build();
+        recipeSuggestionRepository.delete(recipeSuggestion);
     }
 
     public Page<RecipeLoadDTO> getRecipesByName(String recipeName, int page, int size) {
@@ -74,21 +115,55 @@ public class RecipeService {
 
     //TODO: authenticate
     public Page<RecipeLoadDTO> getRecipesByFridgeId(Long fridgeId, int page, int size) {
+        Page<Recipe> recipes = itemRecipeScoreService.getRankedRecipesByFridge(fridgeId, page, size);
+
+        if (recipes == null) {
+            int numRecipes = (int) recipeRepository.count();
+
+            List<Recipe> subListRecipes = recipeRepository.findRandomSubset(PageRequest.of(0, size, Sort.unsorted()));
+
+            List<RecipeLoadDTO> recipeLoadDTOs = subListRecipes.stream()
+                    .map(RecipeMapper::toRecipeLoadDTO)
+                    .collect(Collectors.toList());
+
+            return new PageImpl<>(recipeLoadDTOs, PageRequest.of(0, size), numRecipes);
+        }
+
+        List<RecipeLoadDTO> recipeLoadDTOs = recipes.getContent()
+                .stream()
+                .map(recipe -> {
+                            RecipeLoadDTO recipeLoadDTO = RecipeMapper.toRecipeLoadDTO(recipe);
+                            recipeLoadDTO.setNumMatchingItems(countMatchingItems(recipeLoadDTO, fridgeId));
+                            return recipeLoadDTO;
+                        }
+                )
+                .collect(Collectors.toList());
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        return new PageImpl<>(recipeLoadDTOs, pageable, recipes.getTotalElements());
+    }
+
+    //TODO: authenticate
+    public Page<RecipeLoadDTO> getRecipesByFridgeIdOld(Long fridgeId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Recipe> recipes = recipeRepository.findAll(pageable);
 
         List<RecipeLoadDTO> recipeLoadDTOs = recipes.getContent()
                 .stream()
-                .map(recipe ->
-                    RecipeMapper.toRecipeLoadDTO(recipe, countMatchingItems(recipe, fridgeId))
+                .map(recipe -> {
+                            RecipeLoadDTO recipeLoadDTO = RecipeMapper.toRecipeLoadDTO(recipe);
+                            recipeLoadDTO.setNumMatchingItems(countMatchingItems(recipeLoadDTO, fridgeId));
+                            return recipeLoadDTO;
+                        }
                 )
-                .sorted(Comparator.comparing(RecipeLoadDTO::numMatchingItems).reversed())
+                .sorted(Comparator.comparing(RecipeLoadDTO::getNumMatchingItems).reversed())
                 .collect(Collectors.toList());
 
         return new PageImpl<>(recipeLoadDTOs, pageable, recipes.getTotalElements());
     }
 
-    private int countMatchingItems(Recipe recipe, Long fridgeId) {
+    private int countMatchingItems(RecipeLoadDTO recipeDTO, Long fridgeId) {
         Set<Long> fridgeItemIds = fridgeItemsRepository.findAllByFridge_FridgeId(fridgeId)
                 .orElseThrow(() -> new FridgeNotFoundException(fridgeId))
                 .stream()
@@ -96,14 +171,13 @@ public class RecipeService {
                 .map(Item::getItemId)
                 .collect(Collectors.toSet());
 
-        return recipe.getRecipeParts().stream()
-                .map(RecipePart::getItemsInRecipe)
+        return ((Long) recipeDTO.getRecipeParts().stream()
+                .map(RecipePartDTO::ingredients)
                 .flatMap(Collection::stream)
-                .map(RecipeItems::getItem)
-                .map(Item::getItemId)
-                .filter(fridgeItemIds::contains)
-                .collect(Collectors.toSet())
-                .size();
+                .filter(recipeItemDTO -> fridgeItemIds.contains(recipeItemDTO.getItemId()))
+                .peek(recipeItemDTO -> recipeItemDTO.setHasItem(true))
+                .count())
+                .intValue();
     }
 
 
@@ -130,6 +204,7 @@ public class RecipeService {
             JsonNode rootNode = new ObjectMapper().readTree(responseBody);
 
             Recipe tempRecipe = createRecipeFromJsonNode(rootNode);
+            if(tempRecipe == null) return;
 
             logger.info("Saving recipe to database.");
             final Recipe recipe = recipeRepository.save(tempRecipe);
@@ -166,6 +241,14 @@ public class RecipeService {
         logger.info("Creating recipe");
         String recipeName = rootNode.at("/_source/name").asText();
         String recipeDesc = rootNode.at("/_source/description").asText();
+
+        Recipe recipe = recipeRepository.findRecipeByRecipeNameContainingIgnoreCase(recipeName)
+                .orElse(null);
+
+        if(recipe != null && recipe.getDescription().equals(recipeDesc)) {
+            return null;
+        }
+
         String author = "Meny";
         int servingSize = rootNode.at("/_source/numberOfPersons").asInt();
         int difficultyEstimate = rootNode.at("/_source/difficultyEstimate").asInt();
@@ -327,4 +410,6 @@ public class RecipeService {
         }
         return null;
     }
+
+
 }
