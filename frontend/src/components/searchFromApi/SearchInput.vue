@@ -10,8 +10,8 @@
   />
   <font-awesome-icon
     id="receipt-btn"
-    icon="fa-solid fa-receipt"
-    style="color: #2c831b; scale: 2"
+    icon="fa-solid fa-barcode"
+    style="color: #36454f; scale: 2"
     @click="uploadReceiptButton"
   />
 

@@ -59,7 +59,11 @@
                 :image="item.image"
                 :text="item.name"
                 :store="item.store.name"
-                :price="item.current_price"
+                :price="
+                  typeof item.current_price === 'number'
+                    ? item.current_price
+                    : item.current_price.price
+                "
                 style="text-align: center"
                 @click="addItemToFridge(this.fridge.fridgeId, item)"
               />
@@ -71,6 +75,7 @@
     <div class="searchbar-wrapper">
       <button id="toggle" @click="handleClick">Filter</button>
       <div
+          v-if="click"
         id="filter"
         class="slide-in"
         :class="active ? 'slide-in' : 'slide-out'"
@@ -87,22 +92,23 @@
         <div id="sort-wrapper">
           <select v-model="sort" @change="searchHandler()">
             <option :value="sortOptions[0]">
-              {{ $t("Utløpsdato - Synkende") }}
+              {{ $t("expiry-desc") }}
             </option>
             <option :value="sortOptions[1]">
-              {{ $t("Utløpsdato - Stigende") }}
+              {{ $t("expiry-asc") }}
             </option>
             <option :value="sortOptions[2]">
-              {{ $t("Kjøpsdato - Synkende") }}
+              {{ $t("purchase-desc") }}
             </option>
             <option :value="sortOptions[3]">
-              {{ $t("Kjøpsdato - Stigende") }}
+              {{ $t("purchase-asc") }}
             </option>
           </select>
         </div>
       </div>
 
       <div
+          v-if="click"
         id="filter-component"
         class="slide-in"
         :class="active ? 'slide-in' : 'slide-out'"
@@ -152,7 +158,13 @@ import {
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import { useFridgeStore, useItemStore } from "@/store/store";
-import { onMounted, onUnmounted, ref } from "vue";
+import {
+  getCurrentInstance,
+  onBeforeUnmount,
+  onMounted,
+  onUnmounted,
+  ref,
+} from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import { getItemByBarcode, getItems } from "@/services/ApiService";
@@ -196,7 +208,9 @@ export default {
 
   methods: {
     handleClick() {
+      if(this.click != true) this.click = true
       this.active = !this.active;
+
     },
 
     listing(bool) {
@@ -346,6 +360,14 @@ export default {
           },
           decoder: {
             readers: ["ean_reader", "code_128_reader", "code_39_reader"],
+            debug: {
+              drawBoundingBox: true,
+              showFrequency: true,
+              drawScanline: true,
+              showPattern: true,
+            },
+            multiple: false,
+            frequency: 5, // Set the number of scans per second, e.g., 5 scans per second
           },
         },
         (err) => {
@@ -376,7 +398,7 @@ export default {
             this.searchItems = response.products;
             console.log(response.products);
             this.search = true;
-            this.scannerActive = false;
+            this.stopScanner();
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -411,12 +433,12 @@ export default {
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
     let scannerActive = ref(false);
-    const isCameraToggled = ref(false);
     const isLoading = ref(false);
     const page = ref(0);
     const searchText = ref("");
     const selectedCategory = ref(0);
     const categories = ref<Array<{ id: number; name: string }>>([]);
+    const instance = getCurrentInstance();
 
     const sortOptions = ref([
       { key: "expirationDate", direction: "DESC" },
@@ -508,13 +530,20 @@ export default {
       }
     });
 
+    onBeforeUnmount(() => {
+      if (instance && instance.proxy) {
+        instance.proxy.stopScanner();
+      }
+    });
     const itemAmount = ref(1);
     const submitMessage = ref("norvegia");
     const searchQuery = ref("");
     const active = ref(false);
+    const click = ref(false);
 
     return {
       active,
+      click,
       fridge,
       searchItems,
       fridgeItems,
@@ -547,10 +576,15 @@ export default {
 </script>
 
 <style scoped>
+
+*{
+  font-family: Roboto, sans-serif;
+}
 #barcode-scanner {
   overflow-x: hidden;
   overflow-y: hidden;
 }
+
 #interactive {
   text-align: center;
   width: 95vw;
@@ -582,6 +616,7 @@ export default {
   background-color: white;
   border-radius: 8px;
   overflow-x: hidden;
+  height: 79px;
 }
 
 #toggle {
@@ -641,6 +676,7 @@ export default {
   width: 100%;
   border-radius: 50px;
 }
+
 #sort-wrapper {
   display: flex;
   align-items: center;
@@ -732,7 +768,7 @@ select {
 
 .grey-bar {
   background-color: #6c6c6c;
-  max-height: 35px;
+
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -760,6 +796,13 @@ select {
   height: 40px;
   margin-right: 10px;
   border-radius: 0 50px 50px 0 !important;
+  cursor: pointer;
+}
+
+#searchbtn:hover{
+  cursor: pointer;
+  background-color: #238b65;
+
 }
 
 #grey-header {
@@ -768,10 +811,10 @@ select {
 }
 
 .information-button {
+  display: flex;
   grid-column: 3;
   text-align: right;
-  padding: 2px 5px;
-  max-height: 35px;
+  margin-left: auto;
 }
 
 #info-picture {
@@ -917,10 +960,13 @@ input[type="text"]:focus {
 }
 
 @media only screen and (min-width: 10px) and (max-width: 650px) {
-
+  #searchbtn {
+    display: none;
+  }
 
   .list-wrapper {
     z-index: -1;
+    overflow-y: scroll;
   }
 
   #searchbtn {
@@ -938,9 +984,11 @@ input[type="text"]:focus {
     height: 60px;
     border-radius: 20px 20px 0 0;
   }
+
   .slide-in {
     display: block !important;
   }
+
   .slide-out {
     display: none !important;
   }
@@ -980,6 +1028,7 @@ input[type="text"]:focus {
   .searchbar-wrapper {
     gap: 0;
     flex-wrap: wrap;
+    height: unset;
   }
 
   #toggle {
@@ -987,6 +1036,7 @@ input[type="text"]:focus {
     margin-left: 20%;
     margin-right: 20%;
   }
+
   .wrapper {
     z-index: -1;
     grid-template-rows: 1fr;
@@ -1003,10 +1053,13 @@ input[type="text"]:focus {
     align-items: center;
     align-content: center;
     justify-content: center;
+    margin-left: 10px;
   }
 
   .link {
     margin: 0;
+    padding-left: 5px;
+    padding-right: 5px;
   }
 
   .link.active {
@@ -1019,6 +1072,9 @@ input[type="text"]:focus {
     color: black;
     margin-top: 20px;
     padding-top: 10px;
+    padding-right: 5px;
+    padding-left: 5px;
+
   }
 
   #searchbar {
@@ -1052,17 +1108,5 @@ input[type="text"]:focus {
     z-index: 0;
     margin-bottom: 70px;
   }
-
-  .vcpg {
-    --bg-color-header: transparent !important;
-    border: transparent;
-    width: 100%;
-    overflow-y: scroll;
-    max-height: 150vw;
-    color: black;
-    background-color: white;
-  }
-
-
 }
 </style>

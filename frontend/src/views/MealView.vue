@@ -187,18 +187,18 @@ export default {
 }
 
 .grey-bar {
-  background-color: #6c6c6c;
-  max-height: 35px;
+  background-color: #6C6C6C;
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 }
 
 .information-button {
+  display: flex;
   grid-column: 3;
   text-align: right;
-  padding: 2px 5px;
-  max-height: 35px;
+  margin-left: auto;
+  padding: 0;
 }
 
 #info-picture {
