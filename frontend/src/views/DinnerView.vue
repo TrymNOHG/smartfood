@@ -86,6 +86,7 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 20px;
   grid-column: 2;
+  justify-items: center;
 }
 
 template {

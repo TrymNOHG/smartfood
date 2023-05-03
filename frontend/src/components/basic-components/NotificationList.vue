@@ -10,8 +10,8 @@
       </span>
     </div>
     <div class="notification-icons">
-      <font-awesome-icon icon="fa-solid fa-check-circle" @click="removeBorder" class="check-icon icons"/>
-      <font-awesome-icon icon="fa-solid fa-trash" @click="deleteItem" class="delete-icon icons"/>
+      <font-awesome-icon v-if="userStatus" icon="fa-solid fa-check-circle" @click="removeBorder" class="check-icon icons"/>
+      <font-awesome-icon v-if="userStatus" icon="fa-solid fa-trash" @click="deleteItem" class="delete-icon icons"/>
     </div>
   </div>
 </template>
@@ -25,7 +25,8 @@ export default {
       name: String,
       expirationDate: String,
       border: Boolean
-    }
+    },
+    userStatus: Boolean,
   },
 
   methods: {

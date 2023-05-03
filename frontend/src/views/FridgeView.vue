@@ -115,8 +115,6 @@
         <filter-bar @listing="changeListing" />
       </div>
     </div>
-
-  </div>
     <transition name="fade">
       <div
         v-if="!listView"
@@ -143,9 +141,11 @@
         />
       </div>
     </transition>
+  </div>
   <div class="members-wrapper" v-show="selectedTab === 'members'">
     <member-component />
   </div>
+  <div id="bottom-element"></div>
 </template>
 
 <script lang="ts">

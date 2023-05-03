@@ -3,8 +3,16 @@
     <div class="members-fridge">
       <router-link class="link" :to="{ name: 'fridgeView', query: { selectedTab: 'members' } }" >{{ $t('members') }}</router-link>
       <router-link class="link fridge" :to="{ name: 'fridgeView'}">{{ $t('fridge') }}</router-link>    </div>
-    <div class="information-button">
-      <img src="@/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
+    <div id="info-and-bell">
+      <InfoAndBell/>
+      <div class="information-button">
+        <img
+            src="@/assets/images/info.svg"
+            id="info-picture"
+            @click="showInformation"
+            :alt="$t('alt_info_button')"
+        />
+      </div>
     </div>
   </div>
 
@@ -33,10 +41,11 @@ import {useFridgeStore, useItemStore} from "@/store/store";
 import router from "@/router/router";
 import {addItemToShoppingList} from "@/services/ItemService";
 import swal from "sweetalert2";
+import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
 
 export default {
   name: "itemView",
-  components: {ItemDelete, ItemInfo, ItemHeader},
+  components: {InfoAndBell, ItemDelete, ItemInfo, ItemHeader},
 
   setup() {
     const itemStore = useItemStore();
@@ -144,7 +153,15 @@ export default {
 }
 </script>
 
+
 <style scoped>
+
+#info-and-bell {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 5%;
+}
 
 .item {
   margin-top: 5%;
@@ -226,6 +243,12 @@ export default {
 }
 
 @media (max-width: 650px) {
+
+  #info-and-bell {
+    top: 5%;
+    gap: 25%;
+    left: 8%;
+  }
 
   body {
     height: 95px;

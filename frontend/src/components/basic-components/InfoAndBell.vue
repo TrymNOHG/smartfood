@@ -7,7 +7,9 @@
             v-if="showNotifications"
             v-for="notification in notifications" :notification="notification"
             @delete-notification="deleteNotification(notification)"
-            @remove-border="removeBorder(notification)"/>
+            @remove-border="removeBorder(notification)"
+            :user-status = userStatus
+        />
       </div>
       <div class="redd-dot" v-if="!showNotifications && notifications.length !== 0">{{notifications.length}}</div>
     </div>
@@ -27,7 +29,9 @@ export default {
     const fridgeStore = useFridgeStore();
     const notifications = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
+    let userStatus = ref(false);
 
+    userStatus = fridgeStore.isSuperUser
     /*
     const getNotifications = async () => {
       fridgeStore.fetchNotifications(fridge.fridgeId).then((notification) => {
@@ -67,6 +71,7 @@ export default {
     //getNotifications();
     return {
       notifications,
+      userStatus,
       //getNotifications,
     }
   },
