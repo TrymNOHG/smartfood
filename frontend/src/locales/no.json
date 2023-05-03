@@ -108,7 +108,7 @@
   "expiry-desc": "Utløpsdato - Synkende",
   "expiry-asc": "Utløpsdato - Stigende",
   "purchase-desc": "Kjøpsdato - Synkende",
-  "purchase-asc": "Kjøpsdato - Stigende"
+  "purchase-asc": "Kjøpsdato - Stigende",
   "add_missing_items": "Legg til manglende varer",
   "tips": "Tips",
   "serving_size": "Porsjonsstørrelse",
@@ -122,5 +122,5 @@
   "20 - 40 min": "20 - 40 min",
   "40 - 60 min": "40 - 60 min",
   "Over 60 min:": "Over 60 min",
-  "suggest_dinner": "Foreslå middag",
+  "suggest_dinner": "Foreslå middag"
 }
