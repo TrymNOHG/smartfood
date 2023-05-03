@@ -47,6 +47,9 @@
     <div id="myDropdown" class="dropdown-content">
       <figure id="backBlack"></figure>
       <div id="backGreen">
+        <div id="barcode-scanner">
+          <div v-show="scannerActive" id="interactive" class="viewport"></div>
+        </div>
         <div id="searchbar">
           <SearchInput
             v-model="searchQuery"
@@ -57,12 +60,6 @@
           <button id="searchbtn" @click="handleSearch">
             {{ $t("search") }}
           </button>
-        </div>
-        <div v-if="isCameraToggled">
-          <StreamBarcodeReader
-            @decode="(a, b, c) => onDecode(a, b, c)"
-            @loaded="() => onLoaded()"
-          ></StreamBarcodeReader>
         </div>
       </div>
 
@@ -86,25 +83,45 @@
       </div>
     </div>
     <div class="searchbar-wrapper">
-
       <button id="toggle" @click="handleClick">Filter</button>
-      <div id="filter" class="slide-in" :class="active ? 'slide-in': 'slide-out'">
-      <div id="search-wrapper">
-        <input type="text" v-model="searchText" @input="searchHandler()" :placeholder="$t('search')+'...'" />
+      <div
+        id="filter"
+        class="slide-in"
+        :class="active ? 'slide-in' : 'slide-out'"
+      >
+        <div id="search-wrapper">
+          <input
+            type="text"
+            v-model="searchText"
+            @input="searchHandler()"
+            :placeholder="$t('search') + '...'"
+          />
+        </div>
+
+        <div id="sort-wrapper">
+          <select v-model="sort" @change="searchHandler()">
+            <option :value="sortOptions[0]">
+              {{ $t("Utløpsdato - Synkende") }}
+            </option>
+            <option :value="sortOptions[1]">
+              {{ $t("Utløpsdato - Stigende") }}
+            </option>
+            <option :value="sortOptions[2]">
+              {{ $t("Kjøpsdato - Synkende") }}
+            </option>
+            <option :value="sortOptions[3]">
+              {{ $t("Kjøpsdato - Stigende") }}
+            </option>
+          </select>
+        </div>
       </div>
 
-      <div id="sort-wrapper">
-        <select v-model="sort" @change="searchHandler()">
-          <option :value=sortOptions[0]>{{ $t('Utløpsdato - Synkende') }}</option>
-          <option :value=sortOptions[1]>{{ $t('Utløpsdato - Stigende') }}</option>
-          <option :value=sortOptions[2]>{{ $t('Kjøpsdato - Synkende') }}</option>
-          <option :value=sortOptions[3]>{{ $t('Kjøpsdato - Stigende') }}</option>
-        </select>
-      </div>
-      </div>
-
-      <div id="filter-component" class="slide-in" :class="active ? 'slide-in': 'slide-out'">
-        <filter-bar  @listing="listing"/>
+      <div
+        id="filter-component"
+        class="slide-in"
+        :class="active ? 'slide-in' : 'slide-out'"
+      >
+        <filter-bar @listing="listing" />
       </div>
 
     </div>
@@ -139,16 +156,21 @@
   <div class="members-wrapper" v-show="selectedTab === 'members'">
     <member-component />
   </div>
-  <div id="bottom-element"></div>
 </template>
 
 <script lang="ts">
+import {
+  VueCollapsiblePanelGroup,
+  VueCollapsiblePanel,
+} from "@dafcoe/vue-collapsible-panel";
 
 import {VueCollapsiblePanel, VueCollapsiblePanelGroup,} from "@dafcoe/vue-collapsible-panel";
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import {useFridgeStore, useItemStore} from "@/store/store";
 import {onMounted, onUnmounted, ref} from "vue";
+import { useFridgeStore, useItemStore } from "@/store/store";
+import { onMounted, onUnmounted, ref } from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import {getItemByBarcode, getItems} from "@/services/ApiService";
@@ -160,6 +182,7 @@ import router from "../router/router";
 import {StreamBarcodeReader} from "vue-barcode-reader";
 import NotificationList from "@/components/basic-components/NotificationList.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import Quagga from "quagga";
 
 interface Filter {
   fridgeId: number;
@@ -168,7 +191,6 @@ interface Filter {
   sortOrder: string;
   page: number;
   pageSize: number;
-
 }
 
 export default {
@@ -213,14 +235,11 @@ export default {
     },
 
     handleClick() {
-        this.active = !this.active;
-      },
-
-    listing(bool){
-      this.listView = bool;
+      this.active = !this.active;
     },
-    toggleCamera() {
-      this.isCameraToggled = !this.isCameraToggled;
+
+    listing(bool) {
+      this.listView = bool;
     },
 
     async addShopping(item) {
@@ -242,34 +261,27 @@ export default {
       };
 
       await addItemToShoppingList(itemDTO, fridge.fridgeId, false).then(
-        async (response) => {
-        }
+        async (response) => {}
       );
     },
     async onDecode(a, b, c) {
       this.text = a;
       await getItemByBarcode(a)
-        .then((response) => {
-          if (response !== undefined) {
-            this.searchItems = response.products;
-            this.search = true;
-          } else {
-            console.log("Something went wrong");
-            this.submitMessage =
-              "Something went wrong. Please try again later.";
-          }
-        })
-        .catch((error) => {
-          console.warn("error1", error); //TODO: add exception handling
-        });
-
-      if (this.id) clearTimeout(this.id);
-      this.id = setTimeout(() => {
-        if (this.text === a) {
-          this.text = "";
-        }
-      }, 5000);
+          .then((response) => {
+            if (response !== undefined) {
+              this.searchItems = response.products;
+              this.search = true;
+            } else {
+              console.log("Something went wrong");
+              this.submitMessage =
+                  "Something went wrong. Please try again later.";
+            }
+          })
+          .catch((error) => {
+            console.warn("error1", error); //TODO: add exception handling
+          });
     },
+
     handleSearch() {
       this.search = this.searchQuery.length >= 2;
       getItems(this.searchQuery)
@@ -384,25 +396,88 @@ export default {
       }
     },
 
+    initScanner() {
+      Quagga.init(
+        {
+          inputStream: {
+            name: "Live",
+            type: "LiveStream",
+            target: document.querySelector("#interactive.viewport"),
+          },
+          decoder: {
+            readers: ["ean_reader", "code_128_reader", "code_39_reader"],
+          },
+        },
+        (err) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+          this.scannerActive = true;
+          Quagga.start();
+        }
+      );
 
+      Quagga.onDetected(this.onDetected);
+    },
+
+    stopScanner() {
+      Quagga.offDetected(this.onDetected);
+      Quagga.stop();
+      this.scannerActive = false;
+    },
+    async onDetected(result) {
+      const code = result.codeResult.code;
+      console.log("Detected barcode:", code);
+
+      await getItemByBarcode(code)
+        .then((response) => {
+          if (response !== undefined) {
+            this.searchItems = response.products;
+            console.log(response.products);
+            this.search = true;
+            this.scannerActive = false;
+          } else {
+            console.log("Something went wrong");
+            submitMessage.value =
+              "Something went wrong. Please try again later.";
+          }
+        })
+        .catch((error) => {
+          console.warn("error1", error); //TODO: add exception handling
+        });
+    },
+    toggleCamera() {
+      console.log("toggling", this.scannerActive, this.scannerActive);
+      if (this.scannerActive == true) {
+        this.stopScanner();
+      } else {
+        this.initScanner();
+      }
+    },
   },
 
   setup() {
     const notifications = ref([])
     const fridgeStore = useFridgeStore();
     const itemStore = useItemStore();
-    const selectedTab = ref(router.currentRoute.value.query.selectedTab || 'fridge');
+    const selectedTab = ref(
+      router.currentRoute.value.query.selectedTab || "fridge"
+    );
 
     history.replaceState(null, null, '/fridge');
+    history.replaceState(null, null, "/fridge");
+    const currentUrl = window.location.href;
 
     const searchItems = ref([]);
     const search = ref(false);
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
+    let scannerActive = ref(false);
     const isCameraToggled = ref(false);
     const isLoading = ref(false);
     const page = ref(0);
-    const searchText = ref('');
+    const searchText = ref("");
     const selectedCategory = ref(0);
     const categories = ref<Array<{ id: number; name: string }>>([]);
 
@@ -413,14 +488,11 @@ export default {
       { key: "purchaseDate", direction: "ASC" },
     ]);
 
-    const searchParamOptions = ref([
-      "productName",
-    ]);
+    const searchParamOptions = ref(["productName"]);
 
     const selectedSearchParam = ref(searchParamOptions.value[0]);
 
     const sort = ref(sortOptions.value[0]);
-
 
     itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
       fridgeItems.value = items;
@@ -468,7 +540,6 @@ export default {
       if (!isLoading.value) {
         isLoading.value = true;
 
-
         const filters: Filter[] = [
           {
             fridgeId: fridge.fridgeId,
@@ -487,23 +558,21 @@ export default {
           sortOrder: sort.value.direction,
           page: page.value,
           pageSize: 15,
-        }
+        };
 
-
-
-        itemStore.filterItemsInFridge(itemSearch).then(response => {
-
-          page.value++;
-          fridgeItems.value = [ ...fridgeItems.value, ...response];
-          isLoading.value = false;
-        })
-            .catch((error) => {
-              console.error(error);
-              isLoading.value = false;
-            });
+        itemStore
+          .filterItemsInFridge(itemSearch)
+          .then((response) => {
+            page.value++;
+            fridgeItems.value = [...fridgeItems.value, ...response];
+            isLoading.value = false;
+          })
+          .catch((error) => {
+            console.error(error);
+            isLoading.value = false;
+          });
       }
     };
-
 
     const searchHandler = () => {
       page.value = 0;
@@ -511,19 +580,17 @@ export default {
       loadMore();
     };
 
-
-
     const observeBottom = () => {
       const bottomElement = document.querySelector("#bottom-element");
       const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                loadMore();
-              }
-            });
-          },
-          { threshold: 1 }
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              loadMore();
+            }
+          });
+        },
+        { threshold: 1 }
       );
       if (bottomElement) {
         observer.observe(bottomElement);
@@ -543,14 +610,13 @@ export default {
       }
     });
 
-
     const itemAmount = ref(1);
     const submitMessage = ref("norvegia");
     const searchQuery = ref("");
-
-
+    const active = ref(false);
 
     return {
+      active,
       fridge,
       notifications,
       searchItems,
@@ -562,6 +628,7 @@ export default {
       fridgeStore,
       search,
       itemStore,
+      scannerActive,
       isCameraToggled,
       //getNotifications
       searchText,
@@ -637,6 +704,24 @@ export default {
 }
 
 
+#barcode-scanner {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+#interactive {
+  text-align: center;
+  width: 95vw;
+  height: 380px;
+  margin: auto;
+
+  transform: translate(25%);
+}
+
+.viewport video {
+  width: 400px;
+  height: 300px;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.25s ease;
@@ -644,7 +729,7 @@ export default {
 
 .fade-enter,
 .fade-leave-to {
-    opacity: 0;
+  opacity: 0;
 }
 
 .searchbar-wrapper {
@@ -655,8 +740,8 @@ export default {
   border-radius: 8px;
 }
 
-#toggle{
-margin-top: 10px;
+#toggle {
+  margin-top: 10px;
   margin-left: 10px;
   height: 40px;
   width: 8%;
@@ -665,12 +750,12 @@ margin-top: 10px;
   border: 0;
 }
 
-#toggle:hover{
+#toggle:hover {
   background-color: #238b65;
   cursor: pointer;
 }
 
-#filter{
+#filter {
   display: flex;
   align-content: center;
   justify-content: center;
@@ -684,13 +769,12 @@ margin-top: 10px;
   background-color: #31c48d;
   transform: translateX(2000px);
   -webkit-transform: translateX(2000px);
-
 }
 
-#filter-component{
+#filter-component {
   transform: translateX(2000px);
   -webkit-transform: translateX(2000px);
-margin-top: 10px;
+  margin-top: 10px;
   height: 86%;
   width: 13%;
   margin-left: auto;
@@ -698,10 +782,9 @@ margin-top: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 50px;
   background-color: transparent;
-
 }
 
-#search-wrapper{
+#search-wrapper {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -709,7 +792,7 @@ margin-top: 10px;
   border-radius: 20px;
 }
 
-#search-wrapper input{
+#search-wrapper input {
   width: 100%;
   border-radius: 50px;
 }
@@ -721,7 +804,7 @@ margin-top: 10px;
   border-radius: 20px;
 }
 
-#sort-wrapper select{
+#sort-wrapper select {
   width: 100%;
   border-radius: 50px;
 }
@@ -729,7 +812,6 @@ margin-top: 10px;
 .slide-in {
   animation: slide-in 0.5s forwards;
   -webkit-animation: slide-in 0.5s forwards;
-
 }
 
 .slide-out {
@@ -738,30 +820,38 @@ margin-top: 10px;
 }
 
 @keyframes slide-in {
-  100% { transform: translateX(0%);
+  100% {
+    transform: translateX(0%);
     opacity: 1;
-  pointer-events: all}
+    pointer-events: all;
+  }
 }
 
 @-webkit-keyframes slide-in {
-  100% { -webkit-transform: translateX(0%);
+  100% {
+    -webkit-transform: translateX(0%);
     opacity: 1;
-    pointer-events: all}
+    pointer-events: all;
+  }
 }
 
 @keyframes slide-out {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(2000px); }
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(2000px);
+  }
 }
 
 @-webkit-keyframes slide-out {
-  0% { -webkit-transform: translateX(0%); }
-  100% { -webkit-transform: translateX(2000px); }
+  0% {
+    -webkit-transform: translateX(0%);
+  }
+  100% {
+    -webkit-transform: translateX(2000px);
+  }
 }
-
-
-
-
 
 input[type="text"],
 select {
@@ -785,7 +875,7 @@ select {
 
 .fade-enter,
 .fade-leave-to {
-    opacity: 0;
+  opacity: 0;
 }
 
 .list-wrapper {
@@ -872,7 +962,6 @@ input[type="text"]:focus {
   display: block;
 }
 
-
 .dropdown a:hover {
   background-color: #ddd;
 }
@@ -943,8 +1032,13 @@ input[type="text"]:focus {
   background-color: #6c6c6c;
 }
 
-
-
+@media (max-width: 1350px) {
+  #interactive {
+    transform: none;
+    position: relative;
+    overflow: hidden;
+  }
+}
 
 @media (max-width: 860px) {
   .list-wrapper {
@@ -1018,15 +1112,14 @@ input[type="text"]:focus {
     height: 60px;
     border-radius: 20px 20px 0 0;
   }
-  .slide-in{
+  .slide-in {
     display: block !important;
-
   }
-  .slide-out{
+  .slide-out {
     display: none !important;
   }
 
-  #filter{
+  #filter {
     all: unset;
     width: 100%;
     margin: 10px;
@@ -1035,27 +1128,22 @@ input[type="text"]:focus {
     border-radius: 20px;
   }
 
-  #filter input{
+  #filter input {
     width: 100%;
     border-radius: 50px;
   }
 
-  #filter select{
+  #filter select {
     width: 100%;
     border-radius: 50px;
   }
 
-
-
-
-
-
-  #search-wrapper{
+  #search-wrapper {
     width: 100%;
     margin-bottom: 10px;
   }
 
-  #sort-wrapper{
+  #sort-wrapper {
     width: 100%;
   }
 

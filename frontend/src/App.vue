@@ -49,7 +49,6 @@
       </ul>
       <div class="language" @click="changeLanguage()">{{ language }}</div>
     </nav>
-
   </header>
   <div class="current-fringe" v-if="!isOnAuthPage && !isOnRootPage">
     <div class="break-line" />
@@ -83,9 +82,8 @@
     </div>
   </div>
   <div class="router-view-container">
-    <RouterView/>
+    <RouterView />
   </div>
-
 </template>
 
 <script>
@@ -405,7 +403,7 @@ nav ul li a .text {
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    z-index: 1;
+    z-index: 10;
   }
 
   header img {
@@ -439,7 +437,7 @@ nav ul li a .text {
   nav {
     display: flex;
     align-items: center;
-    max-width: 100%;
+    max-width: 100vw;
     overflow-x: hidden;
     overflow-y: hidden;
   }
@@ -638,7 +636,6 @@ nav ul li a .text {
 
   .icon {
     scale: 2 !important;
-
   }
   nav ul li a {
     padding: 5px 0px 0px 0px !important;
