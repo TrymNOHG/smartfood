@@ -13,6 +13,7 @@ import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.recipe.ItemRecipeScoreRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.recipe.RecipeRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.text.similarity.JaroWinklerDistance;
 import org.springframework.data.domain.Page;
@@ -65,6 +66,7 @@ public class ItemRecipeScoreService {
     }
 
     @Async
+    @Transactional
     public CompletableFuture<List<ItemRecipeScore>> generateScoreForItem(Long itemId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
@@ -75,7 +77,6 @@ public class ItemRecipeScoreService {
         for(Recipe recipe : allRecipes) {
             futures.add(generateSingleScore(item, recipe));
         }
-
         return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
                 .thenApply(v -> futures.stream()
                         .map(CompletableFuture::join)
@@ -93,6 +94,7 @@ public class ItemRecipeScoreService {
     }
 
     @Async
+    @Transactional
     public CompletableFuture<ItemRecipeScore> generateSingleScore(Item item, Recipe recipe) {
         if(itemRecipeScoreRepository.existsItemRecipeScoreByItem_ItemIdAndRecipe_RecipeId(item.getItemId(), recipe.getRecipeId())) return CompletableFuture.completedFuture(null);
 

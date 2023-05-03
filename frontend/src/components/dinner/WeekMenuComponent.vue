@@ -48,15 +48,25 @@ export default {
               fridgeId,
               day.toUpperCase(),
               pageIndex.value,
-              10
+              7
           );
-          console.log("tf")
-          console.log(response.content)
 
-          meals.value = [...meals.value, ...response.content];
-          console.log("meals ", meals.value);
 
-          meals.value[i].dayOfWeek = weekdays[i];
+          for(let newMeal of response.content) {
+            console.log(day)
+            if (
+                !meals.value.find(
+                    (meal) => meal.recipeName === newMeal.recipeName
+                )
+            ) {
+              meals.value[i] = newMeal
+              break;
+            }
+          }
+
+
+
+          meals.value[i].dayOfWeek = day;
           console.log(meals.value[i].dayOfWeek, " ", weekdays[i]);
 
           i++

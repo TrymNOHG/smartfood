@@ -168,7 +168,7 @@ public class RecipeController {
     public ResponseEntity<Object> generateItemRecipeScoresTest(@ParameterObject @RequestParam(name="item") Long itemId,
                                                            @ParameterObject @RequestParam(name="recipe") Long recipeId) {
 
-        itemRecipeScoreService.generateScoreForItem(itemId);
+        itemRecipeScoreService.generateScoreForItem(itemId).join();
         return ResponseEntity.ok().build();
     }
 

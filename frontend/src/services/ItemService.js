@@ -2,7 +2,7 @@ import axios from "axios";
 import SessionToken from '@/features/SessionToken.js'
 
 //TODO: needs to be changed to https://smartmat.me/api/item in order to run on server
-const BASE_LISTING_URL = "https://smartmat.me/api/item";
+const BASE_LISTING_URL = "http://localhost:8089/api/item";
 
 export const addItemToFridge = async (itemDTO, fridgeId) => {
     return await axios.post(`${BASE_LISTING_URL}/fridge/add?fridgeId=${fridgeId}`, itemDTO, {
