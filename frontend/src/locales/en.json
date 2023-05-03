@@ -102,5 +102,47 @@
   "login_error": "Wrong password or Email",
   "register_error": "User already exists",
   "next_page": "Next Page",
-  "previous_page": "Previous Page"
+  "previous_page": "Previous Page",
+
+
+
+  "__Tour__":"Underneath this is all the translation for the tours",
+
+    "Buttons__":"All buttons",
+    "tour: button next": "Next",
+    "tour: button exit": "Exit",
+    "tour: button cancel": "Cancel",
+    "tour: button take-tour": "Take the tour",
+
+    "Whole App__":"This is tour for the whole app",
+      "tour: view:fridgesView method:firstLogginTour id: usage:title":"",
+      "tour: view:fridgesView method:firstLogginTour id: usage:text":"",
+      "tour: view:fridgesView method:firstLogginTour id:welcome usage:title":"Welcome to SmartMat",
+      "tour: view:fridgesView method:firstLogginTour id:welcome usage:text": "Yoyoyo",
+
+    "List of Fridges__":"This is tour for the list of all the fridges",
+      "tour: view:fridgesView method:fridgesStepTour id: usage:title":"",
+      "tour: view:fridgesView method:fridgesStepTour id: usage:text":"",
+      "tour: view:fridgesView method:fridgesStepTour id:profile-tour usage:title":"Profile",
+      "tour: view:fridgesView method:fridgesStepTour id:profile-tour usage:text": "This is the profile button, and will direct you to your profile",
+      "tour: view:fridgesView method:fridgesStepTour id:language-tour usage:title":"Change language",
+      "tour: view:fridgesView method:fridgesStepTour id:language-tour usage:text":"Here you can change the language of the page. <br> Click it to choose between English and Norwegian",
+      "tour: view:fridgesView method:fridgesStepTour id:fridge-name-info usage:title":"Fridge name",
+      "tour: view:fridgesView method:fridgesStepTour id:fridge-name-info usage:text-picked fridge":"This is the name of the fridge your are in. <br> Press on the name, and you will navigate to your fridge",
+      "tour: view:fridgesView method:fridgesStepTour id:fridge-name-info usage:text-not picked fridge":"Here, the name of the fridge you choose will be displayed. <br> Press on the name, and you will navigate to your fridge",
+      "tour: view:fridgesView method:fridgesStepTour id:exit-fridge-button-info usage:title":"Exit fridge",
+      "tour: view:fridgesView method:fridgesStepTour id:exit-fridge-button-info usage:text-picked fridge":"This button can you press to exit or \"escape\" the fridge and see the list of all your fridges",
+      "tour: view:fridgesView method:fridgesStepTour id:exit-fridge-button-info usage:text-not picked fridge":"This button can you press to exit or \"escape\" the fridge and see the list of all your fridges. <br><br> But as you see now, the stick-figure wants to enter a fridge, so please choose a fridge to continue",
+      "tour: view:fridgesView method:fridgesStepTour id:grey-field-header usage:title":"Grey field",
+      "tour: view:fridgesView method:fridgesStepTour id:grey-field-header usage:text":"This grey section will show you the header of pages, like \" List of your refrigerators \" <br> and it shows you the intern navigation bar within a main page",
+      "tour: view:fridgesView method:fridgesStepTour id:list-of-fridges usage:title":"List of your fridges",
+      "tour: view:fridgesView method:fridgesStepTour id:list-of-fridges usage:text":"Here you can see the list of all your fridges",
+      "tour: view:fridgesView method:fridgesStepTour id:single-fridge usage:title":"List of your fridges",
+      "tour: view:fridgesView method:fridgesStepTour id:single-fridge usage:text":"Here is your first fridge. You enter the fridge by clicking on this fridge. The funtions inside the fridge is: <ul><li>See all groceries</li><li>Make grocery-list</li><li>Add members to share the fridge with</li><li>See suggestions on recipe based on your groceries</li><li>Suggested weekly menu</li><li>Statistics, and more</li></ul>",
+      "tour: view:fridgesView method:fridgesStepTour id:fridge-change-information usage:title":"List of your fridges",
+      "tour: view:fridgesView method:fridgesStepTour id:fridge-change-information usage:text":"To change the name of the fridge, you can press the \"change button\" or you can delete the fridge by clicking the bin",
+      "tour: view:fridgesView method:fridgesStepTour id:add-fridge usage:title":"Make a new fridge",
+      "tour: view:fridgesView method:fridgesStepTour id:add-fridge usage:text":"You can make a new fridge by clicking this plus button, and type in the name of the fridge",
+      "tour: view:fridgesView method:fridgesStepTour id:information-button usage:title":"Help / Information",
+      "tour: view:fridgesView method:fridgesStepTour id:information-button usage:text":"You can click on the information-button all the time to get a tour on the current page"
 }
