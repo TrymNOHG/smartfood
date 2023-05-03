@@ -50,6 +50,11 @@ export default {
   transform: translate(-100%, 45%);
 }
 
+#receipt-btn:hover {
+  transform: translate(-100%, 45%);
+  cursor: pointer;
+}
+
 #searchbar {
   display: flex;
 }

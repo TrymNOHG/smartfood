@@ -57,7 +57,7 @@ export default {
   align-items: center;
   background-color: #31c48d;
   height: 100%;
-  border-radius: 10px;
+  border-radius: 50px;
 
 }
 

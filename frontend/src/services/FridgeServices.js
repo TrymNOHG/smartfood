@@ -61,23 +61,5 @@ export const loadUsersByFridgeId = async (fridgeId) => {
     });
 }
 
-export const filterFridge = async (filters, sort, page) => {
-    const token = await SessionToken();
-    return await axios.post( `${BASE_LISTING_URL}/filter`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            data:{
-                filters,
-                "sorts": [
-                    {
-                        key: sort.value.key,
-                        direction: sort.value.direction
-                    }
-                ],
-                "page": page.value,
-                "size": 15
-            },
-            });
-}
+
 
