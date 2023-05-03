@@ -403,8 +403,7 @@ export default {
       router.currentRoute.value.query.selectedTab || "fridge"
     );
 
-    history.replaceState(null, null, "/fridge");
-    const currentUrl = window.location.href;
+    history.replaceState(null, null, '/fridge');
 
     const searchItems = ref([]);
     const search = ref(false);
