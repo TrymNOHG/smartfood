@@ -138,7 +138,7 @@ export default {
     async addRecipeToSuggestions() {
       const recipeSuggestionAddDTO = {
         "fridgeId": this.fridgeId,
-        "recipeId": 2,
+        "recipeId": this.meal.recipeId,
         "userId": this.userId
       }
       console.log("recipeSuggestionAddDTO", recipeSuggestionAddDTO);

@@ -5,21 +5,18 @@
           <h3>Suggestions:</h3>
           <div v-for="(suggestion, index) in suggestions" :key="index">
             <meal
-                :isSuperUser="true"
+                :isSuperUser="isCurrentUserSuperUser"
                 :meal="suggestion.recipeLoadDTO"
-                :currenFridge="fridge"
                 @delete-item="denySuggestion(suggestion)"
+                @accept-item="acceptSuggestion($event, suggestion)"
             />
-            <button @click="acceptSuggestion(suggestion)">Accept</button>
           </div>
         </div>
         <meal
-            :isSuperUser="true"
+            :isSuperUser="false"
             v-for="(meal, index) in meals"
             :key="index"
             :meal="meal"
-            :currenFridge="fridge"
-            @delete-item="deleteItem"
         />
       </div>
       <div class="pagination-buttons" v-if="!isMobile">
@@ -54,6 +51,9 @@
       isMobile() {
         return this.width < 768;
       },
+      isCurrentUserSuperUser() {
+        return this.fridgeStore.getIsSuperUser;
+      },
     },
 
     async mounted() {
@@ -67,7 +67,8 @@
     },
 
     setup() {
-      const fridgeId = useFridgeStore().getCurrentFridge.fridgeId;
+      const fridgeStore = useFridgeStore();
+      const fridgeId = fridgeStore.getCurrentFridge.fridgeId;
       const meals = ref([]);
       const suggestions = ref([]);
       let pageIndex = ref(0);
@@ -86,11 +87,16 @@
       loadSuggestions();
 
 
-      const acceptSuggestion = async (suggestion) => {
+      const acceptSuggestion = async (missingIds, suggestion) => {
+        const recipeShoppingDTO = {
+          fridgeId: fridgeId,
+          itemIds: missingIds
+        }
+        const recipeId = suggestion.recipeLoadDTO.recipeId
+        const userId = suggestion.UserId
         try {
 
-
-          await acceptRecipeSuggestion();
+          await acceptRecipeSuggestion(recipeShoppingDTO, recipeId, userId);
           // Remove the suggestion from the list
           suggestions.value = suggestions.value.filter(s => s.id !== suggestion.id);
         } catch (error) {
@@ -195,6 +201,7 @@
 
 
       return {
+        fridgeStore,
         meals,
         loadMore,
         observeBottom,
