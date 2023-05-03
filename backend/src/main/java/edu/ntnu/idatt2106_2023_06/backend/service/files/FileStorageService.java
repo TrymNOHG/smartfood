@@ -51,7 +51,7 @@ public class FileStorageService implements IFileStorageService {
     public void storeProfilePicture(String userId, MultipartFile profilePicture) throws IOException {
         if (profilePicture != null && !profilePicture.isEmpty()) {
             String contentType = profilePicture.getContentType();
-            if (contentType != null && contentType.startsWith("image/")) {
+            if (contentType != null && contentType.startsWith("image/") ) {
                 Path targetLocation = fileStorageLocation.resolve(userId);
                 Files.copy(profilePicture.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             } else {
