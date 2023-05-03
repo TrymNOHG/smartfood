@@ -59,11 +59,7 @@
                 :image="item.image"
                 :text="item.name"
                 :store="item.store.name"
-                :price="
-                  typeof item.current_price === 'number'
-                    ? item.current_price
-                    : item.current_price.price
-                "
+                :price="item.current_price"
                 style="text-align: center"
                 @click="addItemToFridge(this.fridge.fridgeId, item)"
               />
@@ -158,13 +154,7 @@ import {
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import { useFridgeStore, useItemStore } from "@/store/store";
-import {
-  getCurrentInstance,
-  onBeforeUnmount,
-  onMounted,
-  onUnmounted,
-  ref,
-} from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import { getItemByBarcode, getItems } from "@/services/ApiService";
@@ -360,14 +350,6 @@ export default {
           },
           decoder: {
             readers: ["ean_reader", "code_128_reader", "code_39_reader"],
-            debug: {
-              drawBoundingBox: true,
-              showFrequency: true,
-              drawScanline: true,
-              showPattern: true,
-            },
-            multiple: false,
-            frequency: 5, // Set the number of scans per second, e.g., 5 scans per second
           },
         },
         (err) => {
@@ -398,7 +380,7 @@ export default {
             this.searchItems = response.products;
             console.log(response.products);
             this.search = true;
-            this.stopScanner();
+            this.scannerActive = false;
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -433,12 +415,12 @@ export default {
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
     let scannerActive = ref(false);
+    const isCameraToggled = ref(false);
     const isLoading = ref(false);
     const page = ref(0);
     const searchText = ref("");
     const selectedCategory = ref(0);
     const categories = ref<Array<{ id: number; name: string }>>([]);
-    const instance = getCurrentInstance();
 
     const sortOptions = ref([
       { key: "expirationDate", direction: "DESC" },
@@ -530,11 +512,6 @@ export default {
       }
     });
 
-    onBeforeUnmount(() => {
-      if (instance && instance.proxy) {
-        instance.proxy.stopScanner();
-      }
-    });
     const itemAmount = ref(1);
     const submitMessage = ref("norvegia");
     const searchQuery = ref("");
@@ -584,7 +561,6 @@ export default {
   overflow-x: hidden;
   overflow-y: hidden;
 }
-
 #interactive {
   text-align: center;
   width: 95vw;
@@ -676,7 +652,6 @@ export default {
   width: 100%;
   border-radius: 50px;
 }
-
 #sort-wrapper {
   display: flex;
   align-items: center;
@@ -796,7 +771,6 @@ select {
   height: 40px;
   margin-right: 10px;
   border-radius: 0 50px 50px 0 !important;
-  cursor: pointer;
 }
 
 #searchbtn:hover{
@@ -984,11 +958,9 @@ input[type="text"]:focus {
     height: 60px;
     border-radius: 20px 20px 0 0;
   }
-
   .slide-in {
     display: block !important;
   }
-
   .slide-out {
     display: none !important;
   }
@@ -1036,7 +1008,6 @@ input[type="text"]:focus {
     margin-left: 20%;
     margin-right: 20%;
   }
-
   .wrapper {
     z-index: -1;
     grid-template-rows: 1fr;
