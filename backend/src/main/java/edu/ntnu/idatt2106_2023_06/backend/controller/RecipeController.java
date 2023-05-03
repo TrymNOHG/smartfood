@@ -7,6 +7,7 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeSuggestionAddDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeSuggestionLoad;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Day;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Recipe;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemRecipeScoreService;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemService;
@@ -120,6 +121,25 @@ public class RecipeController {
             @RequestParam(name = "size", defaultValue = "10") int size) {
         logger.info("Trying to load recipes for fridge with ID: " + fridgeId);
         Page<RecipeLoadDTO> recipeLoadDTOs = recipeService.getRecipesByFridgeId(fridgeId, page, size);
+        logger.info("Recipe DTOs successfully made!");
+        return ResponseEntity.ok(recipeLoadDTOs);
+    }
+
+    @GetMapping(value="/loadByDay")
+    @Operation(summary = "Get recipe from Meny")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Loading items of a given shopping list",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RecipeLoadDTO.class)) })}
+    )
+    public ResponseEntity<Page<RecipeLoadDTO>> loadRecipeByFridgeItemsAndDay(
+            @ParameterObject @RequestParam(name = "fridge") Long fridgeId,
+            @ParameterObject @RequestParam(name = "day") Day day,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+        logger.info("Trying to load recipes for fridge with ID: " + fridgeId);
+        Page<RecipeLoadDTO> recipeLoadDTOs = recipeService.getRecipesByFridgeIdAndDay(fridgeId, page, size, day);
+        //TODO: free the shopping items from WeekRecipeItems table.
         logger.info("Recipe DTOs successfully made!");
         return ResponseEntity.ok(recipeLoadDTOs);
     }

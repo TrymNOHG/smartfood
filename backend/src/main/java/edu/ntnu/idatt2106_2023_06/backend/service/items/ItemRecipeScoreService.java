@@ -128,16 +128,15 @@ public class ItemRecipeScoreService {
         }
     }
 
-    public Page<Recipe> getRankedRecipesByFridge(Long fridgeId, int pageNumber, int pageSize) {
+    public Page<Recipe> getRankedRecipeByDate(Long fridgeId, int pageNumber, int pageSize, LocalDateTime date) {
         Fridge fridge = fridgeRepository.findById(fridgeId)
                 .orElseThrow(() -> new FridgeNotFoundException(fridgeId));
         List<FridgeItems> fridgeItems = fridgeItemsRepository.findByFridge(fridge)
                 .orElseThrow(() -> new FridgeNotFoundException(fridgeId));
 
         if(fridgeItems.isEmpty()) {
-           return null;
+            return null;
         }
-
 
         Map<Long, Double> recipeScores = new HashMap<>();
         for (FridgeItems fridgeItem : fridgeItems) {
@@ -147,7 +146,7 @@ public class ItemRecipeScoreService {
                     .orElseGet(() -> generateScoreForItem(fridgeItem.getItem().getItemId()).join());
 
             for (ItemRecipeScore itemRecipeScore : itemRecipeScores) {
-                double weightedScore = getWeightedScore(itemRecipeScore, fridgeItem);
+                double weightedScore = getWeightedScore(itemRecipeScore, fridgeItem, date);
                 recipeScores.merge(itemRecipeScore.getRecipe().getRecipeId(), weightedScore, Double::sum);
             }
         }
@@ -164,10 +163,14 @@ public class ItemRecipeScoreService {
         return new PageImpl<>(recipes, pageable, recipeIds.size());
     }
 
+    public Page<Recipe> getRankedRecipesByFridge(Long fridgeId, int pageNumber, int pageSize) {
+        return getRankedRecipeByDate(fridgeId, pageNumber, pageSize, LocalDateTime.now());
+    }
 
 
-    public double getWeightedScore(ItemRecipeScore itemRecipeScore, FridgeItems fridgeItem) {
-        long daysLeft = ChronoUnit.DAYS.between(LocalDateTime.now(), fridgeItem.getExpirationDate());
+
+    public double getWeightedScore(ItemRecipeScore itemRecipeScore, FridgeItems fridgeItem, LocalDateTime date) {
+        long daysLeft = ChronoUnit.DAYS.between(date, fridgeItem.getExpirationDate());
         double weight = 1 / Math.sqrt(daysLeft);
 
         return weight * itemRecipeScore.getScore();
