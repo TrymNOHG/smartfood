@@ -107,4 +107,22 @@
   "expiry-asc": "Expiry - Ascending",
   "purchase-desc": "Purchase date - Descending",
   "purchase-asc": "Purchase date - Ascending"
+  "add_missing_items": "Add missing items",
+  "tips": "Tips",
+  "serving_size": "Serving size",
+  "cook_time": "Cook time",
+  "difficulty": "Difficulty",
+  "author": "Author",
+  "allergens": "Allergens",
+  "instructions": "Instructions",
+  "step": "Step",
+  "Under 20 min": "Under 20 min",
+  "20 - 40 min": "20 - 40 min",
+  "40 - 60 min": "40 - 60 min",
+  "Over 60 min:": "Over 60 min",
+  "suggest_dinner": "Suggest dinner",
+  "Utløpsdato - Stigende": "Expiry date - Ascending",
+  "Kjøpsdato - Synkende": "Purchase date - Descending",
+  "Kjøpsdato - Stigende": "Purchase date - Ascending",
+  "Utløpsdato - Synkende": "Expiry date - Descending"
 }

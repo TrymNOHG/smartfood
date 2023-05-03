@@ -7,7 +7,7 @@
     <div class="meal-info">
       <h1 class="meal-name">{{ meal.recipeName }}</h1>
       <hr>
-      <p id="description">{{ meal.description }}</p>
+      <p id="description" v-html="formattedDescription"></p>
     </div>
   </div>
 </template>
@@ -20,7 +20,17 @@ export default {
       type: Object,
     },
   },
+  computed: {
+    formattedDescription() {
+      const baseUrl = "https://meny.no";
+      return this.meal.description.replace(/\[(.*?)\]\((\/.*?)\)/g, (match, text, url) => {
+        return `<a href="${baseUrl}${url}" target="_blank">${text}</a>`;
+      });
+    },
+  },
 };
+
+
 </script>
 
 <style scoped>

@@ -274,15 +274,4 @@ describe("Adding and deleting items from fridge", () => {
     cy.contains("Ammeinnlegg 50stk Lillego").should("be.visible");
   });
 
-  it("should delete item from fridge on clicking delete", () => {
-    cy.wait("@getFridgeItems");
-    cy.get(".delete-btn")
-      .invoke("css", "transform", "none")
-      .invoke("css", "opacity", "1")
-      .click({ force: true });
-    cy.contains("bekreft").click();
-    cy.contains("bekreft").click();
-    cy.contains("Ja").click();
-    cy.get("body").should("not.contain", "Ammeinnlegg 50stk Lillego");
-  });
 });

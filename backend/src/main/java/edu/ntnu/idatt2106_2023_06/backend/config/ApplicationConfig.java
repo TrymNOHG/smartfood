@@ -3,9 +3,11 @@ package edu.ntnu.idatt2106_2023_06.backend.config;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -21,6 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  and provides a password encoder to be used for password hashing.
  */
 @Configuration
+@EnableAsync(proxyTargetClass = true)
+@EnableCaching
 @RequiredArgsConstructor
 @ImportAutoConfiguration({
         DatabaseConfig.class,
