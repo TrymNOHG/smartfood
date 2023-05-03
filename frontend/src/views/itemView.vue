@@ -190,15 +190,12 @@ export default {
   display: flex;
   grid-column: 3;
   text-align: right;
-  margin-left: auto;
-
 }
 
 #info-picture{
   height: 30px;
   width: 30px;
   cursor: pointer;
-
 }
 
 .link {
@@ -246,9 +243,12 @@ export default {
 @media (max-width: 650px) {
 
   #info-and-bell {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    gap: 50%;
     top: 5%;
-    gap: 25%;
-    left: 8%;
+    left: 10%;
   }
 
   body {

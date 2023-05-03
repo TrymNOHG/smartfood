@@ -336,7 +336,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
 template {
   display: flex;
@@ -357,8 +357,6 @@ template {
   align-items: stretch;
   flex-wrap: nowrap;
 }
-
-
 
 .grey-bar {
   background-color: #6C6C6C;

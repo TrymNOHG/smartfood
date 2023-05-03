@@ -106,10 +106,12 @@ export default {
 #notification-list  {
   z-index: 998;
   overflow-y: auto;
-  max-height: 320px;
+  max-height: 250px;
   -ms-overflow-style: none;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-size: 125%;
+  position: absolute;
+  left: -350px;
 }
 
 #notification-list::-webkit-scrollbar {
@@ -146,15 +148,15 @@ export default {
 
 @media (max-width: 650px) {
 
+
   #notification-list {
     z-index: 998;
-    position: absolute;
     overflow-y: auto;
     max-height: 350px;
     display: flex;
     flex-direction: column;
-    width: 1720%;
-    right: -50px;
+    width: 1450%;
+    left: -300px;
   }
 }
 

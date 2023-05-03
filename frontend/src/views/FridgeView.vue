@@ -80,9 +80,6 @@
           id="filter"
           class="slide-in"
           :class="active ? 'slide-in' : 'slide-out'"
-          id="filter"
-          class="slide-in"
-          :class="active ? 'slide-in' : 'slide-out'"
       >
         <div id="search-wrapper">
           <input
@@ -770,6 +767,7 @@ select {
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  max-height: 35px;
 }
 
 #searchbar {
@@ -811,7 +809,6 @@ select {
   display: flex;
   grid-column: 3;
   text-align: right;
-  margin-left: auto;
 }
 
 #info-picture {
@@ -939,6 +936,10 @@ input[type="text"]:focus {
   }
 
   #info-and-bell {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    gap: 50%;
     top: 5%;
     left: 10%;
   }
