@@ -42,7 +42,7 @@
   "fridgeNameLabel": "What is the name of your new Fridge?",
   "addFridgeButtonText": "Add Fridge",
   "added_to_fridge": "Item added to Fridge",
-  "fridges": "List of your refrigerators",
+  "fridges": "Your refrigerators",
   "edit": "Edit",
   "changePassword": "Change password",
   "logout": "Logout",
@@ -102,5 +102,9 @@
   "login_error": "Wrong password or Email",
   "register_error": "User already exists",
   "next_page": "Next Page",
-  "previous_page": "Previous Page"
+  "previous_page": "Previous Page",
+  "expiry-desc": "Expiry - Descending",
+  "expiry-asc": "Expiry - Ascending",
+  "purchase-desc": "Purchase date - Descending",
+  "purchase-asc": "Purchase date - Ascending"
 }

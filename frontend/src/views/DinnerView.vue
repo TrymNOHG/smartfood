@@ -104,7 +104,6 @@ export default {
 
 .grey-bar {
   background-color: #6c6c6c;
-  max-height: 35px;
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -116,9 +115,11 @@ export default {
 }
 
 .information-button {
+  display: flex;
   grid-column: 3;
   text-align: right;
-  padding: 2px 5px;
+  margin-left: auto;
+
 }
 
 #info-picture {
@@ -149,6 +150,7 @@ export default {
     align-items: center;
     align-content: center;
     justify-content: center;
+    margin-left: 10px;
   }
 
   .link {
@@ -166,5 +168,6 @@ export default {
     margin-top: 20px;
     padding-top: 10px;
   }
+
 }
 </style>

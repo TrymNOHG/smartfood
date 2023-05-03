@@ -1,7 +1,7 @@
 <template>
   <header v-if="!isOnRootPage">
     <router-link to="/fridges">
-      <img src="@/assets/images/smartmat_logo.png" alt="Logo" />
+      <img id="logo" src="@/assets/images/smartmat_logo.png" alt="Logo" />
     </router-link>
     <h1 class="matprat-title" :class="{ centered: isOnAuthPage }">
       {{ $t("matsmart") }}
@@ -153,6 +153,11 @@ export default {
   border-radius: 30px 30px 0 0;
 }
 
+#logo{
+  padding: 5px;
+}
+
+
 .fridge-name {
   display: flex;
   flex-direction: column;
@@ -210,7 +215,14 @@ header img {
 .language {
   color: white;
   margin-left: 20px;
+  margin-right: 10px;
   cursor: pointer;
+
+}
+
+.language:hover {
+  scale: 1.2;
+
 }
 
 h1 {
@@ -224,6 +236,8 @@ h1 {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  font-family: Roboto, sans-serif;
+  font-weight: bold;
 }
 
 .matprat-title.centered {
@@ -361,18 +375,11 @@ nav ul li a .text {
     justify-content: space-evenly;
   }
 
-  .fridge-name {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 50px;
-    margin-left: 28%;
-  }
 
-  .link-name {
-    text-decoration: none;
-    color: white;
-  }
+
+
+
+
 
   .change-button {
     text-align: center;
@@ -512,10 +519,7 @@ nav ul li a .text {
     height: 80px;
   }
 
-  .fridge-name {
-    margin-left: 30%;
-    font-size: 18px;
-  }
+
 
   .change-button {
     top: 10%;
@@ -650,7 +654,18 @@ nav ul li a .text {
     color: white;
     font-weight: bold;
     text-shadow: 0 0 black;
-    font-size: 20px;
+
+  }
+
+  .fridge-name {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 5%;
+    height: 50px;
+    width: 400px;
+    font-weight: bold;
+    font-size: 25px;
   }
 
   .break-line {
@@ -661,6 +676,8 @@ nav ul li a .text {
   .current-fringe {
     background-color: white;
     border-radius: 0;
+    margin-bottom: 5px;
+
   }
 
   .name-display {

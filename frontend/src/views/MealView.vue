@@ -70,17 +70,17 @@ export default {
 
 .grey-bar {
   background-color: #6C6C6C;
-  height: 35px;
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 }
 
 .information-button {
+  display: flex;
   grid-column: 3;
   text-align: right;
-  padding: 2px 5px;
-  max-height: 35px;
+  margin-left: auto;
+  padding: 0;
 }
 
 #info-picture {
