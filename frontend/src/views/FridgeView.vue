@@ -556,6 +556,7 @@ export default {
   overflow-x: hidden;
   overflow-y: hidden;
 }
+
 #interactive {
   text-align: center;
   width: 95vw;
@@ -645,6 +646,7 @@ export default {
   width: 100%;
   border-radius: 50px;
 }
+
 #sort-wrapper {
   display: flex;
   align-items: center;
@@ -764,6 +766,7 @@ select {
   height: 40px;
   margin-right: 10px;
   border-radius: 0 50px 50px 0 !important;
+  cursor: pointer;
 }
 
 #grey-header {
@@ -944,9 +947,11 @@ input[type="text"]:focus {
     height: 60px;
     border-radius: 20px 20px 0 0;
   }
+
   .slide-in {
     display: block !important;
   }
+
   .slide-out {
     display: none !important;
   }
@@ -993,6 +998,7 @@ input[type="text"]:focus {
     margin-left: 20%;
     margin-right: 20%;
   }
+
   .wrapper {
     z-index: -1;
     grid-template-rows: 1fr;
