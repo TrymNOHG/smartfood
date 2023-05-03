@@ -75,7 +75,7 @@
     <div class="searchbar-wrapper">
       <button id="toggle" @click="handleClick">Filter</button>
       <div
-          v-if="click"
+        v-if="click"
         id="filter"
         class="slide-in"
         :class="active ? 'slide-in' : 'slide-out'"
@@ -108,7 +108,7 @@
       </div>
 
       <div
-          v-if="click"
+        v-if="click"
         id="filter-component"
         class="slide-in"
         :class="active ? 'slide-in' : 'slide-out'"
@@ -158,7 +158,13 @@ import {
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import { useFridgeStore, useItemStore } from "@/store/store";
-import { onMounted, onUnmounted, ref } from "vue";
+import {
+  getCurrentInstance,
+  onBeforeUnmount,
+  onMounted,
+  onUnmounted,
+  ref,
+} from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import { getItemByBarcode, getItems } from "@/services/ApiService";
@@ -202,9 +208,8 @@ export default {
 
   methods: {
     handleClick() {
-      if(this.click != true) this.click = true
+      if (this.click != true) this.click = true;
       this.active = !this.active;
-
     },
 
     listing(bool) {
@@ -420,7 +425,7 @@ export default {
       router.currentRoute.value.query.selectedTab || "fridge"
     );
 
-    history.replaceState(null, null, '/fridge');
+    history.replaceState(null, null, "/fridge");
 
     const searchItems = ref([]);
     const search = ref(false);
@@ -445,9 +450,6 @@ export default {
     const selectedSearchParam = ref(searchParamOptions.value[0]);
 
     const sort = ref(sortOptions.value[0]);
-
-
-
 
     const loadMore = () => {
       if (!isLoading.value) {
@@ -522,7 +524,7 @@ export default {
         observer.unobserve(bottomElement);
       }
     });
-
+    const instance = getCurrentInstance();
     onBeforeUnmount(() => {
       if (instance && instance.proxy && scannerActive.value == true) {
         instance.proxy.stopScanner();
@@ -569,8 +571,7 @@ export default {
 </script>
 
 <style scoped>
-
-*{
+* {
   font-family: Roboto, sans-serif;
 }
 #barcode-scanner {
@@ -789,10 +790,9 @@ select {
   border-radius: 0 50px 50px 0 !important;
 }
 
-#searchbtn:hover{
+#searchbtn:hover {
   cursor: pointer;
   background-color: #238b65;
-
 }
 
 #grey-header {
@@ -1061,7 +1061,6 @@ input[type="text"]:focus {
     padding-top: 10px;
     padding-right: 5px;
     padding-left: 5px;
-
   }
 
   #searchbar {
