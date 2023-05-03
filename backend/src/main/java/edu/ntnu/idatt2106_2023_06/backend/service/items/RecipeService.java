@@ -79,9 +79,7 @@ public class RecipeService {
     public List<RecipeSuggestionLoad> loadRecipeSuggestion(Long fridgeId){
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new FridgeNotFoundException(fridgeId));
         List<RecipeSuggestion> recipeSuggestionList = recipeSuggestionRepository.findAllByFridge(fridge).orElseThrow(() -> new RecipeSuggestionNotFoundException(fridgeId));
-        return recipeSuggestionList.stream().map(i -> {
-            return RecipeMapper.toRecipeSuggestionLoadDTO(i.getRecipe(), i.getUser().getUserId());
-        }).toList();
+        return recipeSuggestionList.stream().map(i -> RecipeMapper.toRecipeSuggestionLoadDTO(i.getRecipe(), i.getUser().getUserId())).toList();
     }
 
     public void deleteRecipeSuggestion(Long recipeId, Long fridgeId, Long userId) {
@@ -111,6 +109,36 @@ public class RecipeService {
                 .map(RecipeMapper::toRecipeLoadDTO)
                 .collect(Collectors.toList());
         return new PageImpl<>(recipeLoadDTOs, pageable, recipePage.getTotalElements());
+    }
+
+    public Page<RecipeLoadDTO> getRecipesByFridgeIdAndDay(Long fridgeId, int page, int size, Day day) {
+        Page<Recipe> recipes = itemRecipeScoreService.getRankedRecipeByDate(fridgeId, page, size, day.getNextDateTime());
+
+        if (recipes == null) {
+            int numRecipes = (int) recipeRepository.count();
+
+            List<Recipe> subListRecipes = recipeRepository.findRandomSubset(PageRequest.of(0, size, Sort.unsorted()));
+
+            List<RecipeLoadDTO> recipeLoadDTOs = subListRecipes.stream()
+                    .map(RecipeMapper::toRecipeLoadDTO)
+                    .collect(Collectors.toList());
+
+            return new PageImpl<>(recipeLoadDTOs, PageRequest.of(0, size), numRecipes);
+        }
+
+        List<RecipeLoadDTO> recipeLoadDTOs = recipes.getContent()
+                .stream()
+                .map(recipe -> {
+                            RecipeLoadDTO recipeLoadDTO = RecipeMapper.toRecipeLoadDTO(recipe);
+                            recipeLoadDTO.setNumMatchingItems(countMatchingItems(recipeLoadDTO, fridgeId));
+                            return recipeLoadDTO;
+                        }
+                )
+                .collect(Collectors.toList());
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        return new PageImpl<>(recipeLoadDTOs, pageable, recipes.getTotalElements());
     }
 
     //TODO: authenticate
@@ -145,23 +173,6 @@ public class RecipeService {
     }
 
     //TODO: authenticate
-    public Page<RecipeLoadDTO> getRecipesByFridgeIdOld(Long fridgeId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Recipe> recipes = recipeRepository.findAll(pageable);
-
-        List<RecipeLoadDTO> recipeLoadDTOs = recipes.getContent()
-                .stream()
-                .map(recipe -> {
-                            RecipeLoadDTO recipeLoadDTO = RecipeMapper.toRecipeLoadDTO(recipe);
-                            recipeLoadDTO.setNumMatchingItems(countMatchingItems(recipeLoadDTO, fridgeId));
-                            return recipeLoadDTO;
-                        }
-                )
-                .sorted(Comparator.comparing(RecipeLoadDTO::getNumMatchingItems).reversed())
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(recipeLoadDTOs, pageable, recipes.getTotalElements());
-    }
 
     private int countMatchingItems(RecipeLoadDTO recipeDTO, Long fridgeId) {
         Set<Long> fridgeItemIds = fridgeItemsRepository.findAllByFridge_FridgeId(fridgeId)
