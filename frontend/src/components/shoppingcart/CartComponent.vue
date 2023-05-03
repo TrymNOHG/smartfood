@@ -126,7 +126,7 @@ import CartSuggestion from "@/components/shoppingcart/CartSuggestion.vue";
 import CartControl from "@/components/shoppingcart/CartControl.vue";
 import BasicCheckBox from "@/components/basic-components/BasicCheckbox.vue";
 import { useLoggedInStore, useFridgeStore, useItemStore } from "@/store/store";
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed, watch, onBeforeUnmount } from "vue";
 import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert2";
 import Quagga from "quagga";
@@ -204,9 +204,10 @@ export default {
         .then((response) => {
           if (response !== undefined) {
             searchItems.value = response.products;
+
             console.log(response.products);
             search.value = true;
-            scannerActive.value = false;
+            stopScanner();
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -381,6 +382,12 @@ export default {
 
     onMounted(async () => {
       await loadItemsFromCart();
+    });
+
+    onBeforeUnmount(() => {
+      if (scannerActive.value == true) {
+        stopScanner();
+      }
     });
     // Watch the searchItems array for changes and update the isExpanded ref accordingly
     watch(searchItems, () => {
@@ -965,8 +972,6 @@ input:focus {
     display: none !important;
   }
 
-
-
   .grey-bar {
     all: unset;
     text-align: center;
@@ -975,10 +980,9 @@ input:focus {
     background-color: #31c48d;
     height: 50px;
     align-content: center;
-
   }
 
-  #grey-header{
+  #grey-header {
     all: unset;
     grid-column: 2;
     color: white;
