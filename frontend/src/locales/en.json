@@ -42,7 +42,7 @@
   "fridgeNameLabel": "What is the name of your new Fridge?",
   "addFridgeButtonText": "Add Fridge",
   "added_to_fridge": "Item added to Fridge",
-  "fridges": "List of your refrigerators",
+  "fridges": "Your refrigerators",
   "edit": "Edit",
   "changePassword": "Change password",
   "logout": "Logout",
@@ -103,6 +103,10 @@
   "register_error": "User already exists",
   "next_page": "Next Page",
   "previous_page": "Previous Page",
+  "expiry-desc": "Expiry - Descending",
+  "expiry-asc": "Expiry - Ascending",
+  "purchase-desc": "Purchase date - Descending",
+  "purchase-asc": "Purchase date - Ascending",
   "add_missing_items": "Add missing items",
   "tips": "Tips",
   "serving_size": "Serving size",
@@ -116,9 +120,6 @@
   "20 - 40 min": "20 - 40 min",
   "40 - 60 min": "40 - 60 min",
   "Over 60 min:": "Over 60 min",
-  "suggest_dinner": "Suggest dinner",
-  "Utløpsdato - Stigende": "Expiry date - Ascending",
-  "Kjøpsdato - Synkende": "Purchase date - Descending",
-  "Kjøpsdato - Stigende": "Purchase date - Ascending",
-  "Utløpsdato - Synkende": "Expiry date - Descending"
+  "suggest_dinner": "Suggest dinner"
+
 }

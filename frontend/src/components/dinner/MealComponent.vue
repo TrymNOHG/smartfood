@@ -144,7 +144,7 @@ export default {
 }
 
 img {
-  border-radius: 25px;
+  border-radius: 20px;
   object-fit: cover;
   width: 100%;
   height: 100%;
