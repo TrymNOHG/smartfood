@@ -45,14 +45,21 @@ describe('NotificationList', () => {
             expirationDate: '2023-05-31',
             border: false
         }
+        const userStatus = true
+
         const wrapper = shallowMount(NotificationList, {
-            propsData: { notification },
+            propsData: { notification, userStatus },
             global: {
                 mocks: {
                     $t: (msg) => msg
                 }
             }
         })
+
+
+        console.log(wrapper.html())
+        console.log(wrapper.find('#delete').exists())
+
         wrapper.find('.delete-icon').trigger('click')
         expect(wrapper.emitted('delete-notification')).toBeTruthy()
     })
@@ -63,8 +70,10 @@ describe('NotificationList', () => {
             expirationDate: '2023-05-31',
             border: false
         }
+        const userStatus = true
+
         const wrapper = shallowMount(NotificationList, {
-            propsData: { notification },
+            propsData: { notification, userStatus },
             global: {
                 mocks: {
                     $t: (msg) => msg

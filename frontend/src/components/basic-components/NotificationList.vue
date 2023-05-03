@@ -11,7 +11,7 @@
     </div>
     <div class="notification-icons">
       <font-awesome-icon v-if="userStatus" icon="fa-solid fa-check-circle" @click="removeBorder" class="check-icon icons"/>
-      <font-awesome-icon v-if="userStatus" icon="fa-solid fa-trash" @click="deleteItem" class="delete-icon icons"/>
+      <font-awesome-icon v-if="userStatus" icon="fa-solid fa-trash" @click="deleteItem" class="delete-icon icons" id="delete"/>
     </div>
   </div>
 </template>
