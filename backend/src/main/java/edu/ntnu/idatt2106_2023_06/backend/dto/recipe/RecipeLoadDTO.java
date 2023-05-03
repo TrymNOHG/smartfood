@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.dto.recipe;
 
 import lombok.*;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -12,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 public class RecipeLoadDTO{
+    @NonNull private Long recipeId;
     @NonNull private String recipeName;
     private String description, author, thumbnail;
     private int servingSize, difficulty, numMatchingItems;
