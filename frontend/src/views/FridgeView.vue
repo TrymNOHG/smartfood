@@ -144,23 +144,20 @@
 
 <script lang="ts">
 
-import {
-  VueCollapsiblePanelGroup,
-  VueCollapsiblePanel,
-} from "@dafcoe/vue-collapsible-panel";
+import {VueCollapsiblePanel, VueCollapsiblePanelGroup,} from "@dafcoe/vue-collapsible-panel";
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
-import { useFridgeStore, useItemStore } from "@/store/store";
+import {useFridgeStore, useItemStore} from "@/store/store";
 import {onMounted, onUnmounted, ref} from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
-import { getItemByBarcode, getItems } from "@/services/ApiService";
+import {getItemByBarcode, getItems} from "@/services/ApiService";
 import Swal from "sweetalert2";
-import { addItemToShoppingList } from "@/services/ItemService";
+import {addItemToShoppingList} from "@/services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
 import router from "../router/router";
-import { StreamBarcodeReader } from "vue-barcode-reader";
+import {StreamBarcodeReader} from "vue-barcode-reader";
 import NotificationList from "@/components/basic-components/NotificationList.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
@@ -251,8 +248,7 @@ export default {
     },
     async onDecode(a, b, c) {
       this.text = a;
-      const barcode = a;
-      await getItemByBarcode(barcode)
+      await getItemByBarcode(a)
         .then((response) => {
           if (response !== undefined) {
             this.searchItems = response.products;
