@@ -1,7 +1,7 @@
 <template>
   <h1>{{ $t("weekly_menu") }}</h1>
 
-  <div class="wrapper">
+  <div class="wrapper2">
     <div v-for="day in weekdays" :key="day">
       <h2>{{ day }}</h2>
       <meal
@@ -112,5 +112,22 @@ export default {
   transition: 0.5s;
   max-width: 80vw;
   margin: auto;
+}
+
+@media only screen and (min-width: 10px) and (max-width: 650px) {
+
+
+  .wrapper2 {
+    z-index: 0;
+    grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
+    grid-row-gap: 30px;
+    transition: 0.5s;
+    width: 100%;
+    padding: 0;
+  }
+
+
+
+
 }
 </style>

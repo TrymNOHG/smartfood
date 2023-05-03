@@ -164,23 +164,24 @@ export default {
 
 .grey-bar {
   background-color: #6c6c6c;
-  max-height: 35px;
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 }
 
 .information-button{
+  display: flex;
   grid-column: 3;
   text-align: right;
-  padding: 2px 5px;
-  max-height: 35px;
+  margin-left: auto;
+
 }
 
 #info-picture{
   height: 30px;
   width: 30px;
   cursor: pointer;
+
 }
 
 .link {
