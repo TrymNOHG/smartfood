@@ -126,7 +126,7 @@ import CartSuggestion from "@/components/shoppingcart/CartSuggestion.vue";
 import CartControl from "@/components/shoppingcart/CartControl.vue";
 import BasicCheckBox from "@/components/basic-components/BasicCheckbox.vue";
 import { useLoggedInStore, useFridgeStore, useItemStore } from "@/store/store";
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed, watch, onBeforeUnmount } from "vue";
 import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert2";
 import Quagga from "quagga";
@@ -318,13 +318,13 @@ export default {
           fridgeId: currentFridge.fridgeId,
         };
 
-        const ItemRemoveDTO = {
+        const ItemMoveDTO = {
           itemId: item.itemId,
           fridgeId: currentFridge.fridgeId,
         };
 
         itemStatDTOList.push(statAddItemToFridgDTO);
-        itemRemoveDTOList.push(ItemRemoveDTO);
+        itemRemoveDTOList.push(ItemMoveDTO);
       });
 
       try {
@@ -382,6 +382,10 @@ export default {
 
     onMounted(async () => {
       await loadItemsFromCart();
+    });
+
+    onBeforeUnmount(() => {
+      stopScanner();
     });
     // Watch the searchItems array for changes and update the isExpanded ref accordingly
     watch(searchItems, () => {

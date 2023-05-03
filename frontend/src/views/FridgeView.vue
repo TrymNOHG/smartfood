@@ -155,7 +155,13 @@ import {
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import { useFridgeStore, useItemStore } from "@/store/store";
-import { onMounted, onUnmounted, ref } from "vue";
+import {
+  getCurrentInstance,
+  onBeforeUnmount,
+  onMounted,
+  onUnmounted,
+  ref,
+} from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import { getItemByBarcode, getItems } from "@/services/ApiService";
@@ -349,6 +355,14 @@ export default {
           },
           decoder: {
             readers: ["ean_reader", "code_128_reader", "code_39_reader"],
+            debug: {
+              drawBoundingBox: true,
+              showFrequency: true,
+              drawScanline: true,
+              showPattern: true,
+            },
+            multiple: false,
+            frequency: 5, // Set the number of scans per second, e.g., 5 scans per second
           },
         },
         (err) => {
@@ -379,7 +393,7 @@ export default {
             this.searchItems = response.products;
             console.log(response.products);
             this.search = true;
-            this.scannerActive = false;
+            this.stopScanner();
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -415,12 +429,12 @@ export default {
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
     let scannerActive = ref(false);
-    const isCameraToggled = ref(false);
     const isLoading = ref(false);
     const page = ref(0);
     const searchText = ref("");
     const selectedCategory = ref(0);
     const categories = ref<Array<{ id: number; name: string }>>([]);
+    const instance = getCurrentInstance();
 
     const sortOptions = ref([
       { key: "expirationDate", direction: "DESC" },
@@ -513,6 +527,11 @@ export default {
       }
     });
 
+    onBeforeUnmount(() => {
+      if (instance && instance.proxy) {
+        instance.proxy.stopScanner();
+      }
+    });
     const itemAmount = ref(1);
     const submitMessage = ref("norvegia");
     const searchQuery = ref("");
