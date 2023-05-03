@@ -124,6 +124,19 @@ public class RecipeController {
         return ResponseEntity.ok(recipeLoadDTOs);
     }
 
+    @PostMapping(value="/generateScores")
+    @Operation(summary = "Generate item recipe scores")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "This endpoint generates item recipes scores between all items and recipes",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Object.class)) })}
+    )
+    public ResponseEntity<Object> generateItemRecipeScores() {
+        itemRecipeScoreService.generateScores();
+        return ResponseEntity.ok().build();
+    }
+
+
     //TODO: use test to see how effective the algorithm is. Does it need fine tuning.
     @PostMapping(value="/generateScoresTest")
     @Operation(summary = "Generate item recipe scores")
@@ -135,7 +148,7 @@ public class RecipeController {
     public ResponseEntity<Object> generateItemRecipeScoresTest(@ParameterObject @RequestParam(name="item") Long itemId,
                                                            @ParameterObject @RequestParam(name="recipe") Long recipeId) {
 
-        itemRecipeScoreService.testScore(itemId, recipeId);
+        itemRecipeScoreService.generateScoreForItem(itemId);
         return ResponseEntity.ok().build();
     }
 

@@ -24,16 +24,12 @@ import lombok.*;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.apache.commons.text.similarity.JaroWinklerDistance;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -53,6 +49,7 @@ public class RecipeService {
     private final RecipePartRepository recipePartRepository;
     private final ItemRepository itemRepository;
     private final ItemService itemService;
+    private final ItemRecipeScoreService itemRecipeScoreService;
     private final RecipeItemsRepository recipeItemsRepository;
     private final FridgeItemsRepository fridgeItemsRepository;
     private final FridgeRepository fridgeRepository;
@@ -118,76 +115,70 @@ public class RecipeService {
 
     //TODO: authenticate
     public Page<RecipeLoadDTO> getRecipesByFridgeId(Long fridgeId, int page, int size) {
-        List<Recipe> allRecipes = recipeRepository.findAll();
+        Page<Recipe> recipes = itemRecipeScoreService.getRankedRecipesByFridge(fridgeId, page, size);
 
-        List<Item> fridgeItems = fridgeItemsRepository.findAllByFridge_FridgeId(fridgeId)
+        if (recipes == null) {
+            int numRecipes = (int) recipeRepository.count();
+
+            List<Recipe> subListRecipes = recipeRepository.findRandomSubset(PageRequest.of(0, size, Sort.unsorted()));
+
+            List<RecipeLoadDTO> recipeLoadDTOs = subListRecipes.stream()
+                    .map(RecipeMapper::toRecipeLoadDTO)
+                    .collect(Collectors.toList());
+
+            return new PageImpl<>(recipeLoadDTOs, PageRequest.of(0, size), numRecipes);
+        }
+
+        List<RecipeLoadDTO> recipeLoadDTOs = recipes.getContent()
+                .stream()
+                .map(recipe -> {
+                            RecipeLoadDTO recipeLoadDTO = RecipeMapper.toRecipeLoadDTO(recipe);
+                            recipeLoadDTO.setNumMatchingItems(countMatchingItems(recipeLoadDTO, fridgeId));
+                            return recipeLoadDTO;
+                        }
+                )
+                .collect(Collectors.toList());
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        return new PageImpl<>(recipeLoadDTOs, pageable, recipes.getTotalElements());
+    }
+
+    //TODO: authenticate
+    public Page<RecipeLoadDTO> getRecipesByFridgeIdOld(Long fridgeId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Recipe> recipes = recipeRepository.findAll(pageable);
+
+        List<RecipeLoadDTO> recipeLoadDTOs = recipes.getContent()
+                .stream()
+                .map(recipe -> {
+                            RecipeLoadDTO recipeLoadDTO = RecipeMapper.toRecipeLoadDTO(recipe);
+                            recipeLoadDTO.setNumMatchingItems(countMatchingItems(recipeLoadDTO, fridgeId));
+                            return recipeLoadDTO;
+                        }
+                )
+                .sorted(Comparator.comparing(RecipeLoadDTO::getNumMatchingItems).reversed())
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(recipeLoadDTOs, pageable, recipes.getTotalElements());
+    }
+
+    private int countMatchingItems(RecipeLoadDTO recipeDTO, Long fridgeId) {
+        Set<Long> fridgeItemIds = fridgeItemsRepository.findAllByFridge_FridgeId(fridgeId)
                 .orElseThrow(() -> new FridgeNotFoundException(fridgeId))
                 .stream()
                 .map(FridgeItems::getItem)
-                .toList();
-        //TODO: refactor to make more efficient
-        Set<String> fridgeItemEans = fridgeItems.stream()
-                .map(Item::getEan)
-                .collect(Collectors.toSet());
-
-        Set<Long> fridgeItemIds = fridgeItems.stream()
                 .map(Item::getItemId)
                 .collect(Collectors.toSet());
 
-        List<RecipeLoadDTO> recipeLoadDTOs = allRecipes.stream()
-                .map(recipe -> {
-                    RecipeLoadDTO recipeLoadDTO = RecipeMapper.toRecipeLoadDTO(recipe);
-                    recipeLoadDTO.setNumMatchingItems(countMatchingItems(recipeLoadDTO, fridgeItemEans));
-                    return recipeLoadDTO;
-                })
-                .sorted(Comparator.comparing(RecipeLoadDTO::getNumMatchingItems).reversed()
-                        .thenComparing(recipeLoadDTO -> getBestMatch(recipeLoadDTO, fridgeItemIds, fridgeId)))
-                .collect(Collectors.toList());
-
-        int startIndex = page * size;
-        int endIndex = Math.min(startIndex + size, recipeLoadDTOs.size());
-        return new PageImpl<>(recipeLoadDTOs.subList(startIndex, endIndex), PageRequest.of(page, size), recipeLoadDTOs.size());
-    }
-
-    private int countMatchingItems(RecipeLoadDTO recipeDTO, Set<String> fridgeItemEans) {
-        return (int) recipeDTO.getRecipeParts().stream()
+        return ((Long) recipeDTO.getRecipeParts().stream()
                 .map(RecipePartDTO::ingredients)
                 .flatMap(Collection::stream)
-                .filter(recipeItemDTO -> {
-                    Item item = itemRepository.findById(recipeItemDTO.getItemId()).orElse(null);
-                    assert item != null; //TODO: fix
-                    return fridgeItemEans.contains(item.getEan());
-                })
+                .filter(recipeItemDTO -> fridgeItemIds.contains(recipeItemDTO.getItemId()))
                 .peek(recipeItemDTO -> recipeItemDTO.setHasItem(true))
-                .count();
+                .count())
+                .intValue();
     }
-
-
-    private double similarity(String s1, String s2) {
-        return new JaroWinklerDistance().apply(s1, s2);
-    }
-
-    private double getBestMatch(RecipeLoadDTO recipeDTO, Set<Long> fridgeItemIds, Long fridgeId) {
-        String[] fridgeItemNames = fridgeItemsRepository.findAllByFridge_FridgeId(fridgeId)
-                .orElseThrow(() -> new FridgeNotFoundException(fridgeId))
-                .stream()
-                .map(FridgeItems::getItem)
-                .map(Item::getProductName)
-                .toArray(String[]::new);
-
-        return recipeDTO.getRecipeParts().stream()
-                .map(RecipePartDTO::ingredients)
-                .flatMap(Collection::stream)
-                .map(RecipeItemDTO::getName)
-                .mapToDouble(recipeItemName ->
-                        Arrays.stream(fridgeItemNames)
-                                .mapToDouble(fridgeItemName -> similarity(recipeItemName, fridgeItemName))
-                                .max()
-                                .orElse(0))
-                .average()
-                .orElse(0);
-    }
-
 
 
     @Transactional

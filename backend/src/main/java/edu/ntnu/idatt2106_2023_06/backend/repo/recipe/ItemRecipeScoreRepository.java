@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface ItemRecipeScoreRepository extends JpaRepository<ItemRecipeScore, ItemRecipeScoreId>, JpaSpecificationExecutor<ItemRecipeScore> {
 
@@ -16,5 +19,20 @@ public interface ItemRecipeScoreRepository extends JpaRepository<ItemRecipeScore
      * @return              Status whether the item recipe score exists or not.
      */
     boolean existsItemRecipeScoreByItem_ItemIdAndRecipe_RecipeId(Long itemId, Long recipeId);
+
+    /**
+     * This method retrieves the ItemRecipeScore based on the item id and recipe id provided.
+     * @param itemId        ID of the item, given as a Long.
+     * @param recipeId      ID of the recipe, given as a Long.
+     * @return              Optional containing the item recipe score entity.
+     */
+    Optional<ItemRecipeScore> findItemRecipeScoreByItem_ItemIdAndRecipe_RecipeId(Long itemId, Long recipeId);
+
+    /**
+     * This method retrieves a list of Item Recipe Score entities for a given item.
+     * @param itemId    ID of the item, given as a Long.
+     * @return          An optional containing the list of ItemRecipeScores.
+     */
+    Optional<List<ItemRecipeScore>> findByItem_ItemId(Long itemId);
 
 }
