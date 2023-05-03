@@ -553,6 +553,23 @@ export default {
 
 <style scoped>
 
+textarea {
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+template {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 25% 50% 25%;
+  z-index: 0;
+}
+
 #info-and-bell {
   display: flex;
   flex-direction: row;

@@ -6,6 +6,7 @@
       <div id="backGreen">
         <div class="grey-bar">
           <h2 id="grey-header">{{ $t("shopping_cart") }}</h2>
+          <InfoAndBell/>
           <div class="information-button">
             <img
               src="@/assets/images/info.svg"
@@ -130,10 +131,12 @@ import { ref, onMounted, computed, watch } from "vue";
 import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert2";
 import Quagga from "quagga";
+import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
 
 export default {
   name: "Cart",
   components: {
+    InfoAndBell,
     FontAwesomeIcon,
     SearchItem,
     BasicButton,

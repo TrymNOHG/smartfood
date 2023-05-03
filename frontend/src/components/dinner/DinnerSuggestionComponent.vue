@@ -138,6 +138,13 @@ export default {
   grid-row-gap: 30px;
   transition: 0.5s;
   margin: 2% 2% 2%;
+  display: grid;
+}
+
+template {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .pagination-buttons {

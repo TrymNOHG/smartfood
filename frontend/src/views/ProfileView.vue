@@ -26,7 +26,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
   .grey-bar {
     background-color: #6C6C6C;

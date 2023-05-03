@@ -74,6 +74,12 @@ export default {
   grid-column: 2;
 }
 
+template {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .link {
   text-decoration: none;
   line-height: 25px;
