@@ -12,6 +12,7 @@ import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Recipe;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemRecipeScoreService;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemService;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.RecipeService;
+import edu.ntnu.idatt2106_2023_06.backend.utils.RecipeScraper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -41,6 +42,7 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final ItemRecipeScoreService itemRecipeScoreService;
     private final ItemService itemService;
+    private final RecipeScraper recipeScraper;
     private final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
     @GetMapping(value="/download")
@@ -55,19 +57,15 @@ public class RecipeController {
         for(int pageNr = 1;; pageNr++) {
             Document document = Jsoup.connect("https://meny.no/oppskrifter/middagstips/?pagenr=" + pageNr).get();
 
-            // Extract the JSON script from the HTML page
             Element script = document.select("script[type=application/ld+json]").first();
             String scriptText = script.html();
 
-            // Parse the JSON using Jackson's ObjectMapper
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(scriptText);
 
-            // Extract the URL from the JSON
             for(JsonNode item : rootNode.get("itemListElement")) {
                 String url = item.get("url").asText();
-                System.out.println(url);
-                recipeService.scrapeRecipe(url);
+                recipeScraper.scrapeRecipe(url);
             }
 
             if(pageNr == 100) {
