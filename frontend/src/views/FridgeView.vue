@@ -82,19 +82,20 @@
         </vue-collapsible-panel-group>
       </div>
     </div>
+
     <div class="searchbar-wrapper">
       <button id="toggle" @click="handleClick">Filter</button>
       <div
-        id="filter"
-        class="slide-in"
-        :class="active ? 'slide-in' : 'slide-out'"
+          id="filter"
+          class="slide-in"
+          :class="active ? 'slide-in' : 'slide-out'"
       >
         <div id="search-wrapper">
           <input
-            type="text"
-            v-model="searchText"
-            @input="searchHandler()"
-            :placeholder="$t('search') + '...'"
+              type="text"
+              v-model="searchText"
+              @input="searchHandler()"
+              :placeholder="$t('search') + '...'"
           />
         </div>
 
@@ -117,14 +118,15 @@
       </div>
 
       <div
-        id="filter-component"
-        class="slide-in"
-        :class="active ? 'slide-in' : 'slide-out'"
+          id="filter-component"
+          class="slide-in"
+          :class="active ? 'slide-in' : 'slide-out'"
       >
         <filter-bar @listing="listing" />
       </div>
-
     </div>
+
+  </div>
     <transition name="fade">
       <div
         v-if="!listView"
@@ -152,23 +154,16 @@
         />
       </div>
     </transition>
-  </div>
   <div class="members-wrapper" v-show="selectedTab === 'members'">
     <member-component />
   </div>
 </template>
 
 <script lang="ts">
-import {
-  VueCollapsiblePanelGroup,
-  VueCollapsiblePanel,
-} from "@dafcoe/vue-collapsible-panel";
 
 import {VueCollapsiblePanel, VueCollapsiblePanelGroup,} from "@dafcoe/vue-collapsible-panel";
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
-import {useFridgeStore, useItemStore} from "@/store/store";
-import {onMounted, onUnmounted, ref} from "vue";
 import { useFridgeStore, useItemStore } from "@/store/store";
 import { onMounted, onUnmounted, ref } from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
@@ -210,9 +205,6 @@ export default {
   },
 
   computed: {
-    marginTopStyle() {
-      return this.isExpanded ? "1%" : "1%";
-    },
     isCurrentUserSuperUser() {
       return useFridgeStore().getIsSuperUser;
     },
@@ -264,23 +256,6 @@ export default {
         async (response) => {}
       );
     },
-    async onDecode(a, b, c) {
-      this.text = a;
-      await getItemByBarcode(a)
-          .then((response) => {
-            if (response !== undefined) {
-              this.searchItems = response.products;
-              this.search = true;
-            } else {
-              console.log("Something went wrong");
-              this.submitMessage =
-                  "Something went wrong. Please try again later.";
-            }
-          })
-          .catch((error) => {
-            console.warn("error1", error); //TODO: add exception handling
-          });
-    },
 
     handleSearch() {
       this.search = this.searchQuery.length >= 2;
@@ -292,10 +267,6 @@ export default {
         .catch((error) => {
           console.error(error);
         });
-    },
-
-    onLoaded() {
-      console.log("load");
     },
 
     async deleteItem(itemToDelete, deletePercentage) {
@@ -410,7 +381,6 @@ export default {
         },
         (err) => {
           if (err) {
-            console.log(err);
             return;
           }
           this.scannerActive = true;
@@ -428,18 +398,15 @@ export default {
     },
     async onDetected(result) {
       const code = result.codeResult.code;
-      console.log("Detected barcode:", code);
 
       await getItemByBarcode(code)
         .then((response) => {
           if (response !== undefined) {
             this.searchItems = response.products;
-            console.log(response.products);
             this.search = true;
             this.scannerActive = false;
           } else {
-            console.log("Something went wrong");
-            submitMessage.value =
+            this.submitMessage =
               "Something went wrong. Please try again later.";
           }
         })
@@ -448,7 +415,6 @@ export default {
         });
     },
     toggleCamera() {
-      console.log("toggling", this.scannerActive, this.scannerActive);
       if (this.scannerActive == true) {
         this.stopScanner();
       } else {
@@ -611,7 +577,7 @@ export default {
     });
 
     const itemAmount = ref(1);
-    const submitMessage = ref("norvegia");
+    const submitMessage = ref("");
     const searchQuery = ref("");
     const active = ref(false);
 
@@ -647,7 +613,6 @@ export default {
       isExpanded: false,
       listView: false,
       showNotifications: false,
-        active: false,
     };
   },
 };
@@ -856,12 +821,12 @@ export default {
 input[type="text"],
 select {
   padding: 8px 12px;
-  margin: 0; /* Reset margin */
+  margin: 0;
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #fff;
   font-size: 16px;
-  box-sizing: border-box; /* Fix for width and height */
+  box-sizing: border-box;
 }
 
 input[type="text"] {
@@ -870,7 +835,7 @@ input[type="text"] {
 
 select {
   width: 250px;
-  appearance: none; /* Remove default styling for consistent appearance */
+  appearance: none;
 }
 
 .fade-enter,
@@ -1056,12 +1021,12 @@ input[type="text"]:focus {
     z-index: 998;
     position: absolute;
     overflow-y: auto;
-    max-height: 250px;
+    max-height: 350px;
     background-color: white;
     display: flex;
     flex-direction: column;
-    width: 200px;
-    right: -60px;
+    width: 1725%;
+    right: -75px;
   }
 
   #info-and-bell {
@@ -1208,9 +1173,9 @@ input[type="text"]:focus {
   }
 
   #backGreen {
-    height: 0px;
+    height: 0;
     width: 100%;
-    padding: 0px 10px 0px 10px;
+    padding: 0 10px 0 10px;
     z-index: 2;
   }
 
@@ -1223,7 +1188,6 @@ input[type="text"]:focus {
     display: flex;
     width: 100%;
     z-index: 0;
-    margin-bottom: 70px;
   }
 }
 </style>

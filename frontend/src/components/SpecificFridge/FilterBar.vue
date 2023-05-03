@@ -1,6 +1,5 @@
 <template>
   <div class="filter-container">
-
     <div class="view-options">
       <font-awesome-icon icon="fa-solid fa-list" class="icon" :class="active ? 'icon2' : 'icon'" @click="listingView(true); handleClick();" />
       <font-awesome-icon icon="fa-solid fa-table-cells" class="icon" :class="active ? 'icon' : 'icon2'" @click="listingView(false); handleClick2();"/>
@@ -11,8 +10,6 @@
 
 <script lang="ts">
 
-import {onMounted, onUnmounted, ref} from "vue";
-
 interface Filter {
   key: string;
   operator: string;
@@ -20,15 +17,12 @@ interface Filter {
   value: string | number;
 }
 
-
 export default {
-
 
   data() {
     return {
       listView: false,
       active: false,
-
     }
   },
 
@@ -60,7 +54,6 @@ export default {
   border-radius: 50px;
 
 }
-
 
 .filter {
   margin-left: 1.5%;
