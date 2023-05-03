@@ -120,12 +120,12 @@ export default {
 
 .bell-icon {
   color: white;
-  grid-column: 3;
   text-align: right;
   padding: 2px 5%;
   height: 100%;
   max-height: 25px;
   cursor: pointer;
+  top: 10%;
 }
 
 .redd-dot {
@@ -133,7 +133,7 @@ export default {
   color: white;
   width: 20px;
   height: 20px;
-  bottom: 80%;
+  bottom: 70%;
   left: 50%;
   border-radius: 10px;
   display: flex;
@@ -148,6 +148,15 @@ export default {
 
 @media (max-width: 650px) {
 
+  .bell-icon {
+    color: white;
+    text-align: right;
+    padding: 2px 5%;
+    height: 60px;
+    max-height: 25px;
+    cursor: pointer;
+    top: 25%;
+  }
 
   #notification-list {
     z-index: 998;
@@ -156,8 +165,23 @@ export default {
     display: flex;
     flex-direction: column;
     width: 1450%;
-    left: -300px;
+    top: 80%;
+    left: -260px;
   }
+
+  .redd-dot {
+    background-color: red;
+    color: white;
+    width: 20px;
+    height: 20px;
+    bottom: 45%;
+    left: 50%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
 }
 
 </style>

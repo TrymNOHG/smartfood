@@ -363,6 +363,7 @@ template {
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  max-height: 40px;
 }
 
 #grey-header{
@@ -376,8 +377,6 @@ template {
   justify-content: center;
   align-content: center;
   align-items: center;
-  margin-left: auto;
-
 }
 
 #info-picture{

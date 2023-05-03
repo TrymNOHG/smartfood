@@ -73,7 +73,7 @@
       </div>
     </div>
 
-    <div class="searchbar-wrapper">
+    <div class="searchbar-wrapper" :class="{'margin-bottom': active}" :style="{'margin-bottom': active ? '20%' : '0'}">
       <button id="toggle" @click="handleClick">Filter</button>
       <div
           v-if="click"
@@ -613,7 +613,6 @@ template {
   gap: 40px;
   background-color: white;
   border-radius: 8px;
-  overflow-x: hidden;
   height: 79px;
 }
 
@@ -767,7 +766,6 @@ select {
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  max-height: 35px;
 }
 
 #searchbar {
@@ -806,9 +804,10 @@ select {
 }
 
 .information-button {
-  display: flex;
-  grid-column: 3;
-  text-align: right;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  height: 40px;
 }
 
 #info-picture {
@@ -931,6 +930,13 @@ input[type="text"]:focus {
 }
 
 @media (max-width: 650px) {
+  .information-button {
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
+
   #filter-component {
     width: 100%;
   }
@@ -939,9 +945,8 @@ input[type="text"]:focus {
     display: flex;
     flex-direction: row;
     justify-content: end;
-    gap: 50%;
-    top: 5%;
-    left: 10%;
+    left: 8%;
+    gap: 40%;
   }
 
   .fridge-wrapper {
@@ -963,6 +968,10 @@ input[type="text"]:focus {
 }
 
 @media only screen and (min-width: 10px) and (max-width: 650px) {
+  #toggle-button:hover {
+    cursor: pointer;
+    font-size: initial;
+  }
 
   #searchbtn {
     display: none;

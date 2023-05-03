@@ -234,7 +234,6 @@ export default {
   grid-column: 2;
 }
 
-
 .link {
   text-decoration: none;
   color: white;
@@ -248,7 +247,7 @@ export default {
     justify-content: end;
     gap: 50%;
     top: 5%;
-    left: 10%;
+    left: 8%;
   }
 
   body {

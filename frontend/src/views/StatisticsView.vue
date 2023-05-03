@@ -1,5 +1,6 @@
 <template>
   <div class="grey-bar">
+    <h2 id="grey-header" >{{ $t('statistics') }}</h2>
     <div id="info-and-bell">
       <InfoAndBell/>
       <div class="information-button">
@@ -187,13 +188,18 @@ export default {
 
 <style scoped>
 
+#grey-header {
+  height: 40px;
+  grid-column: 2;
+  color: white;
+}
+
 #info-and-bell {
   display: flex;
   flex-direction: row;
   justify-content: end;
   gap: 5%;
 }
-
 
 #chart {
   width: 500px;
@@ -236,10 +242,8 @@ h3 {
 
 .information-button {
   display: flex;
-  grid-column: 3;
   text-align: right;
-  margin-left: auto;
-
+  height: 40px;
 }
 
 #info-picture {
@@ -292,9 +296,21 @@ h3 {
 }
 
 @media screen and (max-width: 680px) {
+
+  #grey-header {
+    height: 60px;
+    grid-column: 2;
+    color: black;
+  }
+
   #info-and-bell {
-    top: 5%;
-    right: 4%;
+    margin-left: auto;
+    gap: 50%;
+  }
+
+  #info-picture {
+    top: 15%;
+    height: 60px;
   }
 
   #chart {
@@ -351,20 +367,6 @@ h3 {
     height: 60px;
     border-radius: 20px 20px 0 0;
     width: 100%;
-  }
-
-  #grey-header{
-    margin-left: 25%;
-    height: 60px !important;
-    background-color: white;
-    border-radius: 20px 20px 0 0;
-    font-weight: bold;
-    text-decoration: none;
-    text-shadow: none;
-    color: black;
-    margin-top: 20px;
-    padding-top: 10px;
-    width: 50%;
   }
   .stat-container{
     margin-left: 0;

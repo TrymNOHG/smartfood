@@ -131,40 +131,39 @@ template {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-#grey-header {
-  grid-column: 2;
-  color: white;
-}
-
 .information-button {
   display: flex;
-  grid-column: 3;
   text-align: right;
-  margin-left: auto;
-
 }
 
 #info-picture {
-  height: 30px;
   width: 30px;
   cursor: pointer;
+  height: 40px;
+  bottom: 10%;
 }
 
 @media only screen and (min-width: 10px) and (max-width: 650px) {
   #info-and-bell {
-    top: 5%;
+    gap: 15%;
+  }
+
+  .information-button{
+    height: 60px
   }
 
   .grey-bar {
     display: flex;
     align-content: center;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     margin-top: 5px;
     background-color: #31c48d;
     max-height: 60px;
     height: 60px;
     border-radius: 20px 20px 0 0;
+    flex-direction: row;
+    flex-wrap: nowrap;
   }
 
   .tips-weekMenu {
