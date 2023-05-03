@@ -528,7 +528,7 @@ export default {
     });
 
     onBeforeUnmount(() => {
-      if (instance && instance.proxy) {
+      if (instance && instance.proxy && scannerActive.value == true) {
         instance.proxy.stopScanner();
       }
     });

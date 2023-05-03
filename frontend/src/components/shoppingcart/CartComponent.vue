@@ -385,7 +385,9 @@ export default {
     });
 
     onBeforeUnmount(() => {
-      stopScanner();
+      if (scannerActive.value == true) {
+        stopScanner();
+      }
     });
     // Watch the searchItems array for changes and update the isExpanded ref accordingly
     watch(searchItems, () => {
