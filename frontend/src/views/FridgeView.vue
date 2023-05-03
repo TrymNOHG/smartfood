@@ -59,7 +59,11 @@
                 :image="item.image"
                 :text="item.name"
                 :store="item.store.name"
-                :price="item.current_price"
+                :price="
+                  typeof item.current_price === 'number'
+                    ? item.current_price
+                    : item.current_price.price
+                "
                 style="text-align: center"
                 @click="addItemToFridge(this.fridge.fridgeId, item)"
               />
@@ -71,7 +75,7 @@
     <div class="searchbar-wrapper">
       <button id="toggle" @click="handleClick">Filter</button>
       <div
-          v-if="click"
+        v-if="click"
         id="filter"
         class="slide-in"
         :class="active ? 'slide-in' : 'slide-out'"
@@ -104,7 +108,7 @@
       </div>
 
       <div
-          v-if="click"
+        v-if="click"
         id="filter-component"
         class="slide-in"
         :class="active ? 'slide-in' : 'slide-out'"
@@ -154,7 +158,13 @@ import {
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import { useFridgeStore, useItemStore } from "@/store/store";
-import { onMounted, onUnmounted, ref } from "vue";
+import {
+  getCurrentInstance,
+  onBeforeUnmount,
+  onMounted,
+  onUnmounted,
+  ref,
+} from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import { getItemByBarcode, getItems } from "@/services/ApiService";
@@ -198,9 +208,8 @@ export default {
 
   methods: {
     handleClick() {
-      if(this.click != true) this.click = true
+      if (this.click != true) this.click = true;
       this.active = !this.active;
-
     },
 
     listing(bool) {
@@ -350,6 +359,14 @@ export default {
           },
           decoder: {
             readers: ["ean_reader", "code_128_reader", "code_39_reader"],
+            debug: {
+              drawBoundingBox: true,
+              showFrequency: true,
+              drawScanline: true,
+              showPattern: true,
+            },
+            multiple: false,
+            frequency: 5, // Set the number of scans per second, e.g., 5 scans per second
           },
         },
         (err) => {
@@ -380,7 +397,7 @@ export default {
             this.searchItems = response.products;
             console.log(response.products);
             this.search = true;
-            this.scannerActive = false;
+            this.stopScanner();
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -408,14 +425,13 @@ export default {
       router.currentRoute.value.query.selectedTab || "fridge"
     );
 
-    history.replaceState(null, null, '/fridge');
+    history.replaceState(null, null, "/fridge");
 
     const searchItems = ref([]);
     const search = ref(false);
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
     let scannerActive = ref(false);
-    const isCameraToggled = ref(false);
     const isLoading = ref(false);
     const page = ref(0);
     const searchText = ref("");
@@ -434,9 +450,6 @@ export default {
     const selectedSearchParam = ref(searchParamOptions.value[0]);
 
     const sort = ref(sortOptions.value[0]);
-
-
-
 
     const loadMore = () => {
       if (!isLoading.value) {
@@ -511,7 +524,12 @@ export default {
         observer.unobserve(bottomElement);
       }
     });
-
+    const instance = getCurrentInstance();
+    onBeforeUnmount(() => {
+      if (instance && instance.proxy && scannerActive.value == true) {
+        instance.proxy.stopScanner();
+      }
+    });
     const itemAmount = ref(1);
     const submitMessage = ref("norvegia");
     const searchQuery = ref("");
@@ -553,8 +571,7 @@ export default {
 </script>
 
 <style scoped>
-
-*{
+* {
   font-family: Roboto, sans-serif;
 }
 #barcode-scanner {
@@ -773,10 +790,9 @@ select {
   border-radius: 0 50px 50px 0 !important;
 }
 
-#searchbtn:hover{
+#searchbtn:hover {
   cursor: pointer;
   background-color: #238b65;
-
 }
 
 #grey-header {
@@ -1050,7 +1066,6 @@ input[type="text"]:focus {
     padding-top: 10px;
     padding-right: 5px;
     padding-left: 5px;
-
   }
 
   #searchbar {
