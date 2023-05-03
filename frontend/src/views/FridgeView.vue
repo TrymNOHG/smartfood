@@ -20,17 +20,7 @@
     </div>
 
     <div id="info-and-bell">
-      <div>
-        <font-awesome-icon icon="fa-solid fa-bell" class="bell-icon" @click="changeNotifications"/>
-        <div id="notification-list">
-          <NotificationList
-              v-if="showNotifications"
-              v-for="notification in notifications" :notification="notification"
-              @delete-notification="deleteNotification(notification)"
-              @remove-border="removeBorder(notification)"/>
-        </div>
-        <div class="redd-dot" v-if="!showNotifications && notifications.length !== 0">{{notifications.length}}</div>
-      </div>
+      <InfoAndBell :fridge="this.fridge"/>
       <div class="information-button">
         <img
             src="@/assets/images/info.svg"
@@ -175,9 +165,9 @@ import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
 import router from "../router/router";
 import {StreamBarcodeReader} from "vue-barcode-reader";
-import NotificationList from "@/components/basic-components/NotificationList.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import Quagga from "quagga";
+import InfoAndBell from "../components/basic-components/InfoAndBell.vue";
 
 interface Filter {
   fridgeId: number;
@@ -191,8 +181,8 @@ interface Filter {
 export default {
   name: "FridgeView",
   components: {
+    InfoAndBell,
     FontAwesomeIcon,
-    NotificationList,
     StreamBarcodeReader,
     BasicFridgeList,
     FilterBar,
@@ -211,21 +201,6 @@ export default {
   },
 
   methods: {
-    removeBorder(notification) {
-      console.log(notification)
-      //this.fridgeStore.removeBorderForNotification(notification, this.fridge.fridgeId);
-      //this.getNotifications();
-    },
-
-    deleteNotification(notification) {
-      console.log(notification)
-      //this.fridgeStore.deleteNotificationUsingId(notification, this.fridge.fridgeId);
-    },
-
-    changeNotifications() {
-      this.showNotifications = !this.showNotifications;
-    },
-
     handleClick() {
       this.active = !this.active;
     },
@@ -424,7 +399,6 @@ export default {
   },
 
   setup() {
-    const notifications = ref([])
     const fridgeStore = useFridgeStore();
     const itemStore = useItemStore();
     const selectedTab = ref(
@@ -463,44 +437,6 @@ export default {
     itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
       fridgeItems.value = items;
     });
-
-    /*
-    const getNotifications = async () => {
-      fridgeStore.fetchNotifications(fridge.fridgeId).then((notification) => {
-        notifications.value = notification;
-      });
-    }
-
-     */
-
-    //getNotifications();
-    notifications.value = [
-      {
-        name: "bruhh",
-        expirationDate: "123123123",
-        border: true
-      },
-      {
-        name: "bruhh",
-        expirationDate: "123123123",
-        border: true
-      },
-      {
-        name: "Naan Håndlagde m/Hvitløk 260g Nirus\n",
-        expirationDate: "123123123",
-        border: false
-      },
-      {
-        name: "bruhh",
-        expirationDate: "123123123",
-        border: false
-      },
-      {
-        name: "bruhh",
-        expirationDate: "123123123",
-        border: false
-      },
-        ]
 
     const loadMore = () => {
       if (!isLoading.value) {
@@ -584,7 +520,6 @@ export default {
     return {
       active,
       fridge,
-      notifications,
       searchItems,
       fridgeItems,
       selectedTab,
@@ -596,7 +531,6 @@ export default {
       itemStore,
       scannerActive,
       isCameraToggled,
-      //getNotifications
       searchText,
       searchHandler,
       selectedCategory,
@@ -611,7 +545,6 @@ export default {
   data() {
     return {
       isExpanded: false,
-      listView: false,
       showNotifications: false,
     };
   },
