@@ -36,4 +36,13 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long>, JpaSpecif
      */
     Optional<Page<Recipe>> findByRecipeNameContainingIgnoreCase(String recipeName, Pageable pageable);
 
+    /**
+     * This method retrieves a recipe by recipe id.
+     * @param recipeId   Id of the recipe.
+     * @return           An optional containing the recipe.
+     */
+    Optional<Recipe> findByRecipeId(Long recipeId);
+
+
+
 }

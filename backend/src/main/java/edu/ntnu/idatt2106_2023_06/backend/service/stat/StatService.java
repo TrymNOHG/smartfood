@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +48,7 @@ public class StatService implements IStatService {
     private final FridgeRepository fridgeRepository;
     private final StatTypeRepository statTypeRepository;
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     private void checkValidStatValue(double statValue, int statType) {
         switch (statType) {
@@ -64,6 +65,25 @@ public class StatService implements IStatService {
             default -> throw new IllegalStatTypeException(statType);
         }
     }
+
+    private String getStatsJson(Function<User, List<Statistics>> statProvider) {
+        Long userId = checkUserIsAuthenticated();
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFoundException(userId)
+        );
+
+        List<Statistics> stats = statProvider.apply(user);
+
+        logger.info("Stats: " + stats);
+
+        try {
+            return objectMapper.writeValueAsString(stats);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Could not parse stats to JSON: " + e.getMessage());
+        }
+    }
+
 
     @Override
     public void statDeleteItemFromFridge(StatDeleteFromFridgeDTO statDeleteFromFridgeDTO) {
@@ -109,81 +129,28 @@ public class StatService implements IStatService {
 
     @Override
     public String getUserStats() {
-        Long userId = checkUserIsAuthenticated();
-
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException(userId)
-        );
-
-        List<Statistics> stats = statRepository.findAllByUser(user);
-
-        logger.info("Stats: " + stats);
-
-        objectMapper.registerModule(new JavaTimeModule());
-        String output;
-        try {
-            output = objectMapper.writeValueAsString(stats);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Could not parse stats to JSON: " + e.getMessage());
-        }
-        return output;
+        return getStatsJson(statRepository::findAllByUser);
     }
 
     @Override
     public String getFridgeStats(Long fridgeId) {
-        Long userId = checkUserIsAuthenticated();
-
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException(userId)
-        );
-        Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(
-                () -> new FridgeNotFoundException(fridgeId)
-        );
-
-        if(!fridgeService.userExistsInFridge(fridge.getFridgeId(), user.getUsername())) {
-            throw new UnauthorizedException(user.getUsername());
-        }
-
-        List<Statistics> stats = statRepository.findAllByFridge(fridge.getFridgeId());
-
-
-        objectMapper.registerModule(new JavaTimeModule());
-        String output;
-        try {
-            output = objectMapper.writeValueAsString(stats);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Could not parse stats to JSON: " + e.getMessage());
-        }
-        return output;
+        return getStatsJson(stats -> statRepository.findAllByFridge(fridgeId));
     }
 
     @Override
     public String getAverageThrownPerDayUser() throws JsonProcessingException {
-        Long userId = checkUserIsAuthenticated();
-
-        // Stats are sorted by date (timestamp)
-        List<Statistics> stats = statRepository.findAllByUserAndStatType(userId, 1L);
-
-        return statisticsToJsonThrowRate(stats);
+        return getAverageThrownPerDayJson(userId -> statRepository.findAllByUserAndStatType(userId, 1L));
     }
 
     @Override
     public String getAverageThrownPerDayFridge(long fridgeId) throws JsonProcessingException {
+        return getAverageThrownPerDayJson(stats -> statRepository.findAllByFridgeAndStatType(fridgeId, 1L));
+    }
+
+    private String getAverageThrownPerDayJson(Function<Long, List<Statistics>> statProvider) throws JsonProcessingException {
         Long userId = checkUserIsAuthenticated();
 
-        // Check if user and fridge exist
-        fridgeRepository.findByFridgeId(fridgeId).orElseThrow(
-                () -> new FridgeNotFoundException(fridgeId)
-        );
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException(userId)
-        );
-        if(!fridgeService.userExistsInFridge(fridgeId, user.getUsername())) {
-            throw new UnauthorizedException(user.getUsername());
-        }
-
-        // Stats are sorted by date (timestamp)
-        List<Statistics> stats = statRepository.findAllByFridgeAndStatType(fridgeId, 1L);
+        List<Statistics> stats = statProvider.apply(userId);
 
         return statisticsToJsonThrowRate(stats);
     }
@@ -191,12 +158,18 @@ public class StatService implements IStatService {
     @Override
     public String getAverageThrownTotalUser() throws JsonProcessingException {
         Long userId = checkUserIsAuthenticated();
-
-        return null;
+        List<Statistics> stats = statRepository.findAllByUserAndStatType(userId, 1L);
+        return statisticsToJsonTotalThrowRate(stats);
     }
 
     @Override
     public String getAverageThrownTotalFridge(long fridgeId) throws JsonProcessingException {
+        checkValidUserInFridge(fridgeId);
+        List<Statistics> stats = statRepository.findAllByFridgeAndStatType(fridgeId, 1L);
+        return statisticsToJsonTotalThrowRate(stats);
+    }
+
+    private void checkValidUserInFridge(long fridgeId) {
         Long userId = checkUserIsAuthenticated();
         fridgeRepository.findByFridgeId(fridgeId).orElseThrow(
                 () -> new FridgeNotFoundException(fridgeId)
@@ -207,7 +180,6 @@ public class StatService implements IStatService {
         if(!fridgeService.userExistsInFridge(fridgeId, user.getUsername())) {
             throw new UnauthorizedException(user.getUsername());
         }
-        return null;
     }
 
     @Override
@@ -327,30 +299,13 @@ public class StatService implements IStatService {
     }
 
     private String statisticsToJsonTotalThrowRate(List<Statistics> stats) throws JsonProcessingException {
-        HashMap<String, Pair<Double, Integer>> averageThrownPerDayPair = new HashMap<>();
+        Pair<Double, Integer> pair = new Pair<>(0.0, 0);
         for(Statistics stat : stats) {
-            String date = stat.getTimestamp().toString().substring(0, 10);
-            if(!averageThrownPerDayPair.containsKey(date)) {
-                averageThrownPerDayPair.put(date, new Pair<>(stat.getStatValue()*stat.getQuantity(), stat.getQuantity()));
-            } else {
-                Pair<Double, Integer> pair = averageThrownPerDayPair.get(date);
-                averageThrownPerDayPair.put(date, new Pair<>(pair.getFirst() + stat.getStatValue()*stat.getQuantity(), (int) pair.getSecond() + stat.getQuantity()));
-            }
+            pair.setFirst(pair.getFirst() + stat.getStatValue()*stat.getQuantity());
+            pair.setSecond(pair.getSecond() + stat.getQuantity());
         }
 
-        ArrayList<Pair<String, Double>> averageThrownPerDaySortedByDate = new ArrayList<>();
-        HashSet<String> processedDates = new HashSet<>();
-
-        for(Statistics stat : stats) {
-            String date = stat.getTimestamp().toString().substring(0, 10);
-            if (!processedDates.contains(date)) {
-                Pair<Double, Integer> pair = averageThrownPerDayPair.get(date);
-                averageThrownPerDaySortedByDate.add(new Pair<>(date, pair.getFirst() / pair.getSecond()));
-                processedDates.add(date);
-            }
-        }
-
-        return objectMapper.writeValueAsString(averageThrownPerDaySortedByDate);
+        return Double.toString(pair.getFirst() / pair.getSecond());
     }
 }
 

@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.model.items;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipeItems;
@@ -23,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 @Entity
 @Table(name = "items")
 public class Item {
@@ -34,6 +35,7 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
+    @JsonIgnore
     private Long itemId;
 
     /**
@@ -83,6 +85,7 @@ public class Item {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
+    @JsonIgnore
     private List<RecipeItems> itemsInRecipe = new ArrayList<>();
 
     /**
@@ -91,6 +94,7 @@ public class Item {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
+    @JsonIgnore
     private List<ShoppingItems> itemsInShoppingList = new ArrayList<>();
 
     /**
@@ -99,6 +103,6 @@ public class Item {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
+    @JsonIgnore
     private List<FridgeItems> itemsInFridge = new ArrayList<>();
-
 }

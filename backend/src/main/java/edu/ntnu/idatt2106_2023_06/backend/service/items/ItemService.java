@@ -1,7 +1,9 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.items;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.*;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemSearchDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.RecipeShoppingDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.ShoppingItemUpdateDTO;
@@ -25,16 +27,26 @@ import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ShoppingItemsRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.store.StoreRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
+import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
+import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
+import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
 
@@ -54,6 +66,11 @@ public class ItemService implements IItemService {
     private final Logger logger = LoggerFactory.getLogger(ItemService.class);
     private final UserRepository userRepository;
     private final FridgeMemberRepository fridgeMemberRepository;
+
+    private final FridgeService fridgeService;
+    private final JwtService jwtService;
+
+
 
     //TODO: add
     //        if (itemDTO.quantity() <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
@@ -260,6 +277,113 @@ public class ItemService implements IItemService {
             fridgeItem.setQuantity(fridgeItem.getQuantity() - itemRemoveDTO.quantity());
             fridgeItemsRepository.save(fridgeItem);
         }
+    }
+
+    /**
+     * Searches for items in the fridge. The items can be sorted and filtered by expirationDate or purchaseDate.
+     *
+     * @param fridgeItemSearchDTO  The DTO containing the information of the search.
+     * @return A list of FridgeItemLoadDTOs containing the items that match the search.
+     */
+    @Override
+    public Page<FridgeItemLoadDTO> searchFridgeItems(FridgeItemSearchDTO fridgeItemSearchDTO) {
+        Long userId = jwtService.getAuthenticatedUserId();
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFoundException(userId)
+        );
+        if(!fridgeService.userExistsInFridge(fridgeItemSearchDTO.fridgeId(), user.getUsername())) {
+            throw new UnauthorizedException(jwtService.getAuthenticatedUserEmail());
+        }
+        if (!fridgeItemSearchDTO.sortField().equals("expirationDate") && !fridgeItemSearchDTO.sortField().equals("purchaseDate"))
+            throw new IllegalArgumentException("Sort field must be either expirationDate or purchaseDate");
+        if (!fridgeItemSearchDTO.sortOrder().equalsIgnoreCase("ASC") && !fridgeItemSearchDTO.sortOrder().equalsIgnoreCase("DESC"))
+            throw new IllegalArgumentException("Sort order must be either ASC or DESC");
+        Fridge fridge = fridgeRepository.findByFridgeId(fridgeItemSearchDTO.fridgeId()).orElseThrow(
+                () -> new FridgeNotFoundException(fridgeItemSearchDTO.fridgeId())
+        );
+        List<FridgeItems> fridgeItems = fridgeItemsRepository.findByFridge(fridge).orElseThrow(
+                () -> new FridgeItemsNotFoundException(fridgeItemSearchDTO.fridgeId())
+        );
+
+        int pageNumber = fridgeItemSearchDTO.page();
+        int pageSize = fridgeItemSearchDTO.pageSize();
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+        Comparator<FridgeItems> comparator;
+        if (fridgeItemSearchDTO.sortField().equals("expirationDate")) {
+            comparator = Comparator.comparing(FridgeItems::getExpirationDate);
+        } else {
+            comparator = Comparator.comparing(FridgeItems::getPurchaseDate);
+        }
+
+        if (fridgeItemSearchDTO.sortOrder().equalsIgnoreCase("DESC")) {
+            comparator = comparator.reversed();
+        }
+
+        Stream<FridgeItems> fridgeItemsStream = fridgeItems.stream().sorted(comparator);
+
+        if (!fridgeItemSearchDTO.productName().isEmpty()) {
+            String productName = fridgeItemSearchDTO.productName().toLowerCase();
+            fridgeItemsStream = fridgeItemsStream.filter(fi -> fi.getItem().getProductName().toLowerCase().contains(productName));
+        }
+
+        List<FridgeItems> fridgeItemsList = fridgeItemsStream.toList();
+        List<FridgeItemLoadDTO> itemDTOList = new ArrayList<>();
+
+        for (FridgeItems item : fridgeItemsList){
+            itemDTOList.add(FridgeItemMapper.toFridgeItemLoadDTO(item));
+        }
+        long totalElements = itemDTOList.size();
+        int startIndex = (int) pageRequest.getOffset();
+        int endIndex = (int) Math.min(startIndex + pageRequest.getPageSize(), totalElements);
+        List<FridgeItemLoadDTO> paginatedList = itemDTOList.subList(startIndex, endIndex);
+        return new PageImpl<>(paginatedList, pageRequest, totalElements);
+    }
+
+
+    /**
+     * This method searches for items in the database based on the search request. DOES NOT WORK.
+     *
+     * @param request The search request containing the search parameters.
+     * @param fridgeId The ID of the fridge to search in.
+     * @return A page of fridge items matching the search request.
+     */
+    @Deprecated
+    @Override
+    public Page<FridgeItems> searchFridgeItems(SearchRequest request, Long fridgeId) {
+        SearchSpecification<Item> specification1 = new SearchSpecification<>(request);
+        logger.info("1");
+        Pageable pageable = SearchSpecification.getPageable(request.getPage(), request.getSize());
+        logger.info("2");
+        List<Item> items = itemRepository.findAll(specification1, pageable).getContent();
+        logger.info("Number of items found: " + items.size());
+        logger.info(items.stream().map(Item::getItemId).toList().toString());
+
+        ArrayList<FilterRequest> filters = new ArrayList<>();
+        filters.add(FilterRequest.builder()
+                .key("item")
+                .operator(Operator.IN)
+                .fieldType(FieldType.LONG)
+                .values(Collections.singletonList(items))
+                .build());
+        filters.add(FilterRequest.builder()
+                .key("fridge")
+                .operator(Operator.EQUAL)
+                .fieldType(FieldType.LONG)
+                .value(fridgeId)
+                .build());
+        logger.info("hello");
+        SearchRequest request2 = SearchRequest.builder()
+                .page(request.getPage())
+                .filters(filters)
+                .sorts(request.getSorts())
+                .size(request.getSize())
+                .build();
+        logger.info("hello2");
+        SearchSpecification<FridgeItems> specification2 = new SearchSpecification<>(request2);
+        logger.info("hello3");
+        Pageable pageable2 = SearchSpecification.getPageable(request2.getPage(), request2.getSize());
+        return fridgeItemsRepository.findAll(specification2, pageable2);
     }
 
     /**
