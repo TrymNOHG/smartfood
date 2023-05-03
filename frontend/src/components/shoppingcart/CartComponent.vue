@@ -6,14 +6,16 @@
       <div id="backGreen">
         <div class="grey-bar">
           <h2 id="grey-header">{{ $t("shopping_cart") }}</h2>
-          <InfoAndBell/>
-          <div class="information-button">
-            <img
-              src="@/assets/images/info.svg"
-              id="info-picture"
-              @click="showInformation"
-              :alt="$t('alt_info_button')"
-            />
+          <div id="info-and-bell">
+            <InfoAndBell :fridge="this.fridge"/>
+            <div class="information-button">
+              <img
+                  src="@/assets/images/info.svg"
+                  id="info-picture"
+                  @click="showInformation"
+                  :alt="$t('alt_info_button')"
+              />
+            </div>
           </div>
         </div>
         <div id="barcode-scanner">
@@ -630,6 +632,14 @@ export default {
 </script>
 
 <style scoped>
+
+#info-and-bell {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 5%;
+}
+
 * {
   text-align: center;
 }
@@ -818,7 +828,6 @@ body {
   position: relative;
   background-color: #f6f6f6;
   min-width: 230px;
-  overflow: auto;
   border: 1px solid #ddd;
   z-index: 2;
   text-align: center;
@@ -1211,7 +1220,6 @@ input:focus {
     position: relative;
     background-color: #f6f6f6;
     min-width: 230px;
-    overflow: auto;
     border: 1px solid #ddd;
     z-index: 2;
     text-align: center;

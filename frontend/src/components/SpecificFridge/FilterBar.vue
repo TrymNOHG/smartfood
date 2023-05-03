@@ -28,6 +28,7 @@ export default {
 
   methods: {
     listingView(bool){
+      console.log(bool)
       this.$emit("listing", bool);
     },
 
@@ -36,6 +37,7 @@ export default {
     },
 
     handleClick2() {
+      console.log()
       this.active = false;
     }
   }

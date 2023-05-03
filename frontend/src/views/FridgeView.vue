@@ -20,7 +20,7 @@
     </div>
 
     <div id="info-and-bell">
-      <InfoAndBell :fridge="this.fridge"/>
+      <InfoAndBell/>
       <div class="information-button">
         <img
             src="@/assets/images/info.svg"
@@ -112,7 +112,7 @@
           class="slide-in"
           :class="active ? 'slide-in' : 'slide-out'"
       >
-        <filter-bar @listing="listing" />
+        <filter-bar @listing="changeListing" />
       </div>
     </div>
 
@@ -121,7 +121,6 @@
       <div
         v-if="!listView"
         class="wrapper"
-        :style="{ marginTop: marginTopStyle }"
       >
         <basic-fridge-item
           :isSuperUser="isCurrentUserSuperUser"
@@ -205,7 +204,8 @@ export default {
       this.active = !this.active;
     },
 
-    listing(bool) {
+    changeListing(bool) {
+      console.log(bool)
       this.listView = bool;
     },
 
@@ -546,6 +546,7 @@ export default {
     return {
       isExpanded: false,
       showNotifications: false,
+      listView: false,
     };
   },
 };
@@ -576,48 +577,6 @@ template {
   justify-content: end;
   gap: 5%;
 }
-
-#notification-list  {
-  z-index: 998;
-  overflow-y: auto;
-  max-height: 320px;
-  -ms-overflow-style: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  font-size: 125%;
-}
-
-#notification-list::-webkit-scrollbar {
-  display: none;
-}
-
-.bell-icon {
-  color: white;
-  grid-column: 3;
-  text-align: right;
-  padding: 2px 5%;
-  height: 100%;
-  max-height: 25px;
-  cursor: pointer;
-}
-
-.redd-dot {
-  background-color: red;
-  color: white;
-  width: 20px;
-  height: 20px;
-  bottom: 80%;
-  left: 50%;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.bell-icon:hover {
-  transition: .5s;
-  transform: rotate(45deg);
-}
-
 
 #barcode-scanner {
   overflow-x: hidden;
@@ -966,22 +925,9 @@ input[type="text"]:focus {
   #filter-component {
     width: 100%;
   }
-
-  #notification-list {
-    z-index: 998;
-    position: absolute;
-    overflow-y: auto;
-    max-height: 350px;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    width: 1725%;
-    right: -75px;
-  }
-
   #info-and-bell {
-    top: 25%;
-    left: 5%;
+    top: 5%;
+    left: 10%;
   }
 
   .fridge-wrapper {

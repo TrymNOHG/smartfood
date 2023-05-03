@@ -139,4 +139,18 @@ export default {
   transform: rotate(45deg);
 }
 
+@media (max-width: 650px) {
+
+  #notification-list {
+    z-index: 998;
+    position: absolute;
+    overflow-y: auto;
+    max-height: 350px;
+    display: flex;
+    flex-direction: column;
+    width: 1720%;
+    right: -50px;
+  }
+}
+
 </style>

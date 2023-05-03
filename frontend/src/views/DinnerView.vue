@@ -18,13 +18,17 @@
         {{ $t("weekly_menu") }}
       </div>
     </div>
-    <div class="information-button">
-      <img
-        src="@/assets/images/info.svg"
-        id="info-picture"
-        @click="showInformation"
-        :alt="$t('alt_info_button')"
-      />
+    <div id="info-and-bell">
+
+      <InfoAndBell/>
+      <div class="information-button">
+        <img
+            src="@/assets/images/info.svg"
+            id="info-picture"
+            @click="showInformation"
+            :alt="$t('alt_info_button')"
+        />
+      </div>
     </div>
   </div>
   <div class="suggestion-wrapper" v-show="selectedTab === 'suggestion'">
@@ -40,9 +44,11 @@ import DinnerSuggestion from "../components/dinner/DinnerSuggestionComponent.vue
 import WeekMenu from "../components/dinner/WeekMenuComponent.vue";
 
 import { ref } from "vue";
+import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
 export default {
   name: "DinnerView",
   components: {
+    InfoAndBell,
     DinnerSuggestion,
     WeekMenu,
   },
@@ -62,6 +68,14 @@ export default {
 </script>
 
 <style scoped>
+
+#info-and-bell {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 5%;
+}
+
 .suggestion-weekMenu {
   background-color: #6c6c6c;
   height: 35px;
@@ -134,6 +148,10 @@ template {
 }
 
 @media only screen and (min-width: 10px) and (max-width: 650px) {
+  #info-and-bell {
+    top: 5%;
+  }
+
   .grey-bar {
     display: flex;
     align-content: center;
@@ -148,7 +166,7 @@ template {
 
   .suggestion-weekMenu {
     background-color: #31c48d;
-    margin-top: 0px;
+    margin-top: 0;
     padding-top: 0;
     padding-right: 10px;
     text-align: center;
