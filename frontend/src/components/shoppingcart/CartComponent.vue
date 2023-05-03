@@ -333,10 +333,10 @@ export default {
 
         await itemStore.statAddItemListToFridge(itemStatDTOList);
         await buyItemsFromShoppingList(itemRemoveDTOList);
+        await loadItemsFromCart();
       } catch (error) {
         await swal.fire(error.response.data["Message:"], "", "error");
       }
-      location.reload();
     }
 
     async function handleBuy() {
