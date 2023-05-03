@@ -25,6 +25,8 @@ import {
     faCircleCheck,
     faPlus,
     faCrown,
+    faCamera,
+    faBarcode,
     faCheck, faTableCells, faList, faFilter,
     faReceipt, faChartSimple, faCoins, faFlag, faBell,
 } from "@fortawesome/free-solid-svg-icons";
@@ -45,6 +47,7 @@ library.add(
     faTableCells, faList, faFilter,
     faReceipt, faChartSimple, faCoins, faFlag,
     faBell,
+    faReceipt, faChartSimple, faCoins, faFlag, faCamera,faBarcode
 )
 
 const pinia = createPinia();

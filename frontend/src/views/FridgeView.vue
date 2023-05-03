@@ -76,6 +76,10 @@
     <div class="searchbar-wrapper">
       <button id="toggle" @click="handleClick">Filter</button>
       <div
+          v-if="click"
+          id="filter"
+          class="slide-in"
+          :class="active ? 'slide-in' : 'slide-out'"
           id="filter"
           class="slide-in"
           :class="active ? 'slide-in' : 'slide-out'"
@@ -92,25 +96,26 @@
         <div id="sort-wrapper">
           <select v-model="sort" @change="searchHandler()">
             <option :value="sortOptions[0]">
-              {{ $t("Utløpsdato - Synkende") }}
+              {{ $t("expiry-desc") }}
             </option>
             <option :value="sortOptions[1]">
-              {{ $t("Utløpsdato - Stigende") }}
+              {{ $t("expiry-asc") }}
             </option>
             <option :value="sortOptions[2]">
-              {{ $t("Kjøpsdato - Synkende") }}
+              {{ $t("purchase-desc") }}
             </option>
             <option :value="sortOptions[3]">
-              {{ $t("Kjøpsdato - Stigende") }}
+              {{ $t("purchase-asc") }}
             </option>
           </select>
         </div>
       </div>
 
       <div
-          id="filter-component"
-          class="slide-in"
-          :class="active ? 'slide-in' : 'slide-out'"
+          v-if="click"
+        id="filter-component"
+        class="slide-in"
+        :class="active ? 'slide-in' : 'slide-out'"
       >
         <filter-bar @listing="changeListing" />
       </div>
@@ -145,7 +150,6 @@
   <div class="members-wrapper" v-show="selectedTab === 'members'">
     <member-component />
   </div>
-  <div id="bottom-element"></div>
 </template>
 
 <script lang="ts">
@@ -201,7 +205,9 @@ export default {
 
   methods: {
     handleClick() {
+      if(this.click != true) this.click = true
       this.active = !this.active;
+
     },
 
     changeListing(bool) {
@@ -406,8 +412,6 @@ export default {
     );
 
     history.replaceState(null, null, '/fridge');
-    history.replaceState(null, null, "/fridge");
-    const currentUrl = window.location.href;
 
     const searchItems = ref([]);
     const search = ref(false);
@@ -433,10 +437,6 @@ export default {
     const selectedSearchParam = ref(searchParamOptions.value[0]);
 
     const sort = ref(sortOptions.value[0]);
-
-    itemStore.fetchItemsFromFridgeById(fridge.fridgeId).then((items) => {
-      fridgeItems.value = items;
-    });
 
     const loadMore = () => {
       if (!isLoading.value) {
@@ -516,9 +516,11 @@ export default {
     const submitMessage = ref("");
     const searchQuery = ref("");
     const active = ref(false);
+    const click = ref(false);
 
     return {
       active,
+      click,
       fridge,
       searchItems,
       fridgeItems,
@@ -553,7 +555,6 @@ export default {
 </script>
 
 <style scoped>
-
 textarea {
   margin-bottom: 10px;
   padding: 5px;
@@ -578,6 +579,9 @@ template {
   gap: 5%;
 }
 
+*{
+  font-family: Roboto, sans-serif;
+}
 #barcode-scanner {
   overflow-x: hidden;
   overflow-y: hidden;
@@ -612,6 +616,8 @@ template {
   gap: 40px;
   background-color: white;
   border-radius: 8px;
+  overflow-x: hidden;
+  height: 79px;
 }
 
 #toggle {
@@ -761,7 +767,6 @@ select {
 
 .grey-bar {
   background-color: #6c6c6c;
-  max-height: 35px;
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -791,16 +796,22 @@ select {
   border-radius: 0 50px 50px 0 !important;
 }
 
+#searchbtn:hover{
+  cursor: pointer;
+  background-color: #238b65;
+
+}
+
 #grey-header {
   grid-column: 2;
   color: white;
 }
 
 .information-button {
+  display: flex;
   grid-column: 3;
   text-align: right;
-  padding: 2px 5px;
-  max-height: 35px;
+  margin-left: auto;
 }
 
 #info-picture {
@@ -900,6 +911,7 @@ input[type="text"]:focus {
   color: black;
   background-color: white;
   border-radius: 0;
+  overflow-y: scroll;
 }
 
 #backGreen {
@@ -925,6 +937,7 @@ input[type="text"]:focus {
   #filter-component {
     width: 100%;
   }
+
   #info-and-bell {
     top: 5%;
     left: 10%;
@@ -1033,15 +1046,24 @@ input[type="text"]:focus {
     background-color: #31c48d;
     color: white;
     font-size: 1.25em;
-    padding-top: 5px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-column-gap: 10px;
     grid-column: 2;
+    margin-top: 0;
+    padding-top: 0;
+    padding-right: 10px;
+    text-align: center;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    margin-left: 10px;
   }
 
   .link {
     margin: 0;
+    padding-left: 5px;
+    padding-right: 5px;
   }
 
   .link.active {
@@ -1052,7 +1074,11 @@ input[type="text"]:focus {
     text-decoration: none;
     text-shadow: none;
     color: black;
-    margin-top: 10px;
+    margin-top: 20px;
+    padding-top: 10px;
+    padding-right: 5px;
+    padding-left: 5px;
+
   }
 
   #searchbar {

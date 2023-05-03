@@ -1,13 +1,13 @@
 <template>
   <div class="grey-bar">
-    <div class="suggestion-weekMenu">
+    <div class="tips-weekMenu">
       <div
         id="toggle-button"
         class="link"
-        @click="selectedTab = 'suggestion'"
-        :class="{ active: selectedTab === 'suggestion' }"
+        @click="selectedTab = 'tips'"
+        :class="{ active: selectedTab === 'tips' }"
       >
-        {{ $t("suggestion") }}
+        {{ $t("tips") }}
       </div>
       <div
         id="toggle-button"
@@ -31,7 +31,7 @@
       </div>
     </div>
   </div>
-  <div class="suggestion-wrapper" v-show="selectedTab === 'suggestion'">
+  <div class="tips-wrapper" v-show="selectedTab === 'tips'">
     <dinner-suggestion />
   </div>
   <div class="weekMenu-wrapper" v-show="selectedTab === 'weekMenu'">
@@ -44,6 +44,7 @@ import DinnerSuggestion from "../components/dinner/DinnerSuggestionComponent.vue
 import WeekMenu from "../components/dinner/WeekMenuComponent.vue";
 
 import { ref } from "vue";
+import router from "../router/router";
 import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
 export default {
   name: "DinnerView",
@@ -53,7 +54,9 @@ export default {
     WeekMenu,
   },
   setup() {
-    const selectedTab = ref("suggestion");
+    const selectedTab = ref(router.currentRoute.value.query.selectedTab || 'tips');
+
+    history.replaceState(null, null, '/dinner');
 
     return {
       selectedTab,
@@ -75,8 +78,7 @@ export default {
   justify-content: end;
   gap: 5%;
 }
-
-.suggestion-weekMenu {
+.tips-weekMenu {
   background-color: #6c6c6c;
   height: 35px;
   color: white;
@@ -86,7 +88,6 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 20px;
   grid-column: 2;
-  justify-items: center;
 }
 
 template {
@@ -125,7 +126,6 @@ template {
 
 .grey-bar {
   background-color: #6c6c6c;
-  max-height: 35px;
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -137,9 +137,11 @@ template {
 }
 
 .information-button {
+  display: flex;
   grid-column: 3;
   text-align: right;
-  padding: 2px 5px;
+  margin-left: auto;
+
 }
 
 #info-picture {
@@ -165,7 +167,7 @@ template {
     border-radius: 20px 20px 0 0;
   }
 
-  .suggestion-weekMenu {
+  .tips-weekMenu {
     background-color: #31c48d;
     margin-top: 0;
     padding-top: 0;
@@ -174,6 +176,7 @@ template {
     align-items: center;
     align-content: center;
     justify-content: center;
+    margin-left: 10px;
   }
 
   .link {
@@ -191,5 +194,6 @@ template {
     margin-top: 20px;
     padding-top: 10px;
   }
+
 }
 </style>

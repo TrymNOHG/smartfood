@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106_2023_06.backend.mapper.recipe;
 
 import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeSuggestionLoad;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Recipe;
 
 import java.util.stream.Collectors;
@@ -34,6 +35,13 @@ public class RecipeMapper {
                         .stream()
                         .map(RecipeAllergenMapper::toRecipeAllergenDTO)
                         .collect(Collectors.toList()))
+                .build();
+    }
+
+    public static RecipeSuggestionLoad toRecipeSuggestionLoadDTO(Recipe recipe, Long userId){
+        return RecipeSuggestionLoad.builder()
+                .recipeLoadDTO(toRecipeLoadDTO(recipe))
+                .UserId(userId)
                 .build();
     }
 

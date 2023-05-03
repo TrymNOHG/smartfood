@@ -4,7 +4,7 @@
       {{ $t("mark_all") }}
     </button>
 
-    <button class="control-buttons" type="button" @click="handleBuy">
+    <button class="control-buttons" id="buy" type="button" @click="handleBuy">
       {{ $t("buy") }}
     </button>
 
@@ -53,6 +53,11 @@ export default {
   border: none;
   border-radius: 20px; /* add rounded edges to the buttons */
   cursor: pointer;
+}
+
+#buy{
+  margin-left: auto;
+  margin-right: 3%;
 }
 
 .control-buttons:hover {

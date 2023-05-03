@@ -18,7 +18,7 @@
                 .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
             <h4>{{ $t('expire_date') }}: {{ new Date(item.expirationDate)
                 .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
-            <h4 id="item-quantity">{{ $t('quantity') }}: {{ item.quantity }}L</h4>
+            <h4 id="item-quantity">{{ $t('quantity') }}: {{ item.quantity }}</h4>
             <button v-if="isSuperUser" class="delete-btn" @click.prevent="deleteCard(item)">
               <span>
                 <font-awesome-icon icon="fa-solid fa-trash" class="icon delete-icon" />
