@@ -27,6 +27,31 @@ export const updateFridge = async (fridgeDTO) => {
     })
 }
 
+export const getNotifications = async (fridgeId) => {
+    return await axios.get(`${BASE_LISTING_URL}/notifications?fridgeId=${fridgeId}`, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+}
+
+export const deleteNotification = async (notification, fridgeId) => {
+    await axios.delete(`${BASE_LISTING_URL}/notifications/delete?fridgeId=${fridgeId}`, {
+        data: notification,
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+}
+
+export const removeBorder = async (notification, fridgeId) => {
+    await axios.put(`${BASE_LISTING_URL}/update/notification?fridgeId=${fridgeId}`, notification, {
+        headers: {
+            Authorization: `Bearer ${await SessionToken()}`,
+        },
+    });
+}
+
 export const addUserToFridge = async (fridgeUserDTO) => {
     await axios.post(`${BASE_LISTING_URL}/add/user`, fridgeUserDTO, {
         headers: {
@@ -53,10 +78,9 @@ export const deleteUserFromFridge = async (fridgeUserDTO) => {
 }
 
 export const loadUsersByFridgeId = async (fridgeId) => {
-    const token = await SessionToken();
     return await axios.get(`${BASE_LISTING_URL}/loadAllUsers?fridgeId=${fridgeId}`, {
         headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${await SessionToken()}`,
         },
     });
 }

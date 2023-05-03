@@ -36,8 +36,8 @@
           :button-text="$t('suggest_dinner')"
       />
       <div class="info-delete-wrapper">
-          <recipe-parts id="recipe-parts" :recipe-parts="meal.recipeParts"></recipe-parts>
-          <instructions id="instructions" :instructions="meal.instructions"></instructions>
+          <recipe-parts id="recipe-parts" :recipe-parts="meal.recipeParts"/>
+          <instructions id="instructions" :instructions="meal.instructions"/>
       </div>
     </div>
   </div>
