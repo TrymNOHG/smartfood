@@ -670,6 +670,8 @@ input[type="number"] {
     scale: 1;
   }
 
+
+
   .btn-checkbox {
     margin: 0;
     position: absolute;
@@ -699,6 +701,7 @@ input[type="number"] {
     position: absolute;
     right: 0;
     transform: translateX(-25px);
+    z-index: 1;
   }
 
   .number-input {

@@ -895,6 +895,7 @@ input[type="text"]:focus {
   display: flex;
   justify-content: space-evenly;
   overflow-y: scroll;
+  height: 150vw;
 }
 
 .vcpg {
