@@ -6,7 +6,6 @@
         <NotificationList
             v-if="showNotifications"
             v-for="notification in notifications" :notification="notification"
-            @delete-notification="deleteNotification(notification)"
             :user-status = userStatus
         />
       </div>

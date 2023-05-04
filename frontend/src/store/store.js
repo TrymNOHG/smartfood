@@ -15,8 +15,7 @@ import {
     getUserMoneyStats,
     getUserPercentageStats
 } from "@/services/StatsService";
-import {keys} from "@dafcoe/vue-collapsible-panel";
-import {deleteNotification, getNotifications, removeBorder, setNotifications} from "@/services/NotificationService";
+import {getNotifications, removeBorder, setNotifications} from "@/services/NotificationService";
 
 
 const storeUUID = UniqueId();

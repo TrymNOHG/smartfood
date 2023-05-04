@@ -51,6 +51,12 @@ describe('Profile', () => {
             })
         }).as('loadAllFridges')
 
+        cy.intercept('GET', 'http://localhost:8089/api/notification/update', {
+            statusCode: 200,
+            body: {}
+        }).as('updatedNotifications')
+
+
         cy.visit(`${base_url_site}`)
         cy.contains('a', 'Logg inn').click()
 
@@ -60,6 +66,7 @@ describe('Profile', () => {
 
         cy.wait('@loginRequest')
         cy.wait('@fetchUser')
+        cy.wait('@updatedNotifications')
         cy.wait('@loadAllFridges')
 
         cy.visit(`${base_url_site}/profile`)
