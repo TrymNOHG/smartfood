@@ -5,10 +5,10 @@ import no from "./no.json"
 
 const i18n = createI18n({
     legacy: false,
-    locale: "no",
+    locale: "NO",
     messages: {
-        en: en,
-        no: no,
+        EN: en,
+        NO: no,
     },
 });
 

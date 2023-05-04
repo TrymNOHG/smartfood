@@ -45,7 +45,7 @@ export const useLoggedInStore = defineStore('user', {
         },
         getSessionToken() {
             return this.sessionToken;
-        }
+        },
     },
 
     actions: {
@@ -72,6 +72,7 @@ export const useLoggedInStore = defineStore('user', {
                 lastname: null,
                 username: null,
             };
+            localStorage.removeItem("currentLanguage")
             useFridgeStore().removeCurrentFridge()
         }
     }

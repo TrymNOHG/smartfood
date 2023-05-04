@@ -124,5 +124,6 @@
   "soon_expire": "is about to expire!",
   "password-updated": "Your password has been updated!",
   "password-failed": "Wrong password",
-  "password-match-fail": "Confirm password doesnt match"
+  "password-match-fail": "Confirm password doesnt match",
+  "user-updated": "Userinformation has been updated"
 }

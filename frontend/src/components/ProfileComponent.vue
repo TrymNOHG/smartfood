@@ -19,6 +19,7 @@
         <p id="fullName"><strong>{{ $t("name") }}:</strong> {{ profileData.firstName + " " + profileData.lastName}}</p>
         <p id="username"><strong>{{ $t("username") }}:</strong> {{ profileData.username }}</p>
         <p id="email"><strong>{{ $t("email") }}:</strong> {{ profileData.email }}</p>
+        <language-component/>
         <button class="basic-button edit-btn" @click="isEditing = true">{{ $t('edit') }}</button>
         <button class="basic-button change-password-btn" @click="isChangingPassword = true">{{ $t('changePassword') }}</button>
         <button class="basic-button logout-btn" @click="logout">{{ $t('logout') }}</button>
@@ -113,10 +114,12 @@
   import Swal from "sweetalert2";
   import {useI18n} from "vue-i18n";
   import i18n from "@/locales/i18n";
+  import LanguageComponent from "@/components/basic-components/language-component.vue";
 
   export default {
     name: 'UserProfile',
     components: {
+      LanguageComponent,
       BasicButton,
     },
     setup() {
@@ -148,11 +151,19 @@
 
       const updateUserProfile = async () => {
         try {
-          await updateUser(profileData.value);
+          await updateUser(profileData.value)
+              .then((response) => {
+                userStore.setSessionToken(response.data);
+              });
           await userStore.fetchUser();
+          await Swal.fire({
+            title: t('user-updated'),
+            icon: 'success',
+            confirmButtonText: 'Ok',
+          });
           isEditing.value = false;
-        } catch (error) {
-          // Handle the error (e.g., display an error message)
+        } catch (e) {
+          console.warn(e)
         }
       };
 
@@ -164,24 +175,20 @@
             await Swal.fire({
               title: t('password-updated'),
               icon: 'success',
-              showCancelButton: true,
-              confirmButtonText: 'Yes',
-              cancelButtonText: 'No',
+              confirmButtonText: 'Ok',
             });
           } catch (error) {
             await Swal.fire({
               title: t('password-failed'),
               icon: 'error',
-              showCancelButton: true,
-              confirmButtonText: t('yes'),
+              confirmButtonText: 'Ok',
             });
           }
         }else {
           await Swal.fire({
             title: t('password-match-fail'),
             icon: 'error',
-            showCancelButton: true,
-            confirmButtonText: t('yes'),
+            confirmButtonText: 'Ok',
           });
         }
       };

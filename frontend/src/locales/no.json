@@ -126,5 +126,7 @@
   "soon_expire": "går snart ut på dato!",
   "password-updated": "Passordet ble oppdatert",
   "password-failed": "Feil passord!",
-  "password-match-fail": "Bekreft passord samsvarer ikke!"
+  "password-match-fail": "Bekreft passord samsvarer ikke!",
+  "user-updated": "Brukerinformasjon ble oppdatert"
+
 }
