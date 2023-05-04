@@ -159,7 +159,7 @@ class StatisticsTest {
             Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
                     new ArrayList<>(), new HashSet<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>());
+                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>(), null);
             StatType statType = new StatType(1L, "Waste",
                     "This entry contains the amount of times food was thrown",new ArrayList<>());
             Statistics statistics = new Statistics(1L, user, fridge,
@@ -173,7 +173,7 @@ class StatisticsTest {
             Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
                     new ArrayList<>(), new HashSet<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>());
+                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>(), null);
             Statistics statistics = new Statistics(1L, user, fridge,
                     new StatType(), 1.0,"Meny", "Melk", LocalDateTime.now(), 1);
             assertEquals(user, statistics.getUser());
@@ -184,7 +184,7 @@ class StatisticsTest {
             Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
                     new ArrayList<>(), new HashSet<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>());
+                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>(), null);
             Statistics statistics = new Statistics(1L, user, fridge,
                     new StatType(), 1.0,"Meny", "Melk", LocalDateTime.now(), 1);
             assertEquals(fridge, statistics.getFridge());
@@ -195,7 +195,7 @@ class StatisticsTest {
             Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
                     new ArrayList<>(), new HashSet<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>());
+                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>(), null);
             StatType statType = new StatType(1L, "Waste",
                     "This entry contains the amount of times food was thrown",new ArrayList<>());
             Statistics statistics = new Statistics(1L, user, fridge,
@@ -208,7 +208,7 @@ class StatisticsTest {
             Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
                     new ArrayList<>(), new HashSet<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>());
+                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>(), null);
             StatType statType = new StatType(1L, "Waste",
                     "This entry contains the amount of times food was thrown",new ArrayList<>());
             Statistics statistics = new Statistics(1L, user, fridge,
@@ -221,7 +221,7 @@ class StatisticsTest {
             Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
                     new ArrayList<>(), new HashSet<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>());
+                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>(), null);
             StatType statType = new StatType(1L, "Waste",
                     "This entry contains the amount of times food was thrown",new ArrayList<>());
             Statistics statistics = new Statistics(1L, user, fridge,
@@ -234,7 +234,7 @@ class StatisticsTest {
             Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
                     new ArrayList<>(), new HashSet<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>());
+                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>(), null);
             StatType statType = new StatType(1L, "Waste",
                     "This entry contains the amount of times food was thrown",new ArrayList<>());
             Statistics statistics = new Statistics(1L, user, fridge,
@@ -247,7 +247,7 @@ class StatisticsTest {
             Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
                     new ArrayList<>(), new HashSet<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>());
+                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>(), null);
             StatType statType = new StatType(1L, "Waste",
                     "This entry contains the amount of times food was thrown",new ArrayList<>());
             LocalDateTime timestamp = LocalDateTime.now();
