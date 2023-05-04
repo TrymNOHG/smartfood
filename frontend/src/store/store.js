@@ -1,10 +1,9 @@
 import {defineStore} from 'pinia'
 import {checkSuperUserStatus, getUser} from "@/services/UserService"
 import {
-    addNewFridge, deleteNotification,
+    addNewFridge,
     deleteUserFromFridge,
     getAllFridges,
-    getNotifications, removeBorder,
     updateFridge
 } from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
@@ -17,6 +16,7 @@ import {
     getUserPercentageStats
 } from "@/services/StatsService";
 import {keys} from "@dafcoe/vue-collapsible-panel";
+import {deleteNotification, getNotifications, removeBorder} from "@/services/NotificationService";
 
 
 const storeUUID = UniqueId();
@@ -109,20 +109,24 @@ export const useFridgeStore = defineStore('fridgeStore', {
        async fetchNotifications (fridgeId) {
            let notifications = []
            await getNotifications(fridgeId).then((response) => {
+               console.log("response data: ", response.data)
                for (const notification in response.data) {
-                   const {name, expirationDate} = notification
-                   notifications.push({name, expirationDate})
+                   notifications[notification] = response.data[notification]
                }
            })
            return notifications;
+        },
+
+        async updateNotifications() {
+           await setNotifications()
         },
 
         async deleteNotificationUsingId (notification, fridgeId) {
            await deleteNotification(notification, fridgeId)
         },
 
-        async removeBorderForNotification(notification, fridgeId){
-           await removeBorder(notification, fridgeId)
+        async removeBorderForNotification(){
+           await removeBorder()
         },
 
         async addNewFridgeByFridgeNameAndUsername(fridgeName) {

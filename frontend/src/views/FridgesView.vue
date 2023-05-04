@@ -37,7 +37,6 @@ export default {
         useModalOverlay: true,
         defaultStepOptions: {
           classes: 'shepherd-theme-arrows',
-
         }
       });
 

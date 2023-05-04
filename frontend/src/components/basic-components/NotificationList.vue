@@ -1,8 +1,8 @@
 <template>
-  <div class="notification" :style="notification.border ? 'border: 2px solid red;' : 'border: 2px solid black;'">
+  <div class="notification">
     <div class="notification-header">
       <h3 class="notification-title">
-        {{notification.name}} {{ $t('soon_expire') }}
+        {{notification.itemName}} {{ $t('soon_expire') }}
       </h3>
       <span class="notification-date">
         {{ $t('expire_date') }}: {{new Date(notification.expirationDate)
@@ -10,8 +10,7 @@
       </span>
     </div>
     <div class="notification-icons">
-      <font-awesome-icon v-if="userStatus" icon="fa-solid fa-check-circle" @click="removeBorder" class="check-icon icons"/>
-      <font-awesome-icon v-if="userStatus" icon="fa-solid fa-trash" @click="deleteItem" class="delete-icon icons" id="delete"/>
+      <font-awesome-icon v-if="userStatus" icon="fa-solid fa-trash" @click="deleteNotification" class="delete-icon icons" id="delete"/>
     </div>
   </div>
 </template>
@@ -22,21 +21,19 @@ export default {
 
   props: {
     notification: {
-      name: String,
+      notificationId: Number,
+      itemName: String,
       expirationDate: String,
-      border: Boolean
+      isRead: Boolean,
+      fridgeId: Number
     },
     userStatus: Boolean,
   },
 
   methods: {
-    deleteItem() {
-      this.$emit("delete-notification")
+    deleteNotification() {
+      this.$emit("delete-notification", this.notification)
     },
-
-    removeBorder() {
-      this.$emit("remove-border")
-    }
   }
 }
 </script>
@@ -62,10 +59,6 @@ export default {
 
 .delete-icon:hover {
   color: red;
-}
-
-.check-icon:hover {
-  color: lime;
 }
 
 .notification-header {

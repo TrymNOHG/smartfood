@@ -7,11 +7,10 @@
             v-if="showNotifications"
             v-for="notification in notifications" :notification="notification"
             @delete-notification="deleteNotification(notification)"
-            @remove-border="removeBorder(notification)"
             :user-status = userStatus
         />
       </div>
-      <div class="redd-dot" v-bind:style="[!showNotifications && notifications.length !== 0 ? 'visibility: visible' : 'visibility: hidden']">{{notifications.length}}</div>
+      <div class="redd-dot" v-bind:style="[unread !== null && unread !== 0 ? 'visibility: visible' : 'visibility: hidden']">{{ unread }}</div>
     </div>
   </div>
 </template>
@@ -26,53 +25,34 @@ export default {
   components: {NotificationList},
 
   setup() {
+    let unread = ref(0);
     const fridgeStore = useFridgeStore();
     const notifications = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
     let userStatus = ref(false);
 
     userStatus = fridgeStore.isSuperUser
-    /*
+
     const getNotifications = async () => {
       fridgeStore.fetchNotifications(fridge.fridgeId).then((notification) => {
+        unread.value = 0
         notifications.value = notification;
+        console.log(notifications.value)
+        for (const notification of notifications.value) {
+          console.log(notification)
+          if (!notification.isRead) unread.value++;
+        }
+        console.log(unread.value)
       });
     }
-     */
 
-    notifications.value = [
-      {
-        name: "bruhh",
-        expirationDate: "123123123",
-        border: true
-      },
-      {
-        name: "bruhh",
-        expirationDate: "123123123",
-        border: true
-      },
-      {
-        name: "Naan Håndlagde m/Hvitløk 260g Nirus\n",
-        expirationDate: "123123123",
-        border: false
-      },
-      {
-        name: "bruhh",
-        expirationDate: "123123123",
-        border: false
-      },
-      {
-        name: "bruhh",
-        expirationDate: "123123123",
-        border: false
-      },
-    ];
-
-    //getNotifications();
+    getNotifications();
     return {
       notifications,
       userStatus,
-      //getNotifications,
+      fridgeStore,
+      unread,
+      getNotifications,
     }
   },
 
@@ -83,25 +63,29 @@ export default {
   },
 
   methods: {
-    removeBorder(notification) {
-      console.log(notification)
-      //this.fridgeStore.removeBorderForNotification(notification, this.fridge.fridgeId);
-      //this.getNotifications();
-    },
 
     deleteNotification(notification) {
       console.log(notification)
-      //this.fridgeStore.deleteNotificationUsingId(notification, this.fridge.fridgeId);
     },
 
-    changeNotifications() {
-      this.showNotifications = !this.showNotifications;
+    async changeNotifications() {
+      if (this.showNotifications === false){
+        this.showNotifications = true;
+      } else {
+        this.showNotifications = false;
+        await this.fridgeStore.removeBorderForNotification();
+        await this.getNotifications();
+      }
     },
   }
 }
 </script>
 
 <style scoped>
+
+.unread-margin {
+  margin-right: 150px;
+}
 
 #notification-list  {
   z-index: 998;
@@ -151,7 +135,6 @@ export default {
   transform: rotate(45deg);
 }
 
-
 @media (max-width: 650px) {
 
   .bell-icon {
@@ -193,10 +176,5 @@ export default {
     flex-direction: column;
     justify-content: center;
   }
-
-
-
 }
-
-
 </style>
