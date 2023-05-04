@@ -133,7 +133,6 @@ export default {
           confirmButtonText: this.$t('ok')
         });
       }
-      console.log("Adding missing items to shopping list:", this.missingItemIds);
     },
 
     adjustServingSize(newServingSize) {
@@ -151,7 +150,6 @@ export default {
         "recipeId": this.meal.recipeId,
         "userId": this.userId
       }
-      console.log("recipeSuggestionAddDTO", recipeSuggestionAddDTO);
       await addRecipeSuggestion((recipeSuggestionAddDTO));
       swal.fire({
         title: this.$t('success'),

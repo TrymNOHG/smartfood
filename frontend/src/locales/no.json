@@ -129,5 +129,17 @@
   "password-match-fail": "Bekreft passord samsvarer ikke!",
   "user-updated": "Brukerinformasjon ble oppdatert",
   "chosen_language": "Valgt Språk",
+  "Monday" : "Mandag",
+  "Tuesday" : "Tirsdag",
+  "Wednesday" : "Onsdag",
+  "Thursday" : "Torsdag",
+  "Friday" : "Fredag",
+  "Saturday" : "Lørdag",
+  "Sunday" : "Søndag",
+  "wants_this": "ønsker denne",
+  "loading" : "Laster inn",
+  "deleted_items" : "slettet varer",
+  "Added_to_fridge" : "lagt til i kjøleskapet",
+  "default_part_name" : "",
   "you_have": "Du har"
 }

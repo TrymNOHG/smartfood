@@ -162,7 +162,6 @@ export default {
   },
 
   setup(props) {
-    console.log(props.meal)
     const mealStore = useMealStore()
     return {
       mealStore,

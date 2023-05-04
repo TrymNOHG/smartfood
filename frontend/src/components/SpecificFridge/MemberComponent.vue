@@ -67,7 +67,6 @@ export default {
         async function fetchUsers() {
             try {
                 const response = await loadUsersByFridgeId(fridgeId);
-              console.log(response.data.memberInfo)
                 memberList.value = response.data.memberInfo;
             } catch (error) {
                 console.error("Error fetching users:", error);
@@ -86,7 +85,6 @@ export default {
           } catch (error) {
             console.error("Error searching members:", error);
           }
-          console.log(searchResults);
         }
 
         onMounted(fetchUsers);
@@ -126,7 +124,6 @@ export default {
             username,
             isSuperUser
           };
-          console.log("fridgeUserDTO:", fridgeUserDTO);
           try {
             await updateUserInFridge(fridgeUserDTO);
             await this.fetchUsers()
@@ -143,7 +140,6 @@ export default {
                 username,
                 isSuperUser
             };
-            console.log("fridgeUserDTO:", fridgeUserDTO);
             try {
                 await deleteUserFromFridge(fridgeUserDTO);
                 if (username === this.loggedInUser) {
@@ -162,7 +158,6 @@ export default {
                 username,
                 isSuperUser
             };
-            console.log("fridgeUserDTO:", fridgeUserDTO);
             try {
                 await addUserToFridge(fridgeUserDTO);
                 this.changeModal()

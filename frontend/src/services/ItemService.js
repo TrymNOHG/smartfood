@@ -75,7 +75,6 @@ export const acceptSuggestion = async (itemRemoveDTO) => {
 };
 
 export const buyItemsFromShoppingList = async (itemDTOList) => {
-    console.log(itemDTOList)
 
     return await axios.post(`${BASE_LISTING_URL}/shopping/buy`, itemDTOList, {
         headers: {

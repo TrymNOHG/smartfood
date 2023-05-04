@@ -127,5 +127,17 @@
   "password-match-fail": "Confirm password doesnt match",
   "user-updated": "Userinformation has been updated",
   "chosen_language": "Chosen Language",
+  "Monday" : "Monday",
+  "Tuesday" : "Tuesday",
+  "Wednesday" : "Wednesday",
+  "Thursday" : "Thursday",
+  "Friday" : "Friday",
+  "Saturday" : "Saturday",
+  "Sunday" : "Sunday",
+  "wants_this" : "wants this",
+  "loading" : "Loading",
+  "deleted_items" : "Deleted items",
+  "Added_to_fridge" : "Added to fridge",
+  "default_part_name" : "",
   "you_have" : "You have"
 }
