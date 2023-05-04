@@ -141,6 +141,7 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert2";
 import Quagga from "quagga";
 import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
+import { useI18n } from "vue-i18n";
 
 export default {
   name: "Cart",
@@ -163,7 +164,6 @@ export default {
     },
   },
   setup() {
-    console.log(useFridgeStore().getCurrentFridge);
     var itemAmount = ref(1);
     var submitMessage = ref("norvegia");
     const items = ref([]); // list of items in the cart
@@ -179,6 +179,7 @@ export default {
     const scrollTarget = ref(null);
     const isLoading = ref(false);
     let nextPage = 1;
+    const { t } = useI18n();
 
     function initScanner() {
       Quagga.init(
@@ -194,7 +195,8 @@ export default {
         },
         (err) => {
           if (err) {
-            console.log(err);
+            swal.fire(t("scanner_error"), "", "error");
+
             return;
           }
           scannerActive.value = true;
@@ -220,22 +222,20 @@ export default {
           if (response !== undefined) {
             searchItems.value = response.products;
 
-
             search.value = true;
             stopScanner();
           } else {
-            console.log("Something went wrong");
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
+              swal.fire(t('scanner_error'), "", "error");
+
           }
         })
         .catch((error) => {
-          console.warn("error1", error); //TODO: add exception handling
+            swal.fire(t('scanner_error'), "", "error");
         });
     }
 
     function toggleCamera() {
-      console.log("toggling", scannerActive.value, scannerActive);
+
       if (scannerActive.value == true) {
         stopScanner();
       } else {
@@ -254,7 +254,11 @@ export default {
         await acceptSuggestion(ItemRemoveDTO);
         await loadItemsFromCart();
       } catch (error) {
-        console.error(error);
+        Swal.fire({
+          title: t("Error"),
+          text: t("couldnt_accept_suggestion"),
+          icon: "error",
+        });
       }
     }
 
@@ -266,12 +270,14 @@ export default {
         quantity: item.quantity,
       };
       try {
-        console.log(ItemRemoveDTO);
         await deleteItemFromShoppingList(ItemRemoveDTO, true);
         await loadItemsFromCart();
       } catch (error) {
-        console.error(error);
-        console.log(error.response.data["Message: "]);
+        Swal.fire({
+          title: t("Error"),
+          text: t(error.response.data["Message: "]),
+          icon: "error",
+        });
       }
     }
 
@@ -284,7 +290,7 @@ export default {
 
     async function handleCheckedItem(item, isChecked) {
       item.isChecked = isChecked;
-      // console.log(item.isChecked)
+
     }
 
     async function handleDelete() {
@@ -309,9 +315,8 @@ export default {
         itemRemoveDTOList.shift();
         await deleteItemsFromShoppingList(itemRemoveDTOList);
         await loadItemsFromCart();
-        await swal.fire('Delted files', "", "success");
+        await swal.fire(t("deleted_items"), "", "success");
       } catch (error) {
-        console.error(error);
         await swal.fire(error.response.data["Message:"], "", "error");
       }
     }
@@ -323,7 +328,7 @@ export default {
       const itemStatDTOList = [{}];
 
       selectedItems.forEach((item) => {
-        console.log(item);
+
 
         const statAddItemToFridgeDTO = {
           price: item.price,
@@ -396,23 +401,24 @@ export default {
     }
 
     async function loadMore() {
-        if (isLoading.value) return;
-        console.log("REACHED BOTTOM BOOM!!");
-        isLoading.value = true;
-        try{
-            let response = await getItemsByPage(searchQuery.value, nextPage);
-            nextPage++;
-            if(response){
-                searchItems.value = [...searchItems.value, ...response];
-                console.log("ON BOTTOM BOOM PAGE !!!!!!!!!!! ITEMS", searchItems.value);
-            }
-        } catch (error){
-            console.error("Error loading search items", error); //TODO: add swal.fire ....
+      if (isLoading.value) return;
+      isLoading.value = true;
+      try {
+        let response = await getItemsByPage(searchQuery.value, nextPage);
+        nextPage++;
+        if (response) {
+          searchItems.value = [...searchItems.value, ...response];
         }
+      } catch (error) {
+        Swal.fire({
+          title: t("Error"),
+          text: t("too_many_requests"),
+          icon: "error",
+        }); //TODO: add swal.fire ....
+      }
 
-        isLoading.value = false;
+      isLoading.value = false;
     }
-
 
     const handleScroll = async () => {
       const bottomOfWindow =
@@ -439,7 +445,7 @@ export default {
     });
     // Watch the searchItems array for changes and update the isExpanded ref accordingly
     watch(searchItems, () => {
-      console.log("searchQuery: " + !searchQuery.value.length);
+
       isExpanded.value = !searchQuery.value.length;
     });
 
@@ -457,14 +463,18 @@ export default {
           }
           items.value.push(item);
         });
-        console.log(response.data);
+
       } catch (error) {
-        console.error(error);
+        Swal.fire({
+          title: t("Error"),
+          text: t("couldnt_accept_suggestion"),
+          icon: "error",
+        });
       }
     };
 
     async function inc_CartItemAmount(item) {
-      console.log(item);
+
       const itemDTO = {
         name: item.name,
         description: item.description,
@@ -482,13 +492,11 @@ export default {
           if (response !== undefined) {
             await loadItemsFromCart();
           } else {
-            console.log("Something went wrong");
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
+            await swal.fire(error.response.data["Message:"], "", "error");
           }
         })
         .catch((error) => {
-          console.warn("error1", error); //TODO: add exception handling
+            swal.fire(error.response.data["Message:"], "", "error");
         });
 
       await loadItemsFromCart();
@@ -584,9 +592,7 @@ export default {
           }
         })
         .catch((error) => {
-          //submitMessage.value = error.response.data["Message:"];
-          //console.log(error.response.data);
-          console.warn("error1", error); //TODO: add exception handling
+          swal.fire(error.response.data["Message:"], "", "error");
         });
     };
 
@@ -607,11 +613,8 @@ export default {
       };
       if (typeof item.current_price.price === "number") {
         itemDTO.price = item.current_price.price;
-        console.log(itemDTO.price);
       }
       const fridgeId = currentFridge.fridgeId;
-
-      console.log(itemDTO);
 
       addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
         .then(async (response) => {
@@ -629,7 +632,6 @@ export default {
     }
 
     function handleSearch() {
-      console.log("clicked search");
       search.value = true;
       // filter the list of items based on the search query
       var items = async () => {
@@ -641,7 +643,7 @@ export default {
           searchItems.value = response;
         })
         .catch((error) => {
-          console.error(error);
+          swal.fire(t("couldnt_load_results"), "", "error");
         });
     }
 
@@ -684,7 +686,6 @@ export default {
 </script>
 
 <style scoped>
-
 #info-and-bell {
   display: flex;
   flex-direction: row;
