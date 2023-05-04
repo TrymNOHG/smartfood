@@ -30,22 +30,22 @@ public class UnitParser {
                 unit = !UnitType.contains(matchedUnit) ? UnitType.PIECES : UnitType.fromString(matchedUnit);
 
                 switch (unit) {
-                    case GRAMS -> {
-                        amount = parseAmount(match) / 1000.0;
-                        unit = UnitType.KILOGRAMS;
+                    case KILOGRAMS -> {
+                        amount = parseAmount(match) * 1000.0;
+                        unit = UnitType.GRAMS;
                     }
-                    case MILLILITERS -> {
-                        amount = parseAmount(match) / 1000.0;
-                        unit = UnitType.LITERS;
+                    case LITERS -> {
+                        amount = parseAmount(match) * 1000.0;
+                        unit = UnitType.MILLILITERS;
                     }
                     case DECILITERS -> {
-                        amount = parseAmount(match) / 10.0;
-                        unit = UnitType.LITERS;
+                        amount = parseAmount(match) * 100.0;
+                        unit = UnitType.MILLILITERS;
                     }
                     case GALLONS -> unit = UnitType.LITERS;
                     case POUNDS -> {
-                        amount = parseAmount(match) / 2.20462;
-                        unit = UnitType.KILOGRAMS;
+                        amount = (parseAmount(match) / 2.20462) * 1000;
+                        unit = UnitType.GRAMS;
                     }
                     case PIECES -> {
                         if(!hasValue) {
