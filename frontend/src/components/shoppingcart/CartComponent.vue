@@ -58,7 +58,7 @@
                 style="text-align: center"
                 @click="addItemToList(item)"
               />
-              <div id="bottom"></div>
+              <div ref="scrollTarget"></div>
             </template>
           </vue-collapsible-panel>
         </vue-collapsible-panel-group>
@@ -120,7 +120,7 @@ import { getItemsFromShoppingList } from "@/services/ItemService";
 import { buyItemsFromShoppingList } from "@/services/ItemService";
 import { deleteItemsFromShoppingList } from "@/services/ItemService";
 import { getItems } from "@/services/ApiService";
-import { getItemByBarcode } from "@/services/ApiService";
+import { getItemByBarcode, getItemsByPage } from "@/services/ApiService";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
@@ -162,12 +162,6 @@ export default {
       return useFridgeStore().getIsSuperUser;
     },
   },
-  async mounted() {
-    window.addEventListener("resize", () => {
-      this.width = window.innerWidth;
-    });
-    await this.observeBottom();
-  },
   setup() {
     console.log(useFridgeStore().getCurrentFridge);
     var itemAmount = ref(1);
@@ -182,6 +176,9 @@ export default {
     const suggestedItems = ref([]);
     const itemStore = useItemStore();
     let scannerActive = ref(false);
+    const scrollTarget = ref(null);
+    const isLoading = ref(false);
+    let nextPage = 1;
 
     function initScanner() {
       Quagga.init(
@@ -398,38 +395,41 @@ export default {
       }
     }
 
-    function loadMore() {
-      console.log("REACHED BOTTOM BOOM!!");
+    async function loadMore() {
+        if (isLoading.value) return;
+        console.log("REACHED BOTTOM BOOM!!");
+        isLoading.value = true;
+        try{
+            let response = await getItemsByPage(searchQuery.value, nextPage);
+            nextPage++;
+            if(response){
+                searchItems.value = [...searchItems.value, ...response];
+                console.log("ON BOTTOM BOOM PAGE !!!!!!!!!!! ITEMS", searchItems.value);
+            }
+        } catch (error){
+            console.error("Error loading search items", error); //TODO: add swal.fire ....
+        }
+
+        isLoading.value = false;
     }
 
-    const observeBottom = () => {
-      const bottomElement = document.querySelector("#bottom");
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              console.log("Reached bottom but not bottom boom!");
-              loadMore();
-            }
-          });
-        },
-        { threshold: 1 }
-      );
-      if (bottomElement) {
-        observer.observe(bottomElement);
+
+    const handleScroll = async () => {
+      const bottomOfWindow =
+        Math.ceil(scrollTarget.value.getBoundingClientRect().bottom) <=
+        (window.innerHeight || document.documentElement.clientHeight);
+      if (bottomOfWindow) {
+        await loadMore();
       }
     };
 
-    onUnmounted(() => {
-      const bottomElement = document.querySelector("#bottom");
-      const observer = new IntersectionObserver(() => {}, { threshold: 1 });
-      if (bottomElement) {
-        observer.unobserve(bottomElement);
-      }
+    onMounted(() => {
+      window.addEventListener("scroll", handleScroll);
+      loadMore(); // Load initial data
     });
-    onMounted(async () => {
-      await observeBottom();
-      await loadItemsFromCart();
+
+    onUnmounted(() => {
+      window.removeEventListener("scroll", handleScroll);
     });
 
     onBeforeUnmount(() => {
@@ -677,13 +677,14 @@ export default {
       onDetected,
       initScanner,
       stopScanner,
-      observeBottom,
+      scrollTarget,
     };
   },
 };
 </script>
 
 <style scoped>
+
 #info-and-bell {
   display: flex;
   flex-direction: row;

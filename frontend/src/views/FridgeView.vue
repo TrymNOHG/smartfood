@@ -20,13 +20,13 @@
     </div>
 
     <div id="info-and-bell">
-      <InfoAndBell/>
+      <InfoAndBell />
       <div class="information-button">
         <img
-            src="@/assets/images/info.svg"
-            id="info-picture"
-            @click="showInformation"
-            :alt="$t('alt_info_button')"
+          src="@/assets/images/info.svg"
+          id="info-picture"
+          @click="showInformation"
+          :alt="$t('alt_info_button')"
         />
       </div>
     </div>
@@ -71,26 +71,31 @@
                 style="text-align: center"
                 @click="addItemToFridge(this.fridge.fridgeId, item)"
               />
+              <div ref="scrollTarget"></div>
             </template>
           </vue-collapsible-panel>
         </vue-collapsible-panel-group>
       </div>
     </div>
 
-    <div class="searchbar-wrapper" :class="{'margin-bottom': active}" :style="{'margin-bottom': active ? '20%' : '0'}">
+    <div
+      class="searchbar-wrapper"
+      :class="{ 'margin-bottom': active }"
+      :style="{ 'margin-bottom': active ? '20%' : '0' }"
+    >
       <button id="toggle" @click="handleClick">Filter</button>
       <div
-          v-if="click"
-          id="filter"
-          class="slide-in"
-          :class="active ? 'slide-in' : 'slide-out'"
+        v-if="click"
+        id="filter"
+        class="slide-in"
+        :class="active ? 'slide-in' : 'slide-out'"
       >
         <div id="search-wrapper">
           <input
-              type="text"
-              v-model="searchText"
-              @input="searchHandler()"
-              :placeholder="$t('search') + '...'"
+            type="text"
+            v-model="searchText"
+            @input="searchHandler()"
+            :placeholder="$t('search') + '...'"
           />
         </div>
 
@@ -122,10 +127,7 @@
       </div>
     </div>
     <transition name="fade">
-      <div
-        v-if="!listView"
-        class="wrapper"
-      >
+      <div v-if="!listView" class="wrapper">
         <basic-fridge-item
           :isSuperUser="isCurrentUserSuperUser"
           v-for="(item, index) in fridgeItems"
@@ -154,8 +156,10 @@
 </template>
 
 <script lang="ts">
-
-import {VueCollapsiblePanel, VueCollapsiblePanelGroup,} from "@dafcoe/vue-collapsible-panel";
+import {
+  VueCollapsiblePanel,
+  VueCollapsiblePanelGroup,
+} from "@dafcoe/vue-collapsible-panel";
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import { useFridgeStore, useItemStore } from "@/store/store";
@@ -168,14 +172,18 @@ import {
 } from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
-import {getItemByBarcode, getItems} from "@/services/ApiService";
+import {
+  getItemByBarcode,
+  getItems,
+  getItemsByPage,
+} from "@/services/ApiService";
 import Swal from "sweetalert2";
-import {addItemToShoppingList} from "@/services/ItemService";
+import { addItemToShoppingList } from "@/services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
 import router from "../router/router";
-import {StreamBarcodeReader} from "vue-barcode-reader";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import { StreamBarcodeReader } from "vue-barcode-reader";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import Quagga from "quagga";
 import InfoAndBell from "../components/basic-components/InfoAndBell.vue";
 
@@ -431,11 +439,14 @@ export default {
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
     let scannerActive = ref(false);
-    const isLoading = ref(false);
+    const isLoadingItems = ref(false);
     const page = ref(0);
     const searchText = ref("");
     const selectedCategory = ref(0);
     const categories = ref<Array<{ id: number; name: string }>>([]);
+    const scrollTarget = ref(null);
+    const isLoading = ref(false);
+    let nextPage = 1;
 
     const sortOptions = ref([
       { key: "expirationDate", direction: "DESC" },
@@ -451,8 +462,8 @@ export default {
     const sort = ref(sortOptions.value[0]);
 
     const loadMore = () => {
-      if (!isLoading.value) {
-        isLoading.value = true;
+      if (!isLoadingItems.value) {
+        isLoadingItems.value = true;
 
         const filters: Filter[] = [
           {
@@ -479,11 +490,11 @@ export default {
           .then((response) => {
             page.value++;
             fridgeItems.value = [...fridgeItems.value, ...response];
-            isLoading.value = false;
+            isLoadingItems.value = false;
           })
           .catch((error) => {
             console.error(error);
-            isLoading.value = false;
+            isLoadingItems.value = false;
           });
       }
     };
@@ -513,6 +524,7 @@ export default {
 
     onMounted(async () => {
       await observeBottom();
+      window.addEventListener("scroll", handleScroll);
       loadMore();
     });
 
@@ -522,7 +534,35 @@ export default {
       if (bottomElement) {
         observer.unobserve(bottomElement);
       }
+      window.removeEventListener("scroll", handleScroll);
     });
+
+    const handleScroll = async () => {
+      const bottomOfWindow =
+        Math.ceil(scrollTarget.value.getBoundingClientRect().bottom) <=
+        (window.innerHeight || document.documentElement.clientHeight);
+      if (bottomOfWindow) {
+        await loadMoreSearchItems();
+      }
+    };
+
+    async function loadMoreSearchItems() {
+      if (isLoading.value) return;
+      console.log("REACHED BOTTOM BOOM!!");
+      isLoading.value = true;
+      try {
+        let response = await getItemsByPage(searchQuery.value, nextPage);
+        nextPage++;
+        if (response) {
+          searchItems.value = [...searchItems.value, ...response];
+        }
+      } catch (error) {
+        console.error("Error loading search items", error); //TODO: add swal.fire ....
+      }
+
+      isLoading.value = false;
+    }
+
     const instance = getCurrentInstance();
     onBeforeUnmount(() => {
       if (instance && instance.proxy && scannerActive.value == true) {
@@ -536,6 +576,7 @@ export default {
     const click = ref(false);
 
     return {
+        scrollTarget,
       active,
       click,
       fridge,
@@ -595,13 +636,15 @@ template {
   gap: 5%;
 }
 
-*{
+* {
   font-family: Roboto, sans-serif;
 }
+
 #barcode-scanner {
   overflow-x: hidden;
   overflow-y: hidden;
 }
+
 #interactive {
   text-align: center;
   width: 95vw;
@@ -691,6 +734,7 @@ template {
   width: 100%;
   border-radius: 50px;
 }
+
 #sort-wrapper {
   display: flex;
   align-items: center;
@@ -1014,9 +1058,11 @@ input[type="text"]:focus {
     height: 60px;
     border-radius: 20px 20px 0 0;
   }
+
   .slide-in {
     display: block !important;
   }
+
   .slide-out {
     display: none !important;
   }
@@ -1049,20 +1095,21 @@ input[type="text"]:focus {
     width: 100%;
   }
 
-  #filter-component{
+  #filter-component {
     display: none !important;
   }
 
-  .searchbar-wrapper{
+  .searchbar-wrapper {
     gap: 0;
     flex-wrap: wrap;
   }
 
-  #toggle{
+  #toggle {
     width: 100%;
     margin-left: 20%;
     margin-right: 20%;
   }
+
   .wrapper {
     z-index: -1;
     grid-template-rows: 1fr;
