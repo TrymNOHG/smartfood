@@ -11,5 +11,5 @@ public class RecipeItemDTO {
             @NonNull private String name;
             private double price, quantity;
             private String unitOfMeasurement;
-            private boolean hasItem;
+            private Double fridgeAmount, itemOriginalAmount;
 }
