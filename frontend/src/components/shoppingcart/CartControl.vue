@@ -37,7 +37,6 @@ export default {
   align-items: center;
   padding: 5px 16px 10px;
   background-color: #6c6c6c;
-  border-radius: 50px;
 }
 
 .control-buttons {
@@ -85,7 +84,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 16px;
+    padding: 0 4px 0 4px;
     background-color: white;
     border-radius: 4px;
   }
@@ -93,7 +92,7 @@ export default {
   .control-buttons {
     display: inline-block;
     margin: 0;
-    padding: 8px 16px;
+    padding: 10px 16px;
     font-size: 13px;
     font-weight: bold;
     text-align: center;

@@ -190,6 +190,7 @@ export default {
   display: flex;
   grid-column: 3;
   text-align: right;
+  height: 40px;
 }
 
 #info-picture{
@@ -343,6 +344,11 @@ export default {
     padding-top: 8px;
     padding-right: 5px;
     padding-left: 5px;
+  }
+
+  .information-button{
+    margin-right: 3px !important;
+    height: 60px;
   }
 }
 </style>

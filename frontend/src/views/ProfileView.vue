@@ -103,7 +103,7 @@ export default {
     .information-button {
       display: flex;
       margin-left: auto;
-      margin-right: 5px;
+      margin-right: 8px;
       gap: 30%;
       left: 0;
       height: 60px;

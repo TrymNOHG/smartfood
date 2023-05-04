@@ -207,6 +207,9 @@ template {
     padding-right: 5px;
     font-size: 20px;
   }
+  .information-button{
+    margin-right: 3px !important;
+  }
 
   #toggle-button:hover {
     cursor: pointer;

@@ -413,6 +413,10 @@ h3 {
     top: 0;
   }
 
+  .information-button{
+    margin-right: 3px !important;
+  }
+
 
 
 

@@ -199,6 +199,7 @@ export default {
   text-align: right;
   margin-left: auto;
   padding: 0;
+  height: 40px;
 }
 
 #info-picture {
@@ -349,6 +350,11 @@ export default {
     cursor: pointer;
     font-size: unset;
     font-size: 20px;
+  }
+
+  .information-button{
+    margin-right: 3px !important;
+    height: 60px;
   }
 }
 </style>

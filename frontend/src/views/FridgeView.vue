@@ -1126,6 +1126,10 @@ input[type="text"]:focus {
     font-size: unset;
   }
 
+  .information-button{
+    margin-right: 3px !important;
+  }
+
   #searchbar {
     display: flex;
     position: fixed;
