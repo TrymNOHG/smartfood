@@ -2,6 +2,7 @@ package edu.ntnu.idatt2106_2023_06.backend.model.users;
 
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeMember;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipeSuggestion;
+import edu.ntnu.idatt2106_2023_06.backend.model.notification.Notification;
 import edu.ntnu.idatt2106_2023_06.backend.model.stats.Statistics;
 import jakarta.persistence.*;
 import lombok.*;
@@ -83,7 +84,6 @@ public class User implements UserDetails {
     @ToString.Exclude
     private Set<FridgeMember> memberships = new HashSet<>();
 
-
     /**
      * The statistics of the fridge.
      */
@@ -107,7 +107,13 @@ public class User implements UserDetails {
     @ToString.Exclude
     private List<RecipeSuggestion> recipeSuggestion = new ArrayList<>();
 
-
+    /**
+     * The notifications of the user.
+     */
+    @OneToMany(mappedBy = "user")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    private Set<Notification> notifications = new HashSet<>();
 
     @PreRemove
     private void removeStats() {
