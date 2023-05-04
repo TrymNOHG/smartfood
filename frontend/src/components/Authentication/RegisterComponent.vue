@@ -126,7 +126,6 @@ export default {
 
     const submit = handleSubmit(async () => {
       // Handle registration form submission
-      console.log("Registering");
       const userData = {
         username: username.value,
         password: password.value,
@@ -134,7 +133,6 @@ export default {
         lastName: lastName.value,
         email: email.value,
       };
-      console.log(userData);
       await registerUser(userData)
         .then(async (response) => {
           if (response !== undefined) {

@@ -3,13 +3,11 @@
 
   <div class="wrapper2">
     <div v-for="day in weekdays" :key="day">
-      <h2>{{ day }}</h2>
+      <h2>{{ $t(day) }}</h2>
       <meal
         v-if="getMealForDay(day)"
-        :isSuperUser="true"
+        :isSuperUser="false"
         :meal="getMealForDay(day)"
-        :currentFridge="fridge"
-        @delete-item="deleteItem"
       />
     </div>
   </div>
@@ -43,7 +41,6 @@ export default {
       try {
         let i = 0
         for(let day of weekdays) {
-          console.log(day.toUpperCase())
           const response = await loadRecipeByFridgeItemsAndDay(
               fridgeId,
               day.toUpperCase(),
@@ -53,7 +50,6 @@ export default {
 
 
           for(let newMeal of response.content) {
-            console.log(day)
             if (
                 !meals.value.find(
                     (meal) => meal.recipeName === newMeal.recipeName
@@ -80,13 +76,9 @@ export default {
 
 
     function getMealForDay(day) {
-      console.log(day);
-      console.log("SHOOOOOOOOW ME PLEEEEEEEASE");
-      console.log(meals.value);
       let result = {};
       for (let i = 0; i < meals.value.length; i++) {
         if (meals.value[i].dayOfWeek == day) {
-          console.log("WOOOHOOO MATCH FOUND!!!!");
           result = meals.value[i];
           return result;
         }

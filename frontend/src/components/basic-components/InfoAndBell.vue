@@ -84,13 +84,11 @@ export default {
 
   methods: {
     removeBorder(notification) {
-      console.log(notification)
       //this.fridgeStore.removeBorderForNotification(notification, this.fridge.fridgeId);
       //this.getNotifications();
     },
 
     deleteNotification(notification) {
-      console.log(notification)
       //this.fridgeStore.deleteNotificationUsingId(notification, this.fridge.fridgeId);
     },
 
