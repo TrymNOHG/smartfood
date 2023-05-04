@@ -1,7 +1,7 @@
 import axios from "axios";
 import SessionToken from '@/features/SessionToken.js'
 
-const BASE_LISTING_URL = "http://10.22.58.18:8089/api/recipe";
+const BASE_LISTING_URL = "http://localhost:8089/api/recipe";
 
 export const loadRecipeByFridgeItemsAndDay = async (fridgeId, day, page = 0, size = 10) => {
     const token = await SessionToken();
