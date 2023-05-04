@@ -149,7 +149,7 @@ template {
   }
 
   .information-button{
-    height: 60px
+    height: 60px;
   }
 
   .grey-bar {

@@ -22,9 +22,10 @@
           <h4 class="price-text">{{ $t("price") }} {{ item.price }}</h4>
         </div>
         <font-awesome-icon
-          icon="fa-solid fa-trash"
-          @click="deleteItem"
-          class="delete-icon icons"
+            v-if="isSuperUser"
+            icon="fa-solid fa-trash"
+            @click.prevent="deleteCard(item)"
+            class="delete-icon icons"
         />
       </div>
     </router-link>
@@ -54,6 +55,10 @@ export default {
         store: String,
       }),
     },
+    isSuperUser: {
+      type: Boolean,
+      default: false
+    }
   },
 
   methods: {
@@ -64,84 +69,66 @@ export default {
     deleteCard(item) {
       let deletePercentage = null;
 
-      swal
-        .fire({
-          title: this.$t("confirm_title"),
-          text: this.$t("confirm_text"),
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#4dce38",
-          cancelButtonColor: "#d33",
-          confirmButtonText: this.$t("confirm_button"),
-          cancelButtonText: this.$t("cancel_button"),
-          customClass: {
-            container: "my-swal-dialog-container",
-          },
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            Swal.fire({
-              html: `
-          <div class="swal2-content">
-            <div class="swal2-text">
-              ${this.$t("Percent-wise, how much was left?")}
-            </div>
-            <div id="range-value-text" class="swal2-text"></div>
-          </div>
-        `,
-              input: "range",
-              inputAttributes: {
-                min: 0,
-                max: 100,
-                step: 1,
-              },
-              didOpen: () => {
-                deletePercentage = Swal.getInput();
-                const inputNumber =
-                  Swal.getHtmlContainer().querySelector("#range-value");
-                const rangeValueText =
-                  Swal.getHtmlContainer().querySelector("#range-value-text");
+      Swal.fire({
+        html: `
+         <div class="swal2-content">
+           <div class="swal2-text">
+             ${this.$t("Percent-wise, how much was left?")}
+           </div>
+           <div id="range-value-text" class="swal2-text"></div>
+         </div>
+       `,
+        input: "range",
+        inputAttributes: {
+          min: 0,
+          max: 100,
+          step: 1,
+        },
+        didOpen: () => {
+          deletePercentage = Swal.getInput();
+          const inputNumber =
+              Swal.getHtmlContainer().querySelector("#range-value");
+          const rangeValueText =
+              Swal.getHtmlContainer().querySelector("#range-value-text");
 
-                deletePercentage.nextElementSibling.style.display = "none";
-                deletePercentage.style.width = "100%";
+          deletePercentage.nextElementSibling.style.display = "none";
+          deletePercentage.style.width = "100%";
 
-                deletePercentage.addEventListener("input", () => {
-                  inputNumber.value = deletePercentage.value;
-                  rangeValueText.innerText = `${deletePercentage.value}%`;
-                });
-              },
-              showCancelButton: true,
-              confirmButtonText: this.$t("confirm_button"),
-              cancelButtonText: this.$t("cancel_button"),
-              customClass: {
-                container: "my-swal-dialog-container",
-              },
-            }).then((result) => {
-              if (result.isConfirmed) {
-                swal
-                  .fire({
-                    title: "Vil du kjøpe den på nytt",
-                    icon: "success",
-                    showCancelButton: true,
-                    confirmButtonColor: "#4dce38",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes",
-                    cancelButtonText: "No",
-                    customClass: {
-                      container: "my-swal-dialog-container",
-                    },
-                  })
-                  .then((result) => {
-                    if (result.isConfirmed) {
-                      this.$emit("add-shopping", item);
-                    }
-                    this.$emit("delete-item", item, deletePercentage.value);
-                  });
-              }
-            });
-          }
-        });
-    },
+          deletePercentage.addEventListener("input", () => {
+            inputNumber.value = deletePercentage.value;
+            rangeValueText.innerText = `${deletePercentage.value}%`;
+          });
+        },
+        showCancelButton: true,
+        confirmButtonText: this.$t("confirm_button"),
+        cancelButtonText: this.$t("cancel_button"),
+        customClass: {
+          container: "my-swal-dialog-container",
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          swal
+              .fire({
+                title: "Vil du kjøpe den på nytt",
+                icon: "success",
+                showCancelButton: true,
+                confirmButtonColor: "#4dce38",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
+                customClass: {
+                  container: "my-swal-dialog-container",
+                },
+              })
+              .then((result) => {
+                if (result.isConfirmed) {
+                  this.$emit("add-shopping", item);
+                }
+                this.$emit("delete-item", item, deletePercentage.value);
+              });
+        }
+      });
+    }
   },
 
   setup(props) {
