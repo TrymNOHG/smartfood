@@ -30,7 +30,7 @@ import java.util.List;
 public class Item {
 
     /**
-     * The unique identifier for this items.
+     * The unique identifier for this item.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -117,4 +117,5 @@ public class Item {
     @ToString.Exclude
     @JsonIgnore
     private List<FridgeItems> itemsInFridge = new ArrayList<>();
+
 }

@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.items;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.*;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemSearchDTO;
@@ -18,6 +19,7 @@ import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.ItemRecipeScore;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeMemberRepository;
@@ -29,11 +31,11 @@ import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
 import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.*;
-import edu.ntnu.idatt2106_2023_06.backend.utils.UnitParser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -97,6 +99,7 @@ public class ItemService implements IItemService {
             return item;
         }
 
+        System.out.println(itemDTO);
         Item i = ItemMapper.toItem(itemDTO, store);
         itemRepository.save(i);
 
@@ -128,12 +131,13 @@ public class ItemService implements IItemService {
                 .id(new FridgeItemsId(item.getItemId(), fridge.getFridgeId()))
                 .item(item)
                 .fridge(fridge)
-                .amount(0)
+                .quantity(0)
                 .purchaseDate(LocalDateTime.now())
                 .expirationDate(LocalDateTime.now().plusDays(4)) //TODO: change to a valid expiration date....
                 .build());
 
-        fridgeItem.setAmount(fridgeItem.getAmount() + itemDTO.quantity() * fridgeItem.getItem().getAmount());
+        fridgeItem.setQuantity(fridgeItem.getQuantity() + itemDTO.quantity());
+
         fridgeItemsRepository.save(fridgeItem);
     }
 
@@ -213,8 +217,8 @@ public class ItemService implements IItemService {
         logger.info("Fridge item was found");
 
         logger.info("Changing the fridge item");
-        fridgeItem.setAmount(fridgeItemUpdateDTO.amount() != null && fridgeItemUpdateDTO.amount() > 0 ?
-                fridgeItemUpdateDTO.amount() : fridgeItem.getAmount());
+        fridgeItem.setQuantity(fridgeItemUpdateDTO.quantity() != null && fridgeItemUpdateDTO.quantity() >= 1 ?
+                fridgeItemUpdateDTO.quantity() : fridgeItem.getQuantity());
 
         fridgeItem.setPurchaseDate(fridgeItemUpdateDTO.purchaseDate() != null ?
                 fridgeItemUpdateDTO.purchaseDate() : fridgeItem.getPurchaseDate());
@@ -269,6 +273,8 @@ public class ItemService implements IItemService {
         Item item = itemRepository.findByProductNameAndStore(itemRemoveDTO.itemName(), store).orElseThrow(() -> new ItemNotFoundException(itemRemoveDTO.itemName()));
         Fridge fridge = fridgeRepository.findByFridgeId(itemRemoveDTO.fridgeId()).orElseThrow(() -> new FridgeNotFoundException(itemRemoveDTO.fridgeId()));
         FridgeItems fridgeItem = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElseThrow(() -> new FridgeItemsNotFoundException(""));
+        notificationService.deleteNotificationForEveryUserInFridge(itemRemoveDTO);
+        if (fridgeItem.getQuantity() <= itemRemoveDTO.quantity()){
         if (fridgeItem.getAmount() <= itemRemoveDTO.quantity() * fridgeItem.getItem().getAmount()){
             fridgeItemsRepository.delete(fridgeItem);
         }
@@ -294,7 +300,7 @@ public class ItemService implements IItemService {
             throw new UnauthorizedException(jwtService.getAuthenticatedUserEmail());
         }
         if (!fridgeItemSearchDTO.sortField().equals("expirationDate") && !fridgeItemSearchDTO.sortField().equals("purchaseDate"))
-            throw new IllegalArgumentException("Sort field must be either expirationDate or purchaseDate");
+            throw new IllegalArgumentException("Sort field must be either expirationDate or purchaseDate"); // TODO: global exception handler
         if (!fridgeItemSearchDTO.sortOrder().equalsIgnoreCase("ASC") && !fridgeItemSearchDTO.sortOrder().equalsIgnoreCase("DESC"))
             throw new IllegalArgumentException("Sort order must be either ASC or DESC");
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeItemSearchDTO.fridgeId()).orElseThrow(

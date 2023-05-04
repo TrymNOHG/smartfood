@@ -1,8 +1,16 @@
 <template>
   <div class="grey-bar">
     <h2 id="grey-header" >{{ $t('statistics') }}</h2>
-    <div class="information-button">
-      <img src="@/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
+    <div id="info-and-bell">
+      <InfoAndBell/>
+      <div class="information-button">
+        <img
+            src="@/assets/images/info.svg"
+            id="info-picture"
+            @click="showInformation"
+            :alt="$t('alt_info_button')"
+        />
+      </div>
     </div>
   </div>
   <div class="page-layout">
@@ -70,10 +78,11 @@ import StatCard from "@/components/statistic/StatCard.vue";
 import BasicSelect from "@/components/basic-components/BasicSelect.vue";
 import {ref} from "vue";
 import {useFridgeStore, useStatStore} from "@/store/store";
+import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
 
 export default {
   name: "StatisticsView",
-  components: {BasicSelect, StatCard, BarChart, LineChart},
+  components: {InfoAndBell, BasicSelect, StatCard, BarChart, LineChart},
 
   methods: {
     updateStats(stat) {
@@ -179,6 +188,19 @@ export default {
 
 <style scoped>
 
+#grey-header {
+  height: 40px;
+  grid-column: 2;
+  color: white;
+}
+
+#info-and-bell {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 5%;
+}
+
 #chart {
   width: 500px;
   height: 300px;
@@ -214,17 +236,14 @@ h3 {
   align-items: center;
 }
 
-#grey-header {
-  grid-column: 2;
-  color: white;
+#info-and-bell {
+  grid-column: 3;
 }
 
 .information-button {
   display: flex;
-  grid-column: 3;
   text-align: right;
-  margin-left: auto;
-
+  height: 40px;
 }
 
 #info-picture {
@@ -276,7 +295,24 @@ h3 {
   font-size: 1.5rem;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 680px) {
+
+  #grey-header {
+    height: 60px;
+    grid-column: 2;
+    color: black;
+  }
+
+  #info-and-bell {
+    margin-left: auto;
+    gap: 50%;
+  }
+
+  #info-picture {
+    top: 15%;
+    height: 60px;
+  }
+
   #chart {
     width: 380px;
   }
@@ -331,20 +367,6 @@ h3 {
     height: 60px;
     border-radius: 20px 20px 0 0;
     width: 100%;
-  }
-
-  #grey-header{
-    margin-left: 25%;
-    height: 60px !important;
-    background-color: white;
-    border-radius: 20px 20px 0 0;
-    font-weight: bold;
-    text-decoration: none;
-    text-shadow: none;
-    color: black;
-    margin-top: 20px;
-    padding-top: 10px;
-    width: 50%;
   }
   .stat-container{
     margin-left: 0;
