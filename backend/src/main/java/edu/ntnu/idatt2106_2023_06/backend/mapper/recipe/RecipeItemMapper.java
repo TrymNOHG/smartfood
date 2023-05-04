@@ -15,7 +15,9 @@ public class RecipeItemMapper {
                 .quantity(recipeItem.getQuantity())
                 .unitOfMeasurement(recipeItem.getUnitOfMeasurement())
                 .price(item.getPrice())
-                .hasItem(false)
+                .itemOriginalAmount(item.getAmount())
+                .itemOriginalUnit(item.getUnit())
+                .fridgeAmount(0.0)
                 .build();
     }
 

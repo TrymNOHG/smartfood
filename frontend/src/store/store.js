@@ -214,7 +214,7 @@ export const useItemStore = defineStore('itemStore', {
             await deleteItemStats(statDeleteFromFridgeDTO)
         },
 
-        async deleteItemByNameIdStoreQuantity(itemRemoveDTO){
+        async deleteItemByNameIdStoreAmount(itemRemoveDTO){
             await deleteItemFromFridge(itemRemoveDTO);
         },
 

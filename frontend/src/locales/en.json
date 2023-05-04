@@ -1,5 +1,4 @@
 {
-  "deleted_items": "Deleted items",
   "matsmart": "SmartMat",
   "dinner": "Dinner",
   "fridge": "Fridge",
@@ -139,5 +138,6 @@
   "loading" : "Loading",
   "deleted_items" : "Deleted items",
   "Added_to_fridge" : "Added to fridge",
-  "default_part_name" : ""
+  "default_part_name" : "",
+  "you_have" : "You have"
 }

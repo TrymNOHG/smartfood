@@ -247,7 +247,7 @@ export default {
       };
 
       await addItemToShoppingList(itemDTO, fridge.fridgeId, false).then(
-          async (response) => {}
+        async (response) => {}
       );
     },
 
@@ -267,7 +267,7 @@ export default {
       const statDeleteFromFridgeDTO = {
         percentageThrown: parseFloat(deletePercentage),
         price: itemToDelete.price,
-        quantity: parseFloat(itemToDelete.quantity),
+        quantity: parseFloat(deletePercentage),
         itemName: itemToDelete.name,
         storeName: itemToDelete.store,
         fridgeId: this.fridge.fridgeId,
@@ -277,11 +277,13 @@ export default {
         itemName: itemToDelete.name,
         store: itemToDelete.store,
         fridgeId: this.fridge.fridgeId,
-        quantity: itemToDelete.quantity,
+        quantity: 0,
       };
 
+      console.log(itemRemoveDTO)
+
       await this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO);
-      await this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO);
+      await this.itemStore.deleteItemByNameIdStoreAmount  (itemRemoveDTO);
       await this.itemStore
           .fetchItemsFromFridgeById(this.fridge.fridgeId)
           .then((items) => {
@@ -1216,10 +1218,6 @@ input[type="text"]:focus {
 
   #scrollTarget{
       margin-bottom: 30px;
-  }
-
-  .dropper {
-    height: 150vw;
   }
 }
 </style>

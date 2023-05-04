@@ -88,8 +88,18 @@ export default {
       const ids = [];
       this.meal.recipeParts.forEach(part => {
         part.ingredients.forEach(ingredient => {
-          if (!ingredient.hasItem) {
+          const recipyQuantity = ingredient.quantity;
+          let hasQuantity = ingredient.fridgeAmount;
+          let itemQuantity = ingredient.itemOriginalAmount;
+          console.log(ingredient.itemOriginalUnit)
+          console.log(ingredient.unitOfMeasurement)
+          if (ingredient.itemOriginalUnit ===  "pieces" && ingredient.unitOfMeasurement !== "c") {
+            itemQuantity = itemQuantity * 250;
+            hasQuantity = hasQuantity * 250;
+          }
+          while (hasQuantity < recipyQuantity) {
             ids.push(ingredient.itemId);
+            hasQuantity += itemQuantity;
           }
         });
       });

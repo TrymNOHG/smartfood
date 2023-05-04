@@ -1,5 +1,4 @@
 {
-  "deleted_items": "Slettet varer",
   "matsmart": "SmartMat",
   "dinner": "Middag",
   "fridge": "Kjøleskap",
@@ -141,5 +140,6 @@
   "loading" : "Laster inn",
   "deleted_items" : "slettet varer",
   "Added_to_fridge" : "lagt til i kjøleskapet",
-  "default_part_name" : ""
+  "default_part_name" : "",
+  "you_have": "Du har"
 }
