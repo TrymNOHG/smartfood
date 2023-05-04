@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106_2023_06.backend.mapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
+import edu.ntnu.idatt2106_2023_06.backend.utils.UnitParser;
 
 /**
  * This class is a mapper that maps between the Item model and the Item DTOs.
@@ -19,6 +20,8 @@ public class ItemMapper {
      * @return        The mapped item
      */
     public static Item toItem(ItemDTO itemDTO, Store store){
+        Object[] parsedUnit = UnitParser.parse(itemDTO.name());
+
         return Item.builder()
                 .productName(itemDTO.name())
                 .desc(itemDTO.description())
@@ -26,6 +29,8 @@ public class ItemMapper {
                 .price(itemDTO.price())
                 .pictureLink(itemDTO.image())
                 .ean(itemDTO.EAN())
+                .amount((Double) parsedUnit[0])
+                .unit((String) parsedUnit[1])
                 .build();
     }
 

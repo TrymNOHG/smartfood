@@ -13,6 +13,7 @@ import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.recipe.ItemRecipeScoreRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.recipe.RecipeRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.text.similarity.JaroWinklerDistance;
 import org.springframework.data.domain.Page;
@@ -65,6 +66,7 @@ public class ItemRecipeScoreService {
     }
 
     @Async
+    @Transactional
     public CompletableFuture<List<ItemRecipeScore>> generateScoreForItem(Long itemId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException(itemId));
@@ -75,7 +77,6 @@ public class ItemRecipeScoreService {
         for(Recipe recipe : allRecipes) {
             futures.add(generateSingleScore(item, recipe));
         }
-
         return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
                 .thenApply(v -> futures.stream()
                         .map(CompletableFuture::join)
@@ -93,6 +94,7 @@ public class ItemRecipeScoreService {
     }
 
     @Async
+    @Transactional
     public CompletableFuture<ItemRecipeScore> generateSingleScore(Item item, Recipe recipe) {
         if(itemRecipeScoreRepository.existsItemRecipeScoreByItem_ItemIdAndRecipe_RecipeId(item.getItemId(), recipe.getRecipeId())) return CompletableFuture.completedFuture(null);
 
@@ -128,16 +130,15 @@ public class ItemRecipeScoreService {
         }
     }
 
-    public Page<Recipe> getRankedRecipesByFridge(Long fridgeId, int pageNumber, int pageSize) {
+    public Page<Recipe> getRankedRecipeByDate(Long fridgeId, int pageNumber, int pageSize, LocalDateTime date) {
         Fridge fridge = fridgeRepository.findById(fridgeId)
                 .orElseThrow(() -> new FridgeNotFoundException(fridgeId));
         List<FridgeItems> fridgeItems = fridgeItemsRepository.findByFridge(fridge)
                 .orElseThrow(() -> new FridgeNotFoundException(fridgeId));
 
         if(fridgeItems.isEmpty()) {
-           return null;
+            return null;
         }
-
 
         Map<Long, Double> recipeScores = new HashMap<>();
         for (FridgeItems fridgeItem : fridgeItems) {
@@ -147,7 +148,7 @@ public class ItemRecipeScoreService {
                     .orElseGet(() -> generateScoreForItem(fridgeItem.getItem().getItemId()).join());
 
             for (ItemRecipeScore itemRecipeScore : itemRecipeScores) {
-                double weightedScore = getWeightedScore(itemRecipeScore, fridgeItem);
+                double weightedScore = getWeightedScore(itemRecipeScore, fridgeItem, date);
                 recipeScores.merge(itemRecipeScore.getRecipe().getRecipeId(), weightedScore, Double::sum);
             }
         }
@@ -164,10 +165,14 @@ public class ItemRecipeScoreService {
         return new PageImpl<>(recipes, pageable, recipeIds.size());
     }
 
+    public Page<Recipe> getRankedRecipesByFridge(Long fridgeId, int pageNumber, int pageSize) {
+        return getRankedRecipeByDate(fridgeId, pageNumber, pageSize, LocalDateTime.now());
+    }
 
 
-    public double getWeightedScore(ItemRecipeScore itemRecipeScore, FridgeItems fridgeItem) {
-        long daysLeft = ChronoUnit.DAYS.between(LocalDateTime.now(), fridgeItem.getExpirationDate());
+
+    public double getWeightedScore(ItemRecipeScore itemRecipeScore, FridgeItems fridgeItem, LocalDateTime date) {
+        long daysLeft = ChronoUnit.DAYS.between(date, fridgeItem.getExpirationDate());
         double weight = 1 / Math.sqrt(daysLeft);
 
         return weight * itemRecipeScore.getScore();
