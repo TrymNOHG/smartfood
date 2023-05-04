@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.service.items;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.*;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemSearchDTO;
@@ -18,6 +19,7 @@ import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.ItemRecipeScore;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeMemberRepository;
@@ -35,6 +37,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -60,6 +63,7 @@ import java.util.stream.Stream;
 public class ItemService implements IItemService {
 
     private final ItemRecipeScoreService itemRecipeScoreService;
+    private final NotificationService notificationService;
     private final ItemRepository itemRepository;
     private final FridgeItemsRepository fridgeItemsRepository;
     private final FridgeRepository fridgeRepository;
@@ -70,7 +74,6 @@ public class ItemService implements IItemService {
     private final FridgeMemberRepository fridgeMemberRepository;
     private final JwtService jwtService;
     private final FridgeService fridgeService;
-    private final NotificationService notificationService;
 
     //TODO: add
     //        if (itemDTO.quantity() <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
@@ -99,6 +102,7 @@ public class ItemService implements IItemService {
             return item;
         }
 
+        System.out.println(itemDTO);
         Item i = ItemMapper.toItem(itemDTO, store);
         itemRepository.save(i);
 
@@ -127,13 +131,13 @@ public class ItemService implements IItemService {
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new FridgeNotFoundException(fridgeId));
         FridgeItems fridgeItem = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElseGet(() ->
                 FridgeItems.builder()
-                .id(new FridgeItemsId(item.getItemId(), fridge.getFridgeId()))
-                .item(item)
-                .fridge(fridge)
-                .amount(0)
-                .purchaseDate(LocalDateTime.now())
-                .expirationDate(LocalDateTime.now().plusDays(4)) //TODO: change to a valid expiration date....
-                .build());
+                        .id(new FridgeItemsId(item.getItemId(), fridge.getFridgeId()))
+                        .item(item)
+                        .fridge(fridge)
+                        .amount(0)
+                        .purchaseDate(LocalDateTime.now())
+                        .expirationDate(LocalDateTime.now().plusDays(4)) //TODO: change to a valid expiration date....
+                        .build());
 
         fridgeItem.setAmount(fridgeItem.getAmount() + itemDTO.quantity() * fridgeItem.getItem().getAmount());
         fridgeItemsRepository.save(fridgeItem);
@@ -266,16 +270,15 @@ public class ItemService implements IItemService {
      */
     @Override
     public void removeItemFromFridge(ItemRemoveDTO itemRemoveDTO) {
-        if (itemRemoveDTO.quantity() <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
+        if (itemRemoveDTO.quantity() <= 0) throw new IllegalArgumentException("Cannot have zero or negative quantity");
         Store store = storeRepository.findByStoreName(itemRemoveDTO.store()).orElseThrow(() -> new StoreNotFoundException(itemRemoveDTO.store()));
         Item item = itemRepository.findByProductNameAndStore(itemRemoveDTO.itemName(), store).orElseThrow(() -> new ItemNotFoundException(itemRemoveDTO.itemName()));
         Fridge fridge = fridgeRepository.findByFridgeId(itemRemoveDTO.fridgeId()).orElseThrow(() -> new FridgeNotFoundException(itemRemoveDTO.fridgeId()));
         FridgeItems fridgeItem = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElseThrow(() -> new FridgeItemsNotFoundException(""));
         notificationService.deleteNotificationForEveryUserInFridge(itemRemoveDTO);
-        if (fridgeItem.getAmount() <= itemRemoveDTO.quantity() * fridgeItem.getItem().getAmount()){
+        if (fridgeItem.getAmount() <= itemRemoveDTO.quantity() * fridgeItem.getItem().getAmount()) {
             fridgeItemsRepository.delete(fridgeItem);
-        }
-        else {
+        } else {
             fridgeItem.setAmount(fridgeItem.getAmount() - itemRemoveDTO.quantity() * fridgeItem.getItem().getAmount());
             fridgeItemsRepository.save(fridgeItem);
         }
