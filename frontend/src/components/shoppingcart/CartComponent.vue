@@ -421,17 +421,21 @@ export default {
     }
 
     const handleScroll = async () => {
-      const bottomOfWindow =
-        Math.ceil(scrollTarget.value.getBoundingClientRect().bottom) <=
-        (window.innerHeight || document.documentElement.clientHeight);
-      if (bottomOfWindow) {
-        await loadMore();
-      }
+        if(scrollTarget.value){
+            const bottomOfWindow =
+                Math.ceil(scrollTarget.value.getBoundingClientRect().bottom) <=
+                (window.innerHeight || document.documentElement.clientHeight);
+            if (bottomOfWindow) {
+                await loadMore();
+            }
+        }
+
     };
 
     onMounted(() => {
       window.addEventListener("scroll", handleScroll);
       loadMore(); // Load initial data
+        loadItemsFromCart();
     });
 
     onUnmounted(() => {
