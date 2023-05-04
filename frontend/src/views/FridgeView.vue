@@ -71,7 +71,7 @@
                 style="text-align: center"
                 @click="addItemToFridge(this.fridge.fridgeId, item)"
               />
-              <div ref="scrollTarget"></div>
+              <div ref="scrollTarget" id="scrollTarget"></div>
             </template>
           </vue-collapsible-panel>
         </vue-collapsible-panel-group>
@@ -960,7 +960,6 @@ input[type="text"]:focus {
   display: flex;
   justify-content: space-evenly;
   overflow-y: scroll;
-  height: 150vw;
 }
 
 .vcpg {
@@ -1047,9 +1046,6 @@ input[type="text"]:focus {
     display: none;
   }
 
-
-
-
   .slide-in {
     display: block !important;
   }
@@ -1092,6 +1088,7 @@ input[type="text"]:focus {
   .searchbar-wrapper{
     gap: 0;
     flex-wrap: wrap;
+      height: unset;
   }
 
   #toggle{
@@ -1203,6 +1200,14 @@ input[type="text"]:focus {
     display: flex;
     width: 100%;
     z-index: 0;
+  }
+
+  .vcpg{
+      max-height: 150vh;
+  }
+
+  #scrollTarget{
+      margin-bottom: 30px;
   }
 }
 </style>

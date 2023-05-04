@@ -1206,8 +1206,7 @@ input:focus {
     display: flex;
     width: 100vw;
     justify-content: space-evenly;
-    position: fixed;
-    top: 160px;
+    position: relative;
     overflow-y: scroll;
     margin-bottom: 20px;
     margin: auto;
@@ -1227,7 +1226,6 @@ input:focus {
     border: transparent;
     width: 100%;
     overflow-y: scroll;
-    max-height: 150vw;
     color: black;
     background-color: white;
   }
