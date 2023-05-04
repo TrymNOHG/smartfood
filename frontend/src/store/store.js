@@ -121,8 +121,8 @@ export const useFridgeStore = defineStore('fridgeStore', {
            await setNotifications()
         },
 
-        async deleteNotificationUsingId (notification) {
-           await deleteNotification()
+        async deleteNotificationNotificationId (notificationId) {
+           await deleteNotification(notificationId)
         },
 
         async removeBorderForNotification(){

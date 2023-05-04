@@ -9,9 +9,6 @@
           .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}
       </span>
     </div>
-    <div class="notification-icons">
-      <font-awesome-icon v-if="userStatus" icon="fa-solid fa-trash" @click="deleteNotification" class="delete-icon icons" id="delete"/>
-    </div>
   </div>
 </template>
 
@@ -28,12 +25,6 @@ export default {
       fridgeId: Number
     },
     userStatus: Boolean,
-  },
-
-  methods: {
-    deleteNotification() {
-      this.$emit("delete-notification", this.notification)
-    },
   }
 }
 </script>

@@ -61,10 +61,6 @@ export default {
 
   methods: {
 
-    deleteNotification(notification) {
-
-    },
-
     async changeNotifications() {
       if (this.showNotifications === false){
         this.showNotifications = true;
@@ -79,10 +75,6 @@ export default {
 </script>
 
 <style scoped>
-
-.unread-margin {
-  margin-right: 150px;
-}
 
 #notification-list  {
   z-index: 998;
