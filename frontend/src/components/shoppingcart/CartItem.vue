@@ -49,6 +49,7 @@
       />
       <font-awesome-icon
         class="btn-trash"
+        v-if="isSuperUser"
         icon="fa-solid fa-trash"
         @click="handleDeleteItem"
       />

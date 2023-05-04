@@ -100,7 +100,6 @@ export default {
                     const imageUrl = URL.createObjectURL(new Blob([response.data], { type: 'image/jpeg' }));
                     this.profilePictures.push(imageUrl);
                 } catch (error) {
-                    console.error('Error fetching member picture:', error);
                     this.profilePictures.push(this.defaultProfilePicture);
                 }
             }

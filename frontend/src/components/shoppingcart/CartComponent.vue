@@ -135,6 +135,7 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert2";
 import Quagga from "quagga";
 import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
+import {useI18n} from "vue-i18n/dist/vue-i18n";
 
 export default {
   name: "Cart",
@@ -157,7 +158,7 @@ export default {
     },
   },
   setup() {
-    console.log(useFridgeStore().getCurrentFridge);
+    const { t } = useI18n();
     var itemAmount = ref(1);
     var submitMessage = ref("norvegia");
     const items = ref([]); // list of items in the cart
@@ -204,18 +205,15 @@ export default {
 
     async function onDetected(result) {
       const code = result.codeResult.code;
-      console.log("Detected barcode:", code);
 
       await getItemByBarcode(code)
         .then((response) => {
           if (response !== undefined) {
             searchItems.value = response.products;
 
-            console.log(response.products);
             search.value = true;
             stopScanner();
           } else {
-            console.log("Something went wrong");
             submitMessage.value =
               "Something went wrong. Please try again later.";
           }
@@ -226,7 +224,6 @@ export default {
     }
 
     function toggleCamera() {
-      console.log("toggling", scannerActive.value, scannerActive);
       if (scannerActive.value == true) {
         stopScanner();
       } else {
@@ -257,7 +254,6 @@ export default {
         quantity: item.quantity,
       };
       try {
-        console.log(ItemRemoveDTO);
         await deleteItemFromShoppingList(ItemRemoveDTO, true);
         await loadItemsFromCart();
       } catch (error) {
@@ -275,7 +271,6 @@ export default {
 
     async function handleCheckedItem(item, isChecked) {
       item.isChecked = isChecked;
-      // console.log(item.isChecked)
     }
 
     async function handleDelete() {
@@ -300,7 +295,7 @@ export default {
         itemRemoveDTOList.shift();
         await deleteItemsFromShoppingList(itemRemoveDTOList);
         await loadItemsFromCart();
-        await swal.fire("Deleted items", "", "success");
+        await swal.fire(t("deleted_items"), "", "success");
       } catch (error) {
         console.error(error);
         await swal.fire(error.response.data["Message:"], "", "error");
@@ -314,7 +309,6 @@ export default {
       const itemStatDTOList = [{}];
 
       selectedItems.forEach((item) => {
-        console.log(item);
 
         const statAddItemToFridgeDTO = {
           price: item.price,
@@ -380,7 +374,7 @@ export default {
         await itemStore.statAddItemListToFridge(itemStatDTOList);
         await buyItemsFromShoppingList(itemRemoveDTOList);
         await loadItemsFromCart();
-        await swal.fire("Added to fridge", "", "success");
+        await swal.fire(t("Added_to_fridge"), "", "success");
       } catch (error) {
         await swal.fire(error.response.data["Message:"], "", "error");
       }
@@ -397,7 +391,6 @@ export default {
     });
     // Watch the searchItems array for changes and update the isExpanded ref accordingly
     watch(searchItems, () => {
-      console.log("searchQuery: " + !searchQuery.value.length);
       isExpanded.value = !searchQuery.value.length;
     });
 
@@ -415,14 +408,12 @@ export default {
           }
           items.value.push(item);
         });
-        console.log(response.data);
       } catch (error) {
         console.error(error);
       }
     };
 
     async function inc_CartItemAmount(item) {
-      console.log(item);
       const itemDTO = {
         name: item.name,
         description: item.description,
@@ -565,11 +556,9 @@ export default {
       };
       if (typeof item.current_price.price === "number") {
         itemDTO.price = item.current_price.price;
-        console.log(itemDTO.price);
       }
       const fridgeId = currentFridge.fridgeId;
 
-      console.log(itemDTO);
 
       addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
         .then(async (response) => {
@@ -587,7 +576,6 @@ export default {
     }
 
     function handleSearch() {
-      console.log("clicked search");
       search.value = true;
       // filter the list of items based on the search query
       var items = async () => {
