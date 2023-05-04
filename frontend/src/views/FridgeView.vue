@@ -77,7 +77,7 @@
       </div>
     </div>
 
-    <div class="searchbar-wrapper" :class="{'margin-bottom': active}" :style="{'margin-bottom': active ? '20%' : '0'}">
+    <div class="searchbar-wrapper">
       <button id="toggle" @click="handleClick">Filter</button>
       <div
           v-if="click"
@@ -138,12 +138,13 @@
       </div>
       <div v-else class="list-wrapper">
         <basic-fridge-list
-          v-for="(item, index) in fridgeItems"
-          :key="index"
-          :item="item"
-          :currenFridge="fridge"
-          @delete-item="deleteItem"
-          @add-shopping="addShopping"
+            :isSuperUser="isCurrentUserSuperUser"
+            v-for="(item, index) in fridgeItems"
+            :key="index"
+            :item="item"
+            :currenFridge="fridge"
+            @delete-item="deleteItem"
+            @add-shopping="addShopping"
         />
       </div>
     </transition>
