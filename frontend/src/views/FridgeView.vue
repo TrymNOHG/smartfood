@@ -138,12 +138,13 @@
       </div>
       <div v-else class="list-wrapper">
         <basic-fridge-list
-          v-for="(item, index) in fridgeItems"
-          :key="index"
-          :item="item"
-          :currenFridge="fridge"
-          @delete-item="deleteItem"
-          @add-shopping="addShopping"
+            :isSuperUser="isCurrentUserSuperUser"
+            v-for="(item, index) in fridgeItems"
+            :key="index"
+            :item="item"
+            :currenFridge="fridge"
+            @delete-item="deleteItem"
+            @add-shopping="addShopping"
         />
       </div>
     </transition>
@@ -370,7 +371,7 @@ export default {
               showPattern: true,
             },
             multiple: false,
-            frequency: 5, // Set the number of scans per second, e.g., 5 scans per second
+            frequency: 5,
           },
         },
         (err) => {

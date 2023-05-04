@@ -13,7 +13,7 @@ import java.io.IOException;
 public interface IUserService {
 
     @Transactional
-    void updateUser(UserUpdateDTO userUpdateDTO) throws UserNotFoundException;
+    String updateUser(UserUpdateDTO userUpdateDTO) throws UserNotFoundException;
 
     void updateUserPassword(UserPasswordUpdateDTO userPasswordUpdateDTO, String username);
     void deleteUser(UserDeletionDTO userDeletionDTO);

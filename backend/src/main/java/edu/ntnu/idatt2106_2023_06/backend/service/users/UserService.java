@@ -62,7 +62,7 @@ public class UserService implements IUserService {
      */
     @Transactional
     @Override
-    public void updateUser(UserUpdateDTO userUpdateDTO) throws UserNotFoundException {
+    public String updateUser(UserUpdateDTO userUpdateDTO) throws UserNotFoundException {
         long userId = jwtService.getAuthenticatedUserId();
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException(userUpdateDTO.username())
@@ -79,6 +79,7 @@ public class UserService implements IUserService {
 
         userRepository.save(user);
 
+        return jwtService.generateToken(user);
     }
 
     /**
