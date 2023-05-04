@@ -32,7 +32,7 @@ class FridgeItemsTest {
             try {
                 Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                         new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                        null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                        null, "12345678", 500.0, "l", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
                 FridgeItems items = new FridgeItems(null, item, new Fridge(), 1, LocalDateTime.now(), LocalDateTime.now());
             } catch (Exception e) {
                 fail();
@@ -45,7 +45,7 @@ class FridgeItemsTest {
             try {
                 Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                         new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                        null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                        null, "12345678", 500.0, "l", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
                 FridgeItems items = FridgeItems
                         .builder()
                         .fridge(new Fridge())
@@ -138,7 +138,7 @@ class FridgeItemsTest {
                     new ArrayList<>(), new HashSet<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
-                    200000, "picture.png", "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, "picture.png", "12345678", 500.0, "l", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1, LocalDateTime.now(), LocalDateTime.now());
             assertEquals(item, fridgeItem.getItem());
         }
@@ -149,20 +149,20 @@ class FridgeItemsTest {
                     new ArrayList<>(), new HashSet<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
-                    200000, "picture.png", "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, "picture.png", "12345678", 500.0, "l", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1, LocalDateTime.now(), LocalDateTime.now());
             assertEquals(fridge, fridgeItem.getFridge());
         }
 
         @Test
-        void quantity_getter_returns_correct_value(){
+        void amount_getter_returns_correct_value(){
             Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
                     new ArrayList<>(), new HashSet<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
-                    200000, "picture.png", "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-            FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1, LocalDateTime.now(), LocalDateTime.now());
-            assertEquals(1, fridgeItem.getQuantity());
+                    200000, "picture.png", "12345678", 500.0, "l", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 490.0, LocalDateTime.now(), LocalDateTime.now());
+            assertEquals(490.0, fridgeItem.getAmount());
         }
 
         @Test
@@ -172,7 +172,7 @@ class FridgeItemsTest {
             LocalDateTime purchaseDate = LocalDateTime.now();
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
-                    200000, "picture.png", "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, "picture.png", "12345678", 500.0, "l", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1, purchaseDate, LocalDateTime.now());
             assertEquals(purchaseDate, fridgeItem.getPurchaseDate());
         }
@@ -184,7 +184,7 @@ class FridgeItemsTest {
             LocalDateTime expirationDate = LocalDateTime.now();
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
-                    200000, "picture.png", "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, "picture.png", "12345678", 500.0, "l", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1, LocalDateTime.now(), expirationDate);
             assertEquals(expirationDate, fridgeItem.getExpirationDate());
         }
