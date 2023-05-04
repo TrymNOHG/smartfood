@@ -156,9 +156,6 @@
 
 .shepherd-arrow:before{
     display: none;
-    /*background:#fff;
-    content:url('@/assets/images/red-arrow.svg');
-    transform:rotate(45deg)*/
     }
 
 .shepherd-element .shepherd-arrow {
