@@ -34,13 +34,11 @@ public class NotificationController {
 
     /**
      * This method updates notifications for a given user.
-     *
-     * @param fridgeId The ID of the fridge the notifications belong to
      */
-    @GetMapping("/update/{fridgeId}")
+    @GetMapping("/update")
     @Operation(summary = "Update notifications for a given user")
     @ApiResponse(responseCode = "200", description = "OK")
-    public ResponseEntity<Object> updateNotifications(@PathVariable Long fridgeId) {
+    public ResponseEntity<Object> updateNotifications() {
         notificationService.updateAllNotifications();
         return ResponseEntity.ok().build();
     }

@@ -361,24 +361,10 @@ public class StatService implements IStatService {
                 averageThrownPerDayPair.put(date, new Pair<>(pair.getFirst() + stat.getStatValue()*stat.getQuantity(), (int) pair.getSecond() + stat.getQuantity()));
             }
         }
+        HashMap<String, Double> averageThrownPerDay = new HashMap<>();
+        averageThrownPerDayPair.forEach((key, pair) -> averageThrownPerDay.put(key, pair.getFirst() / pair.getSecond()));
 
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        Map<String, Pair<Double, Integer>> sortedByDate = averageThrownPerDayPair.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey((dateStr1, dateStr2) -> {
-                    LocalDate date1 = LocalDate.parse(dateStr1, dateFormatter);
-                    LocalDate date2 = LocalDate.parse(dateStr2, dateFormatter);
-                    return date1.compareTo(date2);
-                }))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1, LinkedHashMap::new));
-
-        System.out.println(sortedByDate);
-
-        return objectMapper.writeValueAsString(sortedByDate);
+        return objectMapper.writeValueAsString(sortHashMap(averageThrownPerDay));
     }
 
     /**
@@ -398,18 +384,27 @@ public class StatService implements IStatService {
         int i = 0;
         for(Statistics stat : stats1) {
             String date = stat.getTimestamp().toString().substring(0, 10);
-            if(!moneyWasted.containsKey(date)) {
-                moneyWasted.put(date, stat.getStatValue() * (stats2.get(i).getStatValue()/100) * stat.getQuantity());
+            if (!moneyWasted.containsKey(date)) {
+                moneyWasted.put(date, stat.getStatValue() * (stats2.get(i).getStatValue() / 100) * stat.getQuantity());
             } else {
                 Double statValue = moneyWasted.get(date);
-                moneyWasted.put(date, stat.getStatValue() * (stats2.get(i).getStatValue()/100) * stat.getQuantity() + statValue);
+                moneyWasted.put(date, stat.getStatValue() * (stats2.get(i).getStatValue() / 100) * stat.getQuantity() + statValue);
             }
             i++;
         }
 
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return objectMapper.writeValueAsString(sortHashMap(moneyWasted));
+    }
 
-        Map<String, Double> sortedByDate = moneyWasted.entrySet()
+    /**
+     * Sorts a hashmap by date and converts it to a LinkedHashMap.
+     *
+     * @param map The hashmap to sort
+     * @return A LinkedHashMap sorted by date
+     */
+    private LinkedHashMap<String, Double> sortHashMap(Map<String, Double> map) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return map.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByKey((dateStr1, dateStr2) -> {
                     LocalDate date1 = LocalDate.parse(dateStr1, dateFormatter);
@@ -420,8 +415,6 @@ public class StatService implements IStatService {
                         Map.Entry::getKey,
                         Map.Entry::getValue,
                         (e1, e2) -> e1, LinkedHashMap::new));
-
-        return objectMapper.writeValueAsString(sortedByDate);
     }
 
     /**
