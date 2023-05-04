@@ -11,7 +11,9 @@
                 class="suggestion-profile-picture"
             />
             <div class="username-bubble">
-              <div class="chat-bubble-text">{{ "erna wants this!!!!" }}</div>
+              <div class="chat-bubble-text">
+                {{ getUsername(suggestion.UserId) + " " + $t("wants_this") }}
+              </div>
               <div class="chat-bubble-triangle"></div>
             </div>
           </div>
@@ -50,6 +52,7 @@
     import swal from "sweetalert2";
     import {acceptRecipeSuggestion, denyRecipeSuggestion, loadRecipeSuggestions} from "../../services/DinnerService";
     import {getProfilePictureById} from "../../services/UserService";
+    import {loadUsersByFridgeId} from "../../services/FridgeServices";
 
     export default {
       components: {
@@ -87,6 +90,10 @@
         getProfilePicture(userId) {
           return this.profilePictures[userId];
         },
+        getUsername(userId) {
+          const user = this.memberList.find((member) => member.userId === userId);
+          return user ? user.username : "";
+        },
       },
 
       setup() {
@@ -96,6 +103,16 @@
         const suggestions = ref([]);
         let pageIndex = ref(0);
         const profilePictures = ref({});
+        const memberList = ref([]);
+
+        const fetchUsers = async () => {
+          try {
+            const response = await loadUsersByFridgeId(fridgeId);
+            memberList.value = response.data.memberInfo;
+          } catch (error) {
+            console.error("Error fetching users:", error);
+          }
+        };
 
         const fetchProfilePictures = async () => {
           const uniqueUserIds = [...new Set(suggestions.value.map(s => s.UserId))];
@@ -117,6 +134,7 @@
             suggestions.value = response;
             console.log("Suggestions loaded:", suggestions.value)
             await fetchProfilePictures();
+            await fetchUsers();
           } catch (error) {
             console.error("Failed to load suggestions:", error);
           }
@@ -240,6 +258,7 @@
 
         return {
           profilePictures,
+          memberList,
           fridgeStore,
           meals,
           loadMore,
