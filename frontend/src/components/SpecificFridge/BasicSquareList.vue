@@ -76,7 +76,7 @@ export default {
            <div class="swal2-text">
              ${this.$t('percent_wise_how_much')}
            </div>
-           <div id="range-value-text" class="swal2-text"></div>
+           <div id="range-value" class="swal2-text"></div>
          </div>
         `,
         input: 'range',
@@ -88,7 +88,7 @@ export default {
         didOpen: () => {
           deletePercentage = Swal.getInput()
           const inputNumber = Swal.getHtmlContainer().querySelector('#range-value')
-          const rangeValueText = Swal.getHtmlContainer().querySelector('#range-value-text')
+          const rangeValueText = Swal.getHtmlContainer().querySelector('#range-value')
 
           deletePercentage.nextElementSibling.style.display = 'none'
           deletePercentage.style.width = '100%'

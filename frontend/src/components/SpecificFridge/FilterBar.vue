@@ -57,11 +57,6 @@ export default {
 
 }
 
-.filter {
-  margin-left: 1.5%;
-  margin-right: 1%;
-}
-
 .view-options {
   display: flex;
   gap: 30px;
