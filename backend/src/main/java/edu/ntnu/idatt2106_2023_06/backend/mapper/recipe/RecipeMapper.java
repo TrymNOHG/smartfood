@@ -15,6 +15,7 @@ public class RecipeMapper {
     public static RecipeLoadDTO toRecipeLoadDTO(Recipe recipe, int numMatchingItems) {
         return RecipeLoadDTO
                 .builder()
+                .recipeId(recipe.getRecipeId())
                 .recipeName(recipe.getRecipeName())
                 .description(recipe.getDescription())
                 .author(recipe.getAuthor())
