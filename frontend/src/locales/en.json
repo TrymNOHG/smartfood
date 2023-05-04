@@ -121,5 +121,8 @@
   "Over 60 min:": "Over 60 min",
   "suggest_dinner": "Suggest dinner",
   "previous_page": "Previous Page",
-  "soon_expire": "is about to expire!"
+  "soon_expire": "is about to expire!",
+  "password-updated": "Your password has been updated!",
+  "password-failed": "Wrong password",
+  "password-match-fail": "Confirm password doesnt match"
 }

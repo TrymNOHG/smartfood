@@ -110,6 +110,9 @@
   import { updateUser } from '@/services/UserService';
   import {deleteProfilePicture, getProfilePicture, updateProfilePicture, updateUserPassword} from "@/services/UserService";
   import defaultProfilePicture from '@/assets/images/profiledefualt.svg';
+  import Swal from "sweetalert2";
+  import {useI18n} from "vue-i18n";
+  import i18n from "@/locales/i18n";
 
   export default {
     name: 'UserProfile',
@@ -117,9 +120,9 @@
       BasicButton,
     },
     setup() {
+      const { t } = useI18n(i18n)
       const userStore = useLoggedInStore();
       const router = useRouter();
-
 
       const isEditing = ref(false);
       const isChangingPassword = ref(false);
@@ -130,11 +133,10 @@
         confirmPassword: '',
       });
 
-
       userStore.fetchUser();
-      const user =  userStore.getUser;
-      console.log(userStore.isLoggedIn)
-      console.log(userStore.getSessionToken)
+      const user = userStore.getUser;
+      console.log(userStore.isLoggedIn);
+      console.log(userStore.getSessionToken);
 
       const defaultPicture = defaultProfilePicture;
 
@@ -144,31 +146,43 @@
         profileData.value = { ...user };
       });
 
-
-
-
-
       const updateUserProfile = async () => {
         try {
           await updateUser(profileData.value);
-          // Update the user store with the new user information
           await userStore.fetchUser();
           isEditing.value = false;
         } catch (error) {
-          console.error('Error updating user profile:', error);
           // Handle the error (e.g., display an error message)
         }
       };
 
       const updatePassword = async () => {
-        try {
-          await updateUserPassword(passwordData.value);
-          // Update the user store with the new user information
-
-          isChangingPassword.value = false;
-        } catch (error) {
-          console.error('Error updating user profile:', error);
-          // Handle the error (e.g., display an error message)
+        if (passwordData.value.newPassword === passwordData.value.confirmPassword) {
+          try {
+            await updateUserPassword(passwordData.value);
+            isChangingPassword.value = false;
+            await Swal.fire({
+              title: t('password-updated'),
+              icon: 'success',
+              showCancelButton: true,
+              confirmButtonText: 'Yes',
+              cancelButtonText: 'No',
+            });
+          } catch (error) {
+            await Swal.fire({
+              title: t('password-failed'),
+              icon: 'error',
+              showCancelButton: true,
+              confirmButtonText: t('yes'),
+            });
+          }
+        }else {
+          await Swal.fire({
+            title: t('password-match-fail'),
+            icon: 'error',
+            showCancelButton: true,
+            confirmButtonText: t('yes'),
+          });
         }
       };
 
