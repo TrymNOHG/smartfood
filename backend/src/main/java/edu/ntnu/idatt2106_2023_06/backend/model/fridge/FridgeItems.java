@@ -58,10 +58,10 @@ public class FridgeItems {
     private Fridge fridge;
 
     /**
-     * This is the quantity of the items
+     * This is the amount of the fridge item
      */
-    @Column(name = "quantity")
-    private int quantity;
+    @Column(name = "amount")
+    private double amount;
 
     /**
      * The purchase date of the items, can be null

@@ -6,6 +6,6 @@ import org.springframework.lang.Nullable;
 import java.time.LocalDateTime;
 
 public record FridgeItemUpdateDTO(@NonNull Long itemId, @NonNull Long fridgeId,
-                                  @Nullable Integer quantity, @Nullable LocalDateTime purchaseDate,
+                                  @Nullable Double amount, @Nullable LocalDateTime purchaseDate,
                                   @Nullable LocalDateTime expirationDate) {
 }

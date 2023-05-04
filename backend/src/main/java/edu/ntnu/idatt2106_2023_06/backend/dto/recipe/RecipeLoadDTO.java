@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.dto.recipe;
 
 import lombok.*;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
