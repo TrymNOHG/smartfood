@@ -5,19 +5,17 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.notification.NotificationDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.notification.UpdateNotificationDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeItemsNotFoundException;
-import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.ItemNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.NotificationNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.NotificationMapper;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.notification.Notification;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
-import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.notification.NotificationRepository;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
-import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemService;
 import edu.ntnu.idatt2106_2023_06.backend.service.users.UserInfoService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,9 +29,7 @@ public class NotificationService implements INotificationService {
     private final FridgeService fridgeService;
     private final UserInfoService userInfoService;
 
-    private final FridgeRepository fridgeRepository;
     private final FridgeItemsRepository fridgeItemsRepository;
-    private final ItemService itemService;
     private final NotificationRepository notificationRepository;
 
     /**

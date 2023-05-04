@@ -80,7 +80,6 @@ public class FridgeItemsController implements IFridgeItemsController{
     public ResponseEntity<Object> deleteItemFromFridge(@ParameterObject @RequestBody ItemRemoveDTO itemRemoveDTO){
         logger.info(String.valueOf(itemRemoveDTO));
         logger.info("User wants to remove a certain amount of an item from fridge");
-        notificationService.deleteNotificationForEveryUserInFridge(itemRemoveDTO);
         itemService.removeItemFromFridge(itemRemoveDTO);
         logger.info("Items have been removed!");
         return ResponseEntity.ok().build();

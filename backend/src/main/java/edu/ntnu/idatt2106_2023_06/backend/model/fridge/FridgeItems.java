@@ -5,6 +5,8 @@ import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.notification.Notification;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -80,5 +82,6 @@ public class FridgeItems {
      */
     @OneToMany(mappedBy = "fridgeItem", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Notification> notification = new HashSet<>();
 }
