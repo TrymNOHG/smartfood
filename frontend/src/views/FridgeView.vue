@@ -370,7 +370,7 @@ export default {
               showPattern: true,
             },
             multiple: false,
-            frequency: 5, // Set the number of scans per second, e.g., 5 scans per second
+            frequency: 5,
           },
         },
         (err) => {
