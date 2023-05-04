@@ -432,7 +432,7 @@ export default {
       router.currentRoute.value.query.selectedTab || "fridge"
     );
 
-    history.replaceState(null, null, "/fridge");
+    history.replaceState(history.state, '', "/fridge");
 
     const searchItems = ref([]);
     const search = ref(false);

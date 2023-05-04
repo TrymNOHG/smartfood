@@ -220,7 +220,7 @@ export default {
           if (response !== undefined) {
             searchItems.value = response.products;
 
-            console.log(response.products);
+
             search.value = true;
             stopScanner();
           } else {
@@ -309,7 +309,7 @@ export default {
         itemRemoveDTOList.shift();
         await deleteItemsFromShoppingList(itemRemoveDTOList);
         await loadItemsFromCart();
-        await swal.fire("Deleted items", "", "success");
+        await swal.fire('Delted files', "", "success");
       } catch (error) {
         console.error(error);
         await swal.fire(error.response.data["Message:"], "", "error");
