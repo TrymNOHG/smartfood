@@ -121,5 +121,16 @@
   "Over 60 min:": "Over 60 min",
   "suggest_dinner": "Suggest dinner",
   "previous_page": "Previous Page",
-  "soon_expire": "is about to expire!"
+  "soon_expire": "is about to expire!",
+  "Monday" : "Monday",
+  "Tuesday" : "Tuesday",
+  "Wednesday" : "Wednesday",
+  "Thursday" : "Thursday",
+  "Friday" : "Friday",
+  "Saturday" : "Saturday",
+  "Sunday" : "Sunday",
+  "wants_this" : "wants this",
+  "loading" : "Loading",
+  "deleted_items" : "Deleted items",
+  "Added_to_fridge" : "Added to fridge"
 }

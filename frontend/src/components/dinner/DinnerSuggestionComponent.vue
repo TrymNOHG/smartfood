@@ -53,6 +53,7 @@
     import {acceptRecipeSuggestion, denyRecipeSuggestion, loadRecipeSuggestions} from "../../services/DinnerService";
     import {getProfilePictureById} from "../../services/UserService";
     import {loadUsersByFridgeId} from "../../services/FridgeServices";
+    import { useI18n } from 'vue-i18n';
 
     export default {
       components: {
@@ -97,6 +98,7 @@
       },
 
       setup() {
+        const { t } = useI18n();
         const fridgeStore = useFridgeStore();
         const fridgeId = fridgeStore.getCurrentFridge.fridgeId;
         const meals = ref([]);
@@ -175,7 +177,7 @@
         const loadPreviousPage = async () => {
           if (pageIndex.value === 0) return;
           swal.fire({
-            title: 'Loading...',
+            title: t("loading") + " ...",
             allowEscapeKey: false,
             allowOutsideClick: false,
             showConfirmButton: false,
@@ -197,7 +199,7 @@
 
         const loadNextPage = async () => {
           swal.fire({
-            title: 'Loading...',
+            title: t("loading") + " ...",
             allowEscapeKey: false,
             allowOutsideClick: false,
             showConfirmButton: false,

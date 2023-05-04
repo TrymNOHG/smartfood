@@ -134,6 +134,7 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert2";
 import Quagga from "quagga";
 import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
+import {useI18n} from "vue-i18n/dist/vue-i18n";
 
 export default {
   name: "Cart",
@@ -156,6 +157,7 @@ export default {
     },
   },
   setup() {
+    const { t } = useI18n();
     console.log(useFridgeStore().getCurrentFridge);
     var itemAmount = ref(1);
     var submitMessage = ref("norvegia");
@@ -299,7 +301,7 @@ export default {
         itemRemoveDTOList.shift();
         await deleteItemsFromShoppingList(itemRemoveDTOList);
         await loadItemsFromCart();
-        await swal.fire("Deleted items", "", "success");
+        await swal.fire(t("deleted_items"), "", "success");
       } catch (error) {
         console.error(error);
         await swal.fire(error.response.data["Message:"], "", "error");
@@ -379,7 +381,7 @@ export default {
         await itemStore.statAddItemListToFridge(itemStatDTOList);
         await buyItemsFromShoppingList(itemRemoveDTOList);
         await loadItemsFromCart();
-        await swal.fire("Added to fridge", "", "success");
+        await swal.fire(t("Added_to_fridge"), "", "success");
       } catch (error) {
         await swal.fire(error.response.data["Message:"], "", "error");
       }

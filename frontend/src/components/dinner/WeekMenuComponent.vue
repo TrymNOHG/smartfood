@@ -3,13 +3,11 @@
 
   <div class="wrapper2">
     <div v-for="day in weekdays" :key="day">
-      <h2>{{ day }}</h2>
+      <h2>{{ $t(day) }}</h2>
       <meal
         v-if="getMealForDay(day)"
-        :isSuperUser="true"
+        :isSuperUser="false"
         :meal="getMealForDay(day)"
-        :currentFridge="fridge"
-        @delete-item="deleteItem"
       />
     </div>
   </div>

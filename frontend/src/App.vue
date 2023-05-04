@@ -91,6 +91,7 @@ import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import i18n from "@/locales/i18n";
 import { useFridgeStore } from "./store/store";
+import {useI18n} from "vue-i18n";
 
 export default {
   setup() {
@@ -117,17 +118,20 @@ export default {
       return route.path === "/register" || route.path === "/login";
     });
 
+    const { locale } = useI18n()
+    const language = ref("NO");
+
+
     const changeLanguage = () => {
       if (language.value === "NO") {
         language.value = "EN";
-        i18n.global.locale = "en";
+        locale.value = "en"; // Update the locale ref
       } else {
-        i18n.global.locale = "no";
+        locale.value = "no";
         language.value = "NO";
       }
     };
 
-    const language = ref("NO");
 
     return {
       isFridgeRouteActive,
