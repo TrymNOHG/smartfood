@@ -16,7 +16,7 @@ import {
     getUserPercentageStats
 } from "@/services/StatsService";
 import {keys} from "@dafcoe/vue-collapsible-panel";
-import {deleteNotification, getNotifications, removeBorder} from "@/services/NotificationService";
+import {deleteNotification, getNotifications, removeBorder, setNotifications} from "@/services/NotificationService";
 
 
 const storeUUID = UniqueId();
@@ -121,8 +121,8 @@ export const useFridgeStore = defineStore('fridgeStore', {
            await setNotifications()
         },
 
-        async deleteNotificationUsingId (notification, fridgeId) {
-           await deleteNotification(notification, fridgeId)
+        async deleteNotificationUsingId (notification) {
+           await deleteNotification()
         },
 
         async removeBorderForNotification(){

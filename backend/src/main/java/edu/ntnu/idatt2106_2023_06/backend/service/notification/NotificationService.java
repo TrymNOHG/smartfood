@@ -50,6 +50,7 @@ public class NotificationService implements INotificationService {
      * @param fridgeId The id of the fridge to update notifications for.
      */
     private void updateNotifications(Long fridgeId) {
+        System.out.println("bruhhhhhhhh");
         checkNotification(fridgeId);
         User user = userInfoService.getAuthenticatedUserObject();
         List<FridgeItems> items = fridgeItemsRepository.findAllByFridge_FridgeId(fridgeId).orElseThrow(
@@ -65,6 +66,7 @@ public class NotificationService implements INotificationService {
                         .isRead(false)
                         .createdDate(LocalDateTime.now())
                         .build();
+                System.out.println(notification.getUser());
                 notificationRepository.save(notification);
             }
         }

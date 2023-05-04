@@ -21,12 +21,12 @@ export const getNotifications = async () => {
 }
 
 export const setNotifications = async () => {
-    return await axios.get(`${BASE_LISTING_URL}/get`, {
+    await axios.get(`${BASE_LISTING_URL}/update`, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`,
         },
     });
-}
+};
 
 
 export const removeBorder = async () => {

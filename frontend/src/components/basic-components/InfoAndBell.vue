@@ -37,12 +37,9 @@ export default {
       fridgeStore.fetchNotifications(fridge.fridgeId).then((notification) => {
         unread.value = 0
         notifications.value = notification;
-        console.log(notifications.value)
         for (const notification of notifications.value) {
-          console.log(notification)
           if (!notification.isRead) unread.value++;
         }
-        console.log(unread.value)
       });
     }
 
@@ -65,7 +62,7 @@ export default {
   methods: {
 
     deleteNotification(notification) {
-      console.log(notification)
+
     },
 
     async changeNotifications() {
