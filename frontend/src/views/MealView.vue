@@ -31,7 +31,7 @@
       />
       <BasicButton
           v-if="!isCurrentUserSuperUser"
-          @click="addMissingItemsToShoppingList"
+          @click="addRecipeToSuggestions"
           class="add-missing-items-btn"
           :button-text="$t('suggest_dinner')"
       />
@@ -44,14 +44,14 @@
 </template>
 
 <script>
-import {useFridgeStore, useMealStore} from "../store/store";
+import {useFridgeStore, useLoggedInStore, useMealStore} from "../store/store";
 import mealHeader from "@/components/mealDescription/mealHeader.vue";
 import MealInfo from "../components/mealDescription/mealInfo.vue";
 import recipeParts from "../components/mealDescription/RecipeParts.vue";
 import Instructions from "../components/mealDescription/Instructions.vue";
 import router from "../router/router";
 import swal from "sweetalert2";
-import {addIngredientsToShoppingList} from "../services/DinnerService";
+import {addIngredientsToShoppingList, addRecipeSuggestion} from "../services/DinnerService";
 import BasicButton from "../components/basic-components/BasicButton.vue";
 import {ref} from "vue";
 
@@ -72,13 +72,15 @@ export default {
     const fridgeStore = useFridgeStore();
     const fridgeId = fridgeStore.getCurrentFridge.fridgeId;
     const selectedTab = ref(router.currentRoute.value.query.selectedTab || 'tips');
+    const userId = useLoggedInStore().getUser.data.userId;
 
     //history.replaceState(null, null, '/dinner');
     return {
       fridgeStore,
       meal,
       fridgeId,
-      selectedTab
+      selectedTab,
+      userId
     };
   },
   computed: {
@@ -131,6 +133,22 @@ export default {
         });
       });
       this.meal.servingSize = newServingSize;
+    },
+
+    async addRecipeToSuggestions() {
+      const recipeSuggestionAddDTO = {
+        "fridgeId": this.fridgeId,
+        "recipeId": this.meal.recipeId,
+        "userId": this.userId
+      }
+      console.log("recipeSuggestionAddDTO", recipeSuggestionAddDTO);
+      await addRecipeSuggestion((recipeSuggestionAddDTO));
+      swal.fire({
+        title: this.$t('success'),
+        text: this.$t('success_add_recipe'),
+        icon: 'success',
+        confirmButtonText: this.$t('ok')
+      });
     },
   },
 };

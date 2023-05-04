@@ -15,21 +15,39 @@ import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ShoppingItemsRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.store.StoreRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
+import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+import java.util.Collections;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,6 +55,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -244,6 +263,30 @@ public class ItemServiceTest {
         @Autowired
         ItemService itemService;
 
+        @Autowired
+        UserRepository userRepository;
+
+        @Autowired
+        JwtService jwtService;
+
+        @Autowired
+        protected UserDetailsService userDetailsService;
+
+        @BeforeEach
+        public void setUp() {
+            User user = User.builder()
+                    .userId(1L).email("test@test.test")
+                    .firstName("test")
+                    .lastName("test")
+                    .password("test")
+                    .username("testUser")
+                                    .build();
+            userRepository.save(user);
+            UserDetails userDetails = userDetailsService.loadUserByUsername("testUser");
+            String jwt = jwtService.generateToken(userDetails);
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities()));
+        }
+
         @Test
         @Transactional
         void removes_correct_Item(){
@@ -266,8 +309,8 @@ public class ItemServiceTest {
                     .purchaseDate(LocalDateTime.now())
                     .build();
             fridgeItemsRepository.save(fridgeItems);
-            ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1)
-;            itemService.removeItemFromFridge(itemRemoveDTO);
+            ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
+            itemService.removeItemFromFridge(itemRemoveDTO);
 
             assertTrue(fridgeItemsRepository.findByItemAndFridge(item,fridge).isEmpty());
         }

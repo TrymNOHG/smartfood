@@ -26,6 +26,7 @@ export const useLoggedInStore = defineStore('user', {
     state: () => ({
         sessionToken: null,
         user: {
+            userId: null,
             email: null,
             firstname: null,
             lastname: null,

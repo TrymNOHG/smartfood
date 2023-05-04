@@ -24,6 +24,15 @@ import java.util.Optional;
  */
 @Repository
 public interface FridgeItemsRepository extends JpaRepository<FridgeItems, FridgeItemsId>, JpaSpecificationExecutor<FridgeItems> {
+
+    /**
+     * Find a fridgeItem with the given name
+     *
+     * @param productName The name of the product
+     * @return An Optional containing the FridgeItem, or an empty Optional if not found
+     */
+    Optional<FridgeItems> findByItem_ProductName(String productName);
+
     /**
      * Find a FridgeItem by items and fridge
      *

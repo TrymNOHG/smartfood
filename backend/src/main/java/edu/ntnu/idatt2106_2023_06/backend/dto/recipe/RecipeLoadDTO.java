@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 public class RecipeLoadDTO{
+    @NonNull private Long recipeId;
     @NonNull private String recipeName;
     private String description, author, thumbnail;
     private int servingSize, difficulty, numMatchingItems;

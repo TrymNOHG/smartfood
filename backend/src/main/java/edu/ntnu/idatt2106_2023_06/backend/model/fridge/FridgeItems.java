@@ -2,10 +2,16 @@ package edu.ntnu.idatt2106_2023_06.backend.model.fridge;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
+import edu.ntnu.idatt2106_2023_06.backend.model.notification.Notification;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * This class represents an items in the fridge. It, therefore, contains a fridge ID and the items ID.
@@ -71,6 +77,11 @@ public class FridgeItems {
     @NonNull
     private LocalDateTime expirationDate;
 
-
-
+    /**
+     * The notification of the fridge items.
+     */
+    @OneToMany(mappedBy = "fridgeItem", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<Notification> notification = new HashSet<>();
 }
