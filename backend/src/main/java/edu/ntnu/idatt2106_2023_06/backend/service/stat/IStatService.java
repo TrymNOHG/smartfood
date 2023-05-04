@@ -18,9 +18,9 @@ public interface IStatService {
 
     String getAverageThrownPerDayFridge(long fridgeId) throws JsonProcessingException;
 
-    String getAverageThrownTotalUser() throws JsonProcessingException;
+    Double getAverageThrownTotalUser() throws JsonProcessingException;
 
-    String getAverageThrownTotalFridge(long fridgeId) throws JsonProcessingException;
+    Double getAverageThrownTotalFridge(long fridgeId) throws JsonProcessingException;
 
     String getMoneyWastedPerDayUser() throws JsonProcessingException;
 
