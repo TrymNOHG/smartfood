@@ -59,7 +59,6 @@
                 style="text-align: center"
                 @click="addItemToList(item)"
               />
-              <div ref="scrollTarget"></div>
             </template>
           </vue-collapsible-panel>
         </vue-collapsible-panel-group>
@@ -142,7 +141,7 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert2";
 import Quagga from "quagga";
 import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
-import { useI18n } from "vue-i18n";
+import {useI18n} from "vue-i18n/dist/vue-i18n";
 
 export default {
   name: "Cart",
@@ -165,6 +164,7 @@ export default {
     },
   },
   setup() {
+    const { t } = useI18n();
     var itemAmount = ref(1);
     var submitMessage = ref("norvegia");
     const items = ref([]); // list of items in the cart
@@ -180,7 +180,6 @@ export default {
     const scrollTarget = ref(null);
     const isLoading = ref(false);
     let nextPage = 1;
-    const { t } = useI18n();
 
     function initScanner() {
       Quagga.init(
@@ -216,7 +215,6 @@ export default {
 
     async function onDetected(result) {
       const code = result.codeResult.code;
-      console.log("Detected barcode:", code);
 
       await getItemByBarcode(code)
         .then((response) => {
@@ -318,6 +316,7 @@ export default {
         await loadItemsFromCart();
         await swal.fire(t("deleted_items"), "", "success");
       } catch (error) {
+        console.error(error);
         await swal.fire(error.response.data["Message:"], "", "error");
       }
     }
@@ -395,7 +394,7 @@ export default {
         await itemStore.statAddItemListToFridge(itemStatDTOList);
         await buyItemsFromShoppingList(itemRemoveDTOList);
         await loadItemsFromCart();
-        await swal.fire("Added to fridge", "", "success");
+        await swal.fire(t("Added_to_fridge"), "", "success");
       } catch (error) {
         await swal.fire(error.response.data["Message:"], "", "error");
       }
@@ -620,6 +619,7 @@ export default {
         itemDTO.price = item.current_price.price;
       }
       const fridgeId = currentFridge.fridgeId;
+
 
       addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
         .then(async (response) => {

@@ -338,7 +338,6 @@ export default {
       if (!this.isCurrentUserSuperUser) {
         await addItemToShoppingList(itemDTO, fridgeId, true).then(
           async (response) => {
-            console.log("response", response);
             //TODO: add exception handling
           }
         );

@@ -83,7 +83,6 @@ describe("Testing fridge member management", () => {
                 const requestBody = req.body;
                 cartAddedItem = requestBody;
                 // Do something with the requestBody, like logging it to the console
-                console.log("Request body:", requestBody);
             }
         ).as("addItemRequest");
 

@@ -149,7 +149,6 @@ export const useFridgeStore = defineStore('fridgeStore', {
                 if(fridge.fridgeId === fridgeId) {
                     this.currentFridge = fridge;
                     this.isSuperUser = await this.checkSuperUserStatus(fridgeId)
-                    console.log(this.isSuperUser)
                     return;
                 }
             }
@@ -188,7 +187,6 @@ export const useItemStore = defineStore('itemStore', {
 
     getters: {
         getCurrentItem(){
-            console.log(this.currentItem)
             return this.currentItem;
         }
     },
@@ -204,7 +202,6 @@ export const useItemStore = defineStore('itemStore', {
 
         async statAddItemListToFridge(statItemListDTO) {
             for (const statItemListDTOElement of statItemListDTO) {
-                console.log(statItemListDTOElement)
                 await addItemStats(statItemListDTOElement)
             }
         },
@@ -248,8 +245,11 @@ export const useStatStore = defineStore('statStore', {
 
     getters: {
         getPercentageChart(){
-            const labels = this.percentageChart.map(obj => obj.first);
-            const values = this.percentageChart.map(obj => obj.second);
+            const labels = Object.keys(this.percentageChart);
+            const values = Object.values(this.percentageChart);
+
+            console.log(labels)
+            console.log(values)
 
             return {
                 labels,
@@ -261,8 +261,7 @@ export const useStatStore = defineStore('statStore', {
             const labels = Object.keys(this.moneyChart);
             const values = Object.values(this.moneyChart);
 
-            console.log(labels)
-            console.log(values)
+
 
             return {
                 labels,
@@ -275,9 +274,8 @@ export const useStatStore = defineStore('statStore', {
         async fetchUserStatsPercentage() {
             this.percentageChart = []
             await getUserPercentageStats().then((response) => {
-                for (const dataSet of response.data) {
-                    const { first, second } = dataSet
-                    this.percentageChart.push({first, second});
+                for (const key in response.data) {
+                    this.percentageChart[key] = response.data[key];
                 }
             });
         },
@@ -296,9 +294,8 @@ export const useStatStore = defineStore('statStore', {
             this.percentageChart = []
             await getFridgePercentageStats(fridge.fridgeId)
                 .then((response) => {
-                    for (const dataSet of response.data) {
-                        const { first, second } = dataSet
-                        this.percentageChart.push({first, second});
+                    for (const key in response.data) {
+                        this.percentageChart[key] = response.data[key];
                     }
                 })
         },

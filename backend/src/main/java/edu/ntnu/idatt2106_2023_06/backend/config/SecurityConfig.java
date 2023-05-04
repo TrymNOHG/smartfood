@@ -53,18 +53,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                                 authorize.requestMatchers("/home", "/login", "/user/register", "/about", "/swagger/**", "/docs/**", "/swagger-ui/**", "/user/load/{username}", "/fridge/loadAll", "/fridge/loadAllId")
                                         .permitAll()
-                                        .requestMatchers("/user/**", "/auth/**", "/admin/**", "/listing/user/**", "/fridge/**", "/item/**", "/recipe/**")
+                                        .requestMatchers("/user/**", "/auth/**", "/admin/**", "/listing/user/**", "/fridge/**", "/item/**", "/recipe/**", "/notification/**")
                                         .permitAll().anyRequest().authenticated()
-//                        .requestMatchers("/user/**", "/auth/**")
-//                            .hasAnyRole( "USER", "ADMIN") //TODO: is authenticated applied?
-//                        .requestMatchers("/admin/**")
-//                            .hasRole("ADMIN").anyRequest().authenticated()
                 )
-                //TODO: might have to create own CustomRequestMatcher for roles
-//            .formLogin(form ->
-//                    form.loginPage("/login")
-//                            .defaultSuccessUrl("/home")//TODO add custom and to correct port!!!
-//            )
 //            .logout(logout ->
 //                    logout.logoutUrl("/logout")
 //                            .clearAuthentication(true)

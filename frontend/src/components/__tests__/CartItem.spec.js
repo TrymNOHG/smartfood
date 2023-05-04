@@ -81,7 +81,7 @@ describe('Item.vue', () => {
     });
 
     test('emits the delete-item event when trash button is clicked', async () => {
-        const wrapper = factory();
+        const wrapper = factory({ isSuperUser: true });
 
         await wrapper.find('.btn-trash').trigger('click');
 

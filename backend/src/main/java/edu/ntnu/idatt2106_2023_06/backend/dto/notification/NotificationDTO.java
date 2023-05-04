@@ -7,5 +7,6 @@ import lombok.NonNull;
 public record NotificationDTO(@NonNull Long notificationId,
                               @NonNull Boolean isRead,
                               @NonNull String itemName,
-                              @NonNull String expirationDate) {
+                              @NonNull String expirationDate,
+                              @NonNull Long fridgeId) {
 }

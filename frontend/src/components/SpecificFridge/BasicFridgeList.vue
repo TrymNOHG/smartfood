@@ -138,7 +138,6 @@ export default {
       props.item.purchaseDate,
       props.item.expirationDate
     );
-    console.log(props.item);
     function calculateExpirationDate(purchaseDate, expirationDate) {
       const currentDate = new Date();
       const purchase = new Date(purchaseDate);
