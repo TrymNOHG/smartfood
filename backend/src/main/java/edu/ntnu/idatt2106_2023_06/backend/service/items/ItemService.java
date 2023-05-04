@@ -29,8 +29,10 @@ import edu.ntnu.idatt2106_2023_06.backend.repo.item.ShoppingItemsRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.store.StoreRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
+import edu.ntnu.idatt2106_2023_06.backend.service.notification.NotificationService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
 import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.*;
+import edu.ntnu.idatt2106_2023_06.backend.utils.UnitParser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -61,6 +63,7 @@ import java.util.stream.Stream;
 public class ItemService implements IItemService {
 
     private final ItemRecipeScoreService itemRecipeScoreService;
+    private final NotificationService notificationService;
     private final ItemRepository itemRepository;
     private final FridgeItemsRepository fridgeItemsRepository;
     private final FridgeRepository fridgeRepository;
@@ -128,16 +131,15 @@ public class ItemService implements IItemService {
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeId).orElseThrow(() -> new FridgeNotFoundException(fridgeId));
         FridgeItems fridgeItem = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElseGet(() ->
                 FridgeItems.builder()
-                .id(new FridgeItemsId(item.getItemId(), fridge.getFridgeId()))
-                .item(item)
-                .fridge(fridge)
-                .quantity(0)
-                .purchaseDate(LocalDateTime.now())
-                .expirationDate(LocalDateTime.now().plusDays(4)) //TODO: change to a valid expiration date....
-                .build());
+                        .id(new FridgeItemsId(item.getItemId(), fridge.getFridgeId()))
+                        .item(item)
+                        .fridge(fridge)
+                        .amount(0)
+                        .purchaseDate(LocalDateTime.now())
+                        .expirationDate(LocalDateTime.now().plusDays(4)) //TODO: change to a valid expiration date....
+                        .build());
 
-        fridgeItem.setQuantity(fridgeItem.getQuantity() + itemDTO.quantity());
-
+        fridgeItem.setAmount(fridgeItem.getAmount() + itemDTO.quantity() * fridgeItem.getItem().getAmount());
         fridgeItemsRepository.save(fridgeItem);
     }
 
@@ -217,8 +219,8 @@ public class ItemService implements IItemService {
         logger.info("Fridge item was found");
 
         logger.info("Changing the fridge item");
-        fridgeItem.setQuantity(fridgeItemUpdateDTO.quantity() != null && fridgeItemUpdateDTO.quantity() >= 1 ?
-                fridgeItemUpdateDTO.quantity() : fridgeItem.getQuantity());
+        fridgeItem.setAmount(fridgeItemUpdateDTO.amount() != null && fridgeItemUpdateDTO.amount() > 0 ?
+                fridgeItemUpdateDTO.amount() : fridgeItem.getAmount());
 
         fridgeItem.setPurchaseDate(fridgeItemUpdateDTO.purchaseDate() != null ?
                 fridgeItemUpdateDTO.purchaseDate() : fridgeItem.getPurchaseDate());
@@ -268,17 +270,15 @@ public class ItemService implements IItemService {
      */
     @Override
     public void removeItemFromFridge(ItemRemoveDTO itemRemoveDTO) {
-        if (itemRemoveDTO.quantity() <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
+        if (itemRemoveDTO.quantity() <= 0) throw new IllegalArgumentException("Cannot have zero or negative quantity");
         Store store = storeRepository.findByStoreName(itemRemoveDTO.store()).orElseThrow(() -> new StoreNotFoundException(itemRemoveDTO.store()));
         Item item = itemRepository.findByProductNameAndStore(itemRemoveDTO.itemName(), store).orElseThrow(() -> new ItemNotFoundException(itemRemoveDTO.itemName()));
         Fridge fridge = fridgeRepository.findByFridgeId(itemRemoveDTO.fridgeId()).orElseThrow(() -> new FridgeNotFoundException(itemRemoveDTO.fridgeId()));
         FridgeItems fridgeItem = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElseThrow(() -> new FridgeItemsNotFoundException(""));
         notificationService.deleteNotificationForEveryUserInFridge(itemRemoveDTO);
-        if (fridgeItem.getQuantity() <= itemRemoveDTO.quantity()){
-        if (fridgeItem.getAmount() <= itemRemoveDTO.quantity() * fridgeItem.getItem().getAmount()){
+        if (fridgeItem.getAmount() <= itemRemoveDTO.quantity() * fridgeItem.getItem().getAmount()) {
             fridgeItemsRepository.delete(fridgeItem);
-        }
-        else {
+        } else {
             fridgeItem.setAmount(fridgeItem.getAmount() - itemRemoveDTO.quantity() * fridgeItem.getItem().getAmount());
             fridgeItemsRepository.save(fridgeItem);
         }
