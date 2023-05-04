@@ -11,7 +11,7 @@
         <div class="back-side">
           <div class="item-detail">
             <div class="item-description">
-              <p>{{ meal.description }}</p>
+              <p ref="descriptionRef">{{ meal.description }}</p>
             </div>
             <div class="item-name">
               <h2 id="item-name-h2">{{ meal.recipeName }}</h2>
@@ -23,6 +23,11 @@
                 <font-awesome-icon icon="fa-solid fa-trash" class="icon delete-icon" />
               </span>
           </button>
+          <button v-if="isSuperUser" class="accept-btn" @click.prevent="acceptCard">
+            <span>
+              <font-awesome-icon icon="fa-solid fa-check" class="icon accept-icon" />
+            </span>
+          </button>
         </div>
       </div>
     </router-link>
@@ -31,11 +36,9 @@
 
 <script>
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {number} from "yup";
 import swal from "sweetalert2";
-import {useItemStore} from "@/store/store";
-import Swal from "sweetalert2";
 import {useMealStore} from "../../store/store";
+import {object} from "yup";
 
 export default {
   name: "BasicFridgeItem",
@@ -48,7 +51,21 @@ export default {
     isSuperUser: {
       type: Boolean,
       default: false
-    }
+    },
+  },
+
+  computed: {
+    missingItemIds() {
+      const ids = [];
+      this.meal.recipeParts.forEach(part => {
+        part.ingredients.forEach(ingredient => {
+          if (!ingredient.hasItem) {
+            ids.push(ingredient.itemId);
+          }
+        });
+      });
+      return ids;
+    },
   },
 
   methods: {
@@ -58,8 +75,6 @@ export default {
     },
 
     deleteCard(item) {
-      let deletePercentage = null;
-
       swal.fire({
         title: this.$t('confirm_title'),
         text: this.$t('confirm_text'),
@@ -74,53 +89,66 @@ export default {
         }
       }).then((result) => {
         if (result.isConfirmed) {
-          Swal.fire({
-            html: `
-          <div class="swal2-content">
-            <div class="swal2-text">
-              ${this.$t('Percent-wise, how much was left?')}
-            </div>
-            <div id="range-value-text" class="swal2-text"></div>
-          </div>
-        `,
-            input: 'range',
-            inputAttributes: {
-              min: 0,
-              max: 100,
-              step: 1
-            },
-            didOpen: () => {
-              deletePercentage = Swal.getInput()
-              const inputNumber = Swal.getHtmlContainer().querySelector('#range-value')
-              const rangeValueText = Swal.getHtmlContainer().querySelector('#range-value-text')
-
-              deletePercentage.nextElementSibling.style.display = 'none'
-              deletePercentage.style.width = '100%'
-
-              deletePercentage.addEventListener('input', () => {
-                inputNumber.value = deletePercentage.value
-                rangeValueText.innerText = `${deletePercentage.value}%`
-              })
-            },
-            showCancelButton: true,
-            confirmButtonText: this.$t('confirm_button'),
-            cancelButtonText: this.$t('cancel_button'),
-            customClass: {
-              container: 'my-swal-dialog-container'
-            }
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.$emit('delete-item', item, deletePercentage.value);
-              swal.fire(
-                  this.$t('success_message'),
-                  '',
-                  'success'
-              )
-            }
-          })
+          this.$emit('delete-item', item);
+          swal.fire(
+              this.$t('success_message'),
+              '',
+              'success'
+          )
         }
       })
-    }
+    },
+
+    acceptCard() {
+      swal.fire({
+        title: 'Confirm Accept',
+        text: 'Are you sure you want to accept this meal?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4dce38',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        customClass: {
+          container: 'my-swal-dialog-container'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$emit('accept-item', this.missingItemIds);
+          swal.fire(
+              'Accepted',
+              'The missing item IDs have been accepted.',
+              'success'
+          );
+        }
+      });
+    },
+
+    truncateDescription() {
+      const elem = this.$refs.descriptionRef;
+      const lineHeight = parseFloat(getComputedStyle(elem).lineHeight);
+      const maxHeight = lineHeight * 6; // For 6 lines
+
+      if (elem.offsetHeight > maxHeight) {
+        let content = this.meal.description;
+
+        while (elem.offsetHeight > maxHeight) {
+          content = content.slice(0, -1);
+          elem.textContent = content + '...';
+        }
+      }
+    },
+  },
+
+  watch: {
+    meal: {
+      immediate: true,
+      handler() {
+        this.$nextTick(() => {
+          this.truncateDescription();
+        });
+      },
+    },
   },
 
   setup(props) {
@@ -134,6 +162,35 @@ export default {
 </script>
 
 <style scoped>
+
+.accept-btn {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background-color: white;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  opacity: 100%;
+}
+
+.accept-btn:hover {
+  transform: scale(1.2);
+  background-color: green;
+}
+
+.accept-icon {
+  color: black;
+}
+
+.accept-icon:hover {
+  color: white;
+}
 
 .cards-container {
   display: flex;

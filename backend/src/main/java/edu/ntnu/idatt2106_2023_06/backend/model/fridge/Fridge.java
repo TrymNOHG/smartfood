@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106_2023_06.backend.model.fridge;
 
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipeSuggestion;
 import edu.ntnu.idatt2106_2023_06.backend.model.stats.Statistics;
 import jakarta.persistence.*;
 import lombok.*;
@@ -49,7 +50,7 @@ public class Fridge {
     private Set<FridgeMember> members = new HashSet<>();
 
     /**
-     * The members of the fridge.
+     * The shopping items of the fridge.
      */
     @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -57,12 +58,13 @@ public class Fridge {
     private List<ShoppingItems> shoppingItems = new ArrayList<>();
 
     /**
-     * The members of the fridge.
+     * The fridge items of the fridge.
      */
     @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private List<FridgeItems> fridgeItems = new ArrayList<>();
+
 
     /**
      * The statistics of the fridge.
@@ -70,6 +72,14 @@ public class Fridge {
     @OneToMany(mappedBy = "fridge")
     @ToString.Exclude
     private Set<Statistics> stats = new HashSet<>();
+
+    /**
+     * The recipe suggestions of the fridge.
+     */
+    @OneToMany(mappedBy = "fridge", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    private List<RecipeSuggestion> recipeSuggestion = new ArrayList<>();
 
 
     @Override

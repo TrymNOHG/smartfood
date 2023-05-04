@@ -1,153 +1,359 @@
 <template>
   <div>
-    <div class="wrapper">
-      <meal
-          :isSuperUser="true"
-          v-for="(meal, index) in meals"
-          :key="index"
-          :meal="meal"
-          :currenFridge="fridge"
-          @delete-item="deleteItem"
-      />
-    </div>
-    <div class="pagination-buttons" v-if="!isMobile">
-      <BasicButton @click="loadPreviousPage" :disabled="pageIndex.value === 0" :button-text="$t('previous_page')"/>
-      <BasicButton @click="loadNextPage" :button-text="$t('next_page')"/>
-    </div>
-    <div id="bottom"></div>
-  </div>
-</template>
-<script>
-import meal from "@/components/dinner/MealComponent.vue";
-import { loadRecipeByFridgeItems } from "@/services/DinnerService";
-import { useFridgeStore } from "@/store/store";
-import {onMounted, onUnmounted, ref} from "vue";
-import BasicButton from "@/components/basic-components/BasicButton.vue";
+    <div class="suggestions-wrapper">
+      <h1 id="sugTitle">{{ $t("suggestion") }}</h1>
+      <div class="suggestions-grid">
+        <div v-for="(suggestion, index) in suggestions" :key="index" class="suggestion">
+          <div class="suggestion-user">
+            <img
+                :src="getProfilePicture(suggestion.UserId)"
+                alt="Member Profile Picture"
+                class="suggestion-profile-picture"
+            />
+            <div class="username-bubble">
+              <div class="chat-bubble-text">
+                {{ getUsername(suggestion.UserId) + " " + $t("wants_this") }}
+              </div>
+              <div class="chat-bubble-triangle"></div>
+            </div>
+          </div>
+          <meal
+              :isSuperUser="isCurrentUserSuperUser"
+              :meal="suggestion.recipeLoadDTO"
+              @delete-item="denySuggestion(suggestion)"
+              @accept-item="acceptSuggestion($event, suggestion)"
+          />
+          </div>
+        </div>
+      </div>
+      <h1 id="sugTitle">{{ $t("tips") }}</h1>
+      <div class="meals-grid">
+        <meal
+            :isSuperUser="false"
+            v-for="(meal, index) in meals"
+            :key="index"
+            :meal="meal"
+        />
+      </div>
+        <div class="pagination-buttons" v-if="!isMobile">
+          <BasicButton @click="loadPreviousPage" :disabled="pageIndex.value === 0" :button-text="$t('previous_page')"/>
+          <BasicButton @click="loadNextPage" :button-text="$t('next_page')"/>
+        </div>
+        <div id="bottom"></div>
+      </div>
+    </template>
+    <script>
+    import meal from "@/components/dinner/MealComponent.vue";
+    import { loadRecipeByFridgeItems } from "@/services/DinnerService";
+    import { useFridgeStore } from "@/store/store";
+    import defaultProfilePicture from '@/assets/images/profiledefualt.svg';
+    import { onUnmounted, ref} from "vue";
+    import BasicButton from "@/components/basic-components/BasicButton.vue";
+    import swal from "sweetalert2";
+    import {acceptRecipeSuggestion, denyRecipeSuggestion, loadRecipeSuggestions} from "../../services/DinnerService";
+    import {getProfilePictureById} from "../../services/UserService";
+    import {loadUsersByFridgeId} from "../../services/FridgeServices";
 
-export default {
-  components: {
-    BasicButton,
-    meal,
-  },
+    export default {
+      components: {
+        BasicButton,
+        meal,
+      },
 
-  data() {
-    return {
-      width: window.innerWidth
+      data() {
+        return {
+          width: window.innerWidth,
+        }
+      },
+
+      computed: {
+        isMobile() {
+          return this.width < 768;
+        },
+        isCurrentUserSuperUser() {
+          return this.fridgeStore.getIsSuperUser;
+        },
+      },
+
+      async mounted() {
+        window.addEventListener("resize", () => {
+          this.width = window.innerWidth;
+        });
+
+        if (this.isMobile) {
+          await this.observeBottom();
+        }
+      },
+
+
+      methods : {
+        getProfilePicture(userId) {
+          return this.profilePictures[userId];
+        },
+        getUsername(userId) {
+          const user = this.memberList.find((member) => member.userId === userId);
+          return user ? user.username : "";
+        },
+      },
+
+      setup() {
+        const fridgeStore = useFridgeStore();
+        const fridgeId = fridgeStore.getCurrentFridge.fridgeId;
+        const meals = ref([]);
+        const suggestions = ref([]);
+        let pageIndex = ref(0);
+        const profilePictures = ref({});
+        const memberList = ref([]);
+
+        const fetchUsers = async () => {
+          try {
+            const response = await loadUsersByFridgeId(fridgeId);
+            memberList.value = response.data.memberInfo;
+          } catch (error) {
+            console.error("Error fetching users:", error);
+          }
+        };
+
+        const fetchProfilePictures = async () => {
+          const uniqueUserIds = [...new Set(suggestions.value.map(s => s.UserId))];
+          for (const userId of uniqueUserIds) {
+            try {
+              const response = await getProfilePictureById(userId);
+              const imageUrl = URL.createObjectURL(new Blob([response.data], { type: 'image/jpeg' }));
+              profilePictures.value[userId] = imageUrl;
+            } catch (error) {
+              profilePictures.value[userId] = defaultProfilePicture; // Fallback image
+            }
+          }
+        };
+
+
+        const loadSuggestions = async () => {
+          try {
+            const response = await loadRecipeSuggestions(fridgeId);
+            suggestions.value = response;
+            console.log("Suggestions loaded:", suggestions.value)
+            await fetchProfilePictures();
+            await fetchUsers();
+          } catch (error) {
+            console.error("Failed to load suggestions:", error);
+          }
+        };
+
+        loadSuggestions();
+
+
+        const acceptSuggestion = async (missingIds, suggestion) => {
+          const recipeShoppingDTO = {
+            fridgeId: fridgeId,
+            itemIds: missingIds
+          }
+          const recipeId = suggestion.recipeLoadDTO.recipeId
+          const userId = suggestion.UserId
+          try {
+
+            await acceptRecipeSuggestion(recipeShoppingDTO, recipeId, userId);
+            // Remove the suggestion from the list
+            suggestions.value = suggestions.value.filter(s => s.id !== suggestion.id);
+          } catch (error) {
+            console.error("Failed to accept suggestion:", error);
+          }
+        };
+
+        const denySuggestion = async (suggestion) => {
+          try {
+            const recipeId = suggestion.recipeLoadDTO.recipeId
+            const userId = suggestion.UserId
+            await denyRecipeSuggestion(fridgeId, recipeId, userId);
+            // Remove the suggestion from the list
+            suggestions.value = suggestions.value.filter(s => s.id !== suggestion.id);
+          } catch (error) {
+            console.error("Failed to deny suggestion:", error);
+          }
+        };
+
+        const loadPreviousPage = async () => {
+          if (pageIndex.value === 0) return;
+          swal.fire({
+            title: 'Loading...',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+              swal.showLoading();
+            },
+          });
+          try {
+            pageIndex.value--;
+            const response = await loadRecipeByFridgeItems(fridgeId, pageIndex.value, 8);
+            meals.value = response.content;
+          } catch (error) {
+            console.error("Failed to load previous page:", error);
+            pageIndex.value++;
+          }finally {
+            swal.close();
+          }
+        };
+
+        const loadNextPage = async () => {
+          swal.fire({
+            title: 'Loading...',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+              swal.showLoading();
+            },
+          });
+          try {
+            const response = await loadRecipeByFridgeItems(fridgeId, pageIndex.value, 8);
+            meals.value = response.content;
+            pageIndex.value++;
+          } catch (error) {
+            console.error("Failed to load next page:", error);
+          } finally {
+            swal.close();
+          }
+        };
+
+        const loadMore = async () => {
+          try {
+            const response = await loadRecipeByFridgeItems(fridgeId, pageIndex.value, 8);
+            console.log(response.content)
+            meals.value = [ ...meals.value, ...response.content]
+            pageIndex.value++;
+          } catch (error) {
+            console.error("Failed to load next page:", error);
+          }
+        };
+
+        // Load initial data
+        loadNextPage();
+
+        const observeBottom = () => {
+          const bottomElement = document.querySelector("#bottom");
+          const observer = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (entry.isIntersecting) {
+                    loadMore();
+                  }
+                });
+              },
+              { threshold: 1 }
+          );
+          if (bottomElement) {
+            observer.observe(bottomElement);
+          }
+        };
+
+        onUnmounted(() => {
+          const bottomElement = document.querySelector("#bottom");
+          const observer = new IntersectionObserver(() => {}, { threshold: 1 });
+          if (bottomElement) {
+            observer.unobserve(bottomElement);
+          }
+        });
+
+
+        return {
+          profilePictures,
+          memberList,
+          fridgeStore,
+          meals,
+          loadMore,
+          observeBottom,
+          loadPreviousPage,
+          loadNextPage,
+          pageIndex,
+          suggestions,
+          loadSuggestions,
+          acceptSuggestion,
+          denySuggestion,
+        };
+      },
+    };
+    </script>
+    <style scoped>
+    .suggestions-wrapper {
+      margin-bottom: 2rem;
     }
-  },
 
-  computed: {
-    isMobile() {
-      return this.width < 768;
-    },
-  },
-
-  async mounted() {
-    window.addEventListener("resize", () => {
-      this.width = window.innerWidth;
-    });
-
-    if (this.isMobile) {
-      await this.observeBottom();
+    .suggestions-grid,
+    .meals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
+      grid-gap: 30px;
+      transition: 0.5s;
+      margin: 2% 2% 2%;
     }
-  },
 
-  setup() {
-    const fridgeId = useFridgeStore().getCurrentFridge.fridgeId;
-    const meals = ref([]);
-    let pageIndex = ref(0);
+    .pagination-buttons {
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      flex-direction: row;
+      width: 250px;
+      margin: 2% auto;
+      gap: 25%;
+    }
 
-    const loadPreviousPage = async () => {
-      if (pageIndex.value === 0) return;
+    #sugTitle {
+      margin-top: 10px;
+      border-radius: 20px 20px 20px 20px;
+      background-color: #31c48d;
+      color: white;
+      font-size: 25px;
+      text-align: center;
+    }
 
-      try {
-        pageIndex.value--;
-        const response = await loadRecipeByFridgeItems(fridgeId, pageIndex.value, 8);
-        meals.value = response.content;
-      } catch (error) {
-        console.error("Failed to load previous page:", error);
-        pageIndex.value++;
-      }
-    };
+    .suggestion-profile-picture {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+    }
 
-    const loadNextPage = async () => {
-      try {
-        const response = await loadRecipeByFridgeItems(fridgeId, pageIndex.value, 8);
-        meals.value = response.content;
-        pageIndex.value++;
-      } catch (error) {
-        console.error("Failed to load next page:", error);
-      }
-    };
+    .suggestion {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-    const loadMore = async () => {
-      try {
-        const response = await loadRecipeByFridgeItems(fridgeId, pageIndex.value, 8);
-        console.log(response.content)
-        meals.value = [ ...meals.value, ...response.content]
-        pageIndex.value++;
-      } catch (error) {
-        console.error("Failed to load next page:", error);
-      }
-    };
+    .suggestion-user {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 10px;
+    }
 
-    // Load initial data
-    loadNextPage();
+    .username-bubble {
+      position: relative;
+      display: flex;
+    }
 
-    const observeBottom = () => {
-      const bottomElement = document.querySelector("#bottom");
-      const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                loadMore();
-              }
-            });
-          },
-          { threshold: 1 }
-      );
-      if (bottomElement) {
-        observer.observe(bottomElement);
-      }
-    };
+    .chat-bubble-text {
+      background-color: #31c48d;
+      border-radius: 15px;
+      color: white;
+      font-size: 14px;
+      padding: 5px 10px;
+    }
 
-    onUnmounted(() => {
-      const bottomElement = document.querySelector("#bottom");
-      const observer = new IntersectionObserver(() => {}, { threshold: 1 });
-      if (bottomElement) {
-        observer.unobserve(bottomElement);
-      }
-    });
+    .chat-bubble-triangle {
+      position: absolute;
+      left: 2px;
+      top: 20px;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 12px 12px 12px;
+      border-color: transparent transparent #31c48d transparent;
+    }
 
 
-    return {
-      meals,
-      loadMore,
-      observeBottom,
-      loadPreviousPage,
-      loadNextPage,
-      pageIndex,
-    };
-  },
-};
-</script>
-<style scoped>
-.wrapper {
-  z-index: 0;
-  grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
-  grid-row-gap: 30px;
-  transition: 0.5s;
-  margin: 2% 2% 2%;
-}
 
-.pagination-buttons {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  flex-direction: row;
-  width: 250px;
-  margin: 2% auto;
-  gap: 25%;
-}
 
-</style>
+    </style>

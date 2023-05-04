@@ -6,13 +6,16 @@
       <div id="backGreen">
         <div class="grey-bar">
           <h2 id="grey-header">{{ $t("shopping_cart") }}</h2>
-          <div class="information-button">
-            <img
-              src="@/assets/images/info.svg"
-              id="info-picture"
-              @click="showInformation"
-              :alt="$t('alt_info_button')"
-            />
+          <div id="info-and-bell">
+            <InfoAndBell :fridge="this.fridge"/>
+            <div class="information-button">
+              <img
+                  src="@/assets/images/info.svg"
+                  id="info-picture"
+                  @click="showInformation"
+                  :alt="$t('alt_info_button')"
+              />
+            </div>
           </div>
         </div>
         <div id="barcode-scanner">
@@ -126,14 +129,16 @@ import CartSuggestion from "@/components/shoppingcart/CartSuggestion.vue";
 import CartControl from "@/components/shoppingcart/CartControl.vue";
 import BasicCheckBox from "@/components/basic-components/BasicCheckbox.vue";
 import { useLoggedInStore, useFridgeStore, useItemStore } from "@/store/store";
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed, watch, onBeforeUnmount } from "vue";
 import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert2";
 import Quagga from "quagga";
+import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
 
 export default {
   name: "Cart",
   components: {
+    InfoAndBell,
     FontAwesomeIcon,
     SearchItem,
     BasicButton,
@@ -204,9 +209,10 @@ export default {
         .then((response) => {
           if (response !== undefined) {
             searchItems.value = response.products;
+
             console.log(response.products);
             search.value = true;
-            scannerActive.value = false;
+            stopScanner();
           } else {
             console.log("Something went wrong");
             submitMessage.value =
@@ -381,6 +387,12 @@ export default {
 
     onMounted(async () => {
       await loadItemsFromCart();
+    });
+
+    onBeforeUnmount(() => {
+      if (scannerActive.value == true) {
+        stopScanner();
+      }
     });
     // Watch the searchItems array for changes and update the isExpanded ref accordingly
     watch(searchItems, () => {
@@ -627,6 +639,14 @@ export default {
 </script>
 
 <style scoped>
+
+#info-and-bell {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 5%;
+}
+
 * {
   text-align: center;
 }
@@ -813,7 +833,6 @@ body {
   position: relative;
   background-color: #f6f6f6;
   min-width: 230px;
-  overflow: auto;
   border: 1px solid #ddd;
   z-index: 2;
   text-align: center;
@@ -965,8 +984,6 @@ input:focus {
     display: none !important;
   }
 
-
-
   .grey-bar {
     all: unset;
     text-align: center;
@@ -975,10 +992,9 @@ input:focus {
     background-color: #31c48d;
     height: 50px;
     align-content: center;
-
   }
 
-  #grey-header{
+  #grey-header {
     all: unset;
     grid-column: 2;
     color: white;
@@ -1223,7 +1239,6 @@ input:focus {
     position: relative;
     background-color: white;
     min-width: 230px;
-    overflow: auto;
     border: 1px solid #ddd;
     z-index: 2;
     text-align: center;

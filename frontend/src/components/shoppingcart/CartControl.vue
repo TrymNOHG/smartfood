@@ -15,8 +15,6 @@
 </template>
 
 <script>
-import { boolean } from "yup";
-
 export default {
   props: {},
   methods: {
@@ -32,7 +30,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .cart-control {
   display: flex;
   justify-content: space-between;
