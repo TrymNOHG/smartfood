@@ -53,7 +53,7 @@ export default {
         name: String,
         price: String,
         purchaseDate: String,
-        quantity: number,
+        amount: number,
         store: String
       })
     },
