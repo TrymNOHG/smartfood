@@ -53,29 +53,7 @@
         </div>
       </div>
 
-      <div class="dropper" v-if="search">
-        <vue-collapsible-panel-group>
-          <vue-collapsible-panel :expanded="isExpanded.value">
-            <template #content>
-              <SearchItem
-                v-for="(item, index) in searchItems"
-                :key="index"
-                :image="item.image"
-                :text="item.name"
-                :store="item.store.name"
-                :price="
-                  typeof item.current_price === 'number'
-                    ? item.current_price
-                    : item.current_price.price
-                "
-                style="text-align: center"
-                @click="addItemToFridge(this.fridge.fridgeId, item)"
-              />
-              <div ref="scrollTarget" id="scrollTarget"></div>
-            </template>
-          </vue-collapsible-panel>
-        </vue-collapsible-panel-group>
-      </div>
+
     </div>
 
     <div class="searchbar-wrapper" :class="{'margin-bottom': active}" :style="{'margin-bottom': active ? '20%' : '0'}">
@@ -122,6 +100,29 @@
         <filter-bar @listing="changeListing" />
       </div>
     </div>
+      <div class="dropper" v-if="search">
+          <vue-collapsible-panel-group>
+              <vue-collapsible-panel :expanded="isExpanded.value">
+                  <template #content>
+                      <SearchItem
+                              v-for="(item, index) in searchItems"
+                              :key="index"
+                              :image="item.image"
+                              :text="item.name"
+                              :store="item.store.name"
+                              :price="
+                  typeof item.current_price === 'number'
+                    ? item.current_price
+                    : item.current_price.price
+                "
+                              style="text-align: center"
+                              @click="addItemToFridge(this.fridge.fridgeId, item)"
+                      />
+                      <div ref="scrollTarget" id="scrollTarget"></div>
+                  </template>
+              </vue-collapsible-panel>
+          </vue-collapsible-panel-group>
+      </div>
     <transition name="fade">
       <div
         v-if="!listView"
@@ -153,6 +154,7 @@
   <div class="members-wrapper" v-show="selectedTab === 'members'">
     <member-component />
   </div>
+  <div id="bottom-element"></div>
 </template>
 
 <script lang="ts">
