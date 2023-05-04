@@ -80,6 +80,18 @@ public class Item {
     private String ean;
 
     /**
+     * The amount of a product.
+     */
+    @Column(name = "amount")
+    private Double amount;
+
+    /**
+     * The Unit type of product.
+     */
+    @Column(name = "unit")
+    private String unit;
+
+    /**
      * The items in the recipe.
      */
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)

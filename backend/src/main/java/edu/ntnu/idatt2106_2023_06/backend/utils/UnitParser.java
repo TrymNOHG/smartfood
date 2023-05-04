@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public class UnitParser {
 
     private static final Pattern PATTERN = Pattern.compile("(\\d+[.,]?\\d*(?:\\s*[x*/]\\s*\\d+[.,]?\\d*)?)\\s*(\\p{L}+)?");
-    public static void parse(String productName) {
+    public static Object[] parse(String productName) {
         double amount = 0;
         UnitType unit = UnitType.PIECES;
         boolean hasValue = false;
@@ -26,7 +26,8 @@ public class UnitParser {
             if (matchedUnit != null && !matchedUnit.isBlank()) {
                 matchedUnit = matchedUnit.toLowerCase().trim();
 
-                unit = UnitType.fromString(matchedUnit);
+
+                unit = !UnitType.contains(matchedUnit) ? UnitType.PIECES : UnitType.fromString(matchedUnit);
 
                 switch (unit) {
                     case GRAMS -> {
@@ -66,7 +67,7 @@ public class UnitParser {
             unit = UnitType.PIECES;
         }
 
-        System.out.println("Measurement: " + amount + " " + UnitType.getDisplayName(unit));
+        return new Object[]{amount, UnitType.getDisplayName(unit)};
     }
 
     private static double parseAmount(String amountStr) {

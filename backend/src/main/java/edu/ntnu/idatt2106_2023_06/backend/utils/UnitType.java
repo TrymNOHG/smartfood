@@ -11,7 +11,7 @@ import java.util.Map;
  * @author Trym Hamer Gudvangen
  */
 public enum UnitType {
-    PIECES("pieces", "pk", "stk"),
+    PIECES("pieces", "pk", "stk", "mnd"),
     GRAMS("g", "gram", "grams"),
     KILOGRAMS("kg", "kilogram", "kilograms"),
     MILLILITERS("ml", "milliliter", "milliliters"),

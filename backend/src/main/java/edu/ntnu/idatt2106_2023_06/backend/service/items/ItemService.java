@@ -19,7 +19,6 @@ import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
-import edu.ntnu.idatt2106_2023_06.backend.model.recipe.ItemRecipeScore;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeMemberRepository;
@@ -31,11 +30,11 @@ import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
 import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.*;
+import edu.ntnu.idatt2106_2023_06.backend.utils.UnitParser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -99,7 +98,6 @@ public class ItemService implements IItemService {
             return item;
         }
 
-        System.out.println(itemDTO);
         Item i = ItemMapper.toItem(itemDTO, store);
         itemRepository.save(i);
 
@@ -514,6 +512,22 @@ public class ItemService implements IItemService {
         ShoppingItems shoppingItem = shoppingItemsRepository.findByItemAndFridgeAndSuggestion(item, fridge, true).orElseThrow(() -> new ShoppingItemsNotFoundException(""));
         shoppingItem.setSuggestion(false);
         shoppingItemsRepository.save(shoppingItem);
+    }
+
+    /**
+     * This method fills the database's existing items with their corresponding units. The unit and amount are
+     * found through the {@link UnitParser#parse(String)}.
+     */
+    @Transactional
+    public void addUnitToExistingItems(){
+        List<Item> itemList = itemRepository.findAll();
+
+        for(Item item : itemList) {
+            Object[] units = UnitParser.parse(item.getProductName());
+            item.setAmount((Double) units[0]);
+            item.setUnit((String) units[1]);
+            itemRepository.save(item);
+        }
     }
 
 
