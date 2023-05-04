@@ -31,11 +31,6 @@ export default {
 
 <style scoped>
 
-.notification-icons {
-  gap: 25%;
-  margin-left: auto;
-}
-
 .notification {
   display: flex;
   flex-direction: row;
@@ -46,10 +41,6 @@ export default {
   border-radius: 0.25rem;
   padding: 1rem;
   margin: 2% 0 0 2%;
-}
-
-.delete-icon:hover {
-  color: red;
 }
 
 .notification-header {
@@ -70,13 +61,6 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .notification-icons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 0;
-    margin: 1rem 0 0 0;
-  }
 
   .notification {
     flex-direction: column;
@@ -89,10 +73,6 @@ export default {
 
   .notification-date {
     font-size: 0.75rem;
-  }
-
-  .notification-icons {
-    font-size: 1.5rem;
   }
 }
 
