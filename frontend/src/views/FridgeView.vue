@@ -973,9 +973,7 @@ input[type="text"]:focus {
     grid-template-rows: repeat(auto-fill, minmax(95px, 95px));
   }
 
-  .link {
-    margin: 10px 0;
-  }
+
 
   .wrapper {
     z-index: 0;
@@ -1007,16 +1005,7 @@ input[type="text"]:focus {
 
 
 
-  .grey-bar {
-    display: flex;
-    align-content: center;
-    justify-content: center;
-    margin-top: 5px;
-    background-color: #31c48d;
-    max-height: 60px;
-    height: 60px;
-    border-radius: 20px 20px 0 0;
-  }
+
   .slide-in {
     display: block !important;
   }
@@ -1074,11 +1063,28 @@ input[type="text"]:focus {
     margin-bottom: 0;
     overflow-y: scroll;
   }
+  .grey-bar {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    margin-top: 5px;
+    background-color: #31c48d;
+    max-height: 60px;
+    height: 60px;
+    border-radius: 20px 20px 0 0;
+  }
 
+  #info-and-bell{
+    display: flex;
+    margin-left: auto;
+    margin-right: 5px;
+    gap: 30%;
+    left: 0;
+  }
   .members-fridge {
     background-color: #31c48d;
     color: white;
-    font-size: 1.25em;
+    font-size: 20px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-column-gap: 10px;
@@ -1091,8 +1097,23 @@ input[type="text"]:focus {
     align-content: center;
     justify-content: center;
     margin-left: 10px;
+    width: 70%;
   }
 
+  .link.active {
+    height: 60px !important;
+    background-color: white;
+    font-size: 20px;
+    border-radius: 20px 20px 0 0;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: none;
+    color: black;
+    margin-top: 20px;
+    padding-top: 8px;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
 
   .link {
     margin: 0;
@@ -1100,18 +1121,9 @@ input[type="text"]:focus {
     padding-right: 5px;
   }
 
-  .link.active {
-    height: 60px !important;
-    background-color: white;
-    border-radius: 20px 20px 0 0;
-    font-weight: bold;
-    text-decoration: none;
-    text-shadow: none;
-    color: black;
-    margin-top: 20px;
-    padding-top: 10px;
-    padding-right: 5px;
-    padding-left: 5px;
+  #toggle-button:hover {
+    cursor: pointer;
+    font-size: unset;
   }
 
   #searchbar {

@@ -102,9 +102,7 @@ template {
   color: white;
 }
 
-#toggle-button {
-  width: 150px;
-}
+
 
 #toggle-button:hover {
   cursor: pointer;
@@ -132,42 +130,51 @@ template {
 }
 
 .information-button {
-  display: flex;
-  text-align: right;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  height: 40px;
 }
 
 #info-picture {
   width: 30px;
   cursor: pointer;
-  height: 40px;
-  bottom: 10%;
+  height: 30px;
 }
 
 @media only screen and (min-width: 10px) and (max-width: 650px) {
-  #info-and-bell {
-    gap: 15%;
+  .information-button {
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    height: 60px;
   }
-
-  .information-button{
-    height: 60px
-  }
-
   .grey-bar {
     display: flex;
     align-content: center;
-    align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
     margin-top: 5px;
     background-color: #31c48d;
     max-height: 60px;
     height: 60px;
     border-radius: 20px 20px 0 0;
-    flex-direction: row;
-    flex-wrap: nowrap;
   }
 
+  #info-and-bell{
+    display: flex;
+    margin-left: auto;
+    margin-right: 5px;
+    gap: 30%;
+    left: 0;
+  }
   .tips-weekMenu {
     background-color: #31c48d;
+    color: white;
+    font-size: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 10px;
+    grid-column: 2;
     margin-top: 0;
     padding-top: 0;
     padding-right: 10px;
@@ -176,23 +183,38 @@ template {
     align-content: center;
     justify-content: center;
     margin-left: 10px;
-  }
-
-  .link {
-    margin: 0;
+    width: 70%;
   }
 
   .link.active {
     height: 60px !important;
     background-color: white;
+    font-size: 20px;
     border-radius: 20px 20px 0 0;
     font-weight: bold;
     text-decoration: none;
     text-shadow: none;
     color: black;
     margin-top: 20px;
-    padding-top: 10px;
+    padding-top: 8px;
+    padding-right: 5px;
+    padding-left: 5px;
   }
+
+  .link {
+    margin: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 20px;
+  }
+
+  #toggle-button:hover {
+    cursor: pointer;
+    font-size: unset;
+    font-size: 20px;
+  }
+
+
 
 }
 </style>

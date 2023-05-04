@@ -241,8 +241,9 @@ h3 {
 }
 
 .information-button {
-  display: flex;
-  text-align: right;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
   height: 40px;
 }
 
@@ -349,28 +350,77 @@ h3 {
   .chart-legend li {
     font-size: 0.9rem;
   }
+
+  .information-button {
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
 }
 
 
 @media only screen and (min-width: 10px) and (max-width: 650px)  {
 
-  .grey-bar{
+  .grey-bar {
     display: flex;
     align-content: center;
-    align-items: center;
-    flex-wrap: wrap;
     justify-content: center;
-    text-align: center;
     margin-top: 5px;
     background-color: #31c48d;
     max-height: 60px;
     height: 60px;
     border-radius: 20px 20px 0 0;
-    width: 100%;
   }
+
+  #info-and-bell{
+    display: flex;
+    margin-left: auto;
+    margin-right: 5px;
+    gap: 30%;
+    left: 0;
+    height: 60px;
+  }
+
+
+  #grey-header {
+    display: flex;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 10px;
+    grid-column: 2;
+    text-align: center;
+
+    justify-content: center;
+    margin-left: 30%;
+    height: 60px !important;
+    background-color: white;
+    font-size: 20px;
+    border-radius: 20px 20px 0 0;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: none;
+    color: black;
+    margin-top: 20px;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-left: 5px;
+    width: 40%;
+  }
+
+  #info-picture{
+    height: 30px;
+    width: 30px;
+    top: 0;
+  }
+
+
+
+
   .stat-container{
     margin-left: 0;
   }
+
+
 }
 
 </style>
