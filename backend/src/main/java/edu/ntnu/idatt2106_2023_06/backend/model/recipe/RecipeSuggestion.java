@@ -39,7 +39,7 @@ public class RecipeSuggestion {
     /**
      * The fridge of the suggestion.
      */
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("fridge")
     @JoinColumn(name = "fridge_id", nullable = false)
     @NonNull
@@ -49,7 +49,7 @@ public class RecipeSuggestion {
     /**
      * The user of the suggestion.
      */
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("users")
     @JoinColumn(name = "user_id", nullable = false)
     @NonNull

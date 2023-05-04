@@ -30,7 +30,7 @@ class FridgeTest {
         void all_arg_constructor_can_be_made() {
             try {
                 Fridge fridge = new Fridge(1L, "Fridge", new HashSet<>(),
-                        new ArrayList<>(), new ArrayList<>(), new HashSet<>());
+                        new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new ArrayList<>());
             } catch (Exception e) {
                 fail();
             }
@@ -64,7 +64,7 @@ class FridgeTest {
     class Fridge_can_properly_get {
         Fridge getFridge() {
             return new Fridge(1L, "Norman family", new HashSet<>(),
-                    new ArrayList<>(), new ArrayList<>(), new HashSet<>());
+                    new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new ArrayList<>());
         }
 
         @Test
@@ -134,7 +134,7 @@ class FridgeTest {
     class Fridge_can_properly_set {
         Fridge getFridge() {
             return new Fridge(1L, "Norman family", new HashSet<>(),
-                    new ArrayList<>(), new ArrayList<>(), new HashSet<>());
+                    new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new ArrayList<>());
         }
 
         @Test

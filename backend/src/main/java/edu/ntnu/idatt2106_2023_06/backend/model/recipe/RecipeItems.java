@@ -38,7 +38,7 @@ public class RecipeItems {
     /**
      * The recipe of the recipe items.
      */
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @MapsId("recipePart")
     @JoinColumn(name = "recipe_part_id", nullable = false)
     @NonNull

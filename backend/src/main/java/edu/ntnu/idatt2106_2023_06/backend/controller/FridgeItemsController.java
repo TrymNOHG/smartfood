@@ -6,10 +6,9 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadD
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemSearchDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
-import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemService;
+import edu.ntnu.idatt2106_2023_06.backend.service.notification.NotificationService;
 import edu.ntnu.idatt2106_2023_06.backend.service.users.UserService;
-import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.SearchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -39,6 +38,8 @@ public class FridgeItemsController implements IFridgeItemsController{
 
     private final ItemService itemService;
     private final UserService userService;
+    private final NotificationService notificationService;
+
     /**
      * The logger for logging information about the operations performed by this controller.
      */

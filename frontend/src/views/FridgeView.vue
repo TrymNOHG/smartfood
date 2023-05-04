@@ -20,13 +20,13 @@
     </div>
 
     <div id="info-and-bell">
-      <InfoAndBell />
+      <InfoAndBell/>
       <div class="information-button">
         <img
-          src="@/assets/images/info.svg"
-          id="info-picture"
-          @click="showInformation"
-          :alt="$t('alt_info_button')"
+            src="@/assets/images/info.svg"
+            id="info-picture"
+            @click="showInformation"
+            :alt="$t('alt_info_button')"
         />
       </div>
     </div>
@@ -78,11 +78,7 @@
       </div>
     </div>
 
-    <div
-      class="searchbar-wrapper"
-      :class="{ 'margin-bottom': active }"
-      :style="{ 'margin-bottom': active ? '20%' : '0' }"
-    >
+    <div class="searchbar-wrapper" :class="{'margin-bottom': active}" :style="{'margin-bottom': active ? '20%' : '0'}">
       <button id="toggle" @click="handleClick">Filter</button>
       <div
         v-if="click"
@@ -127,7 +123,10 @@
       </div>
     </div>
     <transition name="fade">
-      <div v-if="!listView" class="wrapper">
+      <div
+        v-if="!listView"
+        class="wrapper"
+      >
         <basic-fridge-item
           :isSuperUser="isCurrentUserSuperUser"
           v-for="(item, index) in fridgeItems"
@@ -140,12 +139,13 @@
       </div>
       <div v-else class="list-wrapper">
         <basic-fridge-list
-          v-for="(item, index) in fridgeItems"
-          :key="index"
-          :item="item"
-          :currenFridge="fridge"
-          @delete-item="deleteItem"
-          @add-shopping="addShopping"
+            :isSuperUser="isCurrentUserSuperUser"
+            v-for="(item, index) in fridgeItems"
+            :key="index"
+            :item="item"
+            :currenFridge="fridge"
+            @delete-item="deleteItem"
+            @add-shopping="addShopping"
         />
       </div>
     </transition>
@@ -156,10 +156,8 @@
 </template>
 
 <script lang="ts">
-import {
-  VueCollapsiblePanel,
-  VueCollapsiblePanelGroup,
-} from "@dafcoe/vue-collapsible-panel";
+
+import {VueCollapsiblePanel, VueCollapsiblePanelGroup,} from "@dafcoe/vue-collapsible-panel";
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import { useFridgeStore, useItemStore } from "@/store/store";
@@ -178,7 +176,7 @@ import {
   getItemsByPage,
 } from "@/services/ApiService";
 import Swal from "sweetalert2";
-import { addItemToShoppingList } from "@/services/ItemService";
+import {addItemToShoppingList} from "@/services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
 import router from "../router/router";
@@ -378,7 +376,7 @@ export default {
               showPattern: true,
             },
             multiple: false,
-            frequency: 5, // Set the number of scans per second, e.g., 5 scans per second
+            frequency: 5,
           },
         },
         (err) => {
@@ -641,12 +639,10 @@ template {
 * {
   font-family: Roboto, sans-serif;
 }
-
 #barcode-scanner {
   overflow-x: hidden;
   overflow-y: hidden;
 }
-
 #interactive {
   text-align: center;
   width: 95vw;
@@ -1060,11 +1056,9 @@ input[type="text"]:focus {
     height: 60px;
     border-radius: 20px 20px 0 0;
   }
-
   .slide-in {
     display: block !important;
   }
-
   .slide-out {
     display: none !important;
   }
@@ -1097,21 +1091,20 @@ input[type="text"]:focus {
     width: 100%;
   }
 
-  #filter-component {
+  #filter-component{
     display: none !important;
   }
 
-  .searchbar-wrapper {
+  .searchbar-wrapper{
     gap: 0;
     flex-wrap: wrap;
   }
 
-  #toggle {
+  #toggle{
     width: 100%;
     margin-left: 20%;
     margin-right: 20%;
   }
-
   .wrapper {
     z-index: -1;
     grid-template-rows: 1fr;

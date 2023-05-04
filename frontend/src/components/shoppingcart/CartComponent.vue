@@ -811,7 +811,7 @@ input[type="number"] {
   display: flex;
   grid-column: 3;
   text-align: right;
-  margin-left: auto;
+  height: 40px;
 }
 
 #info-picture {
@@ -1376,5 +1376,17 @@ input:focus {
   input:focus {
     outline: 0;
   }
+
+  #info-and-bell {
+    gap: 25%;
+  }
+
+  .information-button {
+    display: flex;
+    grid-column: 3;
+    text-align: right;
+    height: 65px;
+  }
+
 }
 </style>

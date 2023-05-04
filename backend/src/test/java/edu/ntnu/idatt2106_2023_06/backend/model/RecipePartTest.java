@@ -61,7 +61,7 @@ public class RecipePartTest {
                             "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
                             "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
                             "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
-                    50, new ArrayList<>(),  new ArrayList<>(), new HashSet<>()), "Make dough", new ArrayList<>());
+                    50, new ArrayList<>(),  new ArrayList<>(), new HashSet<>(), new ArrayList<>()), "Make dough", new ArrayList<>());
         }
 
         @Test
@@ -81,7 +81,7 @@ public class RecipePartTest {
                             "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
                             "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
                             "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
-                    50, new ArrayList<>(),  new ArrayList<>(), new HashSet<>());
+                    50, new ArrayList<>(),  new ArrayList<>(), new HashSet<>(), new ArrayList<>());
 
             Recipe actualRecipe = recipePart.getRecipe();
 
