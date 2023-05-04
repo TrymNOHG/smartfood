@@ -20,6 +20,7 @@ public class NotificationMapper {
                 .isRead(notification.getIsRead())
                 .itemName(notification.getFridgeItem().getItem().getProductName())
                 .notificationId(notification.getNotificationId())
+                .fridgeId(notification.getFridgeItem().getFridge().getFridgeId())
                 .build();
     }
 }
