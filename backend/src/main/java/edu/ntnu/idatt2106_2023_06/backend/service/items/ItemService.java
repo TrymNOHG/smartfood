@@ -29,6 +29,7 @@ import edu.ntnu.idatt2106_2023_06.backend.repo.item.ShoppingItemsRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.store.StoreRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import edu.ntnu.idatt2106_2023_06.backend.service.fridge.FridgeService;
+import edu.ntnu.idatt2106_2023_06.backend.service.notification.NotificationService;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
 import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.*;
 import jakarta.transaction.Transactional;
@@ -71,6 +72,7 @@ public class ItemService implements IItemService {
     private final FridgeMemberRepository fridgeMemberRepository;
     private final JwtService jwtService;
     private final FridgeService fridgeService;
+    private final NotificationService notificationService;
 
     //TODO: add
     //        if (itemDTO.quantity() <= 0) throw  new IllegalArgumentException("Cannot have zero or negative quantity");
@@ -273,6 +275,7 @@ public class ItemService implements IItemService {
         Item item = itemRepository.findByProductNameAndStore(itemRemoveDTO.itemName(), store).orElseThrow(() -> new ItemNotFoundException(itemRemoveDTO.itemName()));
         Fridge fridge = fridgeRepository.findByFridgeId(itemRemoveDTO.fridgeId()).orElseThrow(() -> new FridgeNotFoundException(itemRemoveDTO.fridgeId()));
         FridgeItems fridgeItem = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElseThrow(() -> new FridgeItemsNotFoundException(""));
+        notificationService.deleteNotificationForEveryUserInFridge(itemRemoveDTO);
         if (fridgeItem.getQuantity() <= itemRemoveDTO.quantity()){
             fridgeItemsRepository.delete(fridgeItem);
         }
@@ -298,7 +301,7 @@ public class ItemService implements IItemService {
             throw new UnauthorizedException(jwtService.getAuthenticatedUserEmail());
         }
         if (!fridgeItemSearchDTO.sortField().equals("expirationDate") && !fridgeItemSearchDTO.sortField().equals("purchaseDate"))
-            throw new IllegalArgumentException("Sort field must be either expirationDate or purchaseDate");
+            throw new IllegalArgumentException("Sort field must be either expirationDate or purchaseDate"); // TODO: global exception handler
         if (!fridgeItemSearchDTO.sortOrder().equalsIgnoreCase("ASC") && !fridgeItemSearchDTO.sortOrder().equalsIgnoreCase("DESC"))
             throw new IllegalArgumentException("Sort order must be either ASC or DESC");
         Fridge fridge = fridgeRepository.findByFridgeId(fridgeItemSearchDTO.fridgeId()).orElseThrow(

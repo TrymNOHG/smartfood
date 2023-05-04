@@ -33,7 +33,7 @@ class FridgeItemsTest {
                 Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                         new Store(1L, "Dairy", new ArrayList<>()), 200000,
                         null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-                FridgeItems items = new FridgeItems(null, item, new Fridge(), 1, LocalDateTime.now(), LocalDateTime.now());
+                FridgeItems items = new FridgeItems(null, item, new Fridge(), 1, LocalDateTime.now(), LocalDateTime.now(), null);
             } catch (Exception e) {
                 fail();
             }
@@ -66,28 +66,28 @@ class FridgeItemsTest {
         @Test
         void item_cannot_be_null(){
             assertThrows(NullPointerException.class, () -> {
-                FridgeItems fridgeItem = new FridgeItems(null, null, new Fridge(), 1, LocalDateTime.now(), LocalDateTime.now());
+                FridgeItems fridgeItem = new FridgeItems(null, null, new Fridge(), 1, LocalDateTime.now(), LocalDateTime.now(), null);
             });
         }
 
         @Test
         void fridge_cannot_be_null(){
             assertThrows(NullPointerException.class, () -> {
-                FridgeItems fridgeItem = new FridgeItems(null, new Item(), null, 1, LocalDateTime.now(), LocalDateTime.now());
+                FridgeItems fridgeItem = new FridgeItems(null, new Item(), null, 1, LocalDateTime.now(), LocalDateTime.now(), null);
             });
         }
 
         @Test
         void purchase_date_cannot_be_null(){
             assertThrows(NullPointerException.class, () -> {
-                FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge(), 1, null, LocalDateTime.now());
+                FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge(), 1, null, LocalDateTime.now(), null);
             });
         }
 
         @Test
         void expiration_date_cannot_be_null(){
             assertThrows(NullPointerException.class, () -> {
-                FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge(), 1, LocalDateTime.now(), null);
+                FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge(), 1, LocalDateTime.now(), null, null);
             });
         }
 
@@ -98,7 +98,7 @@ class FridgeItemsTest {
 
         @Test
         void item_cannot_be_set_to_null(){
-            FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge(), 1, LocalDateTime.now(), LocalDateTime.now());
+            FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge(), 1, LocalDateTime.now(), LocalDateTime.now(), null);
             assertThrows(NullPointerException.class, () -> {
                 fridgeItem.setItem(null);
             });
@@ -106,7 +106,7 @@ class FridgeItemsTest {
 
         @Test
         void fridge_cannot_be_set_to_null(){
-            FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge(), 1, LocalDateTime.now(), LocalDateTime.now());
+            FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge(), 1, LocalDateTime.now(), LocalDateTime.now(), null);
             assertThrows(NullPointerException.class, () -> {
                 fridgeItem.setFridge(null);
             });
@@ -114,7 +114,7 @@ class FridgeItemsTest {
 
         @Test
         void purchase_date_cannot_be_set_to_null(){
-            FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge(), 1, LocalDateTime.now(), LocalDateTime.now());
+            FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge(), 1, LocalDateTime.now(), LocalDateTime.now(), null);
             assertThrows(NullPointerException.class, () -> {
                 fridgeItem.setPurchaseDate(null);
             });
@@ -122,7 +122,7 @@ class FridgeItemsTest {
 
         @Test
         void expiration_date_cannot_be_set_to_null(){
-            FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge(), 1, LocalDateTime.now(), LocalDateTime.now());
+            FridgeItems fridgeItem = new FridgeItems(null, new Item(), new Fridge(), 1, LocalDateTime.now(), LocalDateTime.now(), null);
             assertThrows(NullPointerException.class, () -> {
                 fridgeItem.setExpirationDate(null);
             });
@@ -139,7 +139,7 @@ class FridgeItemsTest {
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, "picture.png", "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-            FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1, LocalDateTime.now(), LocalDateTime.now());
+            FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1, LocalDateTime.now(), LocalDateTime.now(), null);
             assertEquals(item, fridgeItem.getItem());
         }
 
@@ -150,7 +150,7 @@ class FridgeItemsTest {
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, "picture.png", "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-            FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1, LocalDateTime.now(), LocalDateTime.now());
+            FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1, LocalDateTime.now(), LocalDateTime.now(), null);
             assertEquals(fridge, fridgeItem.getFridge());
         }
 
@@ -161,7 +161,7 @@ class FridgeItemsTest {
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, "picture.png", "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-            FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1, LocalDateTime.now(), LocalDateTime.now());
+            FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1, LocalDateTime.now(), LocalDateTime.now(), null);
             assertEquals(1, fridgeItem.getQuantity());
         }
 
@@ -173,7 +173,7 @@ class FridgeItemsTest {
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, "picture.png", "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-            FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1, purchaseDate, LocalDateTime.now());
+            FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1, purchaseDate, LocalDateTime.now(), null);
             assertEquals(purchaseDate, fridgeItem.getPurchaseDate());
         }
 
@@ -185,7 +185,7 @@ class FridgeItemsTest {
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
                     200000, "picture.png", "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-            FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1, LocalDateTime.now(), expirationDate);
+            FridgeItems fridgeItem = new FridgeItems(null, item, fridge, 1, LocalDateTime.now(), expirationDate, null);
             assertEquals(expirationDate, fridgeItem.getExpirationDate());
         }
 
