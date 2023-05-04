@@ -19,6 +19,7 @@
         <p id="fullName"><strong>{{ $t("name") }}:</strong> {{ profileData.firstName + " " + profileData.lastName}}</p>
         <p id="username"><strong>{{ $t("username") }}:</strong> {{ profileData.username }}</p>
         <p id="email"><strong>{{ $t("email") }}:</strong> {{ profileData.email }}</p>
+        <language-component/>
         <button class="basic-button edit-btn" @click="isEditing = true">{{ $t('edit') }}</button>
         <button class="basic-button change-password-btn" @click="isChangingPassword = true">{{ $t('changePassword') }}</button>
         <button class="basic-button logout-btn" @click="logout">{{ $t('logout') }}</button>
@@ -110,16 +111,21 @@
   import { updateUser } from '@/services/UserService';
   import {deleteProfilePicture, getProfilePicture, updateProfilePicture, updateUserPassword} from "@/services/UserService";
   import defaultProfilePicture from '@/assets/images/profiledefualt.svg';
+  import Swal from "sweetalert2";
+  import {useI18n} from "vue-i18n";
+  import i18n from "@/locales/i18n";
+  import LanguageComponent from "@/components/basic-components/language-component.vue";
 
   export default {
     name: 'UserProfile',
     components: {
+      LanguageComponent,
       BasicButton,
     },
     setup() {
+      const { t } = useI18n(i18n)
       const userStore = useLoggedInStore();
       const router = useRouter();
-
 
       const isEditing = ref(false);
       const isChangingPassword = ref(false);
@@ -129,7 +135,6 @@
         newPassword: '',
         confirmPassword: '',
       });
-
 
       userStore.fetchUser();
       const user =  userStore.getUser;
@@ -142,31 +147,47 @@
         profileData.value = { ...user };
       });
 
-
-
-
-
       const updateUserProfile = async () => {
         try {
-          await updateUser(profileData.value);
-          // Update the user store with the new user information
+          await updateUser(profileData.value)
+              .then((response) => {
+                userStore.setSessionToken(response.data);
+              });
           await userStore.fetchUser();
+          await Swal.fire({
+            title: t('user-updated'),
+            icon: 'success',
+            confirmButtonText: 'Ok',
+          });
           isEditing.value = false;
-        } catch (error) {
-          console.error('Error updating user profile:', error);
-          // Handle the error (e.g., display an error message)
+        } catch (e) {
+          console.warn(e)
         }
       };
 
       const updatePassword = async () => {
-        try {
-          await updateUserPassword(passwordData.value);
-          // Update the user store with the new user information
-
-          isChangingPassword.value = false;
-        } catch (error) {
-          console.error('Error updating user profile:', error);
-          // Handle the error (e.g., display an error message)
+        if (passwordData.value.newPassword === passwordData.value.confirmPassword) {
+          try {
+            await updateUserPassword(passwordData.value);
+            isChangingPassword.value = false;
+            await Swal.fire({
+              title: t('password-updated'),
+              icon: 'success',
+              confirmButtonText: 'Ok',
+            });
+          } catch (error) {
+            await Swal.fire({
+              title: t('password-failed'),
+              icon: 'error',
+              confirmButtonText: 'Ok',
+            });
+          }
+        }else {
+          await Swal.fire({
+            title: t('password-match-fail'),
+            icon: 'error',
+            confirmButtonText: 'Ok',
+          });
         }
       };
 

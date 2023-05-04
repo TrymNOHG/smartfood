@@ -103,6 +103,8 @@ describe('Profile', () => {
         cy.get('#firstName').type('ino')
 
         cy.get('button[type="submit"]').click()
+        cy.contains("Ok").click();
+
         cy.wait('@updateUser')
 
         cy.get('#fullName')

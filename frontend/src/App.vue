@@ -90,14 +90,16 @@
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import i18n from "@/locales/i18n";
-import { useFridgeStore } from "./store/store";
+import {useFridgeStore, useLoggedInStore} from "./store/store";
 import {useI18n} from "vue-i18n";
 
 export default {
   setup() {
     const route = useRoute();
 
+    let language = ref("NO");
     const fridgeStore = useFridgeStore();
+    const userStore = useLoggedInStore();
     const currentFridge = computed(() => fridgeStore.getCurrentFridge);
     const hasCurrentFridge = computed(() => fridgeStore.hasCurrentFridge);
 
@@ -119,15 +121,20 @@ export default {
     });
 
     const { locale } = useI18n()
-    const language = ref("NO");
 
+    watch(
+        () => locale.value,
+        (newLocale) => {
+          language.value = newLocale
+        }
+    )
 
     const changeLanguage = () => {
       if (language.value === "NO") {
         language.value = "EN";
-        locale.value = "en"; // Update the locale ref
+        locale.value = "EN"; // Update the locale ref
       } else {
-        locale.value = "no";
+        locale.value = "NO";
         language.value = "NO";
       }
     };
