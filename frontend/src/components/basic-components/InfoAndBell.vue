@@ -1,5 +1,5 @@
 <template>
-  <div id="info-and-bell">
+  <div id="inf">
     <div>
       <font-awesome-icon icon="fa-solid fa-bell" class="bell-icon" @click="changeNotifications"/>
       <div id="notification-list">
@@ -117,7 +117,12 @@ export default {
 #notification-list::-webkit-scrollbar {
   display: none;
 }
-
+#inf {
+  display: flex;
+  gap: 34%;
+  margin-left: auto;
+  bottom: 0;
+}
 .bell-icon {
   color: white;
   text-align: right;
@@ -146,16 +151,18 @@ export default {
   transform: rotate(45deg);
 }
 
+
 @media (max-width: 650px) {
 
   .bell-icon {
+
     color: white;
     text-align: right;
     padding: 2px 5%;
     height: 60px;
     max-height: 25px;
     cursor: pointer;
-    top: 25%;
+    top: 15px;
   }
 
   #notification-list {
@@ -181,6 +188,21 @@ export default {
     flex-direction: column;
     justify-content: center;
   }
+
+
+
+}
+
+@media only screen and (min-width: 10px) and (max-width: 650px) {
+  #info-and-bell{
+    display: flex;
+    margin-left: auto;
+    margin-right: 5px;
+    gap: 30%;
+    left: 0;
+  }
+
+
 
 }
 

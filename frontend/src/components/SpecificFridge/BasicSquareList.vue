@@ -407,6 +407,7 @@ img {
     height: 25px;
     top: 5px;
     right: 5px;
+    padding-left: 6px;
   }
   .icon{
     color: black;

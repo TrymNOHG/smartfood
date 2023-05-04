@@ -353,7 +353,7 @@ export default {
   }
 
   .information-button{
-    margin-right: 3px !important;
+    margin-right: 8px !important;
     height: 60px;
   }
 }

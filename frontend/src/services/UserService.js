@@ -1,7 +1,7 @@
 import axios from "axios";
 import SessionToken from '@/features/SessionToken.js'
 
-const BASE_USER_URL = "http://localhost:8089/api/user";
+const BASE_USER_URL = "http://10.22.58.18:8089/api/user";
 export const registerUser = async (userData) => {
     return await axios.post(`${BASE_USER_URL}/register`, userData);
 }
