@@ -123,7 +123,6 @@ export default {
             if (result.isConfirmed) {
               swal.fire({
                 title: this.$t('buy_again'),
-                text: this.$t('confirm_text'),
                 icon: 'success',
                 showCancelButton: true,
                 confirmButtonColor: '#4dce38',

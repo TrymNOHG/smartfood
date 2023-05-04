@@ -23,6 +23,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .recipe-parts {
   padding: 20px;
