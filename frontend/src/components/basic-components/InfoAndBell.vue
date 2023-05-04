@@ -11,7 +11,7 @@
             :user-status = userStatus
         />
       </div>
-      <div class="redd-dot" v-if="!showNotifications && notifications.length !== 0">{{notifications.length}}</div>
+      <div class="redd-dot" v-bind:style="[!showNotifications && notifications.length !== 0 ? 'visibility: visible' : 'visibility: hidden']">{{notifications.length}}</div>
     </div>
   </div>
 </template>
@@ -158,7 +158,7 @@ export default {
 
     color: white;
     text-align: right;
-    padding: 2px 5%;
+    padding: 2px 0;
     height: 60px;
     max-height: 25px;
     cursor: pointer;
@@ -176,13 +176,18 @@ export default {
     left: -260px;
   }
 
+  .bell-icon:hover {
+    transition: .5s;
+    transform:none;
+  }
+
   .redd-dot {
     background-color: red;
     color: white;
     width: 20px;
     height: 20px;
     bottom: 45%;
-    left: 50%;
+    left: 12px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -193,17 +198,5 @@ export default {
 
 }
 
-@media only screen and (min-width: 10px) and (max-width: 650px) {
-  #info-and-bell{
-    display: flex;
-    margin-left: auto;
-    margin-right: 5px;
-    gap: 30%;
-    left: 0;
-  }
-
-
-
-}
 
 </style>

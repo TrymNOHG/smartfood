@@ -699,6 +699,10 @@ input[type="number"] {
   color: #5e6977;
 }
 
+.cart-items{
+  color: black !important;
+}
+
 .vcpg {
   --bg-color-header: transparent !important;
   border: transparent;

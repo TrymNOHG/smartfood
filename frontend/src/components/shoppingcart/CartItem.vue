@@ -633,6 +633,7 @@ input[type="number"] {
   }
 
   .description {
+    color: black;
   }
 
   .delete-btn {
