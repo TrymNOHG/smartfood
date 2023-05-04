@@ -424,6 +424,13 @@ public class StatService implements IStatService {
         return objectMapper.writeValueAsString(sortedByDate);
     }
 
+    /**
+     * Converts a list of statistics to a JSON string of the money spent per day.
+     *
+     * @param stats List of statistics
+     * @return A JSON string of the statistics
+     * @throws JsonProcessingException If the statistics could not be parsed to JSON
+     */
     private String statisticsToJsonMoneySpent(List<Statistics> stats) throws JsonProcessingException {
         HashMap<String, Double> moneySaved = new HashMap<>();
         for(Statistics stat : stats) {
@@ -453,6 +460,12 @@ public class StatService implements IStatService {
         return objectMapper.writeValueAsString(sortedByDate);
     }
 
+    /**
+     * Converts a list of statistics to a JSON string of the average throw rate per day.
+     *
+     * @param stats List of statistics
+     * @return A JSON string of the statistics
+     */
     private double statisticsToJsonTotalThrowRate(List<Statistics> stats) {
         Pair<Double, Integer> pair = new Pair<>(0.0, 0);
         for(Statistics stat : stats) {
