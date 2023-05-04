@@ -36,7 +36,7 @@
         />
       </div>
         <div class="pagination-buttons" v-if="!isMobile">
-          <BasicButton @click="loadPreviousPage" :disabled="pageIndex.value === 0" :button-text="$t('previous_page')"/>
+          <BasicButton @click="loadPreviousPage" :button-text="$t('previous_page')"/>
           <BasicButton @click="loadNextPage" :button-text="$t('next_page')"/>
         </div>
         <div id="bottom"></div>
@@ -174,7 +174,7 @@
         };
 
         const loadPreviousPage = async () => {
-          if (pageIndex.value === 0) return;
+          if (pageIndex.value == 0) return;
           swal.fire({
             title: t("loading") + " ...",
             allowEscapeKey: false,
