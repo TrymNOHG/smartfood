@@ -77,7 +77,7 @@
       </div>
     </div>
 
-    <div class="searchbar-wrapper" :class="{'margin-bottom': active}" :style="{'margin-bottom': active ? '20%' : '0'}">
+    <div class="searchbar-wrapper">
       <button id="toggle" @click="handleClick">Filter</button>
       <div
           v-if="click"
