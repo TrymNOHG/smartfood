@@ -1,4 +1,4 @@
-describe("Testing frdige member management", () => {
+describe("Testing fridge member management", () => {
     const base_url = "http://localhost:5173";
     const base_url_site = "http://localhost:5173";
     const base_url_endpoint = "http://localhost:8089/api";
