@@ -634,6 +634,7 @@ input[type="number"] {
   }
 
   .description {
+    color: black;
   }
 
   .delete-btn {
@@ -701,7 +702,7 @@ input[type="number"] {
     position: absolute;
     right: 0;
     transform: translateX(-25px);
-    z-index: -1;
+    z-index: 1;
   }
 
   .number-input {

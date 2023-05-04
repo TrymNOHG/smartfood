@@ -116,7 +116,7 @@ public class NotificationService implements INotificationService {
         FridgeItems fridgeItem = fridgeItemsRepository.findByItem_ProductName(itemRemoveDTO.itemName()).orElseThrow(
                 () -> new FridgeItemsNotFoundException(itemRemoveDTO.itemName())
         );
-        if (itemRemoveDTO.quantity() != fridgeItem.getQuantity())
+        if (itemRemoveDTO.quantity() != fridgeItem.getAmount())
             return;
         List<Notification> notifications = notificationRepository.findByFridgeItem(fridgeItem);
         notificationRepository.deleteAll(notifications);

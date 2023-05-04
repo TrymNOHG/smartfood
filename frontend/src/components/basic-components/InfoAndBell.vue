@@ -1,5 +1,5 @@
 <template>
-  <div id="info-and-bell">
+  <div id="inf">
     <div>
       <font-awesome-icon icon="fa-solid fa-bell" class="bell-icon" @click="changeNotifications"/>
       <div id="notification-list">
@@ -11,7 +11,7 @@
             :user-status = userStatus
         />
       </div>
-      <div class="redd-dot" v-if="!showNotifications && notifications.length !== 0">{{notifications.length}}</div>
+      <div class="redd-dot" v-bind:style="[!showNotifications && notifications.length !== 0 ? 'visibility: visible' : 'visibility: hidden']">{{notifications.length}}</div>
     </div>
   </div>
 </template>
@@ -115,7 +115,12 @@ export default {
 #notification-list::-webkit-scrollbar {
   display: none;
 }
-
+#inf {
+  display: flex;
+  gap: 34%;
+  margin-left: auto;
+  bottom: 0;
+}
 .bell-icon {
   color: white;
   text-align: right;
@@ -144,16 +149,18 @@ export default {
   transform: rotate(45deg);
 }
 
+
 @media (max-width: 650px) {
 
   .bell-icon {
+
     color: white;
     text-align: right;
-    padding: 2px 5%;
+    padding: 2px 0;
     height: 60px;
     max-height: 25px;
     cursor: pointer;
-    top: 25%;
+    top: 15px;
   }
 
   #notification-list {
@@ -167,19 +174,27 @@ export default {
     left: -260px;
   }
 
+  .bell-icon:hover {
+    transition: .5s;
+    transform:none;
+  }
+
   .redd-dot {
     background-color: red;
     color: white;
     width: 20px;
     height: 20px;
     bottom: 45%;
-    left: 50%;
+    left: 12px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
 
+
+
 }
+
 
 </style>

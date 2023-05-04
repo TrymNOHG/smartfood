@@ -159,7 +159,8 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: end;
-  gap: 5%;
+  gap: 34%;
+  margin-left: auto;
 }
 
 .item {
@@ -189,6 +190,7 @@ export default {
   display: flex;
   grid-column: 3;
   text-align: right;
+  height: 40px;
 }
 
 #info-picture{
@@ -240,18 +242,18 @@ export default {
 
 @media (max-width: 650px) {
 
-  #info-and-bell {
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    gap: 50%;
-    top: 5%;
-    left: 8%;
-  }
+
 
   body {
     height: 95px;
     width: 100%;
+  }
+  #info-and-bell {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    left: 8%;
+    gap: 40%;
   }
 
   .info-delete-wrapper{
@@ -268,7 +270,6 @@ export default {
   .grey-bar {
     display: flex;
     align-content: center;
-    align-items: center;
     justify-content: center;
     margin-top: 5px;
     background-color: #31c48d;
@@ -277,31 +278,77 @@ export default {
     border-radius: 20px 20px 0 0;
   }
 
+  #info-and-bell{
+    display: flex;
+    margin-left: auto;
+    margin-right: 5px;
+    gap: 30%;
+    left: 0;
+    height: 60px;
+  }
   .members-fridge {
     background-color: #31c48d;
-    margin-top: 0px;
+    color: white;
+    font-size: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 10px;
+    grid-column: 2;
+    margin-top: 0;
     padding-top: 0;
     padding-right: 10px;
     text-align: center;
     align-items: center;
     align-content: center;
     justify-content: center;
+    margin-left: 10px;
+    width: 70%;
   }
 
-  .link {
-    margin: 0;
-  }
-
-  .fridge {
+  .link.active {
     height: 60px !important;
     background-color: white;
+    font-size: 20px;
     border-radius: 20px 20px 0 0;
     font-weight: bold;
     text-decoration: none;
     text-shadow: none;
     color: black;
     margin-top: 20px;
-    padding-top: 10px;
+    padding-top: 8px;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+  .link {
+    margin: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  #toggle-button:hover {
+    cursor: pointer;
+    font-size: unset;
+  }
+
+  .fridge {
+    height: 60px !important;
+    background-color: white;
+    font-size: 20px;
+    border-radius: 20px 20px 0 0;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: none;
+    color: black;
+    margin-top: 20px;
+    padding-top: 8px;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+  .information-button{
+    margin-right: 3px !important;
+    height: 60px;
   }
 }
 </style>

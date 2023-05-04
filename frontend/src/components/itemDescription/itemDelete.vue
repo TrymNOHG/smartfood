@@ -3,9 +3,9 @@
     <div class="info-window">
       <h2 style="font-weight: bold" id="how-much-left">{{ $t('how_much_left') }}</h2>
       <div class="slider">
-        <input type="range" min="0" max="100" :value="sliderValue" @input="sliderValue = $event.target.value" class="slider-range">
+        <input type="range" min="0" :max=this.item.amount :value="sliderValue" @input="sliderValue = $event.target.value" class="slider-range">
         <div class="slider-bar"></div>
-        <div class="slider-value" id="rangeValue">{{sliderValue}}%</div>
+        <div class="slider-value" id="rangeValue">{{sliderValue}} {{this.item.unit}}</div>
       </div>
       <basic-button :button-text="$t('delete_item')" class="basic-button" @click="deleteItem(item)"/>
     </div>
@@ -36,7 +36,7 @@ export default {
 
   data() {
     return {
-      sliderValue: 50
+      sliderValue: this.$props.item.amount / 2
     }
   },
 }

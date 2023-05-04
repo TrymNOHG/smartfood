@@ -22,7 +22,7 @@ describe('BasicFridgeItem', () => {
                     name: 'test',
                     price: '10',
                     purchaseDate: '2023-04-27',
-                    quantity: 2,
+                    amount: 2,
                     store: 'test'
                 }
             }
@@ -42,7 +42,7 @@ describe('BasicFridgeItem', () => {
             name: 'test',
             price: '10',
             purchaseDate: '2023-04-27',
-            quantity: 2,
+            amount: 2,
             store: 'test'
         };
         const wrapper = mount(BasicFridgeItem, {
@@ -71,7 +71,7 @@ describe('BasicFridgeItem', () => {
             name: 'test',
             price: '10',
             purchaseDate: '2023-04-27',
-            quantity: 2,
+            amount: 2,
             store: 'test'
         };
         const wrapper = mount(BasicFridgeItem, {
@@ -100,7 +100,7 @@ describe('BasicFridgeItem', () => {
             name: 'test',
             price: '10',
             purchaseDate: '2023-04-27',
-            quantity: 2,
+            amount: 2,
             store: 'test'
         };
         const wrapper = mount(BasicFridgeItem, {
@@ -129,7 +129,7 @@ describe('BasicFridgeItem', () => {
             name: 'test',
             price: '10',
             purchaseDate: '2023-04-27',
-            quantity: 2,
+            amount: 2,
             store: 'test'
         };
         const wrapper = mount(BasicFridgeItem, {
@@ -158,7 +158,7 @@ describe('BasicFridgeItem', () => {
             name: 'test',
             price: '10',
             purchaseDate: '2023-04-27',
-            quantity: 2,
+            amount: 2,
             store: 'test'
         };
         const wrapper = mount(BasicFridgeItem, {

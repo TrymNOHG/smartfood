@@ -11,9 +11,9 @@ public class ShoppingItemMapper {
         return ShoppingItems
                 .builder()
                 .item(fridgeItems.getItem())
-                .quantity(fridgeItems.getQuantity())
+                .quantity(0)
                 .fridge(fridgeItems.getFridge())
-                .suggestion(true) //TODO: can change
+                .suggestion(false) //TODO: can change
                 .build();
     }
 

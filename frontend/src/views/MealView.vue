@@ -197,6 +197,7 @@ export default {
   text-align: right;
   margin-left: auto;
   padding: 0;
+  height: 40px;
 }
 
 #info-picture {
@@ -280,10 +281,20 @@ export default {
 }
 
 @media only screen and (min-width: 10px) and (max-width: 650px) {
+  .information-button {
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+    display: flex;
+    margin-left: auto;
+    margin-right: 5px;
+    gap: 30%;
+    left: 0;
+  }
   .grey-bar {
     display: flex;
     align-content: center;
-    align-items: center;
     justify-content: center;
     margin-top: 5px;
     background-color: #31c48d;
@@ -294,29 +305,54 @@ export default {
 
   .tips-weekMenu {
     background-color: #31c48d;
-    margin-top: 0px;
+    color: white;
+    font-size: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 10px;
+    grid-column: 2;
+    margin-top: 0;
     padding-top: 0;
     padding-right: 10px;
     text-align: center;
     align-items: center;
     align-content: center;
     justify-content: center;
-  }
-
-  .link {
-    margin: 0;
+    margin-left: 10px;
+    width: 70%;
   }
 
   .link.active {
     height: 60px !important;
     background-color: white;
+    font-size: 20px;
     border-radius: 20px 20px 0 0;
     font-weight: bold;
     text-decoration: none;
     text-shadow: none;
     color: black;
     margin-top: 20px;
-    padding-top: 10px;
+    padding-top: 8px;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+  .link {
+    margin: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 20px;
+  }
+
+  #toggle-button:hover {
+    cursor: pointer;
+    font-size: unset;
+    font-size: 20px;
+  }
+
+  .information-button{
+    margin-right: 8px !important;
+    height: 60px;
   }
 }
 </style>

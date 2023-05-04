@@ -3,6 +3,21 @@ import SessionToken from '@/features/SessionToken.js'
 
 const BASE_LISTING_URL = "http://localhost:8089/api/recipe";
 
+export const loadRecipeByFridgeItemsAndDay = async (fridgeId, day, page = 0, size = 10) => {
+    const token = await SessionToken();
+    const response = await axios.get(`${BASE_LISTING_URL}/loadByDay`, {
+        params: {
+            fridge: fridgeId,
+            day: day,
+            page,
+            size,
+        },
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+};
 
 export const loadRecipeByFridgeItems = async (fridgeId, page = 0, size = 10) => {
     const token = await SessionToken();

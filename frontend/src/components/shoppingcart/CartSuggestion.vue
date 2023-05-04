@@ -497,6 +497,7 @@ input[type="number"] {
     padding-top: 10px;
     margin-right: 0px;
     width: calc(50%);
+    color: black;
   }
 
   .description {
@@ -504,6 +505,7 @@ input[type="number"] {
     display: flex;
     flex-direction: column;
     max-width: 250px;
+    color: black;
   }
 
   .description span:first-child {
@@ -511,13 +513,15 @@ input[type="number"] {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: black;
   }
 
   .description span:last-child {
     font-weight: 10;
     margin-top: 8px;
-    color: #86939e;
+    color: black;
     white-space: normal;
+
   }
   .delete-btn {
     display: none;
@@ -632,12 +636,13 @@ input[type="number"] {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: black;
   }
 
   .description span:last-child {
     font-weight: 300;
     margin-top: 8px;
-    color: #86939e;
+    color: black;
     white-space: normal;
   }
 
@@ -731,7 +736,7 @@ input[type="number"] {
   .description span:last-child {
     font-weight: 10;
     margin-top: 8px;
-    color: #86939e;
+    color: black;
     white-space: normal;
   }
   .delete-btn {
