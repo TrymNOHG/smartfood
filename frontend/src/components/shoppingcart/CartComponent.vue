@@ -7,13 +7,13 @@
         <div class="grey-bar">
           <h2 id="grey-header">{{ $t("shopping_cart") }}</h2>
           <div id="info-and-bell">
-            <InfoAndBell :fridge="this.fridge"/>
+            <InfoAndBell :fridge="this.fridge" />
             <div class="information-button">
               <img
-                  src="@/assets/images/info.svg"
-                  id="info-picture"
-                  @click="showInformation"
-                  :alt="$t('alt_info_button')"
+                src="@/assets/images/info.svg"
+                id="info-picture"
+                @click="showInformation"
+                :alt="$t('alt_info_button')"
               />
             </div>
           </div>
@@ -57,8 +57,8 @@
                 "
                 style="text-align: center"
                 @click="addItemToList(item)"
-                @item-checked="handleItemChecked"
               />
+              <div id="bottom"></div>
             </template>
           </vue-collapsible-panel>
         </vue-collapsible-panel-group>
@@ -129,7 +129,14 @@ import CartSuggestion from "@/components/shoppingcart/CartSuggestion.vue";
 import CartControl from "@/components/shoppingcart/CartControl.vue";
 import BasicCheckBox from "@/components/basic-components/BasicCheckbox.vue";
 import { useLoggedInStore, useFridgeStore, useItemStore } from "@/store/store";
-import { ref, onMounted, computed, watch, onBeforeUnmount } from "vue";
+import {
+  ref,
+  onMounted,
+  computed,
+  watch,
+  onBeforeUnmount,
+  onUnmounted,
+} from "vue";
 import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert2";
 import Quagga from "quagga";
@@ -154,6 +161,12 @@ export default {
     isCurrentUserSuperUser() {
       return useFridgeStore().getIsSuperUser;
     },
+  },
+  async mounted() {
+    window.addEventListener("resize", () => {
+      this.width = window.innerWidth;
+    });
+    await this.observeBottom();
   },
   setup() {
     console.log(useFridgeStore().getCurrentFridge);
@@ -385,7 +398,37 @@ export default {
       }
     }
 
+    function loadMore() {
+      console.log("REACHED BOTTOM BOOM!!");
+    }
+
+    const observeBottom = () => {
+      const bottomElement = document.querySelector("#bottom");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              console.log("Reached bottom but not bottom boom!");
+              loadMore();
+            }
+          });
+        },
+        { threshold: 1 }
+      );
+      if (bottomElement) {
+        observer.observe(bottomElement);
+      }
+    };
+
+    onUnmounted(() => {
+      const bottomElement = document.querySelector("#bottom");
+      const observer = new IntersectionObserver(() => {}, { threshold: 1 });
+      if (bottomElement) {
+        observer.unobserve(bottomElement);
+      }
+    });
     onMounted(async () => {
+      await observeBottom();
       await loadItemsFromCart();
     });
 
@@ -603,6 +646,7 @@ export default {
     }
 
     return {
+      loadMore,
       itemAmount,
       handleSubtract,
       handleDeleteItem,
@@ -633,13 +677,13 @@ export default {
       onDetected,
       initScanner,
       stopScanner,
+      observeBottom,
     };
   },
 };
 </script>
 
 <style scoped>
-
 #info-and-bell {
   display: flex;
   flex-direction: row;
@@ -655,6 +699,7 @@ export default {
   overflow-x: hidden;
   overflow-y: hidden;
 }
+
 #interactive {
   text-align: center;
   width: 95vw;
@@ -966,6 +1011,7 @@ button:focus,
 input:focus {
   outline: 0;
 }
+
 @media (max-width: 1350px) {
   #interactive {
     transform: none;
@@ -973,6 +1019,7 @@ input:focus {
     overflow: hidden;
   }
 }
+
 @media only screen and (min-width: 50px) and (max-width: 650px) {
   .buttons {
     position: relative;
