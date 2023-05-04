@@ -13,12 +13,12 @@
                   .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
               <br>
             </div>
-            <h4 id="item-price">{{ $t('price') }}: {{ item.price }}; kr</h4>
+            <h4 id="item-price">{{ $t('price') }}: {{ item.price }} kr</h4>
             <h4 id="item-purchase-date">{{ $t('buy_date') }}: {{ new Date(item.purchaseDate)
                 .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
             <h4>{{ $t('expire_date') }}: {{ new Date(item.expirationDate)
                 .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
-            <h4 id="item-quantity">{{ $t('Amount') }}: {{ item.amount.toFixed(3) }} {{ item.unit }}</h4>
+            <h4 id="item-quantity">{{ $t('Amount') }}: {{ item.amount.toFixed(1) }} {{ item.unit }}</h4>
             <button v-if="isSuperUser" class="delete-btn" @click.prevent="deleteCard(item)">
               <span>
                 <font-awesome-icon icon="fa-solid fa-trash" class="icon delete-icon" />
@@ -82,7 +82,7 @@ export default {
         input: 'range',
         inputAttributes: {
           min: 0,
-          max: 100,
+          max: item.amount,
           step: 1
         },
         didOpen: () => {
@@ -95,7 +95,7 @@ export default {
 
           deletePercentage.addEventListener('input', () => {
             inputNumber.value = deletePercentage.value
-            rangeValueText.innerText = `${deletePercentage.value}%`
+            rangeValueText.innerText = `${deletePercentage.value} ${ item.unit }`
           })
         },
         showCancelButton: true,
