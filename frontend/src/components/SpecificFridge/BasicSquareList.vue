@@ -149,13 +149,11 @@ export default {
     const itemStore = useItemStore();
 
     let borderColor = calculateExpirationDate(props.item.purchaseDate, props.item.expirationDate);
-    console.log(props.item)
     function calculateExpirationDate(purchaseDate, expirationDate) {
       const currentDate = new Date();
       const expiration = new Date(expirationDate);
 
       const remainingDays = Math.ceil((expiration.getTime() - currentDate.getTime()) / (1000 * 3600 * 24));
-      console.log(remainingDays)
 
       let borderColor;
 

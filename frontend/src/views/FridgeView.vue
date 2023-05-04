@@ -330,7 +330,6 @@ export default {
       if (!this.isCurrentUserSuperUser) {
         await addItemToShoppingList(itemDTO, fridgeId, true).then(
           async (response) => {
-            console.log("response", response);
             //TODO: add exception handling
           }
         );
@@ -423,8 +422,8 @@ export default {
     const selectedTab = ref(
       router.currentRoute.value.query.selectedTab || "fridge"
     );
-
-    history.replaceState(null, null, "/fridge");
+    const url = '/fridge';
+    history.replaceState(history.state, null, url);
 
     const searchItems = ref([]);
     const search = ref(false);

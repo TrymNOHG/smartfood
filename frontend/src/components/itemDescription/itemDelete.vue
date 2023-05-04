@@ -30,7 +30,6 @@ export default {
   methods: {
     deleteItem(item) {
       let deletePercentage = this.sliderValue
-      console.log(deletePercentage)
       this.$emit('delete-item', item, deletePercentage);
     },
   },

@@ -44,12 +44,9 @@ export default {
           pageIndex.value,
           7
         );
-        console.log(response.content);
         meals.value = [...meals.value, ...response.content];
-        console.log("meals ", meals.value);
         for (let i = 0; i < meals.value.length; i++) {
           meals.value[i].dayOfWeek = weekdays[i];
-          console.log(meals.value[i].dayOfWeek, " ", weekdays[i]);
         }
       } catch (error) {
         console.error("Failed to load:", error);
@@ -57,13 +54,9 @@ export default {
     });
 
     function getMealForDay(day) {
-      console.log(day);
-      console.log("SHOOOOOOOOW ME PLEEEEEEEASE");
-      console.log(meals.value);
       let result = {};
       for (let i = 0; i < meals.value.length; i++) {
         if (meals.value[i].dayOfWeek == day) {
-          console.log("WOOOHOOO MATCH FOUND!!!!");
           result = meals.value[i];
           return result;
         }

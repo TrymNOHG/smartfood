@@ -8,7 +8,7 @@
 
   <div class="wrapper">
     <div class="fridgeList">
-      <fridge-component ref="usageElement" id="fridges"/>
+      <fridge-component ref="usageElement" />
     </div>
   </div>
 

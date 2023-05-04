@@ -132,5 +132,6 @@
   "wants_this" : "wants this",
   "loading" : "Loading",
   "deleted_items" : "Deleted items",
-  "Added_to_fridge" : "Added to fridge"
+  "Added_to_fridge" : "Added to fridge",
+  "default_part_name" : ""
 }

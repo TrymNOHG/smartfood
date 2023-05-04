@@ -134,7 +134,6 @@
           try {
             const response = await loadRecipeSuggestions(fridgeId);
             suggestions.value = response;
-            console.log("Suggestions loaded:", suggestions.value)
             await fetchProfilePictures();
             await fetchUsers();
           } catch (error) {
@@ -221,7 +220,6 @@
         const loadMore = async () => {
           try {
             const response = await loadRecipeByFridgeItems(fridgeId, pageIndex.value, 8);
-            console.log(response.content)
             meals.value = [ ...meals.value, ...response.content]
             pageIndex.value++;
           } catch (error) {

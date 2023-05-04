@@ -7,7 +7,6 @@ export const registerUser = async (userData) => {
 }
 
 export const loginUser = async (userLoginDTO) => {
-    console.log(userLoginDTO)
     return axios.post(`${BASE_USER_URL}/login`, userLoginDTO)
 }
 
@@ -72,7 +71,6 @@ export const loadUserByUsername = async (username) => {
 }
 
 export const updateUser = async (userUpdateDTO) => {
-    console.log(userUpdateDTO)
     return axios.put(`${BASE_USER_URL}/update/info`, userUpdateDTO, {
         headers: {
             // 'Content-Type': 'multipart/form-data',
@@ -82,7 +80,6 @@ export const updateUser = async (userUpdateDTO) => {
 }
 
 export const updateUserPassword = async (userPasswordUpdateDTO) => {
-    console.log(userPasswordUpdateDTO)
     return axios.put(`${BASE_USER_URL}/update/password`, userPasswordUpdateDTO, {
         headers: {
             Authorization: `Bearer ${await SessionToken()}`

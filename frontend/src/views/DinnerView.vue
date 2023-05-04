@@ -56,7 +56,8 @@ export default {
   setup() {
     const selectedTab = ref(router.currentRoute.value.query.selectedTab || 'tips');
 
-    history.replaceState(null, null, '/dinner');
+    const url = '/dinner';
+    history.replaceState(history.state, null, url);
 
     return {
       selectedTab,

@@ -134,5 +134,6 @@
   "wants_this": "ønsker denne",
   "loading" : "Laster inn",
   "deleted_items" : "slettet varer",
-  "Added_to_fridge" : "lagt til i kjøleskapet"
+  "Added_to_fridge" : "lagt til i kjøleskapet",
+  "default_part_name" : ""
 }
