@@ -57,8 +57,6 @@ describe('NotificationList', () => {
         })
 
 
-        console.log(wrapper.html())
-        console.log(wrapper.find('#delete').exists())
 
         wrapper.find('.delete-icon').trigger('click')
         expect(wrapper.emitted('delete-notification')).toBeTruthy()

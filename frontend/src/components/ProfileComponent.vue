@@ -137,9 +137,7 @@
       });
 
       userStore.fetchUser();
-      const user = userStore.getUser;
-      console.log(userStore.isLoggedIn);
-      console.log(userStore.getSessionToken);
+      const user =  userStore.getUser;
 
       const defaultPicture = defaultProfilePicture;
 
@@ -196,7 +194,6 @@
 
       const fetchProfilePicture = async () => {
         try {
-          console.log("fetching profile picture")
           const response = await getProfilePicture();
           const imageUrl = URL.createObjectURL(new Blob([response.data], { type: 'image/jpeg' }));
           profileData.value.picture = imageUrl;
