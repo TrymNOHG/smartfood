@@ -1,4 +1,7 @@
 <template>
+  <p>{{ $t('chosen_language') }}
+    <font-awesome-icon icon="fa-solid fa-globe" />
+  </p>
   <select v-model="currentLanguage" @change="changeLanguage">
     <option v-for="(language, index) in supportedLanguages" :key="index" :value="language">{{ language }}</option>
   </select>
@@ -7,12 +10,10 @@
 <script>
 import {defineComponent, ref, watch} from 'vue'
 import { useI18n } from 'vue-i18n'
-import {useLoggedInStore} from "@/store/store";
 
 export default defineComponent({
   setup() {
     const { locale } = useI18n()
-    const userStore = useLoggedInStore()
 
     const supportedLanguages = ['NO', 'EN']
     const currentLanguage = ref(locale.value)
@@ -37,7 +38,7 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
 select {
   background-color: #f2f2f2;
   color: #333;
@@ -52,6 +53,12 @@ option {
   color: #333;
   padding: 8px;
   cursor: pointer;
+  width: 80%;
+}
+
+p {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
 }
 
 select:hover {

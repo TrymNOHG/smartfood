@@ -125,5 +125,6 @@
   "password-updated": "Your password has been updated!",
   "password-failed": "Wrong password",
   "password-match-fail": "Confirm password doesnt match",
-  "user-updated": "Userinformation has been updated"
+  "user-updated": "Userinformation has been updated",
+  "chosen_language": "Chosen Language"
 }

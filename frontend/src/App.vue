@@ -130,7 +130,6 @@ export default {
     )
 
     const changeLanguage = () => {
-      console.log(locale.value)
       if (language.value === "NO") {
         language.value = "EN";
         locale.value = "EN"; // Update the locale ref

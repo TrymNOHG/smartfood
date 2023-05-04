@@ -127,6 +127,6 @@
   "password-updated": "Passordet ble oppdatert",
   "password-failed": "Feil passord!",
   "password-match-fail": "Bekreft passord samsvarer ikke!",
-  "user-updated": "Brukerinformasjon ble oppdatert"
-
+  "user-updated": "Brukerinformasjon ble oppdatert",
+  "chosen_language": "Valgt Språk"
 }
