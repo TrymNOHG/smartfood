@@ -128,5 +128,6 @@
   "password-failed": "Feil passord!",
   "password-match-fail": "Bekreft passord samsvarer ikke!",
   "user-updated": "Brukerinformasjon ble oppdatert",
-  "chosen_language": "Valgt Språk"
+  "chosen_language": "Valgt Språk",
+  "you_have": "Du har"
 }

@@ -152,6 +152,7 @@
   <div class="members-wrapper" v-show="selectedTab === 'members'">
     <member-component />
   </div>
+  <div id="bottom-element"></div>
 </template>
 
 <script lang="ts">

@@ -126,5 +126,6 @@
   "password-failed": "Wrong password",
   "password-match-fail": "Confirm password doesnt match",
   "user-updated": "Userinformation has been updated",
-  "chosen_language": "Chosen Language"
+  "chosen_language": "Chosen Language",
+  "you_have" : "You have"
 }
