@@ -102,7 +102,6 @@
   "login_error": "Wrong password or Email",
   "register_error": "User already exists",
   "next_page": "Next Page",
-  "previous_page": "Previous Page",
   "expiry-desc": "Expiry - Descending",
   "expiry-asc": "Expiry - Ascending",
   "purchase-desc": "Purchase date - Descending",
@@ -121,6 +120,13 @@
   "40 - 60 min": "40 - 60 min",
   "Over 60 min:": "Over 60 min",
   "suggest_dinner": "Suggest dinner",
+  "previous_page": "Previous Page",
+  "soon_expire": "is about to expire!",
+  "password-updated": "Your password has been updated!",
+  "password-failed": "Wrong password",
+  "password-match-fail": "Confirm password doesnt match",
+  "user-updated": "Userinformation has been updated",
+  "chosen_language": "Chosen Language",
 
 
 

@@ -1,6 +1,12 @@
 import {defineStore} from 'pinia'
 import {checkSuperUserStatus, getUser} from "@/services/UserService"
-import {addNewFridge, deleteUserFromFridge, getAllFridges, updateFridge} from "@/services/FridgeServices";
+import {
+    addNewFridge, deleteNotification,
+    deleteUserFromFridge,
+    getAllFridges,
+    getNotifications, removeBorder,
+    updateFridge
+} from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
 import {addItemToFridge, deleteItemFromFridge, getItemsFromFridge, filterFridge} from "@/services/ItemService";
 import {
@@ -10,6 +16,7 @@ import {
     getUserMoneyStats,
     getUserPercentageStats
 } from "@/services/StatsService";
+import {keys} from "@dafcoe/vue-collapsible-panel";
 
 
 const storeUUID = UniqueId();
@@ -19,6 +26,7 @@ export const useLoggedInStore = defineStore('user', {
     state: () => ({
         sessionToken: null,
         user: {
+            userId: null,
             email: null,
             firstname: null,
             lastname: null,
@@ -38,7 +46,7 @@ export const useLoggedInStore = defineStore('user', {
         },
         getSessionToken() {
             return this.sessionToken;
-        }
+        },
     },
 
     actions: {
@@ -65,6 +73,7 @@ export const useLoggedInStore = defineStore('user', {
                 lastname: null,
                 username: null,
             };
+            localStorage.removeItem("currentLanguage")
             useFridgeStore().removeCurrentFridge()
         }
     }
@@ -97,8 +106,27 @@ export const useFridgeStore = defineStore('fridgeStore', {
     },
 
     actions: {
-        async addNewFridgeByFridgeNameAndUsername(fridgename) {
-            await addNewFridge(fridgename);
+       async fetchNotifications (fridgeId) {
+           let notifications = []
+           await getNotifications(fridgeId).then((response) => {
+               for (const notification in response.data) {
+                   const {name, expirationDate} = notification
+                   notifications.push({name, expirationDate})
+               }
+           })
+           return notifications;
+        },
+
+        async deleteNotificationUsingId (notification, fridgeId) {
+           await deleteNotification(notification, fridgeId)
+        },
+
+        async removeBorderForNotification(notification, fridgeId){
+           await removeBorder(notification, fridgeId)
+        },
+
+        async addNewFridgeByFridgeNameAndUsername(fridgeName) {
+            await addNewFridge(fridgeName);
         },
         async fetchFridgesByUsername(username) {
             await getAllFridges(username).then(response => {
@@ -118,7 +146,7 @@ export const useFridgeStore = defineStore('fridgeStore', {
         },
         async setCurrentFridgeById(fridgeId) {
             for(let fridge of this.allFridges) {
-                if(fridge.fridgeId == fridgeId) {
+                if(fridge.fridgeId === fridgeId) {
                     this.currentFridge = fridge;
                     this.isSuperUser = await this.checkSuperUserStatus(fridgeId)
                     console.log(this.isSuperUser)
@@ -220,8 +248,11 @@ export const useStatStore = defineStore('statStore', {
 
     getters: {
         getPercentageChart(){
-            const labels = this.percentageChart.map(obj => obj.first);
-            const values = this.percentageChart.map(obj => obj.second);
+            const labels = Object.keys(this.percentageChart);
+            const values = Object.values(this.percentageChart);
+
+            console.log(labels)
+            console.log(values)
 
             return {
                 labels,
@@ -247,10 +278,8 @@ export const useStatStore = defineStore('statStore', {
         async fetchUserStatsPercentage() {
             this.percentageChart = []
             await getUserPercentageStats().then((response) => {
-                console.log("response: ", response)
-                for (const dataSet of response.data) {
-                    const { first, second } = dataSet
-                    this.percentageChart.push({first, second});
+                for (const key in response.data) {
+                    this.percentageChart[key] = response.data[key];
                 }
             });
         },
@@ -260,7 +289,7 @@ export const useStatStore = defineStore('statStore', {
             await getUserMoneyStats()
                 .then((response) => {
                     for (const key in response.data) {
-                        this.moneyChart[key] = response.data[key]
+                        this.moneyChart[key] = response.data[key];
                     }
                 });
         },
@@ -269,9 +298,8 @@ export const useStatStore = defineStore('statStore', {
             this.percentageChart = []
             await getFridgePercentageStats(fridge.fridgeId)
                 .then((response) => {
-                    for (const dataSet of response.data) {
-                        const { first, second } = dataSet
-                        this.percentageChart.push({first, second});
+                    for (const key in response.data) {
+                        this.percentageChart[key] = response.data[key];
                     }
                 })
         },

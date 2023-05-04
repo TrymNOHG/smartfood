@@ -1,8 +1,16 @@
 <template>
   <div class="grey-bar">
     <h2 id="grey-header" >{{ $t('statistics') }}</h2>
-    <div class="information-button">
-      <img src="@/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
+    <div id="info-and-bell">
+      <InfoAndBell/>
+      <div class="information-button">
+        <img
+            src="@/assets/images/info.svg"
+            id="info-picture"
+            @click="showInformation"
+            :alt="$t('alt_info_button')"
+        />
+      </div>
     </div>
   </div>
   <div class="page-layout">
@@ -70,10 +78,11 @@ import StatCard from "@/components/statistic/StatCard.vue";
 import BasicSelect from "@/components/basic-components/BasicSelect.vue";
 import {ref} from "vue";
 import {useFridgeStore, useStatStore} from "@/store/store";
+import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
 
 export default {
   name: "StatisticsView",
-  components: {BasicSelect, StatCard, BarChart, LineChart},
+  components: {InfoAndBell, BasicSelect, StatCard, BarChart, LineChart},
 
   methods: {
     updateStats(stat) {
@@ -179,6 +188,20 @@ export default {
 
 <style scoped>
 
+#grey-header {
+  height: 40px;
+  grid-column: 2;
+  color: white;
+}
+
+#info-and-bell {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 34%;
+  margin-left: auto;
+}
+
 #chart {
   width: 500px;
   height: 300px;
@@ -214,17 +237,15 @@ h3 {
   align-items: center;
 }
 
-#grey-header {
-  grid-column: 2;
-  color: white;
+#info-and-bell {
+  grid-column: 3;
 }
 
 .information-button {
-  display: flex;
-  grid-column: 3;
-  text-align: right;
-  margin-left: auto;
-
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  height: 40px;
 }
 
 #info-picture {
@@ -276,7 +297,24 @@ h3 {
   font-size: 1.5rem;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 680px) {
+
+  #grey-header {
+    height: 60px;
+    grid-column: 2;
+    color: black;
+  }
+
+  #info-and-bell {
+    margin-left: auto;
+    gap: 50%;
+  }
+
+  #info-picture {
+    top: 15%;
+    height: 60px;
+  }
+
   #chart {
     width: 380px;
   }
@@ -313,42 +351,81 @@ h3 {
   .chart-legend li {
     font-size: 0.9rem;
   }
+
+  .information-button {
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
 }
 
 
 @media only screen and (min-width: 10px) and (max-width: 650px)  {
 
-  .grey-bar{
+  .grey-bar {
     display: flex;
     align-content: center;
-    align-items: center;
-    flex-wrap: wrap;
     justify-content: center;
-    text-align: center;
     margin-top: 5px;
     background-color: #31c48d;
     max-height: 60px;
     height: 60px;
     border-radius: 20px 20px 0 0;
-    width: 100%;
   }
 
-  #grey-header{
-    margin-left: 25%;
+  #info-and-bell{
+    display: flex;
+    margin-left: auto;
+    margin-right: 5px;
+    gap: 30%;
+    left: 0;
+    height: 60px;
+  }
+
+
+  #grey-header {
+    display: flex;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 10px;
+    grid-column: 2;
+    text-align: center;
+
+    justify-content: center;
+    margin-left: 30%;
     height: 60px !important;
     background-color: white;
+    font-size: 20px;
     border-radius: 20px 20px 0 0;
     font-weight: bold;
     text-decoration: none;
     text-shadow: none;
     color: black;
     margin-top: 20px;
-    padding-top: 10px;
-    width: 50%;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-left: 5px;
+    width: 40%;
   }
+
+  #info-picture{
+    height: 30px;
+    width: 30px;
+    top: 0;
+  }
+
+  .information-button{
+    margin-right: 3px !important;
+  }
+
+
+
+
   .stat-container{
     margin-left: 0;
   }
+
+
 }
 
 </style>

@@ -3,8 +3,16 @@
     <div class="members-fridge">
       <router-link class="link" :to="{ name: 'fridgeView', query: { selectedTab: 'members' } }" >{{ $t('members') }}</router-link>
       <router-link class="link fridge" :to="{ name: 'fridgeView'}">{{ $t('fridge') }}</router-link>    </div>
-    <div class="information-button">
-      <img src="@/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
+    <div id="info-and-bell">
+      <InfoAndBell/>
+      <div class="information-button">
+        <img
+            src="@/assets/images/info.svg"
+            id="info-picture"
+            @click="showInformation"
+            :alt="$t('alt_info_button')"
+        />
+      </div>
     </div>
   </div>
 
@@ -33,10 +41,11 @@ import {useFridgeStore, useItemStore} from "@/store/store";
 import router from "@/router/router";
 import {addItemToShoppingList} from "@/services/ItemService";
 import swal from "sweetalert2";
+import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
 
 export default {
   name: "itemView",
-  components: {ItemDelete, ItemInfo, ItemHeader},
+  components: {InfoAndBell, ItemDelete, ItemInfo, ItemHeader},
 
   setup() {
     const itemStore = useItemStore();
@@ -144,7 +153,16 @@ export default {
 }
 </script>
 
+
 <style scoped>
+
+#info-and-bell {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 34%;
+  margin-left: auto;
+}
 
 .item {
   margin-top: 5%;
@@ -173,15 +191,13 @@ export default {
   display: flex;
   grid-column: 3;
   text-align: right;
-  margin-left: auto;
-
+  height: 40px;
 }
 
 #info-picture{
   height: 30px;
   width: 30px;
   cursor: pointer;
-
 }
 
 .link {
@@ -220,7 +236,6 @@ export default {
   grid-column: 2;
 }
 
-
 .link {
   text-decoration: none;
   color: white;
@@ -228,9 +243,18 @@ export default {
 
 @media (max-width: 650px) {
 
+
+
   body {
     height: 95px;
     width: 100%;
+  }
+  #info-and-bell {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    left: 8%;
+    gap: 40%;
   }
 
   .info-delete-wrapper{
@@ -247,7 +271,6 @@ export default {
   .grey-bar {
     display: flex;
     align-content: center;
-    align-items: center;
     justify-content: center;
     margin-top: 5px;
     background-color: #31c48d;
@@ -256,31 +279,77 @@ export default {
     border-radius: 20px 20px 0 0;
   }
 
+  #info-and-bell{
+    display: flex;
+    margin-left: auto;
+    margin-right: 5px;
+    gap: 30%;
+    left: 0;
+    height: 60px;
+  }
   .members-fridge {
     background-color: #31c48d;
-    margin-top: 0px;
+    color: white;
+    font-size: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 10px;
+    grid-column: 2;
+    margin-top: 0;
     padding-top: 0;
     padding-right: 10px;
     text-align: center;
     align-items: center;
     align-content: center;
     justify-content: center;
+    margin-left: 10px;
+    width: 70%;
   }
 
-  .link {
-    margin: 0;
-  }
-
-  .fridge {
+  .link.active {
     height: 60px !important;
     background-color: white;
+    font-size: 20px;
     border-radius: 20px 20px 0 0;
     font-weight: bold;
     text-decoration: none;
     text-shadow: none;
     color: black;
     margin-top: 20px;
-    padding-top: 10px;
+    padding-top: 8px;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+  .link {
+    margin: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  #toggle-button:hover {
+    cursor: pointer;
+    font-size: unset;
+  }
+
+  .fridge {
+    height: 60px !important;
+    background-color: white;
+    font-size: 20px;
+    border-radius: 20px 20px 0 0;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: none;
+    color: black;
+    margin-top: 20px;
+    padding-top: 8px;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+  .information-button{
+    margin-right: 3px !important;
+    height: 60px;
   }
 }
 </style>

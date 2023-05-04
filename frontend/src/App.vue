@@ -90,7 +90,8 @@
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import i18n from "@/locales/i18n";
-import { useFridgeStore } from "./store/store";
+import {useFridgeStore, useLoggedInStore} from "./store/store";
+import {useI18n} from "vue-i18n";
 import Shepherd from 'shepherd.js'
 import {offset} from "@floating-ui/vue";
 import router from "@/router/router";
@@ -99,7 +100,9 @@ export default {
   setup() {
     const route = useRoute();
 
+    let language = ref("NO");
     const fridgeStore = useFridgeStore();
+    const userStore = useLoggedInStore();
     const currentFridge = computed(() => fridgeStore.getCurrentFridge);
     const hasCurrentFridge = computed(() => fridgeStore.hasCurrentFridge);
 
@@ -120,17 +123,25 @@ export default {
       return route.path === "/register" || route.path === "/login";
     });
 
+    const { locale } = useI18n()
+
+    watch(
+        () => locale.value,
+        (newLocale) => {
+          language.value = newLocale
+        }
+    )
+
     const changeLanguage = () => {
       if (language.value === "NO") {
         language.value = "EN";
-        i18n.global.locale = "en";
+        locale.value = "EN"; // Update the locale ref
       } else {
-        i18n.global.locale = "no";
+        locale.value = "NO";
         language.value = "NO";
       }
     };
 
-    const language = ref("NO");
 
       const applicationTour = new Shepherd.Tour({
           useModalOverlay: true,
@@ -524,7 +535,7 @@ header img {
   margin-left: 20px;
   margin-right: 10px;
   cursor: pointer;
-
+  width: 20px;
 }
 
 .language:hover {

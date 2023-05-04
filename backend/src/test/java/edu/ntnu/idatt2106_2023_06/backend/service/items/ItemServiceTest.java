@@ -15,21 +15,39 @@ import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
+import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ShoppingItemsRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.store.StoreRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
+import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+import java.util.Collections;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,6 +55,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -44,7 +63,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureTestDatabase
 @ActiveProfiles("test")
 public class ItemServiceTest {
-
 
 
     @Nested
@@ -98,7 +116,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
 
             ItemDTO itemDTO = ItemMapper.toItemDTO(item, 1, true);
@@ -120,7 +138,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ItemDTO itemDTO = ItemMapper.toItemDTO(item, 1, true);
 
@@ -128,7 +146,7 @@ public class ItemServiceTest {
             itemService.addToFridge(itemDTO, 1L);
             FridgeItems fridgeItems = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElseThrow();
 
-            assertEquals(2, fridgeItems.getQuantity());
+            assertEquals(200, fridgeItems.getAmount());
         }
 
 //        @Test
@@ -157,7 +175,7 @@ public class ItemServiceTest {
         void throws_FridgeNotFoundException(){
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             assertThrows(FridgeNotFoundException.class, () -> {
                 ItemDTO itemDTO = ItemMapper.toItemDTO(item, 1, true);
@@ -196,13 +214,13 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             FridgeItems fridgeItems = FridgeItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
                     .item(item)
                     .fridge(fridge)
-                    .quantity(1)
+                    .amount(1)
                     .expirationDate(LocalDateTime.now())
                     .purchaseDate(LocalDateTime.now())
                     .build();
@@ -244,6 +262,30 @@ public class ItemServiceTest {
         @Autowired
         ItemService itemService;
 
+        @Autowired
+        UserRepository userRepository;
+
+        @Autowired
+        JwtService jwtService;
+
+        @Autowired
+        protected UserDetailsService userDetailsService;
+
+        @BeforeEach
+        public void setUp() {
+            User user = User.builder()
+                    .userId(1L).email("test@test.test")
+                    .firstName("test")
+                    .lastName("test")
+                    .password("test")
+                    .username("testUser")
+                                    .build();
+            userRepository.save(user);
+            UserDetails userDetails = userDetailsService.loadUserByUsername("testUser");
+            String jwt = jwtService.generateToken(userDetails);
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities()));
+        }
+
         @Test
         @Transactional
         void removes_correct_Item(){
@@ -255,19 +297,19 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             FridgeItems fridgeItems = FridgeItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
                     .item(item)
                     .fridge(fridge)
-                    .quantity(1)
+                    .amount(1)
                     .expirationDate(LocalDateTime.now())
                     .purchaseDate(LocalDateTime.now())
                     .build();
             fridgeItemsRepository.save(fridgeItems);
-            ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1)
-;            itemService.removeItemFromFridge(itemRemoveDTO);
+            ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
+            itemService.removeItemFromFridge(itemRemoveDTO);
 
             assertTrue(fridgeItemsRepository.findByItemAndFridge(item,fridge).isEmpty());
         }
@@ -282,21 +324,21 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 1000.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             FridgeItems fridgeItems = FridgeItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
                     .item(item)
                     .fridge(fridge)
-                    .quantity(3)
+                    .amount(3000)
                     .expirationDate(LocalDateTime.now())
                     .purchaseDate(LocalDateTime.now())
                     .build();
             fridgeItemsRepository.save(fridgeItems);
-            ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 2);
+            ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
             itemService.removeItemFromFridge(itemRemoveDTO);
             FridgeItems fridgeItems1 = fridgeItemsRepository.findByItemAndFridge(item,fridge).orElseThrow();
-            assertEquals(1, fridgeItems1.getQuantity());
+            assertEquals(2000.0, fridgeItems1.getAmount());
         }
 
         @Test
@@ -323,7 +365,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
             assertThrows(FridgeNotFoundException.class, () -> {
@@ -361,7 +403,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
             assertThrows(FridgeItemsNotFoundException.class, () -> {
@@ -400,7 +442,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
 
             ItemDTO itemDTO = ItemMapper.toItemDTO(item, 1, true);
@@ -424,7 +466,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
 
             ItemDTO itemDTO = ItemMapper.toItemDTO(item, 1, true);
@@ -465,7 +507,7 @@ public class ItemServiceTest {
         void throws_IllegalArgumentException_when_list_is_empty(){
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
 
             ItemDTO itemDTO = ItemDTO
@@ -511,7 +553,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ShoppingItems shoppingItems = ShoppingItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
@@ -566,7 +608,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ShoppingItems shoppingItems = ShoppingItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
@@ -592,7 +634,7 @@ public class ItemServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ShoppingItems shoppingItems = ShoppingItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
@@ -632,7 +674,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
             assertThrows(FridgeNotFoundException.class, () -> {
@@ -670,7 +712,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
             assertThrows(ShoppingItemsNotFoundException.class, () -> {
@@ -715,7 +757,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ShoppingItems shoppingItems = ShoppingItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
@@ -747,7 +789,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ShoppingItems shoppingItems = ShoppingItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
@@ -837,7 +879,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ShoppingItems shoppingItems = ShoppingItems.builder()
                     .id(new FridgeItemsId(1L, 1L))
@@ -867,7 +909,7 @@ public class ItemServiceTest {
             storeRepository.save(store);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             ShoppingItems shoppingItems = ShoppingItems.builder()
                     .id(new FridgeItemsId(1L, 1L))

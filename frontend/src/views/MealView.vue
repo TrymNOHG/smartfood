@@ -31,27 +31,27 @@
       />
       <BasicButton
           v-if="!isCurrentUserSuperUser"
-          @click="addMissingItemsToShoppingList"
+          @click="addRecipeToSuggestions"
           class="add-missing-items-btn"
           :button-text="$t('suggest_dinner')"
       />
       <div class="info-delete-wrapper">
-          <recipe-parts id="recipe-parts" :recipe-parts="meal.recipeParts"></recipe-parts>
-          <instructions id="instructions" :instructions="meal.instructions"></instructions>
+          <recipe-parts id="recipe-parts" :recipe-parts="meal.recipeParts"/>
+          <instructions id="instructions" :instructions="meal.instructions"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {useFridgeStore, useMealStore} from "../store/store";
+import {useFridgeStore, useLoggedInStore, useMealStore} from "../store/store";
 import mealHeader from "@/components/mealDescription/mealHeader.vue";
 import MealInfo from "../components/mealDescription/mealInfo.vue";
 import recipeParts from "../components/mealDescription/RecipeParts.vue";
 import Instructions from "../components/mealDescription/Instructions.vue";
 import router from "../router/router";
 import swal from "sweetalert2";
-import {addIngredientsToShoppingList} from "../services/DinnerService";
+import {addIngredientsToShoppingList, addRecipeSuggestion} from "../services/DinnerService";
 import BasicButton from "../components/basic-components/BasicButton.vue";
 import {ref} from "vue";
 
@@ -72,13 +72,15 @@ export default {
     const fridgeStore = useFridgeStore();
     const fridgeId = fridgeStore.getCurrentFridge.fridgeId;
     const selectedTab = ref(router.currentRoute.value.query.selectedTab || 'tips');
+    const userId = useLoggedInStore().getUser.data.userId;
 
     //history.replaceState(null, null, '/dinner');
     return {
       fridgeStore,
       meal,
       fridgeId,
-      selectedTab
+      selectedTab,
+      userId
     };
   },
   computed: {
@@ -132,6 +134,22 @@ export default {
       });
       this.meal.servingSize = newServingSize;
     },
+
+    async addRecipeToSuggestions() {
+      const recipeSuggestionAddDTO = {
+        "fridgeId": this.fridgeId,
+        "recipeId": this.meal.recipeId,
+        "userId": this.userId
+      }
+      console.log("recipeSuggestionAddDTO", recipeSuggestionAddDTO);
+      await addRecipeSuggestion((recipeSuggestionAddDTO));
+      swal.fire({
+        title: this.$t('success'),
+        text: this.$t('success_add_recipe'),
+        icon: 'success',
+        confirmButtonText: this.$t('ok')
+      });
+    },
   },
 };
 </script>
@@ -181,6 +199,7 @@ export default {
   text-align: right;
   margin-left: auto;
   padding: 0;
+  height: 40px;
 }
 
 #info-picture {
@@ -264,10 +283,20 @@ export default {
 }
 
 @media only screen and (min-width: 10px) and (max-width: 650px) {
+  .information-button {
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+    display: flex;
+    margin-left: auto;
+    margin-right: 5px;
+    gap: 30%;
+    left: 0;
+  }
   .grey-bar {
     display: flex;
     align-content: center;
-    align-items: center;
     justify-content: center;
     margin-top: 5px;
     background-color: #31c48d;
@@ -278,29 +307,54 @@ export default {
 
   .tips-weekMenu {
     background-color: #31c48d;
-    margin-top: 0px;
+    color: white;
+    font-size: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 10px;
+    grid-column: 2;
+    margin-top: 0;
     padding-top: 0;
     padding-right: 10px;
     text-align: center;
     align-items: center;
     align-content: center;
     justify-content: center;
-  }
-
-  .link {
-    margin: 0;
+    margin-left: 10px;
+    width: 70%;
   }
 
   .link.active {
     height: 60px !important;
     background-color: white;
+    font-size: 20px;
     border-radius: 20px 20px 0 0;
     font-weight: bold;
     text-decoration: none;
     text-shadow: none;
     color: black;
     margin-top: 20px;
-    padding-top: 10px;
+    padding-top: 8px;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+  .link {
+    margin: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 20px;
+  }
+
+  #toggle-button:hover {
+    cursor: pointer;
+    font-size: unset;
+    font-size: 20px;
+  }
+
+  .information-button{
+    margin-right: 8px !important;
+    height: 60px;
   }
 }
 </style>

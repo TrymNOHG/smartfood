@@ -18,13 +18,17 @@
         {{ $t("fridge") }}
       </div>
     </div>
-    <div class="information-button">
-      <img
-        src="@/assets/images/info.svg"
-        id="info-picture"
-        @click="showInformation"
-        :alt="$t('alt_info_button')"
-      />
+
+    <div id="info-and-bell">
+      <InfoAndBell/>
+      <div class="information-button">
+        <img
+            src="@/assets/images/info.svg"
+            id="info-picture"
+            @click="showInformation"
+            :alt="$t('alt_info_button')"
+        />
+      </div>
     </div>
   </div>
 
@@ -72,20 +76,21 @@
         </vue-collapsible-panel-group>
       </div>
     </div>
+
     <div class="searchbar-wrapper">
       <button id="toggle" @click="handleClick">Filter</button>
       <div
-        v-if="click"
-        id="filter"
-        class="slide-in"
-        :class="active ? 'slide-in' : 'slide-out'"
+          v-if="click"
+          id="filter"
+          class="slide-in"
+          :class="active ? 'slide-in' : 'slide-out'"
       >
         <div id="search-wrapper">
           <input
-            type="text"
-            v-model="searchText"
-            @input="searchHandler()"
-            :placeholder="$t('search') + '...'"
+              type="text"
+              v-model="searchText"
+              @input="searchHandler()"
+              :placeholder="$t('search') + '...'"
           />
         </div>
 
@@ -113,14 +118,13 @@
         class="slide-in"
         :class="active ? 'slide-in' : 'slide-out'"
       >
-        <filter-bar @listing="listing" />
+        <filter-bar @listing="changeListing" />
       </div>
     </div>
     <transition name="fade">
       <div
         v-if="!listView"
         class="wrapper"
-        :style="{ marginTop: marginTopStyle }"
       >
         <basic-fridge-item
           :isSuperUser="isCurrentUserSuperUser"
@@ -134,12 +138,13 @@
       </div>
       <div v-else class="list-wrapper">
         <basic-fridge-list
-          v-for="(item, index) in fridgeItems"
-          :key="index"
-          :item="item"
-          :currenFridge="fridge"
-          @delete-item="deleteItem"
-          @add-shopping="addShopping"
+            :isSuperUser="isCurrentUserSuperUser"
+            v-for="(item, index) in fridgeItems"
+            :key="index"
+            :item="item"
+            :currenFridge="fridge"
+            @delete-item="deleteItem"
+            @add-shopping="addShopping"
         />
       </div>
     </transition>
@@ -147,14 +152,11 @@
   <div class="members-wrapper" v-show="selectedTab === 'members'">
     <member-component />
   </div>
-  <div id="bottom-element"></div>
 </template>
 
 <script lang="ts">
-import {
-  VueCollapsiblePanelGroup,
-  VueCollapsiblePanel,
-} from "@dafcoe/vue-collapsible-panel";
+
+import {VueCollapsiblePanel, VueCollapsiblePanelGroup,} from "@dafcoe/vue-collapsible-panel";
 import MemberComponent from "@/components/SpecificFridge/MemberComponent.vue";
 import BasicFridgeItem from "@/components/SpecificFridge/BasicSquareList.vue";
 import { useFridgeStore, useItemStore } from "@/store/store";
@@ -167,13 +169,16 @@ import {
 } from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
-import { getItemByBarcode, getItems } from "@/services/ApiService";
+import {getItemByBarcode, getItems} from "@/services/ApiService";
 import Swal from "sweetalert2";
-import { addItemToShoppingList } from "@/services/ItemService";
+import {addItemToShoppingList} from "@/services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
 import router from "../router/router";
+import {StreamBarcodeReader} from "vue-barcode-reader";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import Quagga from "quagga";
+import InfoAndBell from "../components/basic-components/InfoAndBell.vue";
 
 interface Filter {
   fridgeId: number;
@@ -187,6 +192,9 @@ interface Filter {
 export default {
   name: "FridgeView",
   components: {
+    InfoAndBell,
+    FontAwesomeIcon,
+    StreamBarcodeReader,
     BasicFridgeList,
     FilterBar,
     SearchItem,
@@ -198,9 +206,6 @@ export default {
   },
 
   computed: {
-    marginTopStyle() {
-      return this.isExpanded ? "1%" : "1%";
-    },
     isCurrentUserSuperUser() {
       return useFridgeStore().getIsSuperUser;
     },
@@ -212,7 +217,7 @@ export default {
       this.active = !this.active;
     },
 
-    listing(bool) {
+    changeListing(bool) {
       this.listView = bool;
     },
 
@@ -366,12 +371,11 @@ export default {
               showPattern: true,
             },
             multiple: false,
-            frequency: 5, // Set the number of scans per second, e.g., 5 scans per second
+            frequency: 5,
           },
         },
         (err) => {
           if (err) {
-            console.log(err);
             return;
           }
           this.scannerActive = true;
@@ -389,18 +393,15 @@ export default {
     },
     async onDetected(result) {
       const code = result.codeResult.code;
-      console.log("Detected barcode:", code);
 
       await getItemByBarcode(code)
         .then((response) => {
           if (response !== undefined) {
             this.searchItems = response.products;
-            console.log(response.products);
             this.search = true;
             this.stopScanner();
           } else {
-            console.log("Something went wrong");
-            submitMessage.value =
+            this.submitMessage =
               "Something went wrong. Please try again later.";
           }
         })
@@ -409,7 +410,6 @@ export default {
         });
     },
     toggleCamera() {
-      console.log("toggling", this.scannerActive, this.scannerActive);
       if (this.scannerActive == true) {
         this.stopScanner();
       } else {
@@ -531,7 +531,7 @@ export default {
       }
     });
     const itemAmount = ref(1);
-    const submitMessage = ref("norvegia");
+    const submitMessage = ref("");
     const searchQuery = ref("");
     const active = ref(false);
     const click = ref(false);
@@ -564,6 +564,7 @@ export default {
   data() {
     return {
       isExpanded: false,
+      showNotifications: false,
       listView: false,
     };
   },
@@ -571,7 +572,32 @@ export default {
 </script>
 
 <style scoped>
-* {
+textarea {
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+template {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 25% 50% 25%;
+  z-index: 0;
+}
+
+#info-and-bell {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 34%;
+  margin-left: auto;
+}
+
+*{
   font-family: Roboto, sans-serif;
 }
 #barcode-scanner {
@@ -608,8 +634,8 @@ export default {
   gap: 40px;
   background-color: white;
   border-radius: 8px;
-  overflow-x: hidden;
   height: 79px;
+  overflow-x: hidden;
 }
 
 #toggle {
@@ -633,7 +659,6 @@ export default {
   justify-content: center;
   gap: 25px;
   padding: 16px;
-  background-color: #f8f8f8;
   margin-top: 10px;
   border-radius: 50px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -729,12 +754,12 @@ export default {
 input[type="text"],
 select {
   padding: 8px 12px;
-  margin: 0; /* Reset margin */
+  margin: 0;
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #fff;
   font-size: 16px;
-  box-sizing: border-box; /* Fix for width and height */
+  box-sizing: border-box;
 }
 
 input[type="text"] {
@@ -743,7 +768,7 @@ input[type="text"] {
 
 select {
   width: 250px;
-  appearance: none; /* Remove default styling for consistent appearance */
+  appearance: none;
 }
 
 .fade-enter,
@@ -760,7 +785,6 @@ select {
 
 .grey-bar {
   background-color: #6c6c6c;
-
   text-align: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -801,10 +825,10 @@ select {
 }
 
 .information-button {
-  display: flex;
-  grid-column: 3;
-  text-align: right;
-  margin-left: auto;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  height: 40px;
 }
 
 #info-picture {
@@ -895,6 +919,7 @@ input[type="text"]:focus {
   display: flex;
   justify-content: space-evenly;
   overflow-y: scroll;
+  height: 150vw;
 }
 
 .vcpg {
@@ -927,8 +952,23 @@ input[type="text"]:focus {
 }
 
 @media (max-width: 650px) {
+  .information-button {
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
+
   #filter-component {
     width: 100%;
+  }
+
+  #info-and-bell {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    left: 8%;
+    gap: 40%;
   }
 
   .fridge-wrapper {
@@ -936,9 +976,7 @@ input[type="text"]:focus {
     grid-template-rows: repeat(auto-fill, minmax(95px, 95px));
   }
 
-  .link {
-    margin: 10px 0;
-  }
+
 
   .wrapper {
     z-index: 0;
@@ -950,6 +988,11 @@ input[type="text"]:focus {
 }
 
 @media only screen and (min-width: 10px) and (max-width: 650px) {
+  #toggle-button:hover {
+    cursor: pointer;
+    font-size: initial;
+  }
+
   #searchbtn {
     display: none;
   }
@@ -963,17 +1006,9 @@ input[type="text"]:focus {
     display: none;
   }
 
-  .grey-bar {
-    display: flex;
-    align-content: center;
-    align-items: center;
-    justify-content: center;
-    margin-top: 5px;
-    background-color: #31c48d;
-    max-height: 60px;
-    height: 60px;
-    border-radius: 20px 20px 0 0;
-  }
+
+
+
   .slide-in {
     display: block !important;
   }
@@ -1009,20 +1044,21 @@ input[type="text"]:focus {
     width: 100%;
   }
 
-  #filter-component {
+  #filter-component{
     display: none !important;
   }
 
-  .searchbar-wrapper {
+  .searchbar-wrapper{
     gap: 0;
     flex-wrap: wrap;
-    height: unset;
   }
 
-  #toggle {
+  #toggle{
     width: 100%;
     margin-left: 20%;
     margin-right: 20%;
+    color: black;
+    font-size: 15px;
   }
   .wrapper {
     z-index: -1;
@@ -1030,9 +1066,32 @@ input[type="text"]:focus {
     margin-bottom: 0;
     overflow-y: scroll;
   }
+  .grey-bar {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    margin-top: 5px;
+    background-color: #31c48d;
+    max-height: 60px;
+    height: 60px;
+    border-radius: 20px 20px 0 0;
+  }
 
+  #info-and-bell{
+    display: flex;
+    margin-left: auto;
+    margin-right: 5px;
+    gap: 30%;
+    left: 0;
+  }
   .members-fridge {
     background-color: #31c48d;
+    color: white;
+    font-size: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 10px;
+    grid-column: 2;
     margin-top: 0;
     padding-top: 0;
     padding-right: 10px;
@@ -1041,6 +1100,22 @@ input[type="text"]:focus {
     align-content: center;
     justify-content: center;
     margin-left: 10px;
+    width: 70%;
+  }
+
+  .link.active {
+    height: 60px !important;
+    background-color: white;
+    font-size: 20px;
+    border-radius: 20px 20px 0 0;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: none;
+    color: black;
+    margin-top: 20px;
+    padding-top: 8px;
+    padding-right: 5px;
+    padding-left: 5px;
   }
 
   .link {
@@ -1049,18 +1124,13 @@ input[type="text"]:focus {
     padding-right: 5px;
   }
 
-  .link.active {
-    height: 60px !important;
-    background-color: white;
-    border-radius: 20px 20px 0 0;
-    font-weight: bold;
-    text-decoration: none;
-    text-shadow: none;
-    color: black;
-    margin-top: 20px;
-    padding-top: 10px;
-    padding-right: 5px;
-    padding-left: 5px;
+  #toggle-button:hover {
+    cursor: pointer;
+    font-size: unset;
+  }
+
+  .information-button{
+    margin-right: 3px !important;
   }
 
   #searchbar {
@@ -1077,9 +1147,9 @@ input[type="text"]:focus {
   }
 
   #backGreen {
-    height: 0px;
+    height: 0;
     width: 100%;
-    padding: 0px 10px 0px 10px;
+    padding: 0 10px 0 10px;
     z-index: 2;
   }
 
@@ -1092,7 +1162,6 @@ input[type="text"]:focus {
     display: flex;
     width: 100%;
     z-index: 0;
-    margin-bottom: 70px;
   }
 }
 </style>

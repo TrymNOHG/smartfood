@@ -7,10 +7,12 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeSuggestionAddDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.recipe.RecipeSuggestionLoad;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Day;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Recipe;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemRecipeScoreService;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.ItemService;
 import edu.ntnu.idatt2106_2023_06.backend.service.items.RecipeService;
+import edu.ntnu.idatt2106_2023_06.backend.utils.RecipeScraper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -40,6 +42,7 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final ItemRecipeScoreService itemRecipeScoreService;
     private final ItemService itemService;
+    private final RecipeScraper recipeScraper;
     private final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
     @GetMapping(value="/download")
@@ -54,19 +57,15 @@ public class RecipeController {
         for(int pageNr = 1;; pageNr++) {
             Document document = Jsoup.connect("https://meny.no/oppskrifter/middagstips/?pagenr=" + pageNr).get();
 
-            // Extract the JSON script from the HTML page
             Element script = document.select("script[type=application/ld+json]").first();
             String scriptText = script.html();
 
-            // Parse the JSON using Jackson's ObjectMapper
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(scriptText);
 
-            // Extract the URL from the JSON
             for(JsonNode item : rootNode.get("itemListElement")) {
                 String url = item.get("url").asText();
-                System.out.println(url);
-                recipeService.scrapeRecipe(url);
+                recipeScraper.scrapeRecipe(url);
             }
 
             if(pageNr == 100) {
@@ -124,6 +123,25 @@ public class RecipeController {
         return ResponseEntity.ok(recipeLoadDTOs);
     }
 
+    @GetMapping(value="/loadByDay")
+    @Operation(summary = "Get recipe from Meny")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Loading items of a given shopping list",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RecipeLoadDTO.class)) })}
+    )
+    public ResponseEntity<Page<RecipeLoadDTO>> loadRecipeByFridgeItemsAndDay(
+            @ParameterObject @RequestParam(name = "fridge") Long fridgeId,
+            @ParameterObject @RequestParam(name = "day") Day day,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+        logger.info("Trying to load recipes for fridge with ID: " + fridgeId);
+        Page<RecipeLoadDTO> recipeLoadDTOs = recipeService.getRecipesByFridgeIdAndDay(fridgeId, page, size, day);
+        //TODO: free the shopping items from WeekRecipeItems table.
+        logger.info("Recipe DTOs successfully made!");
+        return ResponseEntity.ok(recipeLoadDTOs);
+    }
+
     @PostMapping(value="/generateScores")
     @Operation(summary = "Generate item recipe scores")
     @ApiResponses(value = {
@@ -148,7 +166,7 @@ public class RecipeController {
     public ResponseEntity<Object> generateItemRecipeScoresTest(@ParameterObject @RequestParam(name="item") Long itemId,
                                                            @ParameterObject @RequestParam(name="recipe") Long recipeId) {
 
-        itemRecipeScoreService.generateScoreForItem(itemId);
+        itemRecipeScoreService.generateScoreForItem(itemId).join();
         return ResponseEntity.ok().build();
     }
 

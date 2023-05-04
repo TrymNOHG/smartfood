@@ -18,7 +18,7 @@
                 .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
             <h4>{{ $t('expire_date') }}: {{ new Date(item.expirationDate)
                 .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
-            <h4 id="item-quantity">{{ $t('quantity') }}: {{ item.quantity }}</h4>
+            <h4 id="item-quantity">{{ $t('Amount') }}: {{ item.amount.toFixed(3) }} {{ item.unit }}</h4>
             <button v-if="isSuperUser" class="delete-btn" @click.prevent="deleteCard(item)">
               <span>
                 <font-awesome-icon icon="fa-solid fa-trash" class="icon delete-icon" />
@@ -53,7 +53,7 @@ export default {
         name: String,
         price: String,
         purchaseDate: String,
-        quantity: number,
+        amount: number,
         store: String
       })
     },
@@ -64,20 +64,41 @@ export default {
   },
 
   methods: {
-    storeCurrentItem(item){
+    storeCurrentItem(item) {
       this.itemStore.setCurrentItem(item);
     },
 
     deleteCard(item) {
       let deletePercentage = null;
+      Swal.fire({
+        html: `
+         <div class="swal2-content">
+           <div class="swal2-text">
+             ${this.$t('percent_wise_how_much')}
+           </div>
+           <div id="range-value" class="swal2-text"></div>
+         </div>
+        `,
+        input: 'range',
+        inputAttributes: {
+          min: 0,
+          max: 100,
+          step: 1
+        },
+        didOpen: () => {
+          deletePercentage = Swal.getInput()
+          const inputNumber = Swal.getHtmlContainer().querySelector('#range-value')
+          const rangeValueText = Swal.getHtmlContainer().querySelector('#range-value')
 
-      swal.fire({
-        title: this.$t('confirm_title'),
-        text: this.$t('confirm_text'),
-        icon: 'warning',
+          deletePercentage.nextElementSibling.style.display = 'none'
+          deletePercentage.style.width = '100%'
+
+          deletePercentage.addEventListener('input', () => {
+            inputNumber.value = deletePercentage.value
+            rangeValueText.innerText = `${deletePercentage.value}%`
+          })
+        },
         showCancelButton: true,
-        confirmButtonColor: '#4dce38',
-        cancelButtonColor: '#d33',
         confirmButtonText: this.$t('confirm_button'),
         cancelButtonText: this.$t('cancel_button'),
         customClass: {
@@ -85,66 +106,28 @@ export default {
         }
       }).then((result) => {
         if (result.isConfirmed) {
-          Swal.fire({
-            html: `
-          <div class="swal2-content">
-            <div class="swal2-text">
-              ${this.$t('percent_wise_how_much')}
-            </div>
-            <div id="range-value-text" class="swal2-text"></div>
-          </div>
-        `,
-            input: 'range',
-            inputAttributes: {
-              min: 0,
-              max: 100,
-              step: 1
-            },
-            didOpen: () => {
-              deletePercentage = Swal.getInput()
-              const inputNumber = Swal.getHtmlContainer().querySelector('#range-value')
-              const rangeValueText = Swal.getHtmlContainer().querySelector('#range-value-text')
-
-              deletePercentage.nextElementSibling.style.display = 'none'
-              deletePercentage.style.width = '100%'
-
-              deletePercentage.addEventListener('input', () => {
-                inputNumber.value = deletePercentage.value
-                rangeValueText.innerText = `${deletePercentage.value}%`
-              })
-            },
+          swal.fire({
+            title: this.$t('buy_again'),
+            icon: 'success',
             showCancelButton: true,
-            confirmButtonText: this.$t('confirm_button'),
-            cancelButtonText: this.$t('cancel_button'),
+            confirmButtonColor: '#4dce38',
+            cancelButtonColor: '#d33',
+            confirmButtonText: this.$t('Yes'),
+            cancelButtonText: this.$t('No'),
             customClass: {
               container: 'my-swal-dialog-container'
             }
           }).then((result) => {
             if (result.isConfirmed) {
-              swal.fire({
-                title: this.$t('buy_again'),
-                text: this.$t('confirm_text'),
-                icon: 'success',
-                showCancelButton: true,
-                confirmButtonColor: '#4dce38',
-                cancelButtonColor: '#d33',
-                confirmButtonText: this.$t('Yes'),
-                cancelButtonText: this.$t('No'),
-                customClass: {
-                  container: 'my-swal-dialog-container'
-                }
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  this.$emit('add-shopping', item)
-                }
-                this.$emit('delete-item', item, deletePercentage.value);
-              })
+              this.$emit('add-shopping', item)
             }
+            this.$emit('delete-item', item, deletePercentage.value);
           })
         }
       })
-    }
+    },
   },
+
 
   setup(props) {
     const itemStore = useItemStore();
@@ -408,6 +391,7 @@ img {
     height: 25px;
     top: 5px;
     right: 5px;
+    padding-left: 6px;
   }
   .icon{
     color: black;

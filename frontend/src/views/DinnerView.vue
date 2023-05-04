@@ -18,13 +18,17 @@
         {{ $t("weekly_menu") }}
       </div>
     </div>
-    <div class="information-button">
-      <img
-        src="@/assets/images/info.svg"
-        id="info-picture"
-        @click="showInformation"
-        :alt="$t('alt_info_button')"
-      />
+    <div id="info-and-bell">
+
+      <InfoAndBell/>
+      <div class="information-button">
+        <img
+            src="@/assets/images/info.svg"
+            id="info-picture"
+            @click="showInformation"
+            :alt="$t('alt_info_button')"
+        />
+      </div>
     </div>
   </div>
   <div class="tips-wrapper" v-show="selectedTab === 'tips'">
@@ -41,9 +45,11 @@ import WeekMenu from "../components/dinner/WeekMenuComponent.vue";
 
 import { ref } from "vue";
 import router from "../router/router";
+import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
 export default {
   name: "DinnerView",
   components: {
+    InfoAndBell,
     DinnerSuggestion,
     WeekMenu,
   },
@@ -65,6 +71,14 @@ export default {
 </script>
 
 <style scoped>
+
+#info-and-bell {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 34%;
+  margin-left: auto;
+}
 .tips-weekMenu {
   background-color: #6c6c6c;
   height: 35px;
@@ -77,15 +91,19 @@ export default {
   grid-column: 2;
 }
 
+template {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .link {
   text-decoration: none;
   line-height: 25px;
   color: white;
 }
 
-#toggle-button {
-  width: 150px;
-}
+
 
 #toggle-button:hover {
   cursor: pointer;
@@ -112,30 +130,29 @@ export default {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-#grey-header {
-  grid-column: 2;
-  color: white;
-}
-
 .information-button {
-  display: flex;
-  grid-column: 3;
-  text-align: right;
-  margin-left: auto;
-
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  height: 40px;
 }
 
 #info-picture {
-  height: 30px;
   width: 30px;
   cursor: pointer;
+  height: 30px;
 }
 
 @media only screen and (min-width: 10px) and (max-width: 650px) {
+  .information-button {
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
   .grey-bar {
     display: flex;
     align-content: center;
-    align-items: center;
     justify-content: center;
     margin-top: 5px;
     background-color: #31c48d;
@@ -144,9 +161,22 @@ export default {
     border-radius: 20px 20px 0 0;
   }
 
+  #info-and-bell{
+    display: flex;
+    margin-left: auto;
+    margin-right: 5px;
+    gap: 30%;
+    left: 0;
+  }
   .tips-weekMenu {
     background-color: #31c48d;
-    margin-top: 0px;
+    color: white;
+    font-size: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 10px;
+    grid-column: 2;
+    margin-top: 0;
     padding-top: 0;
     padding-right: 10px;
     text-align: center;
@@ -154,23 +184,41 @@ export default {
     align-content: center;
     justify-content: center;
     margin-left: 10px;
-  }
-
-  .link {
-    margin: 0;
+    width: 70%;
   }
 
   .link.active {
     height: 60px !important;
     background-color: white;
+    font-size: 20px;
     border-radius: 20px 20px 0 0;
     font-weight: bold;
     text-decoration: none;
     text-shadow: none;
     color: black;
     margin-top: 20px;
-    padding-top: 10px;
+    padding-top: 8px;
+    padding-right: 5px;
+    padding-left: 5px;
   }
+
+  .link {
+    margin: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 20px;
+  }
+  .information-button{
+    margin-right: 3px !important;
+  }
+
+  #toggle-button:hover {
+    cursor: pointer;
+    font-size: unset;
+    font-size: 20px;
+  }
+
+
 
 }
 </style>

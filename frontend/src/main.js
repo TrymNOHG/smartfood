@@ -11,24 +11,12 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import {
     faHouse,
-    faKitchenSet,
-    faShoppingCart,
-    faEnvelope,
-    faLock,
-    faUtensils,
-    faUserCircle,
-    faPerson,
-    faSignature,
-    faPieChart,
-    faPenToSquare,
-    faTrash,
-    faCircleCheck,
-    faPlus,
-    faCrown,
-    faCamera,
-    faBarcode,
+    faKitchenSet, faShoppingCart, faEnvelope,
+    faLock, faUtensils, faUserCircle, faPerson,
+    faSignature, faPieChart, faPenToSquare, faTrash,
+    faCircleCheck, faPlus, faCrown, faCamera, faBarcode,
     faCheck, faTableCells, faList, faFilter,
-    faReceipt, faChartSimple, faCoins, faFlag,
+    faReceipt, faChartSimple, faCoins, faFlag, faBell, faGlobe,
 } from "@fortawesome/free-solid-svg-icons";
 
 /* Imports fr multiple languages */
@@ -45,7 +33,9 @@ library.add(
     faTrash, faCircleCheck,
     faPlus, faCrown, faCheck,
     faTableCells, faList, faFilter,
-    faReceipt, faChartSimple, faCoins, faFlag, faCamera,faBarcode
+    faReceipt, faChartSimple, faCoins, faFlag,
+    faBell, faGlobe, faReceipt, faChartSimple,
+    faCoins, faFlag, faCamera,faBarcode
 )
 
 const pinia = createPinia();

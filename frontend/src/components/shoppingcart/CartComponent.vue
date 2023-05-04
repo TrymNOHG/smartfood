@@ -1,20 +1,24 @@
 <template>
+  <div class="grey-bar">
+    <h2 id="grey-header">{{ $t("shopping_cart") }}</h2>
+    <div id="info-and-bell">
+      <InfoAndBell :fridge="this.fridge"/>
+      <div class="information-button">
+        <img
+            src="@/assets/images/info.svg"
+            id="info-picture"
+            @click="showInformation"
+            :alt="$t('alt_info_button')"
+        />
+      </div>
+    </div>
+  </div>
   <div>
     <div id="myDropdown" class="dropdown-content">
       <figure id="backBlack"></figure>
 
       <div id="backGreen">
-        <div class="grey-bar">
-          <h2 id="grey-header">{{ $t("shopping_cart") }}</h2>
-          <div class="information-button">
-            <img
-              src="@/assets/images/info.svg"
-              id="info-picture"
-              @click="showInformation"
-              :alt="$t('alt_info_button')"
-            />
-          </div>
-        </div>
+
         <div id="barcode-scanner">
           <div v-show="scannerActive" id="interactive" class="viewport"></div>
         </div>
@@ -30,13 +34,13 @@
             {{ $t("search") }}
           </button>
         </div>
-        <CartControl
+      </div>
+      <CartControl
           v-if="isCurrentUserSuperUser"
           @check-all="handleMarkAll"
           @buy="handleBuy"
           @delete="handleDelete"
-        ></CartControl>
-      </div>
+      ></CartControl>
       <div class="dropper" v-if="search">
         <vue-collapsible-panel-group>
           <vue-collapsible-panel :expanded="isExpanded.value">
@@ -130,10 +134,12 @@ import { ref, onMounted, computed, watch, onBeforeUnmount } from "vue";
 import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert2";
 import Quagga from "quagga";
+import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
 
 export default {
   name: "Cart",
   components: {
+    InfoAndBell,
     FontAwesomeIcon,
     SearchItem,
     BasicButton,
@@ -634,6 +640,14 @@ export default {
 </script>
 
 <style scoped>
+
+#info-and-bell {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 5%;
+}
+
 * {
   text-align: center;
 }
@@ -683,6 +697,10 @@ input[type="number"] {
 
 .dropper:hover {
   color: #5e6977;
+}
+
+.cart-items{
+  color: black !important;
 }
 
 .vcpg {
@@ -748,11 +766,43 @@ input[type="number"] {
   height: 35px;
 }
 
+#grey-header {
+  height: 40px;
+  grid-column: 2;
+  color: white;
+}
+
+#info-and-bell {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 34%;
+  margin-left: auto;
+}
+.grey-bar {
+  background-color: #6C6C6C;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+}
+
+#info-and-bell {
+  grid-column: 3;
+}
+
+#info-picture {
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+}
+
 .information-button {
   display: flex;
   grid-column: 3;
   text-align: right;
   margin-left: auto;
+  height: 40px;
 }
 
 #info-picture {
@@ -820,7 +870,6 @@ body {
   position: relative;
   background-color: #f6f6f6;
   min-width: 230px;
-  overflow: auto;
   border: 1px solid #ddd;
   z-index: 2;
   text-align: center;
@@ -972,22 +1021,61 @@ input:focus {
     display: none !important;
   }
 
+
   .grey-bar {
-    all: unset;
-    text-align: center;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    background-color: #31c48d;
-    height: 50px;
+    display: flex;
     align-content: center;
+    justify-content: center;
+    margin-top: 5px;
+    background-color: #31c48d;
+    max-height: 60px;
+    height: 60px;
+    border-radius: 20px 20px 0 0;
   }
 
+  #info-and-bell{
+    display: flex;
+    margin-left: auto;
+    margin-right: 5px;
+    gap: 30%;
+    left: 0;
+    height: 60px;
+  }
+
+
   #grey-header {
-    all: unset;
+    display: flex;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 10px;
     grid-column: 2;
-    color: white;
-    font-size: 25px;
-    margin-top: 10px;
+    text-align: center;
+
+    justify-content: center;
+    margin-left: 30%;
+    height: 60px !important;
+    background-color: white;
+    font-size: 20px;
+    border-radius: 20px 20px 0 0;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: none;
+    color: black;
+    margin-top: 20px;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-left: 5px;
+    width: 40%;
+  }
+
+  .information-button{
+    margin-right: 3px !important;
+    height: 60px;
+  }
+
+  #info-picture{
+    height: 30px;
+    width: 30px;
+    top: 0;
   }
 
   #backBlack {
@@ -996,8 +1084,7 @@ input:focus {
   }
 
   #backGreen {
-    background-color: #31c48d;
-
+    background-color: transparent;
     width: 100%;
     padding: 5px 10px 10px 10px;
     border-radius: 20px 20px 20px 20px;
@@ -1227,7 +1314,6 @@ input:focus {
     position: relative;
     background-color: white;
     min-width: 230px;
-    overflow: auto;
     border: 1px solid #ddd;
     z-index: 2;
     text-align: center;

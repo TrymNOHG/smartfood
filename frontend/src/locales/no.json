@@ -123,6 +123,12 @@
   "40 - 60 min": "40 - 60 min",
   "Over 60 min:": "Over 60 min",
   "suggest_dinner": "Foreslå middag",
+  "soon_expire": "går snart ut på dato!",
+  "password-updated": "Passordet ble oppdatert",
+  "password-failed": "Feil passord!",
+  "password-match-fail": "Bekreft passord samsvarer ikke!",
+  "user-updated": "Brukerinformasjon ble oppdatert",
+  "chosen_language": "Valgt Språk",
 
   "__Tour__":"Under er all oversetting for alle gjennomganger/tours av appen",
 
