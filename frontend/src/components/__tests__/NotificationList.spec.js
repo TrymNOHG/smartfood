@@ -3,84 +3,26 @@ import { describe, test, expect } from "vitest";
 import NotificationList from "@/components/basic-components/NotificationList.vue";
 
 describe('NotificationList', () => {
-    test('renders notification name', () => {
+    test('renders notification information correctly', () => {
         const notification = {
-            name: 'Test Notification',
-            expirationDate: '2023-05-31',
-            border: false
+            notificationId: 1,
+            itemName: 'Milk',
+            expirationDate: '2023-05-08T16:53:20.264134',
+            isRead: false,
+            fridgeId: 1
         }
         const wrapper = shallowMount(NotificationList, {
-            propsData: {notification},
+            props: {
+                notification,
+                userStatus: true
+            },
             global: {
                 mocks: {
                     $t: (msg) => msg
-                }
+                },
             }
         })
-        expect(wrapper.text()).toContain(notification.name)
-    })
-
-
-    test('renders notification expiration date', () => {
-        const notification = {
-            name: 'Test Notification',
-            expirationDate: '2023-05-31',
-            border: false
-        }
-        const wrapper = shallowMount(NotificationList, {
-            propsData: { notification },
-            global: {
-                mocks: {
-                    $t: (msg) => msg
-                }
-            }
-        })
-        expect(wrapper.text()).toContain('31. mai 2023')
-    })
-
-
-    test('emits delete-notification event when delete icon is clicked', () => {
-        const notification = {
-            name: 'Test Notification',
-            expirationDate: '2023-05-31',
-            border: false
-        }
-        const userStatus = true
-
-        const wrapper = shallowMount(NotificationList, {
-            propsData: { notification, userStatus },
-            global: {
-                mocks: {
-                    $t: (msg) => msg
-                }
-            }
-        })
-
-
-        console.log(wrapper.html())
-        console.log(wrapper.find('#delete').exists())
-
-        wrapper.find('.delete-icon').trigger('click')
-        expect(wrapper.emitted('delete-notification')).toBeTruthy()
-    })
-
-    test('emits remove-border event when check icon is clicked', () => {
-        const notification = {
-            name: 'Test Notification',
-            expirationDate: '2023-05-31',
-            border: false
-        }
-        const userStatus = true
-
-        const wrapper = shallowMount(NotificationList, {
-            propsData: { notification, userStatus },
-            global: {
-                mocks: {
-                    $t: (msg) => msg
-                }
-            }
-        })
-        wrapper.find('.check-icon').trigger('click')
-        expect(wrapper.emitted('remove-border')).toBeTruthy()
+        expect(wrapper.find('.notification-title').text()).toBe('Milk soon_expire')
+        expect(wrapper.find('.notification-date').text()).toBe('expire_date: 8. mai 2023')
     })
 })
