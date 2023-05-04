@@ -56,7 +56,7 @@
 
     </div>
 
-    <div class="searchbar-wrapper">
+    <div class="searchbar-wrapper" >
       <button id="toggle" @click="handleClick">Filter</button>
       <div
         v-if="click"
@@ -1055,6 +1055,10 @@ input[type="text"]:focus {
     display: none !important;
   }
 
+  .marg{
+    margin-bottom: 20%;
+  }
+
   #filter {
     all: unset;
     width: 100%;
@@ -1088,9 +1092,12 @@ input[type="text"]:focus {
   }
 
   .searchbar-wrapper{
+    position: relative;
+    display: flex;
     gap: 0;
     flex-wrap: wrap;
-      height: unset;
+    overflow-x: unset;
+    height: unset;
   }
 
   #toggle{
