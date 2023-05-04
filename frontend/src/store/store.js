@@ -248,8 +248,11 @@ export const useStatStore = defineStore('statStore', {
 
     getters: {
         getPercentageChart(){
-            const labels = this.percentageChart.map(obj => obj.first);
-            const values = this.percentageChart.map(obj => obj.second);
+            const labels = Object.keys(this.percentageChart);
+            const values = Object.values(this.percentageChart);
+
+            console.log(labels)
+            console.log(values)
 
             return {
                 labels,
@@ -275,9 +278,8 @@ export const useStatStore = defineStore('statStore', {
         async fetchUserStatsPercentage() {
             this.percentageChart = []
             await getUserPercentageStats().then((response) => {
-                for (const dataSet of response.data) {
-                    const { first, second } = dataSet
-                    this.percentageChart.push({first, second});
+                for (const key in response.data) {
+                    this.percentageChart[key] = response.data[key];
                 }
             });
         },
@@ -296,9 +298,8 @@ export const useStatStore = defineStore('statStore', {
             this.percentageChart = []
             await getFridgePercentageStats(fridge.fridgeId)
                 .then((response) => {
-                    for (const dataSet of response.data) {
-                        const { first, second } = dataSet
-                        this.percentageChart.push({first, second});
+                    for (const key in response.data) {
+                        this.percentageChart[key] = response.data[key];
                     }
                 })
         },

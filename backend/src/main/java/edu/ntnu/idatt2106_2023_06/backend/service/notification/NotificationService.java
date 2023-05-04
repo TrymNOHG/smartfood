@@ -7,6 +7,7 @@ import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeItemsNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.NotificationNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.NotificationMapper;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.notification.Notification;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
@@ -33,12 +34,22 @@ public class NotificationService implements INotificationService {
     private final NotificationRepository notificationRepository;
 
     /**
+     * Updates all notifications of a user.
+     */
+    public void updateAllNotifications() {
+        List<Long> fridges = fridgeService.retrieveFridgeIdsByUsername(userInfoService.getAuthenticatedUserUsername());
+        for (Long fridgeId : fridges) {
+            updateNotifications(fridgeId);
+        }
+    }
+
+    /**
      * Updates all notifications for a user in a fridge. This is done by checking if any items in the fridge
      * are about to expire, and if so, creating a notification for the user.
      *
      * @param fridgeId The id of the fridge to update notifications for.
      */
-    public void updateNotifications(Long fridgeId) {
+    private void updateNotifications(Long fridgeId) {
         checkNotification(fridgeId);
         User user = userInfoService.getAuthenticatedUserObject();
         List<FridgeItems> items = fridgeItemsRepository.findAllByFridge_FridgeId(fridgeId).orElseThrow(
