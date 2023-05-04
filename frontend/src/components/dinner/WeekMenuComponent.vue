@@ -18,7 +18,7 @@
 <script>
 import meal from "@/components/dinner/MealComponent.vue";
 import { ref, onMounted } from "vue";
-import { loadRecipeByFridgeItems } from "@/services/DinnerService";
+import {loadRecipeByFridgeItems, loadRecipeByFridgeItemsAndDay} from "@/services/DinnerService";
 import { useFridgeStore } from "@/store/store";
 
 export default {
@@ -41,22 +41,43 @@ export default {
 
     onMounted(async () => {
       try {
-        const response = await loadRecipeByFridgeItems(
-          fridgeId,
-          pageIndex.value,
-          7
-        );
-        console.log(response.content);
-        meals.value = [...meals.value, ...response.content];
-        console.log("meals ", meals.value);
-        for (let i = 0; i < meals.value.length; i++) {
-          meals.value[i].dayOfWeek = weekdays[i];
+        let i = 0
+        for(let day of weekdays) {
+          console.log(day.toUpperCase())
+          const response = await loadRecipeByFridgeItemsAndDay(
+              fridgeId,
+              day.toUpperCase(),
+              pageIndex.value,
+              7
+          );
+
+
+          for(let newMeal of response.content) {
+            console.log(day)
+            if (
+                !meals.value.find(
+                    (meal) => meal.recipeName === newMeal.recipeName
+                )
+            ) {
+              meals.value[i] = newMeal
+              break;
+            }
+          }
+
+
+
+          meals.value[i].dayOfWeek = day;
           console.log(meals.value[i].dayOfWeek, " ", weekdays[i]);
+
+          i++
         }
+
       } catch (error) {
         console.error("Failed to load:", error);
       }
     });
+
+
 
     function getMealForDay(day) {
       console.log(day);
