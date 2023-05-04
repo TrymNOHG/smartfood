@@ -56,7 +56,7 @@
 
     </div>
 
-    <div class="searchbar-wrapper" :class="{'margin-bottom': active}" :style="{'margin-bottom': active ? '20%' : '0'}">
+    <div class="searchbar-wrapper">
       <button id="toggle" @click="handleClick">Filter</button>
       <div
         v-if="click"
@@ -1195,7 +1195,7 @@ input[type="text"]:focus {
 
   #myDropdown {
     position: fixed;
-    z-index: 0;
+    z-index: 1;
   }
 
   .fridge-wrapper {
