@@ -182,7 +182,11 @@
       "tour: view:fridgesView method:fridgesStepTour id:add-fridge usage:title": "Lag et nytt kjøleskap",
       "tour: view:fridgesView method:fridgesStepTour id:add-fridge usage:text": "Du kan lage et nytt kjøleskap ved å klikke på denne plusstegnet, og skrive inn navnet på kjøleskapet.",
       "tour: view:fridgesView method:fridgesStepTour id:information-button usage:title": "Hjelp / Informasjon",
-      "tour: view:fridgesView method:fridgesStepTour id:information-button usage:text": "Du kan klikke på informasjonsknappen når som helst for å få en omvisning på gjeldende side eller hele appen."
+      "tour: view:fridgesView method:fridgesStepTour id:information-button usage:text": "Du kan klikke på informasjonsknappen når som helst for å få en omvisning på gjeldende side eller hele appen.",
 
-
+  "One Fridge__":"This is tour for the list of all the fridges",
+      "tour: view:fridgeView method:fridgeStepsTour id: usage:title":"",
+      "tour: view:fridgeView method:fridgeStepsTour id: usage:text":"",
+      "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:title": "Dette er en tittel",
+      "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:text": "Dette er tekst"
 }

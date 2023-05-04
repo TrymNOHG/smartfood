@@ -181,5 +181,11 @@
       "tour: view:fridgesView method:fridgesStepTour id:add-fridge usage:title":"Make a new fridge",
       "tour: view:fridgesView method:fridgesStepTour id:add-fridge usage:text":"You can make a new fridge by clicking this plus button, and type in the name of the fridge",
       "tour: view:fridgesView method:fridgesStepTour id:information-button usage:title":"Help / Information",
-      "tour: view:fridgesView method:fridgesStepTour id:information-button usage:text":"You can click on the information-button all the time to get a tour on the current page or the whole app"
+      "tour: view:fridgesView method:fridgesStepTour id:information-button usage:text":"You can click on the information-button all the time to get a tour on the current page or the whole app",
+
+  "One Fridge__":"This is tour for the list of all the fridges",
+      "tour: view:fridgeView method:fridgeStepsTour id: usage:title":"",
+      "tour: view:fridgeView method:fridgeStepsTour id: usage:text":"",
+      "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:title": "This is a title",
+      "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:text": "This is text"
 }

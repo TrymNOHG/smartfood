@@ -25,7 +25,7 @@
         <img
             src="@/assets/images/info.svg"
             id="info-picture"
-            @click="showInformation"
+            @click="resetSteps(); informationButton()"
             :alt="$t('alt_info_button')"
         />
       </div>
@@ -179,6 +179,9 @@ import {StreamBarcodeReader} from "vue-barcode-reader";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import Quagga from "quagga";
 import InfoAndBell from "../components/basic-components/InfoAndBell.vue";
+import { offset } from "@floating-ui/vue";
+import Shepherd from 'shepherd.js';
+import '@/assets/tourStyle.css';
 
 interface Filter {
   fridgeId: number;
@@ -416,6 +419,122 @@ export default {
         this.initScanner();
       }
     },
+
+      resetSteps(){
+          if(this.fridgeTour.steps.length !== 0) {
+              while (this.fridgeTour.steps.length !== 0) {
+                  this.fridgeTour.steps.pop()
+              }
+          }
+          if(this.information.steps.length !== 0) {
+              while (this.information.steps.length !== 0) {
+                  this.information.steps.pop()
+              }
+          }
+      },
+
+      informationButton(){
+          this.information.addSteps([
+              {
+                  id: 'information-pressed',
+                  title:`<div class="info-box"><img src="../src/assets/images/info.svg" alt="Pressed" id="tour-info-picture"/></div>`,
+                  text: this.$t('tour: view:fridgesView method:informationButton id:information-pressed usage:text'),
+                  attachTo: {
+                      element: '#info-picture',
+                      on: 'bottom',
+                  },
+                  buttons: [
+                      {
+                          action: function() {
+                              //router.push('/fridges');
+                              //this.$emit.firstLogginTour();
+                              //this.information.cancel();
+                          },
+                          secondary: true,
+                          class: " shepherd-button ",
+                          text: this.$t('tour: button whole site'),
+                      },
+                      {
+                          action: () => {
+                              this.fridgeStepsTour();
+                              this.information.cancel();
+
+                          },
+                          class: " shepherd-button ",
+                          text: this.$t('tour: button this site'),
+                      },
+                  ]
+              }])
+          this.information.start()
+      },
+
+      fridgeStepsTour() {
+          if (window.matchMedia("(min-width: 860px)").matches) {
+              this.fridgeTour.addSteps([
+
+                  {
+                      id: 'fridgesWindow',
+                      title: this.$t('tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:title'),
+                      text: this.$t('tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:text'),
+                      attachTo: {
+                          element: 'div.router-view-container',
+                          on: 'bottom',
+                      },
+
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.cancel();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button exit'),
+                          },
+                          {
+                              action: function () {
+                                  return this.next();
+                              },
+                              text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+              ]);
+              this.fridgeTour.start()
+          }
+          else if(window.matchMedia("(max-width: 860px)").matches) {
+              this.fridgeTour.addSteps([
+                  {
+                      id: 'fridgesWindow',
+                      title: this.$t('tour: view:fridgesView method:firstLogginTour id:fridgesWindow usage:title'),
+                      text: this.$t('tour: view:fridgesView method:firstLogginTour id:fridgesWindow usage:text'),
+                      attachTo: {
+                          element: 'div.router-view-container',
+                          on: 'bottom',
+                      },
+
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.cancel();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button exit'),
+                          },
+                          {
+                              action: function () {
+                                  return this.next();
+                              },
+                              text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+                  {
+
+
+                  },
+              ]);
+              this.fridgeTour.start()
+          }
+      },
   },
 
   setup() {
@@ -536,6 +655,34 @@ export default {
     const active = ref(false);
     const click = ref(false);
 
+      const fridgeTour = new Shepherd.Tour({
+          useModalOverlay: true,
+          defaultStepOptions: {
+              classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
+              floatingUIOptions: {
+                  middleware: [offset(30)]
+              },
+              cancelIcon: {
+                  enabled: true
+              },
+          }
+      });
+
+      const information = new Shepherd.Tour({
+          useModalOverlay: true,
+          defaultStepOptions: {
+              classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
+              arrow: true,
+              floatingUIOptions: {
+                  middleware: [offset(30)]
+              },
+              cancelIcon: {
+                  enabled: true
+              },
+          }
+      });
+
+
     return {
       active,
       click,
@@ -558,6 +705,9 @@ export default {
       sortOptions,
       selectedSearchParam,
       searchParamOptions,
+      fridgeTour,
+      information,
+
     };
   },
 
