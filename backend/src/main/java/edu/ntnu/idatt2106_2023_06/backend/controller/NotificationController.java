@@ -35,7 +35,7 @@ public class NotificationController {
     @Operation(summary = "Update notifications for a given user")
     @ApiResponse(responseCode = "200", description = "OK")
     public ResponseEntity<Object> updateNotifications(@PathVariable Long fridgeId) {
-        notificationService.updateNotifications(fridgeId);
+        notificationService.updateAllNotifications();
         return ResponseEntity.ok().build();
     }
 
