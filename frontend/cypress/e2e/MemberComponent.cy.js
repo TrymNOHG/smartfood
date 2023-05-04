@@ -60,7 +60,6 @@ describe("Test for the member component and it features", () => {
                 const requestBody = req.body;
                 cartAddedItem = requestBody;
                 // Do something with the requestBody, like logging it to the console
-                console.log("Request body:", requestBody);
             }
         ).as("addItemRequest");
 

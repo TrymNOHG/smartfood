@@ -99,8 +99,8 @@ export default {
     return {
       moneyUsedPerPers: 46,
       percentageThrownPerPers: 26,
-      choosenStat: this.$t('personal_statistics'),
-      statChoice: [this.$t('personal_statistics'), this.$t('fridge_statistics')],
+      choosenStat: 'personal_statistics',
+      statChoice: ['personal_statistics', 'fridge_statistics'],
       width: window.innerWidth
     }
   },

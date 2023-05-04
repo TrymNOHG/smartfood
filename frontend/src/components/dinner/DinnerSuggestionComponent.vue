@@ -36,7 +36,7 @@
         />
       </div>
         <div class="pagination-buttons" v-if="!isMobile">
-          <BasicButton @click="loadPreviousPage" :disabled="pageIndex.value === 0" :button-text="$t('previous_page')"/>
+          <BasicButton @click="loadPreviousPage" :button-text="$t('previous_page')"/>
           <BasicButton @click="loadNextPage" :button-text="$t('next_page')"/>
         </div>
         <div id="bottom"></div>
@@ -53,6 +53,7 @@
     import {acceptRecipeSuggestion, denyRecipeSuggestion, loadRecipeSuggestions} from "../../services/DinnerService";
     import {getProfilePictureById} from "../../services/UserService";
     import {loadUsersByFridgeId} from "../../services/FridgeServices";
+    import { useI18n } from 'vue-i18n';
 
     export default {
       components: {
@@ -97,6 +98,7 @@
       },
 
       setup() {
+        const { t } = useI18n();
         const fridgeStore = useFridgeStore();
         const fridgeId = fridgeStore.getCurrentFridge.fridgeId;
         const meals = ref([]);
@@ -132,7 +134,6 @@
           try {
             const response = await loadRecipeSuggestions(fridgeId);
             suggestions.value = response;
-            console.log("Suggestions loaded:", suggestions.value)
             await fetchProfilePictures();
             await fetchUsers();
           } catch (error) {
@@ -173,9 +174,9 @@
         };
 
         const loadPreviousPage = async () => {
-          if (pageIndex.value === 0) return;
+          if (pageIndex.value == 0) return;
           swal.fire({
-            title: 'Loading...',
+            title: t("loading") + " ...",
             allowEscapeKey: false,
             allowOutsideClick: false,
             showConfirmButton: false,
@@ -197,7 +198,7 @@
 
         const loadNextPage = async () => {
           swal.fire({
-            title: 'Loading...',
+            title: t("loading") + " ...",
             allowEscapeKey: false,
             allowOutsideClick: false,
             showConfirmButton: false,
@@ -219,7 +220,6 @@
         const loadMore = async () => {
           try {
             const response = await loadRecipeByFridgeItems(fridgeId, pageIndex.value, 8);
-            console.log(response.content)
             meals.value = [ ...meals.value, ...response.content]
             pageIndex.value++;
           } catch (error) {

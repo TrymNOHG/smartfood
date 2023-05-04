@@ -1,60 +1,65 @@
 import { mount } from '@vue/test-utils';
+import { describe, test, expect } from "vitest";
 import DinnerView from '@/views/DinnerView.vue';
 import DinnerSuggestion from '@/components/dinner/DinnerSuggestionComponent.vue';
 import WeekMenu from '@/components/dinner/WeekMenuComponent.vue';
-import { describe, test, expect, beforeEach } from "vitest";
-import sinon from "sinon";
-import {createTestingPinia} from "@pinia/testing";
+import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
+import { createI18n } from "vue-i18n";
+import { createTestingPinia } from "@pinia/testing";
+import sinon from 'sinon';
 
+describe("DinnerView", () => {
+    const spy = sinon.spy();
 
-describe('DinnerView', () => {
-    const spy = sinon.spy()
+    const i18n = createI18n({
+        legacy: false,
+        locale: "en",
+        messages: {
+            en: {},
+        },
+    });
 
-    test('renders the dinner suggestion component when "suggestion" tab is selected', async () => {
-        const wrapper = mount(DinnerView, {
-            global: {
-                mocks: {
-                    $t: (msg) => msg
-                },
-                plugins: [createTestingPinia({ createSpy: spy })]
-            }
+    const mountWithPinia = (options = {}) => {
+        const mockUseFridgeStore = () => ({
+            getCurrentFridge: {
+                fridgeId: "2",
+            },
         });
 
-        wrapper.vm.selectedTab = 'suggestion';
+        return mount(DinnerView, {
+            global: {
+                plugins: [createTestingPinia({ createSpy: () => spy }), i18n],
+                mocks: {
+                    useFridgeStore: mockUseFridgeStore,
+                },
+                ...options,
+            },
+        });
+    };
+
+
+    test('renders the DinnerSuggestion component when "tips" tab is selected', async () => {
+        const wrapper = mountWithPinia();
+
+        await wrapper.vm.$nextTick(() => {
+            wrapper.vm.selectedTab = 'tips';
+        });
+
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(DinnerSuggestion).exists()).toBe(true);
+        expect(wrapper.findComponent(DinnerSuggestion).isVisible()).toBe(true);
     });
 
-    test('renders the week menu component when "weekMenu" tab is selected', async () => {
-        const wrapper = mount(DinnerView, {
-            global: {
-                mocks: {
-                    $t: (msg) => msg
-                },
-                plugins: [createTestingPinia({ createSpy: spy })]
-            }
+    test('renders the WeekMenu component when "weekMenu" tab is selected', async () => {
+        const wrapper = mountWithPinia();
+
+        await wrapper.vm.$nextTick(() => {
+            wrapper.vm.selectedTab = 'weekMenu';
         });
 
-        wrapper.vm.selectedTab = 'weekMenu';
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.findComponent(WeekMenu).exists()).toBe(true);
+        expect(wrapper.findComponent(WeekMenu).isVisible()).toBe(true);
     });
 
-    test('shows information on click of information button', async () => {
-        const wrapper = mount(DinnerView, {
-            global: {
-                mocks: {
-                    $t: (msg) => msg
-                },
-                plugins: [createTestingPinia({ createSpy: spy })]
-            }
-        });
-
-        const informationButton = wrapper.find('#info-picture');
-        informationButton.trigger('click');
-
-        // TODO: Add assertions for expected behavior when information button is clicked
-    });
 });

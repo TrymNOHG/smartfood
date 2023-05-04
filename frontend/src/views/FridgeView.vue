@@ -53,44 +53,23 @@
         </div>
       </div>
 
-      <div class="dropper" v-if="search">
-        <vue-collapsible-panel-group>
-          <vue-collapsible-panel :expanded="isExpanded.value">
-            <template #content>
-              <SearchItem
-                  v-for="(item, index) in searchItems"
-                  :key="index"
-                  :image="item.image"
-                  :text="item.name"
-                  :store="item.store.name"
-                  :price="
-                  typeof item.current_price === 'number'
-                    ? item.current_price
-                    : item.current_price.price
-                "
-                  style="text-align: center"
-                  @click="addItemToFridge(this.fridge.fridgeId, item)"
-              />
-            </template>
-          </vue-collapsible-panel>
-        </vue-collapsible-panel-group>
-      </div>
+
     </div>
 
-    <div class="searchbar-wrapper">
+    <div class="searchbar-wrapper" >
       <button id="toggle" @click="handleClick">Filter</button>
       <div
-          v-if="click"
-          id="filter"
-          class="slide-in"
-          :class="active ? 'slide-in' : 'slide-out'"
+        v-if="click"
+        id="filter"
+        class="slide-in"
+        :class="active ? 'slide-in' : 'slide-out'"
       >
         <div id="search-wrapper">
           <input
-              type="text"
-              v-model="searchText"
-              @input="searchHandler()"
-              :placeholder="$t('search') + '...'"
+            type="text"
+            v-model="searchText"
+            @input="searchHandler()"
+            :placeholder="$t('search') + '...'"
           />
         </div>
 
@@ -121,6 +100,29 @@
         <filter-bar @listing="changeListing" />
       </div>
     </div>
+      <div class="dropper" v-if="search">
+          <vue-collapsible-panel-group>
+              <vue-collapsible-panel :expanded="isExpanded.value">
+                  <template #content>
+                      <SearchItem
+                              v-for="(item, index) in searchItems"
+                              :key="index"
+                              :image="item.image"
+                              :text="item.name"
+                              :store="item.store.name"
+                              :price="
+                  typeof item.current_price === 'number'
+                    ? item.current_price
+                    : item.current_price.price
+                "
+                              style="text-align: center"
+                              @click="addItemToFridge(this.fridge.fridgeId, item)"
+                      />
+                      <div ref="scrollTarget" id="scrollTarget"></div>
+                  </template>
+              </vue-collapsible-panel>
+          </vue-collapsible-panel-group>
+      </div>
     <transition name="fade">
       <div
           v-if="!listView"
@@ -152,6 +154,7 @@
   <div class="members-wrapper" v-show="selectedTab === 'members'">
     <member-component />
   </div>
+  <div id="bottom-element"></div>
 </template>
 
 <script lang="ts">
@@ -169,14 +172,18 @@ import {
 } from "vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
-import {getItemByBarcode, getItems} from "@/services/ApiService";
+import {
+  getItemByBarcode,
+  getItems,
+  getItemsByPage,
+} from "@/services/ApiService";
 import Swal from "sweetalert2";
 import {addItemToShoppingList} from "@/services/ItemService";
 import FilterBar from "@/components/SpecificFridge/FilterBar.vue";
 import BasicFridgeList from "@/components/SpecificFridge/BasicFridgeList.vue";
 import router from "../router/router";
-import {StreamBarcodeReader} from "vue-barcode-reader";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import { StreamBarcodeReader } from "vue-barcode-reader";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import Quagga from "quagga";
 import InfoAndBell from "../components/basic-components/InfoAndBell.vue";
 
@@ -330,10 +337,9 @@ export default {
 
       if (!this.isCurrentUserSuperUser) {
         await addItemToShoppingList(itemDTO, fridgeId, true).then(
-            async (response) => {
-              console.log("response", response);
-              //TODO: add exception handling
-            }
+          async (response) => {
+            //TODO: add exception handling
+          }
         );
       } else {
         await this.itemStore.statAddItemToFridge(statAddItemToFridgeDTO);
@@ -425,18 +431,21 @@ export default {
         router.currentRoute.value.query.selectedTab || "fridge"
     );
 
-    history.replaceState(null, null, "/fridge");
+    history.replaceState(history.state, '', "/fridge");
 
     const searchItems = ref([]);
     const search = ref(false);
     const fridgeItems = ref([]);
     const fridge = fridgeStore.getCurrentFridge;
     let scannerActive = ref(false);
-    const isLoading = ref(false);
+    const isLoadingItems = ref(false);
     const page = ref(0);
     const searchText = ref("");
     const selectedCategory = ref(0);
     const categories = ref<Array<{ id: number; name: string }>>([]);
+    const scrollTarget = ref(null);
+    const isLoading = ref(false);
+    let nextPage = 1;
 
     const sortOptions = ref([
       { key: "expirationDate", direction: "DESC" },
@@ -452,8 +461,8 @@ export default {
     const sort = ref(sortOptions.value[0]);
 
     const loadMore = () => {
-      if (!isLoading.value) {
-        isLoading.value = true;
+      if (!isLoadingItems.value) {
+        isLoadingItems.value = true;
 
         const filters: Filter[] = [
           {
@@ -476,16 +485,16 @@ export default {
         };
 
         itemStore
-            .filterItemsInFridge(itemSearch)
-            .then((response) => {
-              page.value++;
-              fridgeItems.value = [...fridgeItems.value, ...response];
-              isLoading.value = false;
-            })
-            .catch((error) => {
-              console.error(error);
-              isLoading.value = false;
-            });
+          .filterItemsInFridge(itemSearch)
+          .then((response) => {
+            page.value++;
+            fridgeItems.value = [...fridgeItems.value, ...response];
+            isLoadingItems.value = false;
+          })
+          .catch((error) => {
+            console.error(error);
+            isLoadingItems.value = false;
+          });
       }
     };
 
@@ -514,6 +523,7 @@ export default {
 
     onMounted(async () => {
       await observeBottom();
+      window.addEventListener("scroll", handleScroll);
       loadMore();
     });
 
@@ -523,7 +533,37 @@ export default {
       if (bottomElement) {
         observer.unobserve(bottomElement);
       }
+      window.removeEventListener("scroll", handleScroll);
     });
+
+    const handleScroll = async () => {
+      if (scrollTarget.value !== null) {
+        const bottomOfWindow =
+          Math.ceil(scrollTarget.value.getBoundingClientRect().bottom) <=
+          (window.innerHeight || document.documentElement.clientHeight);
+        if (bottomOfWindow) {
+          await loadMoreSearchItems();
+        }
+      }
+    };
+
+    async function loadMoreSearchItems() {
+      if (isLoading.value) return;
+      console.log("REACHED BOTTOM BOOM!!");
+      isLoading.value = true;
+      try {
+        let response = await getItemsByPage(searchQuery.value, nextPage);
+        nextPage++;
+        if (response) {
+          searchItems.value = [...searchItems.value, ...response];
+        }
+      } catch (error) {
+        console.error("Error loading search items", error); //TODO: add swal.fire ....
+      }
+
+      isLoading.value = false;
+    }
+
     const instance = getCurrentInstance();
     onBeforeUnmount(() => {
       if (instance && instance.proxy && scannerActive.value == true) {
@@ -537,6 +577,7 @@ export default {
     const click = ref(false);
 
     return {
+      scrollTarget,
       active,
       click,
       fridge,
@@ -597,7 +638,7 @@ template {
   margin-left: auto;
 }
 
-*{
+* {
   font-family: Roboto, sans-serif;
 }
 #barcode-scanner {
@@ -694,6 +735,7 @@ template {
   width: 100%;
   border-radius: 50px;
 }
+
 #sort-wrapper {
   display: flex;
   align-items: center;
@@ -1005,14 +1047,15 @@ input[type="text"]:focus {
     display: none;
   }
 
-
-
-
   .slide-in {
     display: block !important;
   }
   .slide-out {
     display: none !important;
+  }
+
+  .marg{
+    margin-bottom: 20%;
   }
 
   #filter {
@@ -1048,8 +1091,12 @@ input[type="text"]:focus {
   }
 
   .searchbar-wrapper{
+    position: relative;
+    display: flex;
     gap: 0;
     flex-wrap: wrap;
+    overflow-x: unset;
+    height: unset;
   }
 
   #toggle{
@@ -1154,13 +1201,21 @@ input[type="text"]:focus {
 
   #myDropdown {
     position: fixed;
-    z-index: 0;
+    z-index: 1;
   }
 
   .fridge-wrapper {
     display: flex;
     width: 100%;
     z-index: 0;
+  }
+
+  .vcpg{
+      max-height: 150vh;
+  }
+
+  #scrollTarget{
+      margin-bottom: 30px;
   }
 
   .dropper {

@@ -148,7 +148,6 @@ export const useFridgeStore = defineStore('fridgeStore', {
                 if(fridge.fridgeId === fridgeId) {
                     this.currentFridge = fridge;
                     this.isSuperUser = await this.checkSuperUserStatus(fridgeId)
-                    console.log(this.isSuperUser)
                     return;
                 }
             }
@@ -187,7 +186,6 @@ export const useItemStore = defineStore('itemStore', {
 
     getters: {
         getCurrentItem(){
-            console.log(this.currentItem)
             return this.currentItem;
         }
     },
@@ -203,7 +201,6 @@ export const useItemStore = defineStore('itemStore', {
 
         async statAddItemListToFridge(statItemListDTO) {
             for (const statItemListDTOElement of statItemListDTO) {
-                console.log(statItemListDTOElement)
                 await addItemStats(statItemListDTOElement)
             }
         },
@@ -263,8 +260,7 @@ export const useStatStore = defineStore('statStore', {
             const labels = Object.keys(this.moneyChart);
             const values = Object.values(this.moneyChart);
 
-            console.log(labels)
-            console.log(values)
+
 
             return {
                 labels,
