@@ -10,6 +10,6 @@ public class RecipeItemDTO {
             @NonNull private Long itemId;
             @NonNull private String name;
             private double price, quantity;
-            private String unitOfMeasurement;
+            private String unitOfMeasurement, itemOriginalUnit;
             private Double fridgeAmount, itemOriginalAmount;
 }
