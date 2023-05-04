@@ -377,6 +377,7 @@ template {
   justify-content: center;
   align-content: center;
   align-items: center;
+  margin-left: auto;
 }
 
 #info-picture{

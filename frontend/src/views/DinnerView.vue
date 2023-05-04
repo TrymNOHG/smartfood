@@ -76,7 +76,8 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: end;
-  gap: 5%;
+  gap: 34%;
+  margin-left: auto;
 }
 .tips-weekMenu {
   background-color: #6c6c6c;
