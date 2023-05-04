@@ -102,6 +102,14 @@ public class Recipe {
     @ToString.Exclude
     private Set<RecipeAllergen> recipeAllergenSet = new HashSet<>();
 
+    /**
+     * The recipe suggestions of the fridge.
+     */
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    private List<RecipeSuggestion> recipeSuggestion = new ArrayList<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

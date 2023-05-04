@@ -671,8 +671,6 @@ input[type="number"] {
     scale: 1;
   }
 
-
-
   .btn-checkbox {
     margin: 0;
     position: absolute;

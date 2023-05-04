@@ -34,7 +34,7 @@ class RecipeTest {
                                  "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
                                  "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
                                  "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
-                        50, new ArrayList<>(),  new ArrayList<>(),new HashSet<>());
+                        50, new ArrayList<>(),  new ArrayList<>(),new HashSet<>(), new ArrayList<>());
             } catch (Exception e) {
                 fail();
             }
@@ -69,7 +69,7 @@ class RecipeTest {
                             "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
                             "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
                             "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
-                    50, new ArrayList<>(),  new ArrayList<>(), new HashSet<>());
+                    50, new ArrayList<>(),  new ArrayList<>(), new HashSet<>(), new ArrayList<>());
         }
 
         @Test
@@ -170,7 +170,7 @@ class RecipeTest {
                             "byttet ut med søtpotet og aubergine, ostesausen med en blomkålpuré og lasagneplatene " +
                             "med ulike grønnsaker i tynne skiver. Perfekt vegetarlasagne hvor du kan bruke en " +
                             "rekke grønnsaksrester.\n", "Meny", 5, 1, "image.png",
-                    50, new ArrayList<>(),  new ArrayList<>(), new HashSet<>());
+                    50, new ArrayList<>(),  new ArrayList<>(), new HashSet<>(), new ArrayList<>());
         }
 
         @Test
