@@ -1,9 +1,8 @@
-import { mount } from '@vue/test-utils';
+import {mount, shallowMount} from '@vue/test-utils';
 import { describe, test, expect } from "vitest";
 import DinnerView from '@/views/DinnerView.vue';
 import DinnerSuggestion from '@/components/dinner/DinnerSuggestionComponent.vue';
 import WeekMenu from '@/components/dinner/WeekMenuComponent.vue';
-import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
 import { createI18n } from "vue-i18n";
 import { createTestingPinia } from "@pinia/testing";
 import sinon from 'sinon';
@@ -26,7 +25,7 @@ describe("DinnerView", () => {
             },
         });
 
-        return mount(DinnerView, {
+        return shallowMount(DinnerView, {
             global: {
                 plugins: [createTestingPinia({ createSpy: () => spy }), i18n],
                 mocks: {
