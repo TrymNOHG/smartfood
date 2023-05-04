@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Builder
 public record FridgeItemLoadDTO(@NonNull Long itemId, @NonNull String name,
                                 String description, @NonNull String store,
-                                double price, String image, int quantity,
+                                double price, String image, double amount, String unit,
                                 @NonNull LocalDateTime purchaseDate, @NonNull LocalDateTime expirationDate,
                                 String ean) {
 

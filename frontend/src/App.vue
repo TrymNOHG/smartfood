@@ -239,7 +239,7 @@ header img {
   margin-left: 20px;
   margin-right: 10px;
   cursor: pointer;
-
+  width: 20px;
 }
 
 .language:hover {

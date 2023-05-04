@@ -54,7 +54,8 @@ describe('ItemDelete', () => {
         expect(wrapper.emitted('delete-item')[0][0]).toEqual(item);
     });
 
-    test('updates the slider value when the user interacts with it', () => {
+
+    test('updates the slider value when the user interacts with it', async () => {
         const wrapper = mount(ItemDelete, {
             props: {
                 item: {
@@ -64,7 +65,9 @@ describe('ItemDelete', () => {
                     price: '10',
                     purchaseDate: '2023-04-27',
                     quantity: 2,
-                    store: 'test'
+                    store: 'test',
+                    amount: 10, // Make sure to add amount prop to the test object
+                    unit: '%' // Add unit prop to the test object
                 }
             },
             global: {
@@ -74,8 +77,17 @@ describe('ItemDelete', () => {
             }
         });
 
-        expect(wrapper.vm.sliderValue).toBe(50);
-        expect(wrapper.find('#rangeValue').text()).toBe('50%');
+        expect(wrapper.vm.sliderValue).toBe(5); // Check if the initial slider value is half of the item amount
+        expect(wrapper.find('#rangeValue').text()).toBe('5 %'); // Check if the initial slider text is correct
+
+        // Update the slider value
+        const input = wrapper.find('input[type="range"]');
+        input.setValue(7); // Set the slider value to 7
+        await wrapper.vm.$nextTick(); // Wait for the DOM update
+
+        // Check if the slider value and text are updated
+        expect(wrapper.vm.sliderValue).toBe('7');
+        expect(wrapper.find('#rangeValue').text()).toBe('7 %');
     });
 
     test('on render should ask how muc is left', () => {
