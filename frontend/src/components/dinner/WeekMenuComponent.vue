@@ -98,6 +98,7 @@ export default {
   text-align: center;
 }
 .wrapper {
+  display: grid;
   z-index: 0;
   grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
   grid-row-gap: 30px;

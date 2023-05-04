@@ -121,7 +121,6 @@ export default {
                 swal
                   .fire({
                     title: "Vil du kjøpe den på nytt",
-                    text: this.$t("confirm_text"),
                     icon: "success",
                     showCancelButton: true,
                     confirmButtonColor: "#4dce38",

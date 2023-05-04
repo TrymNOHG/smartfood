@@ -18,13 +18,17 @@
         {{ $t("weekly_menu") }}
       </div>
     </div>
-    <div class="information-button">
-      <img
-        src="@/assets/images/info.svg"
-        id="info-picture"
-        @click="showInformation"
-        :alt="$t('alt_info_button')"
-      />
+    <div id="info-and-bell">
+
+      <InfoAndBell/>
+      <div class="information-button">
+        <img
+            src="@/assets/images/info.svg"
+            id="info-picture"
+            @click="showInformation"
+            :alt="$t('alt_info_button')"
+        />
+      </div>
     </div>
   </div>
   <div class="tips-wrapper" v-show="selectedTab === 'tips'">
@@ -41,9 +45,11 @@ import WeekMenu from "../components/dinner/WeekMenuComponent.vue";
 
 import { ref } from "vue";
 import router from "../router/router";
+import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
 export default {
   name: "DinnerView",
   components: {
+    InfoAndBell,
     DinnerSuggestion,
     WeekMenu,
   },
@@ -65,6 +71,13 @@ export default {
 </script>
 
 <style scoped>
+
+#info-and-bell {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 5%;
+}
 .tips-weekMenu {
   background-color: #6c6c6c;
   height: 35px;
@@ -75,6 +88,12 @@ export default {
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 20px;
   grid-column: 2;
+}
+
+template {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .link {
@@ -112,41 +131,44 @@ export default {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-#grey-header {
-  grid-column: 2;
-  color: white;
-}
-
 .information-button {
   display: flex;
-  grid-column: 3;
   text-align: right;
-  margin-left: auto;
-
 }
 
 #info-picture {
-  height: 30px;
   width: 30px;
   cursor: pointer;
+  height: 40px;
+  bottom: 10%;
 }
 
 @media only screen and (min-width: 10px) and (max-width: 650px) {
+  #info-and-bell {
+    gap: 15%;
+  }
+
+  .information-button{
+    height: 60px
+  }
+
   .grey-bar {
     display: flex;
     align-content: center;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     margin-top: 5px;
     background-color: #31c48d;
     max-height: 60px;
     height: 60px;
     border-radius: 20px 20px 0 0;
+    flex-direction: row;
+    flex-wrap: nowrap;
   }
 
   .tips-weekMenu {
     background-color: #31c48d;
-    margin-top: 0px;
+    margin-top: 0;
     padding-top: 0;
     padding-right: 10px;
     text-align: center;

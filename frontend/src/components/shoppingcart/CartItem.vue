@@ -120,6 +120,7 @@ export default {
   components: { BasicCheckbox },
 };
 </script>
+
 <style scoped>
 .product-img {
   width: 100px;

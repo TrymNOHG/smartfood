@@ -122,5 +122,6 @@
   "20 - 40 min": "20 - 40 min",
   "40 - 60 min": "40 - 60 min",
   "Over 60 min:": "Over 60 min",
-  "suggest_dinner": "Foreslå middag"
+  "suggest_dinner": "Foreslå middag",
+  "soon_expire": "går snart ut på dato!"
 }
