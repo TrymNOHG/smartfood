@@ -368,13 +368,22 @@ img {
     color: #eee;
   }
 
-  .delete-btn {
-    background-color: white;
-    width: 25px;
-    height: 25px;
-    top: 13px;
-    right: 2px;
+  .accept-btn {
+    position: absolute;
+    top: 3%; /* Center the button vertically at the top-right corner */
+    left: -51px;
+    background-color: green;
+    color: white;/* Position the button horizontally at the top-right corner */
   }
+
+  .delete-btn {
+    position: absolute;
+    top: 65%;
+    right: 241px;
+    background-color: red;
+    color: white;
+  }
+
   .icon{
     color: black;
     font-size: 15px;
@@ -461,18 +470,7 @@ img {
     margin-left: 10px;
   }
 
-  .delete-btn {
-    background-color: white;
-    width: 25px;
-    height: 25px;
-    top: 5px;
-    right: 5px;
-  }
-  .icon{
-    color: black;
-    font-size: 15px;
-    margin-right: 5px;
-  }
+
 
   .item-name {
     display: block;

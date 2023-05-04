@@ -1,16 +1,17 @@
 <template>
-  <h1>{{ $t("weekly_menu") }}</h1>
-
-  <div class="wrapper2">
-    <div v-for="day in weekdays" :key="day">
-      <h2>{{ $t(day) }}</h2>
-      <meal
-        v-if="getMealForDay(day)"
-        :isSuperUser="false"
-        :meal="getMealForDay(day)"
-      />
+  <section class="weekly-menu">
+    <h1>{{ $t("weekly_menu") }}</h1>
+    <div class="wrapper">
+      <div class="day" v-for="day in weekdays" :key="day">
+        <h2>{{ $t(day) }}</h2>
+        <meal
+            v-if="getMealForDay(day)"
+            :isSuperUser="false"
+            :meal="getMealForDay(day)"
+        />
+      </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -95,42 +96,69 @@ export default {
 };
 </script>
 
+
 <style scoped>
-* {
-  text-align: center;
+.weekly-menu {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(180deg, #31C48D 0%, #FFFFFF 100%);
+  padding: 3rem 0;
 }
-.wrapper {
-  display: grid;
-  z-index: 0;
-  grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
-  grid-row-gap: 30px;
-  transition: 0.5s;
-  margin: 2% 2% 2%;
+
+h1 {
+  text-align: center;
+  color: #ffffff;
+  font-size: 3.5rem;
+  margin-bottom: 2rem;
+  font-weight: 700;
 }
 
 .wrapper {
-  z-index: 0;
-  grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
-  grid-row-gap: 30px;
-  transition: 0.5s;
-  max-width: 80vw;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 100vw;
   margin: auto;
 }
 
-@media only screen and (min-width: 10px) and (max-width: 650px) {
+.day {
+  flex: 0 1 calc(100% / 7);
+  margin-bottom: 30px;
+  padding: 2rem;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
+.day h2 {
+  margin-bottom: 1rem;
+  color: #31C48D;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+}
 
-  .wrapper2 {
-    z-index: 0;
-    grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
-    grid-row-gap: 30px;
-    transition: 0.5s;
-    width: 100%;
-    padding: 0;
+@media only screen and (max-width: 650px) {
+  .wrapper {
+    flex-direction: column;
+    align-items: center;
   }
 
+  h1 {
+    font-size: 2.5rem;
+  }
 
+  .day {
+    flex: 1;
+    max-width: 100%;
+    padding: 1.5rem;
+  }
 
+  .day h2 {
+    font-size: 1.2rem;
+  }
 
 }
 </style>
