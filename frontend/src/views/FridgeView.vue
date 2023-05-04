@@ -538,11 +538,13 @@ export default {
     });
 
     const handleScroll = async () => {
-      const bottomOfWindow =
-        Math.ceil(scrollTarget.value.getBoundingClientRect().bottom) <=
-        (window.innerHeight || document.documentElement.clientHeight);
-      if (bottomOfWindow) {
-        await loadMoreSearchItems();
+      if (scrollTarget.value !== null) {
+        const bottomOfWindow =
+          Math.ceil(scrollTarget.value.getBoundingClientRect().bottom) <=
+          (window.innerHeight || document.documentElement.clientHeight);
+        if (bottomOfWindow) {
+          await loadMoreSearchItems();
+        }
       }
     };
 
@@ -576,7 +578,7 @@ export default {
     const click = ref(false);
 
     return {
-        scrollTarget,
+      scrollTarget,
       active,
       click,
       fridge,
