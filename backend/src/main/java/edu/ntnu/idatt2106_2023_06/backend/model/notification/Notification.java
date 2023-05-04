@@ -48,8 +48,7 @@ public class Notification {
      * The user that the notification is connected to.
      */
     @ManyToOne(fetch = FetchType.EAGER)
-    @MapsId("user")
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     @NonNull
     @ToString.Exclude
     private User user;
@@ -58,7 +57,6 @@ public class Notification {
      * The fridge that the user is a member of.
      */
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @MapsId("fridgeItem")
     @JoinColumns({
             @JoinColumn(name = "item_id", referencedColumnName = "item_id"),
             @JoinColumn(name = "fridge_id", referencedColumnName = "fridge_id")

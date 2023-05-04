@@ -284,6 +284,28 @@ describe("Testing fridge member management", () => {
             }
         ).as("getSearchFromKasal");
 
+        cy.intercept('GET', 'http://localhost:8089/api/notification/update', {
+            statusCode: 200,
+            body: {}
+        }).as('updatedNotifications')
+
+        cy.intercept('GET', 'http://localhost:8089/api/notification/get',
+            (req) => {
+                req.reply({
+                    statusCode: 200,
+                    body: [
+                        {
+                            notificationId: 1,
+                            itemName: "test1",
+                            expirationDate: "20.20.2020",
+                            isRead: false,
+                            fridgeId: 1
+                        },
+                    ]
+                });
+            }
+        ).as("getNotifications");
+
         cy.visit(`${base_url}`);
 
         cy.contains("a", "Logg inn").click();
@@ -298,6 +320,7 @@ describe("Testing fridge member management", () => {
         cy.wait("@loginRequest");
         cy.wait("@fetchUser");
         cy.wait("@loadAllFridges");
+        cy.wait('@updatedNotifications')
         cy.wait("@isSuperUser");
 
         cy.contains('#toggle-button', 'Medlemmer').click();

@@ -65,6 +65,7 @@ public class NotificationService implements INotificationService {
                         .isRead(false)
                         .createdDate(LocalDateTime.now())
                         .build();
+                System.out.println(notification.getUser());
                 notificationRepository.save(notification);
             }
         }
