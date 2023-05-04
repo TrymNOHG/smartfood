@@ -97,7 +97,7 @@ class FridgeMemberTest {
             Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
                     new ArrayList<>(), new HashSet<>(), new ArrayList<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>(), new ArrayList<>());
+                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>(), new ArrayList<>(), null);
             FridgeMember fridgeMember = new FridgeMember(null, user, fridge, true);
             assertEquals(user, fridgeMember.getUser());
         }
@@ -107,7 +107,7 @@ class FridgeMemberTest {
             Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
                     new ArrayList<>(), new HashSet<>(), new ArrayList<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>(), new ArrayList<>());
+                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>(), new ArrayList<>(), null);
             FridgeMember fridgeMember = new FridgeMember(null, user, fridge, true);
             assertEquals(fridge, fridgeMember.getFridge());
         }
@@ -117,7 +117,7 @@ class FridgeMemberTest {
             Fridge fridge = new Fridge(1L, "Norman family", new HashSet<>(), new ArrayList<>(),
                     new ArrayList<>(), new HashSet<>(), new ArrayList<>());
             User user = new User(null, "Ole123", "Ole", "Norman",
-                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>(), new ArrayList<>());
+                    "password","Ole@gmail.com", new HashSet<>(), new HashSet<>(), new HashSet<>(), new ArrayList<>(), null);
             FridgeMember fridgeMember = new FridgeMember(null, user, fridge, true);
             assertEquals(true, fridgeMember.isSuperUser());
         }
