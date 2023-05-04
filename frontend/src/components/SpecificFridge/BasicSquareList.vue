@@ -336,7 +336,7 @@ img {
   }
 }
 
-@media only screen and (min-width: 350px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 480px) {
   body{
     height: 100%;
   }
