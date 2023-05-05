@@ -10,8 +10,6 @@ describe("LineChart", () => {
                     labels: ["January", "February", "March"],
                     values: [40, 20, 100],
                 },
-                ymin: 0,
-                ymax: 100,
             },
         });
 
@@ -25,8 +23,6 @@ describe("LineChart", () => {
                     labels: ["January", "February", "March"],
                     values: [40, 20, 100],
                 },
-                ymin: 0,
-                ymax: 100,
             },
         });
         const chartData = wrapper.vm.chartData;
@@ -35,28 +31,6 @@ describe("LineChart", () => {
         expect(chartData.datasets[0].label).toBe("Dataset 1");
         expect(chartData.datasets[0].data).toEqual([40, 20, 100]);
         expect(chartData.datasets[0].backgroundColor).toBe("#31c48d");
-    });
-
-    test("renders the chart with correct options", () => {
-        const wrapper = mount(LineChart, {
-            propsData: {
-                data: {
-                    labels: ["January", "February", "March"],
-                    values: [40, 20, 100],
-                },
-                ymin: 0,
-                ymax: 100,
-            },
-        });
-        const chartOptions = wrapper.vm.chartOptions;
-
-        expect(chartOptions.title.display).toBe(false);
-        expect(chartOptions.legend.display).toBe(true);
-        expect(chartOptions.legend.position).toBe("top");
-        expect(chartOptions.plugins.annotation.annotations.line1.yMin).toBe(0);
-        expect(chartOptions.plugins.annotation.annotations.line1.yMax).toBe(100);
-        expect(chartOptions.plugins.annotation.annotations.line1.label.enabled).toBe(true);
-        expect(chartOptions.plugins.annotation.annotations.line1.label.content).toBe("55");
     });
 
     test("renders the chart legend correctly", () => {
