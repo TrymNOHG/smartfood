@@ -43,10 +43,10 @@ describe('ItemInfo', () => {
                 }
             }
         });
-        expect(wrapper.find('.text h3:nth-of-type(3)').text()).toMatch('price 50kr');
+        expect(wrapper.find('.text h3:nth-of-type(3)').text()).toMatch('price: 50kr');
     });
 
-    test('amount price', () => {
+    test('renders amount', () => {
         const wrapper = shallowMount(ItemInfo, {
             propsData: { item },
             global: {
@@ -55,6 +55,6 @@ describe('ItemInfo', () => {
                 }
             }
         });
-        expect(wrapper.find('.text h3:last-of-type').text()).toMatch('amount: 250');
+        expect(wrapper.find('.text h3:last-of-type').text()).toMatch('Amount: 250.0');
     });
 });
