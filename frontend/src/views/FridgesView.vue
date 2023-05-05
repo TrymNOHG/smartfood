@@ -37,7 +37,7 @@ export default {
       const installElement = ref(null);
       const usageElement = ref(null);
       const route = useRoute()
-      const init = !(route.query.init === undefined || route.query.init === "false")
+      const appTour = !(route.query.appTour === undefined || route.query.appTour === "false")
 
 
 
@@ -55,7 +55,7 @@ export default {
           }
       });
 
-      /*const applicationTour = new Shepherd.Tour({
+      const applicationTour = new Shepherd.Tour({
           useModalOverlay: true,
           defaultStepOptions: {
               classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled',
@@ -67,7 +67,7 @@ export default {
               },
           },
 
-      });*/
+      });
 
       const fridgesTour = new Shepherd.Tour({
         useModalOverlay: true,
@@ -85,8 +85,8 @@ export default {
 
 
       return {
-        init,
-        //applicationTour,
+        appTour,
+        applicationTour,
         fridgesTour,
         installElement,
         usageElement,
@@ -96,18 +96,18 @@ export default {
     },
 
     created() {
-        if(this.init) {
-            this.$ref.firstLogginTour();
+        if(this.appTour) {
+            this.firstLogginTour();
         }
     },
 
     methods: {
       resetSteps(){
-        // if(this.$ref.applicationTour.steps.length !== 0) {
-        //     while (this.$ref.applicationTour.steps.length !== 0) {
-        //         this.$ref.applicationTour.steps.pop()
-        //     }
-        // }
+         if(this.applicationTour.steps.length !== 0) {
+             while (this.applicationTour.steps.length !== 0) {
+                 this.applicationTour.steps.pop()
+             }
+        }
         if(this.fridgesTour.steps.length !== 0) {
             while (this.fridgesTour.steps.length !== 0) {
                 this.fridgesTour.steps.pop()
@@ -124,8 +124,9 @@ export default {
         firstLogginTour() shows a welcome message to a new registered user, and shows the user a tour if user wants
         information about the application
        */
- /*     firstLogginTour(){
-        this.applicationTour.addSteps([
+
+        firstLogginTour(){
+          this.applicationTour.addSteps([
             {
                 id: 'welcome',
                 text: `
@@ -293,7 +294,7 @@ export default {
                 text: this.$t('tour: view:fridgesView method:firstLogginTour id:fridgesWindow usage:text'),
                 attachTo: {
                     element: 'div.router-view-container',
-                    /!*on: 'bottom',*!/
+                    on: 'bottom',
                 },
                 classes: 'shepherd-theme-arrows',
                 buttons: [
@@ -340,8 +341,8 @@ export default {
             },
             {
                 id: 'firstLogginTour-9',
-                title: this.$t('tour: view:fridgesView method:fridgesStepTour id:firstLogginTour-9 usage:title'),
-                text: this.$t('tour: view:fridgesView method:fridgesStepTour id:firstLogginTour-9 usage:text'),
+                title: this.$t('tour: view:fridgesView method:firstLogginTour id:firstLogginTour-9 usage:title'),
+                text: this.$t('tour: view:fridgesView method:firstLogginTour id:firstLogginTour-9 usage:text'),
                 attachTo: {
                     element: '#Fridge0',
                     on: 'top',
@@ -359,38 +360,38 @@ export default {
                 ],
 
             },
-            {
-                id: 'nav-tour-fridge',
-                text: this.$t('tour: view:fridgesView method:fridgesStepTour id:profile-tour usage:text'),
-                title: this.$t('tour: view:fridgesView method:fridgesStepTour id:profile-tour usage:title'),
-                attachTo: {
-                    element: '#app-nav',
-                    on: 'bottom',
-                },
-                classes: '',
-                buttons: [
-                    {
-                        action: function () {
-                            return this.back();
-                        },
-                        class: " shepherd-button ",
-                        secondary: true,
-                        text: this.$t('tour: button back'),
-                    },
-                    {
-                        action: function () {
-                            return this.next();
-                        },
-                        class: " shepherd-button ",
-                        text: this.$t('tour: button next'),
-                    },
-                ]
-            },
+            // {
+            //     id: 'nav-tour-fridge',
+            //     text: this.$t('tour: view:fridgesView method:fridgesStepTour id:profile-tour usage:text'),
+            //     title: this.$t('tour: view:fridgesView method:fridgesStepTour id:profile-tour usage:title'),
+            //     attachTo: {
+            //         element: '#app-nav',
+            //         on: 'bottom',
+            //     },
+            //     classes: '',
+            //     buttons: [
+            //         {
+            //             action: function () {
+            //                 return this.back();
+            //             },
+            //             class: " shepherd-button ",
+            //             secondary: true,
+            //             text: this.$t('tour: button back'),
+            //         },
+            //         {
+            //             action: function () {
+            //                 return this.next();
+            //             },
+            //             class: " shepherd-button ",
+            //             text: this.$t('tour: button next'),
+            //         },
+            //     ]
+            // },
 
 
         ])
           this.applicationTour.start()
-      },*/
+      },
 
 
       informationButton(){
