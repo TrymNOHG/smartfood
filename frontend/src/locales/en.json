@@ -144,5 +144,8 @@
   "success" : "Success",
   "success_add_recipe" : "Recipe added to cart",
   "delete_error" : "could not delete",
-  "error_add_missing_items" : "Could not add missing items"
+  "error_add_missing_items" : "Could not add missing items",
+  "update_item": "Update amount",
+  "amount": "Amount left",
+  "update_title": "Your Item has been updated"
 }

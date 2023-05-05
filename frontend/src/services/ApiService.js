@@ -15,7 +15,6 @@ export const getItems = async (searchQuery) => {
 };
 
 export const getItemsByPage = async (searchQuery, pageNr) => {
-    console.log(searchQuery);
     const response = axios.get(
         `https://kassal.app/api/v1/products?search=${searchQuery}&page=${pageNr}`,
         {
