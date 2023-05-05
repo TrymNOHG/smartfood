@@ -55,9 +55,12 @@ export const useLoggedInStore = defineStore('user', {
         async fetchUser() {
             await getUser()
                 .then(response => {
-                    this.user = response.data
+                    // const { data : {userId, username, fullName, email, picture, role}} = response
+                    // this.user = {userId, username, fullName, email, picture, role}
+                    this.user = response
                 }).catch(error => {
                     console.warn('error', error)
+                    //TODO: handle error
                 })
         },
         logout() {

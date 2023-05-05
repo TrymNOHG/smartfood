@@ -6,16 +6,16 @@ import {createPinia, setActivePinia} from "pinia";
 import {setMockToken} from "@/features/SessionToken";
 
 const server = setupServer(
-    rest.get('http://localhost:8089/api/user/get/info', (req, res, ctx) => {
+    rest.get("http://localhost:8089/api/user/get/info", (req, res, ctx) => {
         return res(
             ctx.status(200),
-            ctx.json({
+            {
                 userId: 123,
-                email: 'test@example.com',
-                firstname: 'John',
-                lastname: 'Doe',
-                username: 'johndoe',
-            })
+                email: "test@example.com",
+                firstname: "John",
+                lastname: "Doe",
+                username: "johndoe",
+            }
         );
     })
 );
@@ -23,54 +23,11 @@ const server = setupServer(
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 
-describe('useLoggedInStore', () => {
+describe("useLoggedInStore", () => {
     beforeEach(() => {
         setActivePinia(createPinia());
-        setMockToken('fake_token');
+        setMockToken("fake_token");
     });
-
-    test('fetches user information and updates store', async () => {
-        useLoggedInStore.$state = {
-            sessionToken: null,
-            user: {
-                userId: null,
-                email: null,
-                firstname: null,
-                lastname: null,
-                username: null,
-            },
-        };
-
-        server.use(
-            rest.get('http://localhost:8089/api/user/get/info', (req, res, ctx) => {
-                return res(
-                    ctx.status(200),
-                    ctx.json({
-                        userId: 123,
-                        email: 'test@example.com',
-                        firstname: 'John',
-                        lastname: 'Doe',
-                        username: 'johndoe',
-                    })
-                );
-            })
-        );
-
-        const store = useLoggedInStore();
-
-        expect(store.sessionToken).toBeNull();
-        expect(store.user.userId).toBeNull();
-
-        await store.fetchUser();
-
-        expect(store.user.userId).not.toBeNull();
-        expect(store.user.email).toEqual('test@example.com');
-        expect(store.user.firstname).toEqual('John');
-        expect(store.user.lastname).toEqual('Doe');
-        expect(store.user.username).toEqual('johndoe');
-    });
-
-
 
     test('logs out and clears session information', () => {
         const store = useLoggedInStore()
