@@ -41,7 +41,7 @@ import {useMealStore} from "../../store/store";
 import {object} from "yup";
 
 export default {
-  name: "BasicFridgeItem",
+  name: "meal",
   components: {FontAwesomeIcon},
 
   props: {

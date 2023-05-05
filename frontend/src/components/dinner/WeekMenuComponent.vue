@@ -7,7 +7,10 @@
         <meal
             v-if="getMealForDay(day)"
             :isSuperUser="false"
-            :meal="getMealForDay(day)"
+            :meal="{
+            ...getMealForDay(day),
+            description: getMealForDay(day).description
+          }"
         />
       </div>
     </div>
