@@ -16,6 +16,7 @@ import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Day;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Recipe;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipeSuggestion;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipeSuggestionId;
@@ -35,14 +36,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -497,5 +501,194 @@ public class RecipeServiceTest {
 
             });
         }
+    }
+
+    @Nested
+    @SpringBootTest
+    class GetRecipesByName{
+
+        @Autowired
+        RecipeRepository recipeRepository;
+
+        @Autowired
+        RecipeService recipeService;
+
+        @Test
+        @Transactional
+        void gets_correct_Recipe(){
+            Recipe recipe = Recipe.builder()
+                    .recipeName("TestName")
+                    .description("TestDescription")
+                    .author("TestAuthor")
+                    .servingSize(1)
+                    .difficulty(1)
+                    .thumbnailLink("TestLink")
+                    .cookTime(20)
+                    .recipeParts(new ArrayList<>())
+                    .instructions(new ArrayList<>())
+                    .recipeAllergenSet(new HashSet<>())
+                    .build();
+            recipeRepository.save(recipe);
+            Page<RecipeLoadDTO> recipeLoadDTO = recipeService.getRecipesByName("TestName", 0, 1);
+
+            assertEquals("TestName", recipeLoadDTO.get().toList().get(0).getRecipeName());
+        }
+
+        @Test
+        @Transactional
+        void returns_empty_page_if_no_items(){
+            Page<RecipeLoadDTO> recipeLoadDTOS = recipeService.getRecipesByName("TestName", 0, 1);
+            assertTrue(recipeLoadDTOS.isEmpty());
+        }
+
+    }
+
+    @Nested
+    @SpringBootTest
+    class GetRecipesByFridgeIdAndDay{
+
+        @Autowired
+        RecipeRepository recipeRepository;
+
+        @Autowired
+        RecipeService recipeService;
+
+        @Autowired
+        FridgeRepository fridgeRepository;
+
+        @Test
+        @Transactional
+        void does_not_throw_exception(){
+            Recipe recipe = Recipe.builder()
+                    .recipeName("TestName")
+                    .description("TestDescription")
+                    .author("TestAuthor")
+                    .servingSize(1)
+                    .difficulty(1)
+                    .thumbnailLink("TestLink")
+                    .cookTime(20)
+                    .recipeParts(new ArrayList<>())
+                    .instructions(new ArrayList<>())
+                    .recipeAllergenSet(new HashSet<>())
+                    .build();
+            recipeRepository.save(recipe);
+
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .build();
+            fridgeRepository.save(fridge);
+
+            assertDoesNotThrow(() -> recipeService.getRecipesByFridgeIdAndDay(1L, 0, 1, Day.FRIDAY));
+
+        }
+
+        @Test
+        @Transactional
+        void returns_empty_page_if_no_items(){
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .build();
+            fridgeRepository.save(fridge);
+            Page<RecipeLoadDTO> recipeLoadDTOS = recipeService.getRecipesByFridgeIdAndDay(1L, 0, 1, Day.FRIDAY);
+            assertTrue(recipeLoadDTOS.isEmpty());
+        }
+
+    }
+
+    @Nested
+    @SpringBootTest
+    class GetRecipesByFridgeId{
+
+        @Autowired
+        RecipeRepository recipeRepository;
+
+        @Autowired
+        RecipeService recipeService;
+
+        @Autowired
+        FridgeRepository fridgeRepository;
+
+        @Test
+        @Transactional
+        void does_not_throw_exception(){
+            Recipe recipe = Recipe.builder()
+                    .recipeName("TestName")
+                    .description("TestDescription")
+                    .author("TestAuthor")
+                    .servingSize(1)
+                    .difficulty(1)
+                    .thumbnailLink("TestLink")
+                    .cookTime(20)
+                    .recipeParts(new ArrayList<>())
+                    .instructions(new ArrayList<>())
+                    .recipeAllergenSet(new HashSet<>())
+                    .build();
+            recipeRepository.save(recipe);
+
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .build();
+            fridgeRepository.save(fridge);
+
+            assertDoesNotThrow(() -> recipeService.getRecipesByFridgeId(1L, 0, 1));
+
+        }
+
+        @Test
+        @Transactional
+        void returns_empty_page_if_no_items(){
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .build();
+            fridgeRepository.save(fridge);
+            Page<RecipeLoadDTO> recipeLoadDTOS = recipeService.getRecipesByFridgeId(1L, 0, 1);
+            assertTrue(recipeLoadDTOS.isEmpty());
+        }
+
+    }
+
+    @Nested
+    @SpringBootTest
+    class CountMatchingItems{
+
+        @Autowired
+        RecipeRepository recipeRepository;
+
+        @Autowired
+        RecipeService recipeService;
+
+        @Autowired
+        FridgeRepository fridgeRepository;
+
+        @Test
+        @Transactional
+        void does_not_throw_exception(){
+
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .build();
+            fridgeRepository.save(fridge);
+
+            RecipeLoadDTO recipeLoadDTO = RecipeLoadDTO.builder()
+                    .recipeId(1L)
+                    .recipeName("TestName")
+                    .description("TestDescription")
+                    .author("TestAuthor")
+                    .servingSize(1)
+                    .difficulty(1)
+                    .recipeParts(new ArrayList<>())
+                    .instructions(new ArrayList<>())
+                    .allergens(new ArrayList<>())
+                    .build();
+
+            assertDoesNotThrow(() -> recipeService.countMatchingItems(recipeLoadDTO, 1L));
+
+        }
+
     }
 }

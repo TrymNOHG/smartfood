@@ -24,6 +24,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ *  A controller class handling shopping items and their operations.
+ *
+ * @author Trym Hamer Gudvangen
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/item/shopping")
@@ -101,7 +106,6 @@ public class ShoppingItemsController implements IShoppingItemsController{
     }
 
 
-    //TODO: add authentication
     /**
      * Deletes the items on the shopping list for a given fridge.
      *
@@ -122,7 +126,6 @@ public class ShoppingItemsController implements IShoppingItemsController{
         return ResponseEntity.ok().build();
     }
 
-    //TODO: right now only super users can update a shopping list, including suggestions. This may need to be changed later
     /**
      * This method updates a given fridge item to contain the information received.
      * @param shoppingItemUpdateDTO New shopping item information, given as a ShoppingItemUpdateDTO
@@ -142,7 +145,6 @@ public class ShoppingItemsController implements IShoppingItemsController{
         return ResponseEntity.ok().build();
     }
 
-    //TODO: add authentication and check whether user is a superuser or not
     /**
      * Buys the items on the shopping list for a given fridge and places it in fridge items.
      *
@@ -204,11 +206,27 @@ public class ShoppingItemsController implements IShoppingItemsController{
         return ResponseEntity.ok().build();
     }
 
-    //TODO: move these method to a service...
+    /**
+     *  This method authenticates the given authentication object by checking if it is null or not authenticated.
+     *  If the authentication is null or not authenticated, an UnauthorizedException is thrown.
+     *  @param authentication           The authentication object to authenticate
+     *  @throws UnauthorizedException   if the authentication is null or not authenticated
+     */
     private void authenticate(Authentication authentication){
         if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
     }
 
+    /**
+     * This method validates whether the authenticated user is a superuser for the given fridge ID.
+     * The method first authenticates the user using the provided authentication object.
+     * It then checks if the authenticated user is a superuser for the given fridge ID using the userService.
+     * If the user is not a superuser, an UnauthorizedException is thrown.
+     *
+     * @param fridgeId the ID of the fridge to check for superuser access
+     * @param authentication the authentication object of the user
+     * @throws UnauthorizedException if the authentication is null or not authenticated,
+     *                              or if the authenticated user is not a superuser for the given fridge ID
+     */
     private void validateSuperUser(Long fridgeId, Authentication authentication) {
         authenticate(authentication);
 

@@ -6,6 +6,7 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemMoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.ShoppingListLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.filter.JwtAuthenticationFilter;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
@@ -26,10 +27,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,6 +45,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -255,4 +263,20 @@ public class ItemControllerTest {
 
         verify(itemService, times(1)).acceptSuggestion(itemRemoveDTO);
     }
+
+    @Test
+    public void testAddUnitToExistingItemsWithAuthentication() throws Exception {
+        Authentication authentication = new UsernamePasswordAuthenticationToken("test_user", null);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/item/addUnits")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(request -> {
+                            request.setRemoteUser("test_user");
+                            return request;
+                        })
+                        .with(authentication(authentication)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+
 }

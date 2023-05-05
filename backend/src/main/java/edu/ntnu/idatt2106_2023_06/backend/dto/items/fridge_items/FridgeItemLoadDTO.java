@@ -5,6 +5,9 @@ import lombok.NonNull;
 
 import java.time.LocalDateTime;
 
+/**
+ *  This record represents a data transfer object for loading a fridge item.
+ */
 @Builder
 public record FridgeItemLoadDTO(@NonNull Long itemId, @NonNull String name,
                                 String description, @NonNull String store,

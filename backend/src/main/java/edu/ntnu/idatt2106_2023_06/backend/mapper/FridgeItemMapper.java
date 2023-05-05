@@ -8,8 +8,17 @@ import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 
 import java.time.LocalDateTime;
 
+/**
+ * This class provides methods for mapping between different types of Fridge items DTOs and Fridge items models.
+ */
 public class FridgeItemMapper {
 
+    /**
+     * Converts a ShoppingItems object into a FridgeItems object.
+     *
+     * @param shoppingItems The ShoppingItems object to convert.
+     * @return The resulting FridgeItems object.
+     */
     public static FridgeItems toFridgeItems(ShoppingItems shoppingItems) {
         return FridgeItems
                 .builder()
@@ -22,6 +31,12 @@ public class FridgeItemMapper {
                 .build();
     }
 
+    /**
+     * Converts a FridgeItems object into a FridgeItemLoadDTO object.
+     *
+     * @param fridgeItem The FridgeItems object to convert.
+     * @return The resulting FridgeItemLoadDTO object.
+     */
     public static FridgeItemLoadDTO toFridgeItemLoadDTO(FridgeItems fridgeItem) {
         Item item = fridgeItem.getItem();
         return FridgeItemLoadDTO

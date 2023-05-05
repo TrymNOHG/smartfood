@@ -1,5 +1,8 @@
 package edu.ntnu.idatt2106_2023_06.backend.exception.not_found;
 
+/**
+ * This exception is thrown when a notification can not be found.
+ */
 public class NotificationNotFoundException extends NotFoundException {
 
     /**

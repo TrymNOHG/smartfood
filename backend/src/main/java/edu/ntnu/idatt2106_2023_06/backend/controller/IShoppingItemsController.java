@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * This interface contains the outline of essential functions for the ShoppingItemsController.
+ */
 public interface IShoppingItemsController {
 
 
@@ -59,8 +62,14 @@ public interface IShoppingItemsController {
     @PostMapping(value="/shopping/delete/all", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Delete items from shopping list")
     ResponseEntity<Object> deleteAllItemsFromShoppingList(@ParameterObject @RequestBody List<ItemRemoveDTO> itemDTOList,
-                                                          Authentication authentication);
 
+                                                          Authentication authentication);
+    /**
+     * This method updates a given fridge item to contain the information received.
+     * @param shoppingItemUpdateDTO New shopping item information, given as a ShoppingItemUpdateDTO
+     * @param authentication        The authentication of the user who sent in the request, given as an Authentication object.
+     * @return                      A ResponseEntity indicating the success or failure of the operation.
+     */
     @PutMapping(value="/shopping/update")
     @Operation(summary = "Update item from shopping list")
     ResponseEntity<Object> updateShoppingListItem(@ParameterObject @RequestBody ShoppingItemUpdateDTO shoppingItemUpdateDTO,

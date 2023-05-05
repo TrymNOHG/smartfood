@@ -51,7 +51,7 @@ public class StatType {
     /**
      * The items from the given store.
      */
-    @OneToMany(mappedBy = "statType", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "statType", cascade = CascadeType.MERGE)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     @JsonIgnore

@@ -4,7 +4,9 @@ import lombok.*;
 
 import java.util.List;
 
-//TODO: make sure instructions and parts arrive in the correct order.
+/**
+ * This record represents the DTO used for loading a whole recipe.
+ */
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor

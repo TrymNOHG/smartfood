@@ -45,9 +45,6 @@ public class FridgeItemsController implements IFridgeItemsController{
      */
     private final Logger logger = LoggerFactory.getLogger(FridgeItemsController.class);
 
-    //TODO: in next refactor round, make different creationDTOs, read up a little on DTO standards
-    //TODO: add authentication!!!
-
     /**
      * Adds an item to the fridge.
      *
@@ -140,10 +137,28 @@ public class FridgeItemsController implements IFridgeItemsController{
         return ResponseEntity.ok(itemList);
     }
 
+
+    /**
+     *  This method authenticates the given authentication object by checking if it is null or not authenticated.
+     *  If the authentication is null or not authenticated, an UnauthorizedException is thrown.
+     *  @param authentication           The authentication object to authenticate
+     *  @throws UnauthorizedException   if the authentication is null or not authenticated
+     */
     private void authenticate(Authentication authentication){
         if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
     }
 
+    /**
+     * This method validates whether the authenticated user is a superuser for the given fridge ID.
+     * The method first authenticates the user using the provided authentication object.
+     * It then checks if the authenticated user is a superuser for the given fridge ID using the userService.
+     * If the user is not a superuser, an UnauthorizedException is thrown.
+     *
+     * @param fridgeId the ID of the fridge to check for superuser access
+     * @param authentication the authentication object of the user
+     * @throws UnauthorizedException if the authentication is null or not authenticated,
+     *                              or if the authenticated user is not a superuser for the given fridge ID
+     */
     private void validateSuperUser(Long fridgeId, Authentication authentication) {
         authenticate(authentication);
 
