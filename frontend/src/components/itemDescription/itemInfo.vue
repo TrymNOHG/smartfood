@@ -6,7 +6,7 @@
           .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
       <h3>{{ $t('expire_date') }}: {{new Date(item.expirationDate)
           .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h3>
-      <h3>{{ $t('price') }}: {{ item.price }}kr</h3>
+      <h3>{{ $t('price') }} {{ item.price }}kr</h3>
       <h3>{{ $t('amount') }}: {{ item.amount}} {{ item.unit }}</h3>
     </div>
   </div>

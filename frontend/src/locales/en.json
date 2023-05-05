@@ -141,6 +141,6 @@
   "default_part_name" : "",
   "you_have" : "You have",
   "update_item": "Update amount",
-  "amount": "Amount left: ",
+  "amount": "Amount left",
   "update_title": "Your Item has been updated"
 }

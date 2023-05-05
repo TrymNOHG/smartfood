@@ -124,10 +124,7 @@
           </vue-collapsible-panel-group>
       </div>
     <transition name="fade">
-      <div
-          v-if="!listView"
-          class="wrapper"
-      >
+      <div v-if="!listView" class="wrapper">
         <basic-fridge-item
             :isSuperUser="isCurrentUserSuperUser"
             v-for="(item, index) in fridgeItems"
@@ -823,6 +820,7 @@ select {
 .list-wrapper {
   display: grid;
   grid-template-columns: 50% 50%;
+  grid-template-rows: repeat(auto-fill, minmax(120px, 120px));
   z-index: 0;
   margin: 2% 2% 80px;
 }

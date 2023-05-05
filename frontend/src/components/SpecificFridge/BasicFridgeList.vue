@@ -9,6 +9,7 @@
         <img class="item-img" :src="item.image" alt="item image" />
         <h3 class="item-name">{{ item.name }}</h3>
         <div class="item-info">
+          <h4 class="price-text">{{ $t("Amount") }}: {{ item.amount }} {{ item.unit }}</h4>
           <h4>
             {{ $t("expire_date") }}:
             {{
@@ -19,9 +20,6 @@
               })
             }}
           </h4>
-          <h4 class="price-text">{{ $t("price") }} {{ item.price }}</h4>
-          <h4 class="price-text">{{ $t("Amount") }}: {{ item.amount }} {{ item.unit }}</h4>
-
         </div>
         <font-awesome-icon
             v-if="isSuperUser"
@@ -184,7 +182,7 @@ export default {
 
 .item-img {
   max-height: 80px;
-  max-width: 100%;
+  width: 100px;
   object-fit: contain;
 }
 
@@ -202,6 +200,7 @@ export default {
 
 .item-name {
   margin-left: auto;
+  width: 200px;
 }
 
 #item-link {
