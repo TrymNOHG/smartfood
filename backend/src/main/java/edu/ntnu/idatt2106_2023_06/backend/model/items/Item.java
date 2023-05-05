@@ -92,6 +92,12 @@ public class Item {
     private String unit;
 
     /**
+     * The number of days this item will last in the fridge till it expires.
+     */
+    @Column(name = "expires_in", nullable = false)
+    private int expiresIn;
+
+    /**
      * The items in the recipe.
      */
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)

@@ -122,7 +122,7 @@ class RecipeItemsTest {
                      new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                     "picture.png", "12345678", 100.0, "l", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                     "picture.png", "12345678", 100.0, "l",4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             RecipeItems recipeItems = new RecipeItems(new RecipeItemId(recipePart.getRecipePartId(), item.getItemId()), item, recipePart, 1, "L");
             assertEquals(item, recipeItems.getItem());
         }
@@ -133,7 +133,7 @@ class RecipeItemsTest {
                     new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    "picture.png", "12345678", 100.0, "l", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    "picture.png", "12345678", 100.0, "l",4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             RecipeItems recipeItems = new RecipeItems(new RecipeItemId(recipePart.getRecipePartId(), item.getItemId()), item, recipePart, 1, "L");
             assertEquals(recipePart, recipeItems.getRecipePart());
         }
@@ -144,7 +144,7 @@ class RecipeItemsTest {
                     new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    "picture.png", "12345678", 100.0, "l", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    "picture.png", "12345678", 100.0, "l", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             RecipeItems recipeItems = new RecipeItems(new RecipeItemId(recipePart.getRecipePartId(), item.getItemId()), item, recipePart, 1, "L");
             assertEquals(1, recipeItems.getQuantity());
         }
@@ -155,7 +155,7 @@ class RecipeItemsTest {
                     new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    "picture.png", "12345678", 100.0, "l", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    "picture.png", "12345678", 100.0, "l", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             RecipeItems recipeItems = new RecipeItems(new RecipeItemId(recipePart.getRecipePartId(), item.getItemId()), item, recipePart, 1, "L");
             assertEquals("L", recipeItems.getUnitOfMeasurement());
         }

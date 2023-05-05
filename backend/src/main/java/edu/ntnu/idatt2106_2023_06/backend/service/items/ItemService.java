@@ -102,7 +102,6 @@ public class ItemService implements IItemService {
             return item;
         }
 
-        System.out.println(itemDTO);
         Item i = ItemMapper.toItem(itemDTO, store);
         itemRepository.save(i);
 
@@ -136,7 +135,7 @@ public class ItemService implements IItemService {
                         .fridge(fridge)
                         .amount(0)
                         .purchaseDate(LocalDateTime.now())
-                        .expirationDate(LocalDateTime.now().plusDays(4)) //TODO: change to a valid expiration date....
+                        .expirationDate(LocalDateTime.now().plusDays(item.getExpiresIn()))
                         .build());
 
         fridgeItem.setAmount(fridgeItem.getAmount() + itemDTO.quantity() * fridgeItem.getItem().getAmount());
@@ -536,6 +535,5 @@ public class ItemService implements IItemService {
             itemRepository.save(item);
         }
     }
-
 
 }

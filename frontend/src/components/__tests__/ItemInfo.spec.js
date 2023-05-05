@@ -7,6 +7,7 @@ describe('ItemInfo', () => {
         purchaseDate: '2022-04-26',
         expirationDate: '2022-05-26',
         price: '50',
+        amount: 250
     };
 
     test('renders purchase date', () => {
@@ -42,6 +43,18 @@ describe('ItemInfo', () => {
                 }
             }
         });
-        expect(wrapper.find('.text h3:last-of-type').text()).toMatch('price: 50kr');
+        expect(wrapper.find('.text h3:nth-of-type(3)').text()).toMatch('price: 50kr');
+    });
+
+    test('renders amount', () => {
+        const wrapper = shallowMount(ItemInfo, {
+            propsData: { item },
+            global: {
+                mocks: {
+                    $t: (msg) => msg
+                }
+            }
+        });
+        expect(wrapper.find('.text h3:last-of-type').text()).toMatch('Amount: 250.0');
     });
 });
