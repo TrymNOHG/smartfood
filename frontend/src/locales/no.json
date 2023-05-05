@@ -1,4 +1,5 @@
 {
+  "passwords_do_not_match": "Passordene stemmer ikke overens",
   "matsmart": "SmartMat",
   "dinner": "Middag",
   "fridge": "Kjøleskap",
@@ -143,5 +144,8 @@
   "default_part_name" : "",
   "you_have": "Du har",
   "success" : "Suksess",
-  "success_add_recipe" : "Oppskriften ble lagt til i handlekurven"
+  "success_add_recipe" : "Oppskriften ble lagt til i handlekurven",
+  "update_item": "Updater mengden",
+  "amount": "Mengde igjen",
+  "update_title": "Varen din ble oppdatert"
 }

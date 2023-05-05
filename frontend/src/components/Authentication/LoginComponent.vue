@@ -38,7 +38,7 @@
           <a href="#">{{ $t("forgot_password") }}</a>
         </div>
 
-        <button type="submit" @click="submit" id="login-btn">{{ $t("login") }}</button>
+        <BasicButton type="submit" @click="submit" id="login-btn" :button-text="$t('login')" />
         <div class="login-register">
           <p>
             {{ $t("dont_have_account") }}
@@ -58,11 +58,13 @@ import router from "@/router/router";
 import { loginUser } from "@/services/UserService";
 import { useStorage } from "vue3-storage";
 import { RouterLink } from 'vue-router'
+import BasicButton from "@/components/basic-components/BasicButton.vue";
 
 
 export default {
   name: "LoginComponent",
   components: {
+    BasicButton,
     RouterLink
   },
   setup() {
