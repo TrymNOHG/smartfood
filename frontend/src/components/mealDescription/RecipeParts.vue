@@ -6,9 +6,9 @@
           v-for="item in part.ingredients"
           :key="item.itemId"
           class="item-info"
-          :class="{ 'has-item': item.fridgeAmount >= item.quantity, 'no-item': item.fridgeAmount < item.quantity }"
+          :class="{ 'has-item': getItemQuantity(item) >= item.quantity, 'no-item': getItemQuantity(item) < item.quantity }"
       >
-        <span class="item-status">{{ item.fridgeAmount >= item.quantity ? '✓' : '✗' }}</span>
+        <span class="item-status">{{ getItemQuantity(item) >= item.quantity ? '✓' : '✗' }}</span>
         <h4>{{ item.name }}</h4>
         <p>{{ item.quantity }} {{ $t(item.unitOfMeasurement) }}</p>
         <p>{{ $t('you_have') }}: {{ getItemQuantity(item) }} {{ $t(item.unitOfMeasurement) }}</p>

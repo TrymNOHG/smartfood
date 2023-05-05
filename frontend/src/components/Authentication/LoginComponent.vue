@@ -44,9 +44,7 @@
           {{ $t(submitMessage) }}
         </h5>
 
-        <div class="remember-forgot">
-          <a href="#">{{ $t("forgot_password") }}</a>
-        </div>
+
 
         <BasicButton type="submit" @click="submit" id="login-btn" :button-text="$t('login')" />
         <div class="login-register">
