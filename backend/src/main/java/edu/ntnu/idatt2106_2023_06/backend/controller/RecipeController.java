@@ -216,7 +216,7 @@ public class RecipeController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Object.class)) })}
     )
-    public ResponseEntity<Object> denySuggestion(@ParameterObject @RequestParam(name="recipe") Long fridgeId,
+    public ResponseEntity<Object> denySuggestion(@ParameterObject @RequestParam(name="fridge") Long fridgeId,
                                                    @ParameterObject @RequestParam(name="recipe") Long recipeId,
                                                    @ParameterObject @RequestParam(name="user") Long userId,
                                                    Authentication authentication) {
