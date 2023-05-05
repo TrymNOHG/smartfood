@@ -5,8 +5,17 @@ import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 
+/**
+ The ShoppingItemMapper class contains methods for mapping between FridgeItems and ShoppingItems model, and
+ between Item and ShoppingListLoadDTO DTO.
+ */
 public class ShoppingItemMapper {
 
+    /**
+     * This method converts a FridgeItems object to a ShoppingItems object.
+     * @param fridgeItems FridgeItems object to be converted.
+     * @return ShoppingItems object.
+     */
     public static ShoppingItems toShoppingItem(FridgeItems fridgeItems) {
         return ShoppingItems
                 .builder()
@@ -17,6 +26,13 @@ public class ShoppingItemMapper {
                 .build();
     }
 
+    /**
+     * This method converts an Item object to a ShoppingListLoadDTO object.
+     * @param item Item object to be converted.
+     * @param quantity The quantity of the item.
+     * @param suggestion Boolean value representing whether the item is a suggestion or not.
+     * @return ShoppingListLoadDTO object.
+     */
     public static ShoppingListLoadDTO toShoppingListLoadDTO(Item item, int quantity, boolean suggestion) {
         return ShoppingListLoadDTO
                 .builder()
