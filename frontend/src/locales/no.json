@@ -199,8 +199,32 @@
       "tour: view:fridgesView method:fridgesStepTour id:information-button usage:text": "Du kan klikke på informasjonsknappen når som helst for å få en omvisning på gjeldende side eller hele appen.",
 
   "One Fridge__":"This is tour for the list of all the fridges",
+
+      "tour: view:fridgeView method:fridgeViewStepTour id:grey-field-header usage:title": "Faner",
+      "tour: view:fridgeView method:fridgeViewStepTour id:grey-field-header usage:text": "Dette grå feltet viser fanene i et kjøleskap, og den lysegrå markeringen viser hvilken fane du er på",
       "tour: view:fridgeView method:fridgeStepsTour id: usage:title":"",
       "tour: view:fridgeView method:fridgeStepsTour id: usage:text":"",
       "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:title": "Dette er en tittel",
-      "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:text": "Dette er tekst"
+      "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:text": "Dette er tekst",
+      "tour: view:fridgeView method:fridgeStepsTour id:grey-field-header-fridge usage:title": "Kjøleskap-fanen",
+      "tour: view:fridgeView method:fridgeStepsTour id:grey-field-header-fridge usage:text": "Nå ser du kjøleskapssiden, som viser deg elementene i kjøleskapet ditt",
+      "tour: view:fridgeView method:fridgeStepsTour id:items usage:title": "Matvarer",
+      "tour: view:fridgeView method:fridgeStepsTour id:items usage:text": "Matvarene vises i dette vinduet. Hold musepekeren over og se informasjon om varen, og slett matvaren",
+      "tour: view:fridgeView method:fridgeStepsTour id:search usage:title": "Søk etter vare",
+      "tour: view:fridgeView method:fridgeStepsTour id:search usage:text": "Her kan du søke etter matvarer og legge dem til i kjøleskapet. <br> <br> For vanlige brukere blir matvaren lagt til på handlelisten",
+      "tour: view:fridgeView method:fridgeStepsTour id:filter usage:title": "Filter",
+      "tour: view:fridgeView method:fridgeStepsTour id:filter usage:text": "Ved å klikke på \"Filter\", kan du endre visningen av matvarer og sortere etter forskjellige variabler",
+
+
+      "tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:title": "Medlemsfanen",
+      "tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:text": "Nå ser du medlemssiden. <br><br> Som en superbruker kan du: <ul><li>Se alle medlemmer i kjøleskapet</li><li>Legge til medlemmer</li><li>Endre tittel på medlemmer</li><li>Fjerne medlemmer</li><li>Fjerne deg selv fra kjøleskapet</li></ul> <br> Som en vanlig bruker kan du: <ul><li>Se alle medlemmer i kjøleskapet</li><li>Fjerne deg selv fra kjøleskapet</li></ul>",
+      "tour: view:fridgeView method:memberStepTour id:single-member usage:title": "Medlem-fane",
+      "tour: view:fridgeView method:memberStepTour id:single-member usage:text":"Her ser du en enkel representasjon av et medlem i kjøleskapet",
+      "tour: view:fridgeView method:memberStepTour id:edit-user usage:title":"Endre tittel",
+      "tour: view:fridgeView method:memberStepTour id:edit-user usage:text":"For å endre tittelen på medlemmet, trykk på rediger-knappen eller slett medlemmet ved å klikke på søppelbøtten",
+      "tour: view:fridgeView method:memberStepTour id:add-user usage:title": "Legg til medlem",
+      "tour: view:fridgeView method:memberStepTour id:add-user usage:text": "For å legge til et nytt medlem i dette kjøleskapet, kan du trykke på denne knappen"
+
+
+
 }

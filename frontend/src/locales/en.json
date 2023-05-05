@@ -198,9 +198,28 @@
       "tour: view:fridgesView method:fridgesStepTour id:information-button usage:text":"You can click on the information-button all the time to get a tour on the current page or the whole app",
 
   "One Fridge__":"This is tour for the list of all the fridges",
+      "tour: view:fridgeView method:fridgeViewStepTour id:grey-field-header usage:title": "Tabs",
+      "tour: view:fridgeView method:fridgeViewStepTour id:grey-field-header usage:text": "This grey section shows you the tabs in a fridge, and the light grey marking shows which tab you are in",
       "tour: view:fridgeView method:fridgeStepsTour id: usage:title":"",
       "tour: view:fridgeView method:fridgeStepsTour id: usage:text":"",
-      "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:title": "This is a title",
-      "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:text": "This is text"
+      "tour: view:fridgeView method:fridgeStepsTour id:fridgeWindow usage:title": "Text frige",
+      "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:text": "This is text",
+      "tour: view:fridgeView method:fridgeStepsTour id:grey-field-header-fridge usage:title": "Fridge tab",
+      "tour: view:fridgeView method:fridgeStepsTour id:grey-field-header-fridge usage:text": "Here you see the fridge which contains the groceries.<br><br> Main functions in this window is: <ul><li>See all the groceries in the fridge</li><li>Add groceries to the fridge</li><li>Keep track on expiration date</li><li>Remove items in fridge</li></ul> <br> Ass a normal user, you can <ul><li>See all the groceries in the fridge</li><li>Make suggestions about adding groceries to the fridge</li></ul>",
+      "tour: view:fridgeView method:fridgeStepsTour id:items usage:title": "Groceries",
+      "tour: view:fridgeView method:fridgeStepsTour id:items usage:text": "The groceries are shown in this window. Hover over and see information, and delete the grocery",
+      "tour: view:fridgeView method:fridgeStepsTour id:search usage:title": "Search item",
+      "tour: view:fridgeView method:fridgeStepsTour id:search usage:text": "In this section, you can search on groceries and add them to the fridge. <br> <br> For normal user, the grocery is moved to the shopping list",
+      "tour: view:fridgeView method:fridgeStepsTour id:filter usage:title": "Filter",
+      "tour: view:fridgeView method:fridgeStepsTour id:filter usage:text": "By clicking \"Filter\", you can change the representation of groceries and sort on different variables",
+
+      "tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:title": "Member tab",
+      "tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:text": "Now you see the member page.<br><br> Ass super user, you can: <ul><li>See all members in fridge</li><li>Add members</li><li>Change title of members</li><li>Remove members</li><li>Remove your self from the fridge</li></ul> <br> Ass a normal user, you can <ul><li>See all members in fridge</li><li>Remove your self from the fridge</li></ul>",
+      "tour: view:fridgeView method:memberStepTour id:single-member usage:title":"Member tab",
+      "tour: view:fridgeView method:memberStepTour id:single-member usage:text":"Here you see the single representation of a member of the fridge",
+      "tour: view:fridgeView method:memberStepTour id:edit-user usage:title":"Change title",
+      "tour: view:fridgeView method:memberStepTour id:edit-user usage:text":"To change the title of the member,press the edit button or delete the member by clicking the bin",
+      "tour: view:fridgeView method:memberStepTour id:add-user usage:title": "Add member",
+      "tour: view:fridgeView method:memberStepTour id:add-user usage:text": "To add a new user to this fridge, you can press this button"
 
 }
