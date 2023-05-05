@@ -77,7 +77,6 @@ hr {
 
 
 
-
 @media only screen and (max-width: 768px) {
   .meal-header {
     flex-direction: column;
@@ -90,6 +89,13 @@ hr {
     width: 100%;
     max-width: 400px;
   }
+
+  .meal-name-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
 
   .meal-name {
     font-size: 20px;
