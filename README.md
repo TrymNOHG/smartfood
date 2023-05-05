@@ -41,13 +41,13 @@ cd backend
 2. Install maven dependencies 
 
 ```
-mvn clean install
+./mvnw spring-boot:run
 ```
 
 3. Run the application
 
 ```
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 
 The backend will run on port `8089`.
