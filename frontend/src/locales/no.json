@@ -141,5 +141,8 @@
   "deleted_items" : "slettet varer",
   "Added_to_fridge" : "lagt til i kjøleskapet",
   "default_part_name" : "",
-  "you_have": "Du har"
+  "you_have": "Du har",
+  "update_item": "Updater mengden",
+  "amount": "Mengde igjen",
+  "update_title": "Varen din ble oppdatert"
 }

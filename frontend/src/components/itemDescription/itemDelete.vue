@@ -30,12 +30,11 @@ export default {
 
   methods: {
     deleteItem(item) {
-      let deletePercentage = this.sliderValue
-      this.$emit('delete-item', item, deletePercentage);
+      let amountDeleted = this.sliderValue
+      this.$emit('delete-item', item, amountDeleted);
     },
     updateItem(item) {
       let newAmount = this.sliderValue
-      console.log(newAmount)
       this.$emit('update-item', item, newAmount);
     }
   },

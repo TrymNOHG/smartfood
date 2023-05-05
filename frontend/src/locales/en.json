@@ -139,5 +139,8 @@
   "deleted_items" : "Deleted items",
   "Added_to_fridge" : "Added to fridge",
   "default_part_name" : "",
-  "you_have" : "You have"
+  "you_have" : "You have",
+  "update_item": "Update amount",
+  "amount": "Amount left",
+  "update_title": "Your Item has been updated"
 }

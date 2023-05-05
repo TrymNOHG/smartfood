@@ -124,10 +124,7 @@
           </vue-collapsible-panel-group>
       </div>
     <transition name="fade">
-      <div
-          v-if="!listView"
-          class="wrapper"
-      >
+      <div v-if="!listView" class="wrapper">
         <basic-fridge-item
             :isSuperUser="isCurrentUserSuperUser"
             v-for="(item, index) in fridgeItems"
@@ -263,11 +260,18 @@ export default {
           });
     },
 
-    async deleteItem(itemToDelete, deletePercentage) {
+    async deleteItem(itemToDelete, amountToBeDeleted) {
+      let amountDeleted = null;
+      const stkStandard = 250;
+
+      if (itemToDelete.unit === "g" || itemToDelete.unit === "ml") {
+        amountDeleted = amountToBeDeleted;
+      } else {
+        amountDeleted = Math.floor(amountToBeDeleted * stkStandard);
+      }
+
       const statDeleteFromFridgeDTO = {
-        percentageThrown: parseFloat(deletePercentage),
-        price: itemToDelete.price,
-        quantity: parseFloat(deletePercentage),
+        amountDeleted: amountDeleted,
         itemName: itemToDelete.name,
         storeName: itemToDelete.store,
         fridgeId: this.fridge.fridgeId,
@@ -280,10 +284,8 @@ export default {
         quantity: 0,
       };
 
-      console.log(itemRemoveDTO)
-
       await this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO);
-      await this.itemStore.deleteItemByNameIdStoreAmount  (itemRemoveDTO);
+      await this.itemStore.deleteItemByNameIdStoreAmount(itemRemoveDTO);
       await this.itemStore
           .fetchItemsFromFridgeById(this.fridge.fridgeId)
           .then((items) => {
@@ -399,6 +401,7 @@ export default {
       Quagga.stop();
       this.scannerActive = false;
     },
+
     async onDetected(result) {
       const code = result.codeResult.code;
 
@@ -417,6 +420,7 @@ export default {
             console.warn("error1", error); //TODO: add exception handling
           });
     },
+
     toggleCamera() {
       if (this.scannerActive == true) {
         this.stopScanner();
@@ -551,7 +555,6 @@ export default {
 
     async function loadMoreSearchItems() {
       if (isLoading.value) return;
-      console.log("REACHED BOTTOM BOOM!!");
       isLoading.value = true;
       try {
         let response = await getItemsByPage(searchQuery.value, nextPage);
@@ -823,6 +826,7 @@ select {
 .list-wrapper {
   display: grid;
   grid-template-columns: 50% 50%;
+  grid-template-rows: repeat(auto-fill, minmax(120px, 120px));
   z-index: 0;
   margin: 2% 2% 80px;
 }
