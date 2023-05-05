@@ -1,4 +1,6 @@
 {
+  "first_name_error": "First name is required",
+  "last_name_error": "Last name is required",
   "passwords_do_not_match": "Passwords do not match",
   "matsmart": "SmartMat",
   "dinner": "Dinner",
