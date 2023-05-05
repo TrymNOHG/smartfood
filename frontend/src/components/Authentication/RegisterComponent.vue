@@ -1,107 +1,145 @@
 <template>
-  <div class="fridge-wrapper">
-    <div class="form-box login">
-      <h2>{{ $t("register") }}</h2>
-      <form @submit.prevent="submit" :class="{ 'has-errors': hasErrors }">
-        <div class="input-box">
-          <span class="icon"
-            ><font-awesome-icon icon="fa-solid fa-signature"
-          /></span>
-          <input
-            type="text"
-            required
-            v-model.trim="firstName"
-            name="firstName"
-          />
-          <label>{{ $t("first_name") }}</label>
-          <div v-if="errors['firstName']" class="error">
-            {{ $t(errors["firstName"]) }}
-          </div>
-        </div>
-        <div class="input-box">
-          <span class="icon"
-            ><font-awesome-icon icon="fa-solid fa-signature"
-          /></span>
-          <input type="text" required v-model.trim="lastName" name="lastName" />
-          <label>{{ $t("last_name") }}</label>
-          <div v-if="errors['lastName']" class="error">
-            {{ $t(errors["lastName"]) }}
-          </div>
-        </div>
+    <div class="fridge-wrapper">
+        <div class="form-box login">
+            <h2>{{ $t("register") }}</h2>
+            <form @submit.prevent="submit" :class="{ 'has-errors': hasErrors }" role="form">
+                <div class="input-box">
+          <span class="icon" aria-hidden="true">
+            <font-awesome-icon icon="fa-solid fa-signature"/>
+            <span class="sr-only">{{ $t("first_name_icon") }}</span>
+          </span>
+                    <input
+                            type="text"
+                            required
+                            v-model.trim="firstName"
+                            name="firstName"
+                            id="firstName"
+                            aria-labelledby="firstNameLabel"
+                    />
+                    <label id="firstNameLabel">{{ $t("first_name") }}</label>
+                    <div v-if="errors['firstName']" class="error" role="alert" aria-describedby="firstName">
+                        {{ $t(errors["firstName"]) }}
+                    </div>
+                </div>
 
-        <div class="input-box">
-          <span class="icon"
-            ><font-awesome-icon icon="fa-solid fa-person"
-          /></span>
-          <input type="text" required v-model.trim="username" name="username" />
-          <label>{{ $t("username") }}</label>
-          <div v-if="errors['username']" class="error">
-            {{ $t(errors["username"]) }}
-          </div>
-        </div>
-        <div class="input-box">
-          <span class="icon"
-            ><font-awesome-icon icon="fa-solid fa-envelope"
-          /></span>
-          <input type="email" required v-model.trim="email" name="email" />
-          <label>{{ $t("email") }}</label>
-          <div v-if="errors['email']" class="error">
-            {{ $t(errors["email"]) }}
-          </div>
-        </div>
-        <div class="input-box">
-          <span class="icon"
-            ><font-awesome-icon icon="fa-solid fa-lock"
-          /></span>
-          <input
-            type="password"
-            required
-            v-model.trim="password"
-            name="password"
-          />
-          <label>{{ $t("password") }}</label>
-          <div v-if="errors['password']" class="error password-err">
-            {{ $t(errors["password"]) }}
-          </div>
-        </div>
+                <div class="input-box">
+          <span class="icon" aria-hidden="true">
+            <font-awesome-icon icon="fa-solid fa-signature"/>
+            <span class="sr-only">{{ $t("last_name_icon") }}</span>
+          </span>
+                    <input
+                            type="text"
+                            required
+                            v-model.trim="lastName"
+                            name="lastName"
+                            id="lastName"
+                            aria-labelledby="lastNameLabel"
+                    />
+                    <label id="lastNameLabel">{{ $t("last_name") }}</label>
+                    <div v-if="errors['lastName']" class="error" role="alert" aria-describedby="lastName">
+                        {{ $t(errors["lastName"]) }}
+                    </div>
+                </div>
 
-        <div class="input-box">
-          <span class="icon"
-            ><font-awesome-icon icon="fa-solid fa-lock"
-          /></span>
-          <input
-            type="password"
-            required
-            v-model.trim="confirmPassword"
-            name="confirmPassword"
-          />
-          <label>{{ $t("confirm_password") }}</label>
-          <div
-            v-if="combinedErrors['confirm_password']"
-            class="error password-err"
-          >
-            {{ $t(combinedErrors["confirm_password"]) }}
-          </div>
+                <div class="input-box">
+          <span class="icon" aria-hidden="true">
+            <font-awesome-icon icon="fa-solid fa-person"/>
+            <span class="sr-only">{{ $t("username_icon") }}</span>
+          </span>
+                    <input
+                            type="text"
+                            required
+                            v-model.trim="username"
+                            name="username"
+                            id="username"
+                            aria-labelledby="usernameLabel"
+                    />
+                    <label id="usernameLabel">{{ $t("username") }}</label>
+                    <div v-if="errors['username']" class="error" role="alert" aria-describedby="username">
+                        {{ $t(errors["username"]) }}
+                    </div>
+                </div>
+
+                <div class="input-box">
+          <span class="icon" aria-hidden="true">
+            <font-awesome-icon icon="fa-solid fa-envelope"/>
+            <span class="sr-only">{{ $t("email_icon") }}</span>
+          </span>
+                    <input
+                            type="email"
+                            required
+                            v-model.trim="email"
+                            name="email"
+                            id="email"
+                            aria-labelledby="emailLabel"
+                    />
+                    <label id="emailLabel">{{ $t("email") }}</label>
+                    <div v-if="errors['email']" class="error" role="alert" aria-describedby="email">
+                        {{ $t(errors["email"]) }}
+                    </div>
+                </div>
+
+                <div class="input-box">
+  <span class="icon" aria-hidden="true">
+    <font-awesome-icon icon="fa-solid fa-lock"/>
+    <span class="sr-only">{{ $t("password_icon") }}</span>
+  </span>
+                    <input
+                            type="password"
+                            required
+                            v-model.trim="password"
+                            name="password"
+                            id="password"
+                            aria-labelledby="passwordLabel"
+                    />
+                    <label id="passwordLabel">{{ $t("password") }}</label>
+                    <div v-if="errors['password']" class="error password-err" role="alert" aria-describedby="password">
+                        {{ $t(errors["password"]) }}
+                    </div>
+                </div>
+
+                <div class="input-box">
+  <span class="icon" aria-hidden="true">
+    <font-awesome-icon icon="fa-solid fa-lock"/>
+    <span class="sr-only">{{ $t("confirm_password_icon") }}</span>
+  </span>
+                    <input
+                            type="password"
+                            required
+                            v-model.trim="confirmPassword"
+                            name="confirmPassword"
+                            id="confirmPassword"
+                            aria-labelledby="confirmPasswordLabel"
+                    />
+                    <label id="confirmPasswordLabel">{{ $t("confirm_password") }}</label>
+                    <div
+                            v-if="combinedErrors['confirm_password']"
+                            class="error password-err"
+                            role="alert"
+                            aria-describedby="confirmPassword"
+                    >
+                        {{ $t(combinedErrors["confirm_password"]) }}
+                    </div>
+                </div>
+                <h5
+                        v-if="submitMessage"
+                        id="submit-message"
+                        aria-describedby="login-form"
+                >
+                    {{ $t(submitMessage) }}
+                </h5>
+                <BasicButton type="submit" @click="submit" :button-text="$t('register')"/>
+                <div class="login-register">
+                    <p>
+                        {{ $t("already_have_account") }}
+                        <router-link to="/login" class="register-link"
+                        >{{ $t("login") }}
+                        </router-link>
+                    </p>
+                </div>
+            </form>
         </div>
-        <h5
-          v-if="submitMessage"
-          id="submit-message"
-          aria-describedby="login-form"
-        >
-          {{ $t(submitMessage) }}
-        </h5>
-        <BasicButton type="submit" @click="submit" :button-text="$t('register')"/>
-        <div class="login-register">
-          <p>
-            {{ $t("already_have_account") }}
-            <router-link to="/login" class="register-link"
-              >{{ $t("login") }}
-            </router-link>
-          </p>
-        </div>
-      </form>
     </div>
-  </div>
 </template>
 
 <script>

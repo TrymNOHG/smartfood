@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="suggestions-wrapper">
-      <h1 id="sugTitle">{{ $t("suggestion") }}</h1>
-      <div class="suggestions-grid">
+      <h1 v-if="suggestions.length" id="sugTitle">{{ $t("suggestion") }}</h1>
+      <div v-if="suggestions.length" class="suggestions-grid">
         <div v-for="(suggestion, index) in suggestions" :key="index" class="suggestion">
           <div class="suggestion-user">
             <img

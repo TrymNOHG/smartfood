@@ -7,8 +7,16 @@
           <span class="icon"
             ><font-awesome-icon icon="fa-solid fa-envelope"
           /></span>
-          <input type="text" required v-model.trim="email" name="email" id="email-input" />
-          <label>{{ $t("email") }}</label>
+          <input
+            type="text"
+            required
+            v-model.trim="email"
+            name="email"
+            id="email-input"
+            aria-required="true"
+            aria-labelledby="email-input"
+          />
+          <label for="email-input">{{ $t("email") }}</label>
           <div v-if="errors && errors['email']" class="error">
             {{ $t(errors["email"]) }}
           </div>
@@ -23,15 +31,17 @@
             v-model.trim="password"
             name="password"
             id="password-input"
+            aria-required="true"
+            aria-labelledby="password-input"
           />
-          <label>{{ $t("password") }}</label>
+          <label for="password-input">{{ $t("password") }}</label>
           <div v-if="errors && errors['password']" class="error">
             {{ $t(errors["password"]) }}
           </div>
         </div>
 
         <h5 v-if="submitMessage" class="submit-message">
-          {{ $t( submitMessage ) }}
+          {{ $t(submitMessage) }}
         </h5>
 
         <div class="remember-forgot">
@@ -42,7 +52,9 @@
         <div class="login-register">
           <p>
             {{ $t("dont_have_account") }}
-            <router-link to="/register" class="register-link">{{ $t("register") }}</router-link>
+            <router-link to="/register" class="register-link">{{
+              $t("register")
+            }}</router-link>
           </p>
         </div>
       </form>

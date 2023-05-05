@@ -1,17 +1,21 @@
 <template>
-  <input
-    v-bind="$attrs"
-    :value="modelValue"
-    :placeholder="label"
-    @input="$emit('update:modelValue', $event.target.value)"
-    class="form-control"
-    :style="{ borderColor: error ? 'red' : '' }"
-    aria-invalid="error ? true : null"
-  />
+
+        <input
+                v-bind="$attrs"
+                :value="modelValue"
+                :placeholder="label"
+                @input="$emit('update:modelValue', $event.target.value)"
+                class="form-control"
+                :style="{ borderColor: error ? 'red' : '' }"
+                :aria-invalid="error ? true : null"
+                aria-label="{{$t('search_input') }}"
+        />
+
   <font-awesome-icon
     id="receipt-btn"
     icon="fa-solid fa-barcode"
     @click="uploadReceiptButton"
+    aria-label="{{ $t('upload_receipt') }}"
   />
 
   <p v-if="error" class="errorMessage" aria-live="assertive">
