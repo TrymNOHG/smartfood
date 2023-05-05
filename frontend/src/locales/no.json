@@ -168,7 +168,8 @@
       "tour: view:fridgesView method:firstLogginTour id:header usage:text": "Det grønne feltet i toppen vil følge deg konstant gjennom appen. <br>Den har flere funksjoer og navigasjonsknapper men siden du ikke har valgt kjøleskap så vil ikke hele navigasjonen være til stede",
       "tour: view:fridgesView method:firstLogginTour id:fridgesWindow usage:title": "Dine kjøleskap",
       "tour: view:fridgesView method:firstLogginTour id:fridgesWindow usage:text": "Nå er du inne på Dine kjøleskap som viser deg listen over alle dine kjøleskap <br><br> Hovedfunksjonaliteten i vinduet er: <ul><li>Gå inn i et kjøleskap</li><li>Legge til kjøleskap</li><li>Endre navn på kjøleskap du har laget</li><li>Slette kjøleskap fra din liste</li></ul>",
-
+      "tour: view:fridgesView method:firstLogginTour id:firstLogginTour-9 usage:title": "Fortsett brukerveiledningen",
+      "tour: view:fridgesView method:firstLogginTour id:firstLogginTour-9 usage:text": "For å fortsette brukerveiledningen, vennligst velg dette kjøleskapet",
 
   "List of Fridges__":"dette er gjennomgangen for siden med alle kjøleskapene",
 

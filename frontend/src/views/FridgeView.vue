@@ -534,10 +534,32 @@ export default {
                       ]
                   },
                   {
-
-
+                      id: 'grey-field-kjøleskap',
+                      title: this.$t('tour: view:fridgesView method:firstLogginTour id:grey-field-kjøleskap usage:title'),
+                      text: this.$t('tour: view:fridgesView method:firstLogginTour id:grey-field-kjøleskap usage:text'),
+                      attachTo: {
+                          element: '#grey-header',
+                          on: 'bottom',
+                          offset: {x: 0, y: 20},
+                      },
+                      classes: 'shepherd-theme-arrows',
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.back();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button back'),
+                          },
+                          {
+                              action: function () {
+                                  return this.next();
+                              },
+                              text: this.$t('tour: button next'),
+                          },
+                      ]
                   },
-              ]);
+              ])
               this.fridgeTour.start()
           }
       },

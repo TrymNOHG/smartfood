@@ -167,7 +167,8 @@
       "tour: view:fridgesView method:firstLogginTour id:header usage:text": "This page will follow you constantly throughout the app. <br>It has several functions and navigation buttons, but since you haven't selected a fridge, not all of the navigation will be present.",
       "tour: view:fridgesView method:firstLogginTour id:fridgesWindow usage:title": "Your refrigerators",
       "tour: view:fridgesView method:firstLogginTour id:fridgesWindow usage:text": "You are now on the \"Your refrigerators\" page which shows you the list of all your fridges <br><br> The main functionality in the window includes: <ul><li>Enter a fridge</li><li>Add a fridge</li><li>Change the name of a fridge you have created</li><li>Delete a fridge from your list</li></ul>",
-
+      "tour: view:fridgesView method:firstLogginTour id:firstLogginTour-9 usage:title": "Press fridge to continue",
+      "tour: view:fridgesView method:firstLogginTour id:firstLogginTour-9 usage:text": "To continue the tour, please enter this fridge",
 
   "List of Fridges__":"This is tour for the list of all the fridges",
       "tour: view:fridgesView method:fridgesStepTour id: usage:title":"",
