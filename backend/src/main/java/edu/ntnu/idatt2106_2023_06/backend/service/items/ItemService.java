@@ -295,10 +295,12 @@ public class ItemService implements IItemService {
      */
     @Override
     public Page<FridgeItemLoadDTO> searchFridgeItems(FridgeItemSearchDTO fridgeItemSearchDTO) {
+        logger.info("Searching for fridge items");
         Long userId = jwtService.getAuthenticatedUserId();
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException(userId)
         );
+        logger.info("User was found");
         if(!fridgeService.userExistsInFridge(fridgeItemSearchDTO.fridgeId(), user.getUsername())) {
             throw new UnauthorizedException(jwtService.getAuthenticatedUserEmail());
         }
@@ -312,6 +314,7 @@ public class ItemService implements IItemService {
         List<FridgeItems> fridgeItems = fridgeItemsRepository.findByFridge(fridge).orElseThrow(
                 () -> new FridgeItemsNotFoundException(fridgeItemSearchDTO.fridgeId())
         );
+        logger.info("Fridge items were found");
 
         int pageNumber = fridgeItemSearchDTO.page();
         int pageSize = fridgeItemSearchDTO.pageSize();
@@ -334,6 +337,7 @@ public class ItemService implements IItemService {
             String productName = fridgeItemSearchDTO.productName().toLowerCase();
             fridgeItemsStream = fridgeItemsStream.filter(fi -> fi.getItem().getProductName().toLowerCase().contains(productName));
         }
+        logger.info("Fridge items were filtered");
 
         List<FridgeItems> fridgeItemsList = fridgeItemsStream.toList();
         List<FridgeItemLoadDTO> itemDTOList = new ArrayList<>();
@@ -345,6 +349,7 @@ public class ItemService implements IItemService {
         int startIndex = (int) pageRequest.getOffset();
         int endIndex = (int) Math.min(startIndex + pageRequest.getPageSize(), totalElements);
         List<FridgeItemLoadDTO> paginatedList = itemDTOList.subList(startIndex, endIndex);
+        logger.info("Fridge items were paginated");
         return new PageImpl<>(paginatedList, pageRequest, totalElements);
     }
 

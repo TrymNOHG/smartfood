@@ -279,10 +279,9 @@ public class ItemServiceTest {
                     .lastName("test")
                     .password("test")
                     .username("testUser")
-                                    .build();
+                    .build();
             userRepository.save(user);
             UserDetails userDetails = userDetailsService.loadUserByUsername("testUser");
-            String jwt = jwtService.generateToken(userDetails);
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities()));
         }
 

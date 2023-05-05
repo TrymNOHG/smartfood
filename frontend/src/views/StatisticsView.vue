@@ -149,6 +149,7 @@ export default {
           .values[chartDataPercentage.value.values.length - 1]);
       moneyThrown.value = Math.trunc(chartDataMoney.value
           .values[chartDataMoney.value.values.length -1])
+        console.log(moneyThrown + " and " + moneyThrown.value)
 
 
       if (isNaN(percentageThrown.value)) {

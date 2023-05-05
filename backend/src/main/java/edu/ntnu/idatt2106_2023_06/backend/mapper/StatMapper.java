@@ -24,11 +24,10 @@ public class StatMapper {
                 .user(user)
                 .fridge(fridge)
                 .timestamp(LocalDateTime.now())
-                .statValue(statDeleteFromFridgeDTO.percentageThrown().doubleValue())
+                .statValue(statDeleteFromFridgeDTO.amountDeleted().doubleValue())
                 .statType(statType1)
                 .storeName(statDeleteFromFridgeDTO.storeName())
                 .itemName(statDeleteFromFridgeDTO.itemName())
-                .quantity(statDeleteFromFridgeDTO.quantity())
                 .build());
 
 
@@ -37,11 +36,9 @@ public class StatMapper {
                 .user(user)
                 .fridge(fridge)
                 .timestamp(LocalDateTime.now())
-                .statValue(statDeleteFromFridgeDTO.price())
                 .statType(statType2)
                 .storeName(statDeleteFromFridgeDTO.storeName())
                 .itemName(statDeleteFromFridgeDTO.itemName())
-                .quantity(statDeleteFromFridgeDTO.quantity())
                 .build());
 
 
@@ -61,7 +58,6 @@ public class StatMapper {
                 .statType(statType)
                 .storeName(statAddItemToFridgeDTO.storeName())
                 .itemName(statAddItemToFridgeDTO.itemName())
-                .quantity(statAddItemToFridgeDTO.quantity())
                 .build();
     }
 
