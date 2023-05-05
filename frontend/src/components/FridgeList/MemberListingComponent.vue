@@ -97,8 +97,12 @@ export default {
             for (const member of this.membersList) {
                 try {
                     const response = await getProfilePictureById(member.userId);
-                    const imageUrl = URL.createObjectURL(new Blob([response.data], { type: 'image/jpeg' }));
-                    this.profilePictures.push(imageUrl);
+                    if(response.data.byteLength === 0){
+                      this.profilePictures.push(this.defaultProfilePicture)
+                    } else {
+                      const imageUrl = URL.createObjectURL(new Blob([response.data], { type: 'image/jpeg' }));
+                      this.profilePictures.push(imageUrl);
+                    }
                 } catch (error) {
                     this.profilePictures.push(this.defaultProfilePicture);
                 }

@@ -1,13 +1,17 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
+  video: false,
   e2e: {
     setupNodeEvents(on, config) {
-      on("before:browser:launch", (browser, launchOptions) => {
-        // set the baseUrl configuration option
-        launchOptions.args.push("--baseUrl=http://localhost:5173");
-        return launchOptions;
-      });
+      require('@cypress/code-coverage/task')(on, config);
+      return config;
+    },
+  },
+  component: {
+    setupNodeEvents(on, config) {
+      require('@cypress/code-coverage/task')(on, config);
+      return config;
     },
   },
 });

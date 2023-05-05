@@ -17,14 +17,13 @@ describe('Register', () => {
                 statusCode: 200,
                 body: {
                     userId: 123,
-                    username: 'johndoe',
-                    firstName: 'John',
-                    lastName: 'Doe', email: 'johndoe@example.com'
+                    username: 'tomaber',
+                    firstName: 'Tomas',
+                    lastName: 'Beranek',
+                    email: 'tomaber@example.com'
                 }
             })
         }).as('fetchUser')
-
-
 
         cy.visit(`${base_url_site}/register`)
     })
@@ -48,10 +47,10 @@ describe('Register', () => {
     it('registers a new user', () => {
 
         // Fill out the registration form
-        cy.get('input[name="firstName"]').type('John')
-        cy.get('input[name="lastName"]').type('Doe')
-        cy.get('input[name="username"]').type('johndoe')
-        cy.get('input[name="email"]').type('johndoe@example.com')
+        cy.get('input[name="firstName"]').type('Tomas')
+        cy.get('input[name="lastName"]').type('Bernake')
+        cy.get('input[name="username"]').type('tomaber')
+        cy.get('input[name="email"]').type('tomaber@example.com')
         cy.get('input[name="password"]').type('password')
         cy.get('input[name="confirmPassword"]').type('password')
 
@@ -66,10 +65,10 @@ describe('Register', () => {
     it('Error when password missing', () => {
 
         // Fill out the registration form
-        cy.get('input[name="firstName"]').type('John')
-        cy.get('input[name="lastName"]').type('Doe')
-        cy.get('input[name="username"]').type('johndoe')
-        cy.get('input[name="email"]').type('johndoe@example.com')
+        cy.get('input[name="firstName"]').type('Tomas')
+        cy.get('input[name="lastName"]').type('Beranek')
+        cy.get('input[name="username"]').type('tomaber')
+        cy.get('input[name="email"]').type('tomaber@example.com')
 
         // Submit the registration form
         cy.get('button[type="submit"]').click()
@@ -80,9 +79,9 @@ describe('Register', () => {
     it('Error when username missing', () => {
 
         // Fill out the registration form
-        cy.get('input[name="firstName"]').type('johndoe')
-        cy.get('input[name="lastName"]').type('Doe')
-        cy.get('input[name="email"]').type('johndoe@example.com')
+        cy.get('input[name="firstName"]').type('Tomas')
+        cy.get('input[name="lastName"]').type('Beranek')
+        cy.get('input[name="email"]').type('tomaber@example.com')
         cy.get('input[name="password"]').type('password')
 
         // Submit the registration form
@@ -94,9 +93,9 @@ describe('Register', () => {
     it('Error when email missing', () => {
 
         // Fill out the registration form
-        cy.get('input[name="firstName"]').type('Test')
-        cy.get('input[name="lastName"]').type('Doe')
-        cy.get('input[name="username"]').type('johndoe')
+        cy.get('input[name="firstName"]').type('Tomas')
+        cy.get('input[name="lastName"]').type('Beranek')
+        cy.get('input[name="username"]').type('tomaber')
         cy.get('input[name="password"]').type('password')
 
         // Submit the registration form
@@ -108,9 +107,9 @@ describe('Register', () => {
     it('Error when firstName missing', () => {
 
         // Fill out the registration form
-        cy.get('input[name="lastName"]').type('Doe')
-        cy.get('input[name="username"]').type('johndoe')
-        cy.get('input[name="email"]').type('johndoe@example.com')
+        cy.get('input[name="lastName"]').type('Tomas')
+        cy.get('input[name="username"]').type('tomaber')
+        cy.get('input[name="email"]').type('tomaber@example.com')
         cy.get('input[name="password"]').type('password')
 
         // Submit the registration form
@@ -122,10 +121,26 @@ describe('Register', () => {
     it('Error when lastName missing', () => {
 
         // Fill out the registration form
-        cy.get('input[name="firstName"]').type('Doe')
-        cy.get('input[name="username"]').type('johndoe')
-        cy.get('input[name="email"]').type('johndoe@example.com')
+        cy.get('input[name="firstName"]').type('Tomas')
+        cy.get('input[name="username"]').type('Beranek')
+        cy.get('input[name="email"]').type('tomaber@example.com')
         cy.get('input[name="password"]').type('password')
+
+        // Submit the registration form
+        cy.get('button[type="submit"]').click()
+
+        cy.get('.has-errors').should('exist') // checking that the form displays error messages
+    })
+
+    it('Error when password and confirm password doesnt match', () => {
+
+        // Fill out the registration form
+        cy.get('input[name="firstName"]').type('Tomas')
+        cy.get('input[name="username"]').type('Beranek')
+        cy.get('input[name="email"]').type('tomaber@example.com')
+        cy.get('input[name="password"]').type('password')
+        cy.get('input[name="password"]').type('password')
+        cy.get('input[name="confirmPassword"]').type('drowssap')
 
         // Submit the registration form
         cy.get('button[type="submit"]').click()

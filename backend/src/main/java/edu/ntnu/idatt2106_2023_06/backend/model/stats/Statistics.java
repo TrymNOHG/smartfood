@@ -6,7 +6,6 @@ import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 /**
@@ -89,12 +88,4 @@ public class Statistics {
     @Column(name = "timestamp", nullable = false)
     @NonNull
     private LocalDateTime timestamp;
-
-    /**
-     * The number of items in the statistics.
-     */
-    @Column(name = "quantity", nullable = false)
-    @NonNull
-    private Integer quantity;
-
 }

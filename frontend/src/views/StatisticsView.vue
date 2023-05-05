@@ -7,7 +7,6 @@
         <img
             src="@/assets/images/info.svg"
             id="info-picture"
-            @click="showInformation"
             :alt="$t('alt_info_button')"
         />
       </div>
@@ -27,20 +26,16 @@
         <div>
           <line-chart
               id="chart"
-              :data="chartDataPercentage"
-              :ymin="percentageThrownPerPers"
-              :ymax="percentageThrownPerPers"
+              :data="chartDataFood"
               :chart-label="$t('percentage_thrown')"
-          />
+           />
         </div>
         <div>
           <line-chart
               id="chart"
               :data="chartDataMoney"
-              :ymin="moneyUsedPerPers"
-              :ymax="moneyUsedPerPers"
               :chart-label="$t('money_wasted')"
-          />
+              />
         </div>
       </div>
     </div>
@@ -55,16 +50,11 @@
       />
       <div class="display-details">
         <stat-card
-            :value="percentageThrown + '%'"
+            :food="foodThrown + 'g'"
+            :money="moneyThrown + 'kr'"
             :name="$t('percentage_thrown_last_day')"
             class="card"
             iconName="fa-chart-simple"
-        />
-        <stat-card
-            :value="moneyThrown + 'kr'"
-            :name="$t('money_wasted_last_day')"
-            class="card"
-            iconName="fa-coins"
         />
       </div>
     </div>
@@ -77,7 +67,7 @@ import LineChart from '@/components/statistic/LineChart.vue';
 import StatCard from "@/components/statistic/StatCard.vue";
 import BasicSelect from "@/components/basic-components/BasicSelect.vue";
 import {ref} from "vue";
-import {useFridgeStore, useStatStore} from "@/store/store";
+import {useFridgeStore, useLoggedInStore, useStatStore} from "@/store/store";
 import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
 
 export default {
@@ -86,7 +76,8 @@ export default {
 
   methods: {
     updateStats(stat) {
-      if (stat === "Personal Statistics" || stat === "Personlig statistikk") {
+      console.log(stat)
+      if (stat === "personal_statistics") {
         this.fetchFridgeStats();
       } else {
         this.fetchUserStats();
@@ -97,16 +88,16 @@ export default {
 
   data() {
     return {
-      moneyUsedPerPers: 46,
-      percentageThrownPerPers: 26,
       choosenStat: 'personal_statistics',
       statChoice: ['personal_statistics', 'fridge_statistics'],
-      width: window.innerWidth
+      width: window.innerWidth,
     }
   },
 
   setup() {
-    const chartDataPercentage = ref({
+    const userStore = useLoggedInStore();
+    const currenUser = ref("");
+    const chartDataFood = ref({
       labels: [],
       values: []
     });
@@ -116,22 +107,22 @@ export default {
     });
     const statStore = useStatStore();
     const fridgeStore = useFridgeStore();
-    let percentageThrown = ref();
+    let foodThrown = ref();
     let moneyThrown = ref();
     const fetchUserStats = async () => {
       await statStore.fetchUserStatsPercentage();
       await statStore.fetchUserStatsMoney();
-      chartDataPercentage.value = statStore.getPercentageChart;
+      chartDataFood.value = statStore.getPercentageChart;
       chartDataMoney.value = statStore.getMoneyChart;
 
-      percentageThrown.value = Math.trunc(chartDataPercentage.value
-          .values[chartDataPercentage.value.values.length - 1]);
+      foodThrown.value = Math.trunc(chartDataFood.value
+          .values[chartDataFood.value.values.length - 1]);
       moneyThrown.value = Math.trunc(chartDataMoney.value
           .values[chartDataMoney.value.values.length -1])
 
 
-      if (isNaN(percentageThrown.value)) {
-        percentageThrown.value = 0;
+      if (isNaN(foodThrown.value)) {
+        foodThrown.value = 0;
       }
 
       if (isNaN(moneyThrown.value)) {
@@ -142,33 +133,35 @@ export default {
     const fetchFridgeStats = async () => {
       await statStore.fetchFridgePercentage(fridgeStore.getCurrentFridge);
       await statStore.fetchFridgeMoney(fridgeStore.getCurrentFridge)
-      chartDataPercentage.value = statStore.getPercentageChart;
+      chartDataFood.value = statStore.getPercentageChart;
       chartDataMoney.value = statStore.getMoneyChart;
 
-      percentageThrown.value = Math.trunc(chartDataPercentage.value
-          .values[chartDataPercentage.value.values.length - 1]);
+      foodThrown.value = Math.trunc(chartDataFood.value
+          .values[chartDataFood.value.values.length - 1]);
       moneyThrown.value = Math.trunc(chartDataMoney.value
           .values[chartDataMoney.value.values.length -1])
 
-
-      if (isNaN(percentageThrown.value)) {
-        percentageThrown.value = 0;
+      if (isNaN(foodThrown.value)) {
+        foodThrown.value = 0;
       }
 
       if (isNaN(moneyThrown.value)) {
         moneyThrown.value = 0;
       }
     };
-
+    
     fetchUserStats();
 
     return {
-      chartDataPercentage,
-      percentageThrown,
+      chartDataFood: chartDataFood,
+      foodThrown: foodThrown,
       moneyThrown,
       fetchFridgeStats,
       fetchUserStats,
-      chartDataMoney
+      chartDataMoney,
+      currenUser,
+      userStore,
+      fridgeStore
     };
   },
 
@@ -280,13 +273,13 @@ h3 {
 }
 
 .display-details {
-  margin: 2% 2% 2%;
+  margin: 5% 2% 2%;
   justify-content: space-evenly;
 }
 
 .card {
-  height: 180px;
   margin: 2% 2% 20%;
+  height: 80%;
 }
 
 .sidebar {
@@ -345,7 +338,6 @@ h3 {
 
   .display-details {
     display: block;
-    gap: 2%;
   }
 
   .chart-legend li {

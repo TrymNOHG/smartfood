@@ -37,7 +37,7 @@
       </div>
         <div class="pagination-buttons" v-if="!isMobile">
           <BasicButton @click="loadPreviousPage" :button-text="$t('previous_page')" :disabled="pageIndex.value <= 0"/>
-          <div class="page-index">{{ pageIndex + 1 }}</div>
+          <div class="page-index">{{ pageIndex + 1}}</div>
           <BasicButton @click="loadNextPage" :button-text="$t('next_page')"/>
         </div>
         <div id="bottom"></div>
@@ -122,8 +122,12 @@
           for (const userId of uniqueUserIds) {
             try {
               const response = await getProfilePictureById(userId);
-              const imageUrl = URL.createObjectURL(new Blob([response.data], { type: 'image/jpeg' }));
-              profilePictures.value[userId] = imageUrl;
+              if(response.data.byteLength === 0){
+                profilePictures.value[userId] = defaultProfilePicture;
+              } else {
+                const imageUrl = URL.createObjectURL(new Blob([response.data], { type: 'image/jpeg' }));
+                profilePictures.value[userId] = imageUrl;
+              }
             } catch (error) {
               profilePictures.value[userId] = defaultProfilePicture; // Fallback image
             }
@@ -228,10 +232,11 @@
             },
           });
           try {
+            pageIndex.value++;
             const response = await loadRecipeByFridgeItems(fridgeId, pageIndex.value, 8);
             meals.value = response.content;
-            pageIndex.value++;
           } catch (error) {
+            pageIndex.value--
             console.error("Failed to load next page:", error);
           } finally {
             swal.close();

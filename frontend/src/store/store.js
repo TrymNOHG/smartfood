@@ -256,8 +256,6 @@ export const useStatStore = defineStore('statStore', {
             const labels = Object.keys(this.moneyChart);
             const values = Object.values(this.moneyChart);
 
-
-
             return {
                 labels,
                 values
@@ -293,6 +291,7 @@ export const useStatStore = defineStore('statStore', {
                         this.percentageChart[key] = response.data[key];
                     }
                 })
+            console.log(this.percentageChart)
         },
 
         async fetchFridgeMoney(fridge) {
@@ -303,6 +302,7 @@ export const useStatStore = defineStore('statStore', {
                         this.moneyChart[key] = response.data[key]
                     }
                 })
+            console.log(this.moneyChart)
         }
     },
 });
