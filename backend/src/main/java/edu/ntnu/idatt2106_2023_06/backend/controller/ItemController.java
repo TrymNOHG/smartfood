@@ -56,7 +56,7 @@ public class ItemController implements IItemController{
         if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
     }
 
-    private void validateSuperUser(Long fridgeId, Authentication authentication) {
+    void validateSuperUser(Long fridgeId, Authentication authentication) {
         authenticate(authentication);
 
         boolean isSuperUser = userService.isSuperUser(fridgeId, authentication.getName());
