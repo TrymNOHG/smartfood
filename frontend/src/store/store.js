@@ -256,8 +256,6 @@ export const useStatStore = defineStore('statStore', {
             const labels = Object.keys(this.moneyChart);
             const values = Object.values(this.moneyChart);
 
-
-
             return {
                 labels,
                 values
