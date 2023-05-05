@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StatMapper {
 
-    public static List<Statistics> toStatistics(StatDeleteFromFridgeDTO statDeleteFromFridgeDTO, User user, Fridge fridge, StatType statType1, StatType statType2) {
+    public static List<Statistics> toStatistics(StatDeleteFromFridgeDTO statDeleteFromFridgeDTO, User user, Fridge fridge, StatType statType1) {
 
         List<Statistics> statistics = new ArrayList<>();
 
@@ -24,26 +24,11 @@ public class StatMapper {
                 .user(user)
                 .fridge(fridge)
                 .timestamp(LocalDateTime.now())
-                .statValue(statDeleteFromFridgeDTO.percentageThrown().doubleValue())
+                .statValue(statDeleteFromFridgeDTO.amountDeleted().doubleValue())
                 .statType(statType1)
                 .storeName(statDeleteFromFridgeDTO.storeName())
                 .itemName(statDeleteFromFridgeDTO.itemName())
-                .quantity(statDeleteFromFridgeDTO.quantity())
                 .build());
-
-
-        // Add statistics for item price
-        statistics.add(Statistics.builder()
-                .user(user)
-                .fridge(fridge)
-                .timestamp(LocalDateTime.now())
-                .statValue(statDeleteFromFridgeDTO.price())
-                .statType(statType2)
-                .storeName(statDeleteFromFridgeDTO.storeName())
-                .itemName(statDeleteFromFridgeDTO.itemName())
-                .quantity(statDeleteFromFridgeDTO.quantity())
-                .build());
-
 
         return statistics;
     }
@@ -61,7 +46,6 @@ public class StatMapper {
                 .statType(statType)
                 .storeName(statAddItemToFridgeDTO.storeName())
                 .itemName(statAddItemToFridgeDTO.itemName())
-                .quantity(statAddItemToFridgeDTO.quantity())
                 .build();
     }
 

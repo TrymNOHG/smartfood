@@ -17,7 +17,7 @@ public class FridgeItemMapper {
                 .item(shoppingItems.getItem())
                 .fridge(shoppingItems.getFridge())
                 .purchaseDate(LocalDateTime.now())
-                .expirationDate(LocalDateTime.now().plusDays(1)) //TODO: change to include expiration date
+                .expirationDate(LocalDateTime.now().plusDays(shoppingItems.getItem().getExpiresIn())) //TODO: change to include expiration date
                 .amount(0)
                 .build();
     }

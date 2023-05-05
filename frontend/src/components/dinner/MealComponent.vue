@@ -41,7 +41,7 @@ import {useMealStore} from "../../store/store";
 import {object} from "yup";
 
 export default {
-  name: "BasicFridgeItem",
+  name: "meal",
   components: {FontAwesomeIcon},
 
   props: {
@@ -62,8 +62,6 @@ export default {
           const recipyQuantity = ingredient.quantity;
           let hasQuantity = ingredient.fridgeAmount;
           let itemQuantity = ingredient.itemOriginalAmount;
-          console.log(ingredient.itemOriginalUnit)
-          console.log(ingredient.unitOfMeasurement)
           if (ingredient.itemOriginalUnit ===  "pieces" && ingredient.unitOfMeasurement !== "c") {
             itemQuantity = itemQuantity * 250;
             hasQuantity = hasQuantity * 250;
@@ -100,11 +98,6 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           this.$emit('delete-item', item);
-          swal.fire(
-              this.$t('success_message'),
-              '',
-              'success'
-          )
         }
       })
     },
@@ -125,11 +118,6 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           this.$emit('accept-item', this.missingItemIds);
-          swal.fire(
-              'Accepted',
-              'The missing item IDs have been accepted.',
-              'success'
-          );
         }
       });
     },
@@ -368,13 +356,22 @@ img {
     color: #eee;
   }
 
-  .delete-btn {
-    background-color: white;
-    width: 25px;
-    height: 25px;
-    top: 13px;
-    right: 2px;
+  .accept-btn {
+    position: absolute;
+    top: 3%; /* Center the button vertically at the top-right corner */
+    left: -51px;
+    background-color: green;
+    color: white;/* Position the button horizontally at the top-right corner */
   }
+
+  .delete-btn {
+    position: absolute;
+    top: 65%;
+    right: 241px;
+    background-color: red;
+    color: white;
+  }
+
   .icon{
     color: black;
     font-size: 15px;
@@ -461,18 +458,7 @@ img {
     margin-left: 10px;
   }
 
-  .delete-btn {
-    background-color: white;
-    width: 25px;
-    height: 25px;
-    top: 5px;
-    right: 5px;
-  }
-  .icon{
-    color: black;
-    font-size: 15px;
-    margin-right: 5px;
-  }
+
 
   .item-name {
     display: block;

@@ -18,7 +18,7 @@
                 .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
             <h4>{{ $t('expire_date') }}: {{ new Date(item.expirationDate)
                 .toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) }}</h4>
-            <h4 id="item-quantity">{{ $t('Amount') }}: {{ item.amount.toFixed(1) }} {{ item.unit }}</h4>
+            <h4 id="item-quantity">{{ $t('Amount') }}: {{ item.amount.toFixed(1) }} {{ $t(item.unit) }}</h4>
             <button v-if="isSuperUser" class="delete-btn" @click.prevent="deleteCard(item)">
               <span>
                 <font-awesome-icon icon="fa-solid fa-trash" class="icon delete-icon" />
@@ -69,7 +69,7 @@ export default {
     },
 
     deleteCard(item) {
-      let deletePercentage = null;
+      let amountDeleted = null;
       Swal.fire({
         html: `
          <div class="swal2-content">
@@ -86,16 +86,16 @@ export default {
           step: 1
         },
         didOpen: () => {
-          deletePercentage = Swal.getInput()
+          amountDeleted = Swal.getInput()
           const inputNumber = Swal.getHtmlContainer().querySelector('#range-value')
           const rangeValueText = Swal.getHtmlContainer().querySelector('#range-value')
 
-          deletePercentage.nextElementSibling.style.display = 'none'
-          deletePercentage.style.width = '100%'
+          amountDeleted.nextElementSibling.style.display = 'none'
+          amountDeleted.style.width = '100%'
 
-          deletePercentage.addEventListener('input', () => {
-            inputNumber.value = deletePercentage.value
-            rangeValueText.innerText = `${deletePercentage.value} ${ item.unit }`
+          amountDeleted.addEventListener('input', () => {
+            inputNumber.value = amountDeleted.value
+            rangeValueText.innerText = `${amountDeleted.value} ${ item.unit }`
           })
         },
         showCancelButton: true,
@@ -121,7 +121,7 @@ export default {
             if (result.isConfirmed) {
               this.$emit('add-shopping', item)
             }
-            this.$emit('delete-item', item, deletePercentage.value);
+            this.$emit('delete-item', item, amountDeleted.value);
           })
         }
       })

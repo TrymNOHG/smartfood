@@ -109,15 +109,16 @@ public class RecipeControllerTest {
 
     @Test
     public void testDenySuggestion() throws Exception {
-        RecipeShoppingDTO recipeShoppingDTO = new RecipeShoppingDTO(1L, new ArrayList<>());
         Long recipeId = 1L;
         Long userId = 1L;
+        Long fridgeId = 1L;
+
         mockMvc.perform(MockMvcRequestBuilders.post("/recipe/suggestion/deny")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(recipeShoppingDTO))
                         .param("recipe", recipeId.toString())
                         .param("user", userId.toString())
+                        .param("fridge", fridgeId.toString())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

@@ -108,7 +108,6 @@ export const useFridgeStore = defineStore('fridgeStore', {
        async fetchNotifications (fridgeId) {
            let notifications = []
            await getNotifications(fridgeId).then((response) => {
-               console.log("response data: ", response.data)
                for (const notification in response.data) {
                    notifications[notification] = response.data[notification]
                }
@@ -247,9 +246,6 @@ export const useStatStore = defineStore('statStore', {
             const labels = Object.keys(this.percentageChart);
             const values = Object.values(this.percentageChart);
 
-            console.log(labels)
-            console.log(values)
-
             return {
                 labels,
                 values
@@ -259,8 +255,6 @@ export const useStatStore = defineStore('statStore', {
         getMoneyChart(){
             const labels = Object.keys(this.moneyChart);
             const values = Object.values(this.moneyChart);
-
-
 
             return {
                 labels,
