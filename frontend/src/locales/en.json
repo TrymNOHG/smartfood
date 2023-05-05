@@ -293,9 +293,5 @@
 
 "BEKA ": "This is the tour for your profile page",
 "tour: view:StatisticsView method:StatisticsStepTour id:StatisticsWindow usage:title": "Profile",
-"tour: view:StatisticsView method:StatisticsStepTour id:StatisticsWindow usage:text":"This is where you can see and modify personal information.<br><br> Here you can: <ul><li>Edit your profile</li><li>Change password</li><li>Log out</li><li>Change languages</li></ul>",
-
-
-
-
+"tour: view:StatisticsView method:StatisticsStepTour id:StatisticsWindow usage:text":"This is where you can see and modify personal information.<br><br> Here you can: <ul><li>Edit your profile</li><li>Change password</li><li>Log out</li><li>Change languages</li></ul>"
 }
