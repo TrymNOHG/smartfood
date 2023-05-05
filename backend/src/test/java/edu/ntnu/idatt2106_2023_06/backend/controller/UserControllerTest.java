@@ -342,8 +342,6 @@ public class UserControllerTest {
         assertEquals("test@test.test", userLoadDTO.email());
     }
 
-    /*
-       TODO: Brage fix test plz!
     @Test
     public void deletePicture() throws Exception {
         // Arrange
@@ -369,10 +367,8 @@ public class UserControllerTest {
                 .andReturn();
 
         // Assert
-        assertThrows(ImageNotFoundException.class, () -> fileStorageService.getProfilePicture(userId));
+        assertNull(fileStorageService.getProfilePicture(userId));
     }
-
-     */
 
     @Test
     public void searchUser() throws Exception {

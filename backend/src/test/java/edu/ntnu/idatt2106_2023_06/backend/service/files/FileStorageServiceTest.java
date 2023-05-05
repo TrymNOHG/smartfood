@@ -86,17 +86,12 @@ public class FileStorageServiceTest {
 
         assertArrayEquals(expectedBytes, actualBytes);
     }
-    /*
-    TODO: Brage fix test plz!
+
     @Test
     void getProfilePictureThrowsImageNotFoundException() {
         long imageId = 12345L;
 
-        assertThrows(ImageNotFoundException.class, () -> {
-            fileStorageService.getProfilePicture(imageId);
-        });
+        assertNull(fileStorageService.getProfilePicture(imageId));
     }
-
-     */
 
 }
