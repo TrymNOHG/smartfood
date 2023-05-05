@@ -2,7 +2,7 @@
   <div class="grey-bar">
     <h2 id="grey-header" >{{ $t('profile') }}</h2>
     <div class="information-button">
-      <img src="@/assets/images/info.svg" id="info-picture" @click="showInformation" :alt=" $t('alt_info_button') ">
+      <img src="@/assets/images/info.svg" id="info-picture" @click=" resetSteps(); profileStepsTour()" :alt=" $t('alt_info_button') ">
     </div>
   </div>
   <div>
@@ -13,16 +13,65 @@
 
 <script>
 import ProfileComponent from "../components/ProfileComponent.vue";
+import Shepherd from "shepherd.js";
+import {offset} from "@floating-ui/vue";
 export default {
   name: "ProfileView",
   components: {ProfileComponent},
 
-  methods: {
+  setup() {
+      const profileTour = new Shepherd.Tour({
+          useModalOverlay: true,
+          defaultStepOptions: {
+              classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
+              arrow: true,
+              floatingUIOptions: {
+                  middleware: [offset(30)]
+              },
+              cancelIcon: {
+                  enabled: true
+              },
+          }
+      });
+      return {
+          profileTour
+      }
+  },
 
-    showInformation(){
-      //TODO: INFORMATION PROFILE put information API in here
-    },
-  }
+
+  methods: {
+      resetSteps() {
+          if (this.profileTour.steps.length !== 0) {
+              while (this.profileTour.steps.length !== 0) {
+                  this.profileTour.steps.pop()
+              }
+          }
+      },
+      profileStepsTour() {
+          this.profileTour.addSteps([
+              {
+                  id: 'itemWindow',
+                  title: this.$t('tour: view:ProfileView method:StatisticsStepTour id:StatisticsWindow usage:title'),
+                  text: this.$t('tour: view:ProfileView method:StatisticsStepTour id:StatisticsWindow usage:text'),
+                  attachTo: {
+                      element: '.router-view-container',
+
+                  },
+                  classes: 'shepherd-theme-arrows',
+                  buttons: [
+                      {
+                          action: function () {
+                              return this.cancel();
+                          },
+                          class: " shepherd-button ",
+                          text: this.$t('tour: button exit'),
+                      },
+                  ]
+              },
+          ])
+          this.profileTour.start()
+      },
+  },
 }
 </script>
 

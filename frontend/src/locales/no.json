@@ -277,11 +277,11 @@
       "tour: view:dinnerView method:tipsViewStepTour id:tipsWindow usage:title": "Tips",
       "tour: view:dinnerView method:tipsViewStepTour id:tipsWindow usage:text":"På denne siden kan du finne både middagstips og middagsforslag fra andre medlemmer. Du kan bla gjennom mange middagsforslag ved å klikke på neste side-knappen til du finner måltidet du ønsker.",
 
-  "BEKA STATISTIKK": "Dette er turen for din statistikkside",
+  "Stats__": "Dette er turen for din statistikkside",
   "tour: view:StatisticsView method:StatisticsStepTour id:StatisticsWindow usage:title": "Statistikk",
   "tour: view:StatisticsView method:StatisticsStepTour id:StatisticsWindow usage:text":"Statistikksiden viser forbrukshistorikken din visualisert i diagrammer.<br><br> Her kan du: <ul><li>Se statistikk for kjøleskapet ditt (mat kastet i gram / penger brukt)</li><li>Personlig statistikk (mat kastet i gram / penger brukt)</li></ul>",
 
-  "BEKA PROFIL": "Dette er turen for din profilside",
+  "Profile__": "Dette er turen for din profilside",
   "tour: view:ProfileView method:StatisticsStepTour id:StatisticsWindow usage:title": "Profil",
   "tour: view:ProfileView method:StatisticsStepTour id:StatisticsWindow usage:text":"Dette er stedet hvor du kan se og endre personlig informasjon.<br><br> Her kan du: <ul><li>Redigere profilen din</li><li>Endre passord</li><li>Logg ut</li><li>Bytt språk</li></ul>"
 

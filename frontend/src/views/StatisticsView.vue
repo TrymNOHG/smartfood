@@ -8,7 +8,7 @@
             src="@/assets/images/info.svg"
             id="info-picture"
             :alt="$t('alt_info_button')"
-            @click="resetSteps();itemStepsTour()"
+            @click="resetSteps();statStepsTour()"
         />
       </div>
     </div>
@@ -95,7 +95,7 @@ export default {
           }
       },
 
-      itemStepsTour() {
+      statStepsTour() {
           this.statsTour.addSteps([
               {
                   id: 'itemWindow',
