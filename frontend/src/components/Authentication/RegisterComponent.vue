@@ -65,7 +65,7 @@
           </div>
         </div>
         <h5 v-if="submitMessage" id="submit-message" aria-describedby="login-form">{{ $t( submitMessage ) }}</h5>
-        <button type="submit" @click="submit">{{ $t("register") }}</button>
+        <BasicButton type="submit" @click="submit" :button-text="$t('register')"/>
         <div class="login-register">
           <p>
             {{ $t("already_have_account") }}
@@ -86,10 +86,12 @@ import {ref} from "vue";
 import {useLoggedInStore} from "@/store/store";
 import router from "@/router/router";
 import { RouterLink } from 'vue-router'
+import BasicButton from "@/components/basic-components/BasicButton.vue";
 
 export default {
   name: "RegisterComponent",
   components: {
+    BasicButton,
     RouterLink
   },
   setup() {
