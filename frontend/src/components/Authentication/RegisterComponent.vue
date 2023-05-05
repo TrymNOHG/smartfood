@@ -106,12 +106,11 @@
 
 <script>
 import * as yup from "yup";
-import { useField, useForm, defineRule, configure } from "vee-validate";
+import { useField, useForm, } from "vee-validate";
 import { registerUser } from "@/services/UserService";
 import { computed, ref } from "vue";
 import { useLoggedInStore } from "@/store/store";
 import router from "@/router/router";
-import { RouterLink } from "vue-router";
 import { RouterLink } from 'vue-router'
 import BasicButton from "@/components/basic-components/BasicButton.vue";
 
