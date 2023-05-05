@@ -252,8 +252,6 @@
       "tour: view:fridgeView method:fridgeStepsTour id:search usage:text": "Her kan du søke etter matvarer og legge dem til i kjøleskapet. <br> <br> For vanlige brukere blir matvaren lagt til på handlelisten",
       "tour: view:fridgeView method:fridgeStepsTour id:filter usage:title": "Filter",
       "tour: view:fridgeView method:fridgeStepsTour id:filter usage:text": "Ved å klikke på \"Filter\", kan du endre visningen av matvarer og sortere etter forskjellige variabler",
-
-
       "tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:title": "Medlemsfanen",
       "tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:text": "Nå ser du medlemssiden. <br><br> Som en superbruker kan du: <ul><li>Se alle medlemmer i kjøleskapet</li><li>Legge til medlemmer</li><li>Endre tittel på medlemmer</li><li>Fjerne medlemmer</li><li>Fjerne deg selv fra kjøleskapet</li></ul> <br> Som en vanlig bruker kan du: <ul><li>Se alle medlemmer i kjøleskapet</li><li>Fjerne deg selv fra kjøleskapet</li></ul>",
       "tour: view:fridgeView method:memberStepTour id:single-member usage:title": "Medlem-fane",
@@ -261,7 +259,9 @@
       "tour: view:fridgeView method:memberStepTour id:edit-user usage:title":"Endre tittel",
       "tour: view:fridgeView method:memberStepTour id:edit-user usage:text":"For å endre tittelen på medlemmet, trykk på rediger-knappen eller slett medlemmet ved å klikke på søppelbøtten",
       "tour: view:fridgeView method:memberStepTour id:add-user usage:title": "Legg til medlem",
-      "tour: view:fridgeView method:memberStepTour id:add-user usage:text": "For å legge til et nytt medlem i dette kjøleskapet, kan du trykke på denne knappen"
+      "tour: view:fridgeView method:memberStepTour id:add-user usage:text": "For å legge til et nytt medlem i dette kjøleskapet, kan du trykke på denne knappen",
 
-
+  "One Item__": "This is the tour for a Item",
+      "tour: view:itemView method:itemStepTour id:itemWindow usage:title": "Produkt siden",
+      "tour: view:itemView method:itemStepTour id:itemWindow usage:text": "Nå ser du produktsiden.<br><br> Her kan du: <ul><li>Se informasjon om produktet</li><li>Oppdatere varen hvis den brukes</li><li>Slette varen fra kjøleskapet</li></ul>"
 }

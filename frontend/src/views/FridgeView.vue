@@ -459,10 +459,9 @@ export default {
                   },
                   buttons: [
                       {
-                          action: function() {
-                              //router.push('/fridges');
-                              //this.$emit.firstLogginTour();
-                              //this.information.cancel();
+                          action: () => {
+                              router.push('/fridges?appTour=true');
+                              this.information.cancel();
                           },
                           secondary: true,
                           class: " shepherd-button ",
@@ -867,10 +866,8 @@ export default {
                       title: this.$t('tour: view:fridgeView method:fridgeStepsTour id:grey-field-header-fridge usage:title'),
                       text: this.$t('tour: view:fridgeView method:fridgeStepsTour id:grey-field-header-fridge usage:text'),
                       attachTo: {
-                          element: '.grey-bar',
-                          on: 'bottom',
+                          element: '.router-view-container ',
                       },
-                      arrow:'true ',
 
                       buttons: [
                           {
@@ -878,7 +875,7 @@ export default {
                                   return this.cancel();
                               },
                               secondary: true,
-                              text: this.$t('tour: button exit'),
+                              text: this.$t('tour: button cancel'),
                           },
                           {
                               action: function () {
@@ -889,40 +886,14 @@ export default {
                       ]
                   },
                   {
-                      id: 'fridgesWindow',
-                      title: this.$t('tour: view:fridgesView method:firstLogginTour id:fridgesWindow usage:title'),
-                      text: this.$t('tour: view:fridgesView method:firstLogginTour id:fridgesWindow usage:text'),
+                      id: 'items',
+                      title: this.$t('tour: view:fridgeView method:fridgeStepsTour id:items usage:title'),
+                      text: this.$t('tour: view:fridgeView method:fridgeStepsTour id:items usage:text'),
                       attachTo: {
-                          element: 'div.router-view-container',
-                          on: 'bottom',
+                          element: '.wrapper',
+                          on: 'top',
                       },
 
-                      buttons: [
-                          {
-                              action: function () {
-                                  return this.cancel();
-                              },
-                              secondary: true,
-                              text: this.$t('tour: button exit'),
-                          },
-                          {
-                              action: function () {
-                                  return this.next();
-                              },
-                              text: this.$t('tour: button next'),
-                          },
-                      ]
-                  },
-                  {
-                      id: 'grey-field-kjøleskap',
-                      title: this.$t('tour: view:fridgesView method:firstLogginTour id:grey-field-kjøleskap usage:title'),
-                      text: this.$t('tour: view:fridgesView method:firstLogginTour id:grey-field-kjøleskap usage:text'),
-                      attachTo: {
-                          element: '#grey-header',
-                          on: 'bottom',
-                          offset: {x: 0, y: 20},
-                      },
-                      classes: 'shepherd-theme-arrows',
                       buttons: [
                           {
                               action: function () {
@@ -936,6 +907,63 @@ export default {
                                   return this.next();
                               },
                               text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+                  {
+                      id: 'search',
+                      title: this.$t('tour: view:fridgeView method:fridgeStepsTour id:search usage:title'),
+                      text: this.$t('tour: view:fridgeView method:fridgeStepsTour id:search usage:text'),
+                      attachTo: {
+                          element: '#searchbar',
+                          on: 'top',
+                      },
+
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.back();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button back'),
+                          },
+                          {
+                              action: function ()  {
+                                  return this.next();
+
+                              },
+                              text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+                  {
+                      id: 'filterstep',
+                      title: this.$t('tour: view:fridgeView method:fridgeStepsTour id:filter usage:title'),
+                      text: this.$t('tour: view:fridgeView method:fridgeStepsTour id:filter usage:text'),
+                      attachTo: {
+                          element: '.searchbar-wrapper',
+                      },
+                      beforeShowPromise: function() {
+                          return new Promise(function(resolve, reject) {
+                              const button = document.querySelector('#toggle');
+                              button.click();
+                              resolve();
+                          });
+                      },
+
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.back();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button back'),
+                          },
+                          {
+                              action: function () {
+                                  return this.cancel();
+                              },
+                              text: this.$t('tour: button exit'),
                           },
                       ]
                   },

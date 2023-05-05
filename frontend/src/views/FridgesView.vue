@@ -407,8 +407,7 @@ export default {
               buttons: [
                   {
                       action: () => {
-                          //router.push('/fridges');
-                          this.$emit.firstLogginTour();
+                          router.push('/fridges?appTour=true');
                           this.information.cancel();
                       },
                       secondary: true,

@@ -252,7 +252,6 @@
       "tour: view:fridgeView method:fridgeStepsTour id:search usage:text": "In this section, you can search on groceries and add them to the fridge. <br> <br> For normal user, the grocery is moved to the shopping list",
       "tour: view:fridgeView method:fridgeStepsTour id:filter usage:title": "Filter",
       "tour: view:fridgeView method:fridgeStepsTour id:filter usage:text": "By clicking \"Filter\", you can change the representation of groceries and sort on different variables",
-
       "tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:title": "Member tab",
       "tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:text": "Now you see the member page.<br><br> Ass super user, you can: <ul><li>See all members in fridge</li><li>Add members</li><li>Change title of members</li><li>Remove members</li><li>Remove your self from the fridge</li></ul> <br> Ass a normal user, you can <ul><li>See all members in fridge</li><li>Remove your self from the fridge</li></ul>",
       "tour: view:fridgeView method:memberStepTour id:single-member usage:title":"Member tab",
@@ -260,6 +259,10 @@
       "tour: view:fridgeView method:memberStepTour id:edit-user usage:title":"Change title",
       "tour: view:fridgeView method:memberStepTour id:edit-user usage:text":"To change the title of the member,press the edit button or delete the member by clicking the bin",
       "tour: view:fridgeView method:memberStepTour id:add-user usage:title": "Add member",
-      "tour: view:fridgeView method:memberStepTour id:add-user usage:text": "To add a new user to this fridge, you can press this button"
+      "tour: view:fridgeView method:memberStepTour id:add-user usage:text": "To add a new user to this fridge, you can press this button",
+
+  "One Item__": "This is the tour for a Item",
+      "tour: view:itemView method:itemStepTour id:itemWindow usage:title": "Product",
+      "tour: view:itemView method:itemStepTour id:itemWindow usage:text": "Now you see the product page.<br><br> Here you can: <ul><li>See information about the product</li><li>Update the item if it is used</li><li>Delete the item from fridge</li></ul>"
 
 }
