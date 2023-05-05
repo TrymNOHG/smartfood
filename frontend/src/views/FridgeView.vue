@@ -445,6 +445,8 @@ export default {
           }
       },
 
+      //Eirik
+
       informationButton(){
           this.information.addSteps([
               {
@@ -468,7 +470,7 @@ export default {
                       },
                       {
                           action: () => {
-                              this.fridgeStepsTour();
+                              this.fridgeViewStepsTour();
                               this.information.cancel();
 
                           },
@@ -480,18 +482,395 @@ export default {
           this.information.start()
       },
 
+      fridgeViewStepsTour() {
+          this.fridgeViewTour.addSteps([
+          {
+              id: 'grey-field-header',
+              title: this.$t('tour: view:fridgeView method:fridgeViewStepTour id:grey-field-header usage:title'),
+              text: this.$t('tour: view:fridgeView method:fridgeViewStepTour id:grey-field-header usage:text'),
+              attachTo: {
+                  element: '.grey-bar',
+                  on: 'bottom',
+              },
+              classes: 'shepherd-theme-arrows',
+                  buttons: [
+              {
+                  action: function () {
+                      return this.back();
+                  },
+                  secondary: true,
+                  text: this.$t('tour: button back'),
+              },
+              {
+                  action: () => {
+                      if(this.selectedTab === "fridge"){
+                          this.fridgeStepsTour();
+                          this.fridgeViewTour.cancel();
+                      } else{
+                          this.memberStepsTour();
+                          this.fridgeViewTour.cancel();
+                      }
+
+
+                  },
+                  class: " shepherd-button ",
+                  text: this.$t('tour: button next'),
+              },
+              ]
+            },
+          ])
+          this.fridgeViewTour.start()
+      },
+
+      memberStepsTour() {
+          if (window.matchMedia("(min-width: 860px)").matches) {
+              this.memberTour.addSteps([
+                  {
+                      id: 'grey-field-header-member',
+                      title: this.$t('tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:title'),
+                      text: this.$t('tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:text'),
+                      attachTo: {
+                          element: '.router-view-container',
+
+                      },
+                      classes: 'shepherd-theme-arrows',
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.cancel();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button exit'),
+                          },
+                          {
+                              action: function () {
+                                  return this.next();
+                              },
+                              class: " shepherd-button ",
+                              text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+                  {
+                      id: 'single-member',
+                      title: this.$t('tour: view:fridgeView method:memberStepTour id:single-member usage:title'),
+                      text: this.$t('tour: view:fridgeView method:memberStepTour id:single-member usage:text'),
+                      attachTo: {
+                          element: '.member',
+                          on:'bottom',
+
+                      },
+                      classes: 'shepherd-theme-arrows',
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.back();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button back'),
+                          },
+                          {
+                              action: function () {
+                                  return this.next();
+                              },
+                              class: " shepherd-button ",
+                              text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+                  {
+                      id: 'edit-user',
+                      title: this.$t('tour: view:fridgeView method:memberStepTour id:edit-user usage:title'),
+                      text: this.$t('tour: view:fridgeView method:memberStepTour id:edit-user usage:text'),
+                      attachTo: {
+                          element: '.actions',
+                          on:'bottom',
+
+                      },
+                      classes: 'shepherd-theme-arrows',
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.back();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button back'),
+                          },
+                          {
+                              action: function () {
+                                  return this.next();
+                              },
+                              class: " shepherd-button ",
+                              text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+                  {
+                      id: 'add-user',
+                      title: this.$t('tour: view:fridgeView method:memberStepTour id:add-user usage:title'),
+                      text: this.$t('tour: view:fridgeView method:memberStepTour id:add-user usage:text'),
+                      attachTo: {
+                          element: '.container_button',
+                          on:'top',
+                      },
+                      classes: 'shepherd-theme-arrows',
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.back();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button back'),
+                          },
+                          {
+                              action: function () {
+                                  return this.cancel();
+                              },
+                              class: " shepherd-button ",
+                              text: this.$t('tour: button exit'),
+                          },
+                      ]
+                  },
+              ])
+              this.memberTour.start()
+          }
+          else if(window.matchMedia("(max-width: 860px)").matches) {
+              this.memberTour.addSteps([
+                  {
+                      id: 'grey-field-header-member',
+                      title: this.$t('tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:title'),
+                      text: this.$t('tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:text'),
+                      attachTo: {
+                          element: '.router-view-container',
+
+                      },
+                      classes: 'shepherd-theme-arrows',
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.cancel();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button exit'),
+                          },
+                          {
+                              action: function () {
+                                  return this.next();
+                              },
+                              class: " shepherd-button ",
+                              text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+                  {
+                      id: 'single-member',
+                      title: this.$t('tour: view:fridgeView method:memberStepTour id:single-member usage:title'),
+                      text: this.$t('tour: view:fridgeView method:memberStepTour id:single-member usage:text'),
+                      attachTo: {
+                          element: '.member',
+                          on:'bottom',
+
+                      },
+                      classes: 'shepherd-theme-arrows',
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.back();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button back'),
+                          },
+                          {
+                              action: function () {
+                                  return this.next();
+                              },
+                              class: " shepherd-button ",
+                              text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+                  {
+                      id: 'edit-user',
+                      title: this.$t('tour: view:fridgeView method:memberStepTour id:edit-user usage:title'),
+                      text: this.$t('tour: view:fridgeView method:memberStepTour id:edit-user usage:text'),
+                      attachTo: {
+                          element: '.actions',
+                          on:'bottom',
+
+                      },
+                      classes: 'shepherd-theme-arrows',
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.back();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button back'),
+                          },
+                          {
+                              action: function () {
+                                  return this.next();
+                              },
+                              class: " shepherd-button ",
+                              text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+                  {
+                      id: 'add-user',
+                      title: this.$t('tour: view:fridgeView method:memberStepTour id:add-user usage:title'),
+                      text: this.$t('tour: view:fridgeView method:memberStepTour id:add-user usage:text'),
+                      attachTo: {
+                          element: '.container_button',
+                          on:'top',
+                      },
+                      classes: 'shepherd-theme-arrows',
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.back();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button back'),
+                          },
+                          {
+                              action: function () {
+                                  return this.cancel();
+                              },
+                              class: " shepherd-button ",
+                              text: this.$t('tour: button exit'),
+                          },
+                      ]
+                  },
+              ])
+              this.memberTour.start()
+          }
+      },
+
+
       fridgeStepsTour() {
           if (window.matchMedia("(min-width: 860px)").matches) {
               this.fridgeTour.addSteps([
-
                   {
-                      id: 'fridgesWindow',
-                      title: this.$t('tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:title'),
-                      text: this.$t('tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:text'),
+                      id: 'grey-field-header-fridge',
+                      title: this.$t('tour: view:fridgeView method:fridgeStepsTour id:grey-field-header-fridge usage:title'),
+                      text: this.$t('tour: view:fridgeView method:fridgeStepsTour id:grey-field-header-fridge usage:text'),
                       attachTo: {
-                          element: 'div.router-view-container',
+                          element: '.router-view-container ',
+                      },
+
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.cancel();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button cancel'),
+                          },
+                          {
+                              action: function () {
+                                  return this.next();
+                              },
+                              text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+                  {
+                      id: 'items',
+                      title: this.$t('tour: view:fridgeView method:fridgeStepsTour id:items usage:title'),
+                      text: this.$t('tour: view:fridgeView method:fridgeStepsTour id:items usage:text'),
+                      attachTo: {
+                          element: '.wrapper',
+                          on: 'top',
+                      },
+
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.back();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button back'),
+                          },
+                          {
+                              action: function () {
+                                  return this.next();
+                              },
+                              text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+                  {
+                      id: 'search',
+                      title: this.$t('tour: view:fridgeView method:fridgeStepsTour id:search usage:title'),
+                      text: this.$t('tour: view:fridgeView method:fridgeStepsTour id:search usage:text'),
+                      attachTo: {
+                          element: '#searchbar',
+                          on: 'top',
+                      },
+
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.back();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button back'),
+                          },
+                          {
+                              action: function ()  {
+                                  return this.next();
+
+                              },
+                              text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+                  {
+                      id: 'filterstep',
+                      title: this.$t('tour: view:fridgeView method:fridgeStepsTour id:filter usage:title'),
+                      text: this.$t('tour: view:fridgeView method:fridgeStepsTour id:filter usage:text'),
+                      attachTo: {
+                          element: '.searchbar-wrapper',
+                      },
+                      beforeShowPromise: function() {
+                          return new Promise(function(resolve, reject) {
+                              const button = document.querySelector('#toggle');
+                              button.click();
+                              resolve();
+                          });
+                      },
+
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.back();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button back'),
+                          },
+                          {
+                              action: function () {
+                                  return this.cancel();
+                              },
+                              text: this.$t('tour: button exit'),
+                          },
+                      ]
+                  },
+              ]);
+              this.fridgeTour.start()
+          }
+          else if(window.matchMedia("(max-width: 860px)").matches) {
+              this.fridgeTour.addSteps([
+                  {
+                      id: 'grey-field-header-fridge',
+                      title: this.$t('tour: view:fridgeView method:fridgeStepsTour id:grey-field-header-fridge usage:title'),
+                      text: this.$t('tour: view:fridgeView method:fridgeStepsTour id:grey-field-header-fridge usage:text'),
+                      attachTo: {
+                          element: '.grey-bar',
                           on: 'bottom',
                       },
+                      arrow:'true ',
 
                       buttons: [
                           {
@@ -509,11 +888,6 @@ export default {
                           },
                       ]
                   },
-              ]);
-              this.fridgeTour.start()
-          }
-          else if(window.matchMedia("(max-width: 860px)").matches) {
-              this.fridgeTour.addSteps([
                   {
                       id: 'fridgesWindow',
                       title: this.$t('tour: view:fridgesView method:firstLogginTour id:fridgesWindow usage:title'),
@@ -722,10 +1096,12 @@ export default {
     const active = ref(false);
     const click = ref(false);
 
+    //Eirik
       const fridgeTour = new Shepherd.Tour({
           useModalOverlay: true,
           defaultStepOptions: {
               classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
+              arrow: true,
               floatingUIOptions: {
                   middleware: [offset(30)]
               },
@@ -749,6 +1125,33 @@ export default {
           }
       });
 
+      const fridgeViewTour = new Shepherd.Tour({
+          useModalOverlay: true,
+          defaultStepOptions: {
+              classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
+              arrow: true,
+              floatingUIOptions: {
+                  middleware: [offset(30)]
+              },
+              cancelIcon: {
+                  enabled: true
+              },
+          }
+      });
+
+      const memberTour = new Shepherd.Tour({
+          useModalOverlay: true,
+          defaultStepOptions: {
+              classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
+              arrow: true,
+              floatingUIOptions: {
+                  middleware: [offset(30)]
+              },
+              cancelIcon: {
+                  enabled: true
+              },
+          }
+      });
 
     return {
       scrollTarget,
@@ -775,8 +1178,9 @@ export default {
       searchParamOptions,
       fridgeTour,
       information,
-
-    };
+      fridgeViewTour,
+      memberTour,
+    }
   },
 
   data() {
