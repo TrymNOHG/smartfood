@@ -265,9 +265,9 @@ export default {
 
     async deleteItem(itemToDelete, deletePercentage) {
       const statDeleteFromFridgeDTO = {
-        percentageThrown: parseFloat(deletePercentage),
+        percentageThrown: parseFloat("5"), //TODO: bug test
         price: itemToDelete.price,
-        quantity: parseFloat(deletePercentage),
+        quantity: parseFloat("1"), //TODO: FIX
         itemName: itemToDelete.name,
         storeName: itemToDelete.store,
         fridgeId: this.fridge.fridgeId,
@@ -283,7 +283,7 @@ export default {
       console.log(itemRemoveDTO)
 
       await this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO);
-      await this.itemStore.deleteItemByNameIdStoreAmount  (itemRemoveDTO);
+      await this.itemStore.deleteItemByNameIdStoreAmount(itemRemoveDTO);
       await this.itemStore
           .fetchItemsFromFridgeById(this.fridge.fridgeId)
           .then((items) => {

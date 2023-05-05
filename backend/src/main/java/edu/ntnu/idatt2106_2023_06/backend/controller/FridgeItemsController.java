@@ -140,7 +140,6 @@ public class FridgeItemsController implements IFridgeItemsController{
         return ResponseEntity.ok(itemList);
     }
 
-    //TODO: move these method to a service...
     private void authenticate(Authentication authentication){
         if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
     }

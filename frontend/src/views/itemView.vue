@@ -117,16 +117,17 @@ export default {
             customClass: {
               container: 'my-swal-dialog-container'
             }
-          }).then((result) => {
+          }).then(async (result) => {
             const statDeleteFromFridgeDTO = {
               "percentageThrown": parseFloat(deletePercentage),
               "price": item.price,
-              "quantity": parseFloat(item.quantity), //TODO: FIX THIS SHEET
+              "quantity": parseFloat(deletePercentage), //TODO: FIX THIS SHEET
               "itemName": item.name,
               "storeName": item.store,
               "fridgeId": this.fridge.fridgeId
             };
             console.log("yooooo"  + deletePercentage)
+            console.log(item.quantity)
             const itemRemoveDTO = {
               "itemName": item.name,
               "store": item.store,
@@ -134,9 +135,9 @@ export default {
               "quantity": 0
             };
             if (result.isConfirmed) {
-              this.addShopping(item);
+              await this.addShopping(item);
             }
-            this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO).then(() => {
+            await this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO).then(() => {
               this.itemStore.deleteItemByNameIdStoreAmount(itemRemoveDTO).then(() => {
                 router.push('/fridge');
               });
@@ -150,10 +151,6 @@ export default {
 
     async updateItem(item, newAmount) {
 
-      if(newAmount === 0){
-        await this.deleteItem(item, newAmount)
-      }
-
       swal.fire({
         title: this.$t('confirm_title'),
         text: this.$t('confirm_text'),
@@ -166,35 +163,22 @@ export default {
         customClass: {
           container: 'my-swal-dialog-container'
         }
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          swal.fire({
-            title: this.$t('buy_again'),
-            text: this.$t('confirm_text'),
-            icon: 'success',
-            showCancelButton: true,
-            confirmButtonColor: '#4dce38',
-            cancelButtonColor: '#d33',
-            confirmButtonText: this.$t('Yes'),
-            cancelButtonText: this.$t('No'),
-            customClass: {
-              container: 'my-swal-dialog-container'
-            }
-          }).then((result) => {
-            console.log("yooooo"  + newAmount)
-            const itemRemoveDTO = {
-              "itemName": item.name,
-              "store": item.store,
-              "fridgeId": this.fridge.fridgeId,
-              "quantity": newAmount
-            };
-
-            this.itemStore.deleteItemByNameIdStoreAmount(itemRemoveDTO).then(() => {
-              router.push('/fridge');
-            });
-
-          });
+      }).then(async () => {
+        if(newAmount === 0){
+          await this.deleteItem(item, newAmount)
         }
+
+        const itemRemoveDTO = {
+          "itemName": item.name,
+          "store": item.store,
+          "fridgeId": this.fridge.fridgeId,
+          "quantity": newAmount
+        };
+
+        this.itemStore.deleteItemByNameIdStoreAmount(itemRemoveDTO).then(() => {
+          router.push('/fridge');
+        })
+
       });
     }
   },
