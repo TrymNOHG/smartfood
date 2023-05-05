@@ -14,6 +14,11 @@ const factory = (propsData) => {
             quantity: 1,
             ...propsData, // Ensure you are passing the additional propsData
         },
+        global: {
+            mocks: {
+                $t: (msg) => msg
+            }
+        }
     });
 };
 
