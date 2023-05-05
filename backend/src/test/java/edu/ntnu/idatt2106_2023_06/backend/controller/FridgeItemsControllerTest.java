@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemSearchDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.filter.JwtAuthenticationFilter;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
@@ -21,8 +23,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,6 +42,9 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -108,7 +118,7 @@ public class FridgeItemsControllerTest {
 
         given(itemService.addItem(itemDTO)).willReturn(item);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/item/fridge/add")
+        mockMvc.perform(post("/item/fridge/add")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(itemDTO))
@@ -151,6 +161,54 @@ public class FridgeItemsControllerTest {
                 .andExpect(status().isOk());
 
         verify(itemService, times(1)).removeItemFromFridge(itemRemoveDTO);
+    }
+
+    @Test
+    @WithMockUser(username = "user1", password = "pwd", roles = "USER")
+    public void testUpdateFridgeItem() throws Exception {
+        FridgeItemUpdateDTO fridgeItemUpdateDTO = FridgeItemUpdateDTO.builder()
+                .itemId(1L)
+                .fridgeId(1L)
+                .amount(2.0)
+                .build();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        doNothing().when(itemService).updateFridgeItem(fridgeItemUpdateDTO);
+        when(userService.isSuperUser(fridgeItemUpdateDTO.fridgeId(), authentication.getName())).thenReturn(true);
+
+        mockMvc.perform(put("/item/fridge/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(fridgeItemUpdateDTO))
+                        .with(authentication(authentication)))
+                .andExpect(status().isOk());
+
+        verify(itemService, times(1)).updateFridgeItem(fridgeItemUpdateDTO);
+    }
+
+    @Test
+    public void testSearchFridgeItems() throws Exception {
+        FridgeItemSearchDTO fridgeItemSearchDTO = new FridgeItemSearchDTO(1L, "test", "expirationDate", "ASC", 0, 1);
+
+        List<FridgeItemLoadDTO> itemList = new ArrayList<>();
+        FridgeItemLoadDTO item1 = new FridgeItemLoadDTO(1L, "Tine Melk",
+                "Tine melk kommer fra fri gående, grass matet kuer.", "Kiwi", 200000,
+                null, 2, "l", LocalDateTime.now(), LocalDateTime.now(), "123456");
+        itemList.add(item1);
+
+        Page<FridgeItemLoadDTO> pageItemList = new PageImpl<>(itemList);
+
+        when(itemService.searchFridgeItems(fridgeItemSearchDTO)).thenReturn(pageItemList);
+
+        mockMvc.perform(post("/item/fridge/search")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(fridgeItemSearchDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].itemId").value(1L))
+                .andExpect(jsonPath("$.content[0].name").value("Tine Melk"))
+                .andExpect(jsonPath("$.content[0].amount").value(2));
+
+        verify(itemService, times(1)).searchFridgeItems(fridgeItemSearchDTO);
     }
 
 

@@ -279,15 +279,4 @@ public class ItemControllerTest {
     }
 
 
-
-
-    @Test
-    @WithMockUser(username = "user1", password = "pwd", roles = "USER")
-    public void testValidateSuperUserWhenSuperUser() {
-        Long fridgeId = 1L;
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        when(userService.isSuperUser(fridgeId, authentication.getName())).thenReturn(true);
-
-        new ItemController(itemService, userService).validateSuperUser(fridgeId, authentication);
-    }
 }
