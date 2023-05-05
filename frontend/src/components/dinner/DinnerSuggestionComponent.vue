@@ -122,8 +122,12 @@
           for (const userId of uniqueUserIds) {
             try {
               const response = await getProfilePictureById(userId);
-              const imageUrl = URL.createObjectURL(new Blob([response.data], { type: 'image/jpeg' }));
-              profilePictures.value[userId] = imageUrl;
+              if(response.data.byteLength === 0){
+                profilePictures.value[userId] = defaultProfilePicture;
+              } else {
+                const imageUrl = URL.createObjectURL(new Blob([response.data], { type: 'image/jpeg' }));
+                profilePictures.value[userId] = imageUrl;
+              }
             } catch (error) {
               profilePictures.value[userId] = defaultProfilePicture; // Fallback image
             }

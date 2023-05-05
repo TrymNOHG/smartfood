@@ -171,8 +171,6 @@ public class UserController {
     public ResponseEntity<Object> getPicture(Authentication authentication) throws IOException {
         logger.info(String.format("User %s wants to get their profile picture!", authentication.getName()));
         byte[] file = fileStorageService.getProfilePicture(jwtService.getAuthenticatedUserId());
-        if(file == null)
-            return ResponseEntity.ok("No profile picture found!");
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+jwtService.getAuthenticatedUserId()+"\"")
                 .contentType(MediaType.IMAGE_JPEG)
