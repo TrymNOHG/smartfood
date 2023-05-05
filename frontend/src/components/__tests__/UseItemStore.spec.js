@@ -5,6 +5,7 @@ import { setupServer } from 'msw/node';
 import { useItemStore } from '@/store/store';
 import { getItemsFromFridge } from '@/services/ItemService'; // Import the service function used in the fetchItemsFromFridgeById action
 import { setMockToken } from '@/features/SessionToken';
+import {addItemToFridge} from "../../services/ItemService";
 
 const server = setupServer(
     rest.get('http://localhost:8089/api/item/fridge/get?fridgeId=test_fridge_id', (req, res, ctx) => {
@@ -16,6 +17,34 @@ const server = setupServer(
             ]));
         }
     }),
+    rest.get('http://localhost:8089/api/item/fridge/get', (req, res, ctx) => {
+        const fridgeId = req.url.searchParams.get('fridgeId');
+        if (fridgeId === 'test_fridge_id') {
+            return res(ctx.json([
+                { id: 1, name: 'Apple', amount: 5 },
+                { id: 2, name: 'Orange', amount: 3 },
+            ]));
+        } else {
+            return res(ctx.status(400));
+        }
+    }),
+    rest.delete('http://localhost:8089/api/item/fridge/delete', (req, res, ctx) => {
+        const itemRemoveDTO = req.body;
+        if (itemRemoveDTO.itemId === 1 && itemRemoveDTO.fridgeId === 'test_fridge_id') {
+            return res(ctx.json({ success: true }));
+        } else {
+            return res(ctx.status(400));
+        }
+    }),
+    rest.post('http://localhost:8089/api/item/fridge/add', (req, res, ctx) => {
+        const fridgeId = req.url.searchParams.get('fridgeId');
+        if (fridgeId === 'test_fridge_id') {
+            return res(ctx.json({ success: true }));
+        } else {
+            return res(ctx.status(400), ctx.json({ error: 'Invalid fridge ID' }));
+        }
+    })
+
 );
 
 describe('Test item store', () => {
@@ -67,6 +96,25 @@ describe('Test item store', () => {
         const testItem = { id: 1, name: 'Apple', amount: 5 };
         store.setCurrentItem(testItem);
         expect(store.currentItem).toEqual(testItem);
+    });
+
+    test('addItemToFridge with valid parameters', async () => {
+        const itemDTO = { name: 'Test Item', amount: 1 };
+        const fridgeId = 'test_fridge_id';
+        const result = await addItemToFridge(itemDTO, fridgeId);
+        expect(result.status).toEqual(200);
+        expect(result.data.success).toBe(true);
+    });
+
+
+    test('getItemsFromFridge with valid parameters', async () => {
+        const fridgeId = 'test_fridge_id';
+        const result = await getItemsFromFridge(fridgeId);
+        expect(result.status).toEqual(200);
+        expect(result.data).toEqual([
+            { id: 1, name: 'Apple', amount: 5 },
+            { id: 2, name: 'Orange', amount: 3 },
+        ]);
     });
 
     // Other tests involving API calls can't be performed without mocking.
