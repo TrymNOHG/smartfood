@@ -36,7 +36,7 @@ public class RecipePart {
     /**
      * The recipe of the recipe items.
      */
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "recipe_id", nullable = false)
     @NonNull
     @ToString.Exclude

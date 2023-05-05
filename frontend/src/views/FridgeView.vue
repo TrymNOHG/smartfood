@@ -826,7 +826,6 @@ select {
 .list-wrapper {
   display: grid;
   grid-template-columns: 50% 50%;
-  grid-template-rows: repeat(auto-fill, minmax(120px, 120px));
   z-index: 0;
   margin: 2% 2% 80px;
 }
