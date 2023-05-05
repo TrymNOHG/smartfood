@@ -154,7 +154,7 @@ public class RecipeService {
 
     //TODO: authenticate
 
-    private int countMatchingItems(RecipeLoadDTO recipeDTO, Long fridgeId) {
+    public int countMatchingItems(RecipeLoadDTO recipeDTO, Long fridgeId) {
         Set<FridgeItems> fridgeItemIds = new HashSet<>(fridgeItemsRepository.findAllByFridge_FridgeId(fridgeId)
                 .orElseThrow(() -> new FridgeNotFoundException(fridgeId)));
 

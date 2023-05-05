@@ -9,7 +9,6 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.MessagingException;
@@ -76,7 +75,7 @@ public class EmailService implements IEmailService {
      * @param link  The URL that the button should link to.
      * @return      The HTML button, represented as a String.
      */
-    private String createLinkButton(String buttonText, String link) {
+    public String createLinkButton(String buttonText, String link) {
         return "<a href=\"" + link + "\" style=\"background-color: #008CBA; color: white; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block; border-radius: 5px; font-size: 16px; font-weight: bold;\">" + buttonText + "</a>";
     }
 
@@ -87,7 +86,7 @@ public class EmailService implements IEmailService {
      * @param button  The button link to the page, represented as a String.
      * @return        The actual HTML, represented as a String.
      */
-    private String createEmailBody(String name, String message, String button) {
+    public String createEmailBody(String name, String message, String button) {
         StringBuilder body = new StringBuilder();
         body.append("<html><body>");
         body.append("<h1>Activate Your SmartMat Account</h1>");

@@ -20,6 +20,13 @@ import java.io.IOException;
 // https://github.com/BrageNTNU/IDATT-2105-Prosjekt/blob/main/Backend/src/main/java/edu/ntnu/idatt2105/backend/security/JWTAuthenticationFilter.java
 // https://github.com/TrymNOHG/Cache-Dash/blob/master/backend/src/main/java/edu/ntnu/idatt2105/g6/backend/security/JwtAuthenticationFilter.java
 
+/**
+ *  JwtAuthenticationFilter is responsible for authentication of incoming requests with JWT token.
+ *  It extends the OncePerRequestFilter class, which makes sure that the filter is only executed once per request.
+ *  This class checks for the presence of a JWT token in the Authorization header of the request.
+ *  If the token is present and valid, the user is authenticated and their UserDetails object is set in the security context.
+ *  Otherwise, the request is passed down the filter chain.
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -29,6 +36,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
 
+    /**
+     * This method filters the incoming request and checks for the presence of a JWT token in the Authorization header.
+     * If the token is present and valid, the user is authenticated and their UserDetails object is set in the security context.
+     * Otherwise, the request is passed down the filter chain.
+     *
+     * @param request           the incoming HttpServletRequest
+     * @param response          the HttpServletResponse to be sent
+     * @param filterChain       the FilterChain to be executed
+     * @throws ServletException in case of a Servlet error
+     * @throws IOException      in case of an IO error
+     */
     @Override
     protected void doFilterInternal(@NonNull jakarta.servlet.http.HttpServletRequest request,
                                     @NonNull jakarta.servlet.http.HttpServletResponse response,

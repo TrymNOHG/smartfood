@@ -13,6 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * The StatController class contains the API endpoints related to statistics. It provides functionality for adding
+ * statistics to the database, getting personal statistics, and getting fridge statistics. The endpoints are
+ * protected by a JWT token, and the endpoints that require a fridgeId also check that the user is a member of that fridge.
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/stat")

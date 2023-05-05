@@ -4,25 +4,31 @@ import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemMoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.ItemRemoveDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemSearchDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.fridge_items.FridgeItemUpdateDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.RecipeShoppingDTO;
+import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.ShoppingItemUpdateDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.items.shopping_list.ShoppingListLoadDTO;
+import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.*;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.ItemNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.ItemMapper;
-import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
+import edu.ntnu.idatt2106_2023_06.backend.model.fridge.*;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
-import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
-import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
-import edu.ntnu.idatt2106_2023_06.backend.model.fridge.ShoppingItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeMemberRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.item.ShoppingItemsRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.store.StoreRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
 import edu.ntnu.idatt2106_2023_06.backend.service.security.JwtService;
+import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.FilterRequest;
+import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.SearchRequest;
+import edu.ntnu.idatt2106_2023_06.backend.sortAndFilter.SortRequest;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -36,6 +42,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -958,6 +965,552 @@ public class ItemServiceTest {
         }
     }
 
+
+    @Nested
+    @SpringBootTest
+    class AddIngredientsToShoppingList {
+
+        @Autowired
+        FridgeRepository fridgeRepository;
+
+        @Autowired
+        ItemRepository itemRepository;
+
+        @Autowired
+        ShoppingItemsRepository shoppingItemsRepository;
+
+        @Autowired
+        FridgeItemsRepository fridgeItemsRepository;
+
+        @Autowired
+        StoreRepository storeRepository;
+
+        @Autowired
+        UserRepository userRepository;
+
+        @Autowired
+        FridgeMemberRepository fridgeMemberRepository;
+
+        @Autowired
+        ItemService itemService;
+
+        @Test
+        @Transactional
+        void throws_UnauthorizedException(){
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .build();
+            fridgeRepository.save(fridge);
+            User user = User
+                    .builder()
+                    .userId(1L)
+                    .username("Ole123")
+                    .firstName("Ole")
+                    .lastName("Norman")
+                    .password("123123123")
+                    .email("Ole@gmail.com")
+                    .build();
+            userRepository.save(user);
+            FridgeMemberId fridgeMemberId = new FridgeMemberId(1L, 1L);
+            FridgeMember fridgeMember = new FridgeMember(fridgeMemberId, user, fridge, true);
+            fridgeMemberRepository.save(fridgeMember);
+            Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(1L, "Dairy", new ArrayList<>()), 200000,
+                    null, "12345678", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>() );
+            itemRepository.save(item);
+            FridgeItemsId fridgeItemsId = new FridgeItemsId(1L, 1L);
+            FridgeItems fridgeItems = FridgeItems
+                    .builder()
+                    .id(fridgeItemsId)
+                    .fridge(fridge)
+                    .item(item)
+                    .purchaseDate(LocalDateTime.now())
+                    .expirationDate(LocalDateTime.now())
+                    .build();
+            fridgeItemsRepository.save(fridgeItems);
+
+
+            RecipeShoppingDTO recipeShoppingDTO = new RecipeShoppingDTO(1L, new ArrayList<>());
+
+            assertThrows(UnauthorizedException.class, () -> itemService.addIngredientsToShoppingList(recipeShoppingDTO, "hans"));
+        }
+
+
+        @Test
+        @Transactional
+        void does_not_throw_exception(){
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .build();
+            fridgeRepository.save(fridge);
+            User user = User
+                    .builder()
+                    .userId(1L)
+                    .username("Ole123")
+                    .firstName("Ole")
+                    .lastName("Norman")
+                    .password("123123123")
+                    .email("Ole@gmail.com")
+                    .build();
+            userRepository.save(user);
+            FridgeMemberId fridgeMemberId = new FridgeMemberId(1L, 1L);
+            FridgeMember fridgeMember = new FridgeMember(fridgeMemberId, user, fridge, true);
+            fridgeMemberRepository.save(fridgeMember);
+            Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(1L, "Dairy", new ArrayList<>()), 200000,
+                    null, "12345678", 100.0, "ml", 4,  new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            itemRepository.save(item);
+            FridgeItemsId fridgeItemsId = new FridgeItemsId(1L, 1L);
+            FridgeItems fridgeItems = FridgeItems
+                    .builder()
+                    .id(fridgeItemsId)
+                    .fridge(fridge)
+                    .item(item)
+                    .purchaseDate(LocalDateTime.now())
+                    .expirationDate(LocalDateTime.now())
+                    .build();
+            fridgeItemsRepository.save(fridgeItems);
+
+
+            RecipeShoppingDTO recipeShoppingDTO = new RecipeShoppingDTO(1L, new ArrayList<>());
+
+            assertDoesNotThrow(() -> itemService.addIngredientsToShoppingList(recipeShoppingDTO, "Ole123"));
+        }
+
+    }
+
+    @Nested
+    @SpringBootTest
+    class UpdateFridgeItem {
+
+        @Autowired
+        FridgeRepository fridgeRepository;
+
+        @Autowired
+        ItemRepository itemRepository;
+
+        @Autowired
+        ShoppingItemsRepository shoppingItemsRepository;
+
+        @Autowired
+        FridgeItemsRepository fridgeItemsRepository;
+
+        @Autowired
+        StoreRepository storeRepository;
+
+        @Autowired
+        UserRepository userRepository;
+
+        @Autowired
+        FridgeMemberRepository fridgeMemberRepository;
+
+        @Autowired
+        ItemService itemService;
+
+        @Test
+        @Transactional
+        void updates_correct_amount(){
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .build();
+            fridgeRepository.save(fridge);
+            Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(1L, "Dairy", new ArrayList<>()), 200000,
+                    null, "12345678", 100.0, "ml", 4,  new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            itemRepository.save(item);
+            FridgeItemsId fridgeItemsId = new FridgeItemsId(1L, 1L);
+            FridgeItems fridgeItem = FridgeItems
+                    .builder()
+                    .id(fridgeItemsId)
+                    .fridge(fridge)
+                    .item(item)
+                    .purchaseDate(LocalDateTime.now())
+                    .expirationDate(LocalDateTime.now())
+                    .build();
+            fridgeItemsRepository.save(fridgeItem);
+
+
+            FridgeItemUpdateDTO fridgeItemUpdateDTO = new FridgeItemUpdateDTO(1L, 1L, 2.0, LocalDateTime.now(), LocalDateTime.now());
+            itemService.updateFridgeItem(fridgeItemUpdateDTO);
+            FridgeItems fridgeItem2 = fridgeItemsRepository.findByItem_ItemIdAndFridge_FridgeId(1L, 1L).orElseThrow();
+            assertEquals(2, fridgeItem2.getAmount());
+        }
+
+        @Test
+        @Transactional
+        void throws_FridgeItemsNotFoundException(){
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .build();
+            fridgeRepository.save(fridge);
+            Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(1L, "Dairy", new ArrayList<>()), 200000,
+                    null, "12345678", 100.0, "ml", 4,  new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            itemRepository.save(item);
+            FridgeItemsId fridgeItemsId = new FridgeItemsId(1L, 1L);
+
+
+
+            FridgeItemUpdateDTO fridgeItemUpdateDTO = new FridgeItemUpdateDTO(1L, 1L, 2.0, LocalDateTime.now(), LocalDateTime.now());
+            assertThrows(FridgeItemsNotFoundException.class, () -> itemService.updateFridgeItem(fridgeItemUpdateDTO));
+
+        }
+    }
+
+    @Nested
+    @SpringBootTest
+    class UpdateShoppingItem {
+
+        @Autowired
+        FridgeRepository fridgeRepository;
+
+        @Autowired
+        ItemRepository itemRepository;
+
+        @Autowired
+        ShoppingItemsRepository shoppingItemsRepository;
+
+        @Autowired
+        FridgeItemsRepository fridgeItemsRepository;
+
+        @Autowired
+        StoreRepository storeRepository;
+
+        @Autowired
+        UserRepository userRepository;
+
+        @Autowired
+        FridgeMemberRepository fridgeMemberRepository;
+
+        @Autowired
+        ItemService itemService;
+
+        @Test
+        @Transactional
+        void updates_correct_amount(){
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .build();
+            fridgeRepository.save(fridge);
+            Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(1L, "Dairy", new ArrayList<>()), 200000,
+                    null, "12345678", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            itemRepository.save(item);
+            FridgeItemsId fridgeItemsId = new FridgeItemsId(1L, 1L);
+            ShoppingItems shoppingItem = ShoppingItems
+                    .builder()
+                    .id(fridgeItemsId)
+                    .fridge(fridge)
+                    .item(item)
+                    .quantity(1)
+                    .suggestion(false)
+                    .build();
+            shoppingItemsRepository.save(shoppingItem);
+            User user = User
+                    .builder()
+                    .userId(1L)
+                    .username("Ole123")
+                    .firstName("Ole")
+                    .lastName("Norman")
+                    .password("123123123")
+                    .email("Ole@gmail.com")
+                    .build();
+            userRepository.save(user);
+
+            ShoppingItemUpdateDTO shoppingItemUpdateDTO = new ShoppingItemUpdateDTO(1L, 1L, 2, false);
+            itemService.updateShoppingItem(shoppingItemUpdateDTO, "Ole123");
+            ShoppingItems shoppingItem2 = shoppingItemsRepository.findByItem_ItemIdAndFridge_FridgeId(1L, 1L).orElseThrow();
+            assertEquals(2, shoppingItem2.getQuantity());
+        }
+
+        @Test
+        @Transactional
+        void throws_ShoppingItemsNotFoundException(){
+            User user = User
+                    .builder()
+                    .userId(1L)
+                    .username("Ole123")
+                    .firstName("Ole")
+                    .lastName("Norman")
+                    .password("123123123")
+                    .email("Ole@gmail.com")
+                    .build();
+            userRepository.save(user);
+
+
+            ShoppingItemUpdateDTO shoppingItemUpdateDTO = new ShoppingItemUpdateDTO(1L, 1L, 2, false);
+            assertThrows(ShoppingItemsNotFoundException.class, () -> itemService.updateShoppingItem(shoppingItemUpdateDTO, "Ole123"));
+
+        }
+
+        @Test
+        @Transactional
+        void throws_UsernameNotFoundException(){
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .build();
+            fridgeRepository.save(fridge);
+            Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(1L, "Dairy", new ArrayList<>()), 200000,
+                    null, "12345678", 100.0, "ml",4,  new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            itemRepository.save(item);
+            FridgeItemsId fridgeItemsId = new FridgeItemsId(1L, 1L);
+            ShoppingItems shoppingItem = ShoppingItems
+                    .builder()
+                    .id(fridgeItemsId)
+                    .fridge(fridge)
+                    .item(item)
+                    .quantity(1)
+                    .suggestion(false)
+                    .build();
+            shoppingItemsRepository.save(shoppingItem);
+
+
+            ShoppingItemUpdateDTO shoppingItemUpdateDTO = new ShoppingItemUpdateDTO(1L, 1L, 2, false);
+            assertThrows(UsernameNotFoundException.class, () -> itemService.updateShoppingItem(shoppingItemUpdateDTO, "test"));
+
+        }
+    }
+
+    @Nested
+    @SpringBootTest
+    class SearchFridgeItems {
+
+        @Autowired
+        FridgeRepository fridgeRepository;
+
+        @Autowired
+        ItemRepository itemRepository;
+
+        @Autowired
+        ShoppingItemsRepository shoppingItemsRepository;
+
+        @Autowired
+        FridgeItemsRepository fridgeItemsRepository;
+
+        @Autowired
+        StoreRepository storeRepository;
+
+        @Autowired
+        UserRepository userRepository;
+
+        @Autowired
+        FridgeMemberRepository fridgeMemberRepository;
+
+        @Autowired
+        ItemService itemService;
+
+        @Autowired
+        JwtService jwtService;
+
+        @Autowired
+        UserDetailsService userDetailsService;
+
+
+        @Test
+        @Transactional
+        void does_not_throw_exception(){
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .build();
+            fridgeRepository.save(fridge);
+            User user = User
+                    .builder()
+                    .userId(1L)
+                    .username("Ole123")
+                    .firstName("Ole")
+                    .lastName("Norman")
+                    .password("123123123")
+                    .email("Ole@gmail.com")
+                    .build();
+            userRepository.save(user);
+            UserDetails userDetails = userDetailsService.loadUserByUsername("Ole123");
+            String jwt = jwtService.generateToken(userDetails);
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities()));
+            FridgeMemberId fridgeMemberId = new FridgeMemberId(1L, 1L);
+            FridgeMember fridgeMember = new FridgeMember(fridgeMemberId, user, fridge, true);
+            fridgeMemberRepository.save(fridgeMember);
+            Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(1L, "Dairy", new ArrayList<>()), 200000,
+                    null, "12345678", 100.0, "ml",4,  new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            itemRepository.save(item);
+            FridgeItemsId fridgeItemsId = new FridgeItemsId(1L, 1L);
+            FridgeItems fridgeItems = FridgeItems
+                    .builder()
+                    .id(fridgeItemsId)
+                    .fridge(fridge)
+                    .item(item)
+                    .purchaseDate(LocalDateTime.now())
+                    .expirationDate(LocalDateTime.now())
+                    .build();
+            fridgeItemsRepository.save(fridgeItems);
+
+
+            FridgeItemSearchDTO fridgeItemSearchDTO = new FridgeItemSearchDTO(1L, "Tine Melk", "expirationDate", "ASC", 0, 1);
+            assertDoesNotThrow( () -> itemService.searchFridgeItems(fridgeItemSearchDTO));
+
+        }
+
+
+
+        @Test
+        @Transactional
+        void throws_UnauthorizedException(){
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .build();
+            fridgeRepository.save(fridge);
+            User user = User
+                    .builder()
+                    .userId(1L)
+                    .username("Ole123")
+                    .firstName("Ole")
+                    .lastName("Norman")
+                    .password("123123123")
+                    .email("Ole@gmail.com")
+                    .build();
+            userRepository.save(user);
+            UserDetails userDetails = userDetailsService.loadUserByUsername("Ole123");
+            String jwt = jwtService.generateToken(userDetails);
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities()));
+            Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(1L, "Dairy", new ArrayList<>()), 200000,
+                    null, "12345678", 100.0, "ml",4,  new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            itemRepository.save(item);
+            FridgeItemsId fridgeItemsId = new FridgeItemsId(1L, 1L);
+            FridgeItems fridgeItems = FridgeItems
+                    .builder()
+                    .id(fridgeItemsId)
+                    .fridge(fridge)
+                    .item(item)
+                    .purchaseDate(LocalDateTime.now())
+                    .expirationDate(LocalDateTime.now())
+                    .build();
+            fridgeItemsRepository.save(fridgeItems);
+
+
+            FridgeItemSearchDTO fridgeItemSearchDTO = new FridgeItemSearchDTO(1L, "Tine Melk", "expirationDate", "ASC", 0, 1);
+            assertThrows(UnauthorizedException.class, () -> itemService.searchFridgeItems(fridgeItemSearchDTO));
+
+        }
+
+
+    }
+
+    @Nested
+    @SpringBootTest
+    class DeleteAllItemsFromShoppingList {
+
+        @Autowired
+        FridgeRepository fridgeRepository;
+
+        @Autowired
+        ItemRepository itemRepository;
+
+        @Autowired
+        ShoppingItemsRepository shoppingItemsRepository;
+
+        @Autowired
+        FridgeItemsRepository fridgeItemsRepository;
+
+        @Autowired
+        StoreRepository storeRepository;
+
+        @Autowired
+        UserRepository userRepository;
+
+        @Autowired
+        FridgeMemberRepository fridgeMemberRepository;
+
+        @Autowired
+        ItemService itemService;
+
+        @Autowired
+        JwtService jwtService;
+
+        @Autowired
+        UserDetailsService userDetailsService;
+
+        @Test
+        @Transactional
+        void does_not_throw_exception(){
+            Fridge fridge = Fridge.builder()
+                    .fridgeId(1L)
+                    .fridgeName("testFridge")
+                    .stats(new HashSet<>())
+                    .build();
+            fridgeRepository.save(fridge);
+            Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(1L, "Dairy", new ArrayList<>()), 200000,
+                    null, "12345678", 100.0, "ml",4,  new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            itemRepository.save(item);
+            ShoppingItems shoppingItems = ShoppingItems.builder()
+                    .id(new FridgeItemsId(1L, 1L))
+                    .item(item)
+                    .fridge(fridge)
+                    .quantity(1)
+                    .suggestion(false)
+                    .build();
+            shoppingItemsRepository.save(shoppingItems);
+            ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
+            List<ItemRemoveDTO> itemRemoveDTOList = List.of(itemRemoveDTO);
+            assertDoesNotThrow(() -> itemService.deleteAllItemsFromShoppingList(itemRemoveDTOList));
+        }
+    }
+
+    @Nested
+    @SpringBootTest
+    class AddUnitToExistingItems {
+
+        @Autowired
+        FridgeRepository fridgeRepository;
+
+        @Autowired
+        ItemRepository itemRepository;
+
+        @Autowired
+        ShoppingItemsRepository shoppingItemsRepository;
+
+        @Autowired
+        FridgeItemsRepository fridgeItemsRepository;
+
+        @Autowired
+        StoreRepository storeRepository;
+
+        @Autowired
+        UserRepository userRepository;
+
+        @Autowired
+        FridgeMemberRepository fridgeMemberRepository;
+
+        @Autowired
+        ItemService itemService;
+
+        @Autowired
+        JwtService jwtService;
+
+        @Autowired
+        UserDetailsService userDetailsService;
+
+        @Test
+        @Transactional
+        void does_not_throw_exception(){
+            Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
+                    new Store(1L, "Dairy", new ArrayList<>()), 200000,
+                    null, "12345678", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            itemRepository.save(item);
+
+            assertDoesNotThrow(() -> itemService.addUnitToExistingItems());
+        }
+    }
 
 
 }

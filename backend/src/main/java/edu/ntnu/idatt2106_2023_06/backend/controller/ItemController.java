@@ -28,16 +28,21 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ItemController implements IItemController{
 
+    /**
+     * The item service necessary for operating on items stored in the database.
+     */
     private final ItemService itemService;
-    private final UserService userService;
+
     /**
      * The logger for logging information about the operations performed by this controller.
      */
     private final Logger logger = LoggerFactory.getLogger(ItemController.class);
 
-    //TODO: in next refactor round, make different creationDTOs, read up a little on DTO standards
-    //TODO: add authentication!!!
-
+    /**
+     * This method adds amount and unit to existing items.
+     *
+     * @return ResponseEntity indicating whether the operation was successful or not.
+     */
     @PostMapping(value="/addUnits")
     @Operation(summary = "Add amount and unit to existing items")
     @ApiResponses(value = {
@@ -52,14 +57,4 @@ public class ItemController implements IItemController{
         return ResponseEntity.ok().build();
     }
 
-    private void authenticate(Authentication authentication){
-        if(authentication == null || !authentication.isAuthenticated()) throw new UnauthorizedException("Anon");
-    }
-
-    private void validateSuperUser(Long fridgeId, Authentication authentication) {
-        authenticate(authentication);
-
-        boolean isSuperUser = userService.isSuperUser(fridgeId, authentication.getName());
-        if(!isSuperUser) throw new UnauthorizedException(authentication.getName(), "User must be super user");
-    }
 }

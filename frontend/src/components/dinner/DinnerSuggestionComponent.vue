@@ -51,9 +51,9 @@
     import { onUnmounted, ref} from "vue";
     import BasicButton from "@/components/basic-components/BasicButton.vue";
     import swal from "sweetalert2";
-    import {acceptRecipeSuggestion, denyRecipeSuggestion, loadRecipeSuggestions} from "../../services/DinnerService";
-    import {getProfilePictureById} from "../../services/UserService";
-    import {loadUsersByFridgeId} from "../../services/FridgeServices";
+    import {acceptRecipeSuggestion, denyRecipeSuggestion, loadRecipeSuggestions} from "@/services/DinnerService";
+    import {getProfilePictureById} from "@/services/UserService";
+    import {loadUsersByFridgeId} from "@/services/FridgeServices";
     import { useI18n } from 'vue-i18n';
 
     export default {

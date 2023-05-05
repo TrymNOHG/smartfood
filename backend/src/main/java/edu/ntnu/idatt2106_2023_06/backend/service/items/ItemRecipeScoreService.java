@@ -108,7 +108,7 @@ public class ItemRecipeScoreService {
         return CompletableFuture.completedFuture(itemRecipeScore);
     }
 
-    private double getScore(Item item, RecipeItems ingredient) {
+    public double getScore(Item item, RecipeItems ingredient) {
         if(item.getEan() != null && item.getEan().equals(ingredient.getItem().getEan())) return 1.0;
         else {
             String regex = "\\b\\d+\\s*(g|%|ml|L)?\\b";

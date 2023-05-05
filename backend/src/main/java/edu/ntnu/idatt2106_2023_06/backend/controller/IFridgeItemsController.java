@@ -13,6 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * This interface contains the essential methods for the FridgeItems controller.
+ *
+ * @author Trym Hamer Gudvangen
+ */
 public interface IFridgeItemsController {
 
     /**
