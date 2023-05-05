@@ -5,6 +5,10 @@ import org.springframework.lang.Nullable;
 
 import java.time.LocalDateTime;
 
+
+/**
+ * This record represents a DTO for updating a fridge item.
+ */
 public record FridgeItemUpdateDTO(@NonNull Long itemId, @NonNull Long fridgeId,
                                   @Nullable Double amount, @Nullable LocalDateTime purchaseDate,
                                   @Nullable LocalDateTime expirationDate) {

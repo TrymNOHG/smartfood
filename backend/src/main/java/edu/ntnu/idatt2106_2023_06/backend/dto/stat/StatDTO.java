@@ -4,6 +4,9 @@ import lombok.NonNull;
 
 import java.util.Date;
 
+/**
+ * This record represents a general statistics DTO.
+ */
 public record StatDTO(@NonNull Long statId,
                       @NonNull Double statValue,
                       @NonNull Date timestamp,
