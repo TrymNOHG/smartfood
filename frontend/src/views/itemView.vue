@@ -141,8 +141,6 @@ export default {
               quantity: 0,
             };
 
-            console.log(statDeleteFromFridgeDTO)
-
             if (result.isConfirmed) {
               this.addShopping(item);
             }

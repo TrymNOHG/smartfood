@@ -63,8 +63,6 @@ export default {
 
 
           meals.value[i].dayOfWeek = day;
-          console.log(meals.value[i].dayOfWeek, " ", weekdays[i]);
-
           i++
         }
 

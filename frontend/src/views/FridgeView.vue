@@ -284,8 +284,6 @@ export default {
         quantity: 0,
       };
 
-      console.log("Statistics: ", statDeleteFromFridgeDTO)
-
       await this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO);
       await this.itemStore.deleteItemByNameIdStoreAmount(itemRemoveDTO);
       await this.itemStore
@@ -557,7 +555,6 @@ export default {
 
     async function loadMoreSearchItems() {
       if (isLoading.value) return;
-      console.log("REACHED BOTTOM BOOM!!");
       isLoading.value = true;
       try {
         let response = await getItemsByPage(searchQuery.value, nextPage);
