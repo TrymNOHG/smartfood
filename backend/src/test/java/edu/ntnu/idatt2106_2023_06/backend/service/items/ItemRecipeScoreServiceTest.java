@@ -79,7 +79,7 @@ public class ItemRecipeScoreServiceTest {
         void returns_ItemRecipeScore(){
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             Recipe recipe = Recipe.builder()
                     .recipeId(1L)
                     .recipeName("TestName")
@@ -127,7 +127,7 @@ public class ItemRecipeScoreServiceTest {
         void returns_RecipeNotFoundException(){
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
 
 
@@ -155,7 +155,7 @@ public class ItemRecipeScoreServiceTest {
         void does_not_throw_exception(){
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
 
 
@@ -232,7 +232,7 @@ public class ItemRecipeScoreServiceTest {
 
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             Recipe recipe = Recipe.builder()
                     .recipeId(1L)
                     .recipeName("TestName")
@@ -263,10 +263,10 @@ public class ItemRecipeScoreServiceTest {
         void does_not_throw_exception(){
             Item item = new Item(1L, "Tine Melk 1L stor kartong", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             Item item2 = new Item(1L, "Tine Melk 1L stor kartong", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "23456789", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "23456789", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             RecipeItems recipeItem = new RecipeItems(null, item2, new RecipePart(), 1, "l");
 
 
@@ -277,7 +277,7 @@ public class ItemRecipeScoreServiceTest {
         void returns_1_if_same_item(){
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 100.0, "ml",4,  new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             RecipeItems recipeItem = new RecipeItems(null, item, new RecipePart(), 1, "L");
 
 
@@ -318,7 +318,7 @@ public class ItemRecipeScoreServiceTest {
             fridgeRepository.save(fridge);
             Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", 500.0, "l", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 500.0, "l", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             itemRepository.save(item);
             FridgeItemsId fridgeItemsId = new FridgeItemsId(item.getItemId(), fridge.getFridgeId());
             FridgeItems items = FridgeItems
@@ -427,7 +427,7 @@ public class ItemRecipeScoreServiceTest {
 
             Item item1 = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, grass matet kuer.",
                     new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                    null, "12345678", 500.0, "l", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    null, "12345678", 500.0, "l", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             FridgeItems items = FridgeItems
                     .builder()
                     .fridge(new Fridge())
