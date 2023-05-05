@@ -35,7 +35,6 @@ export default {
     },
     updateItem(item) {
       let newAmount = this.sliderValue
-      console.log(newAmount)
       this.$emit('update-item', item, newAmount);
     }
   },

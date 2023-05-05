@@ -155,46 +155,23 @@ export default {
       }
 
       swal.fire({
-        title: this.$t('confirm_title'),
-        text: this.$t('confirm_text'),
-        icon: 'warning',
-        showCancelButton: true,
+        title: this.$t('update_title'),
+        icon: 'success',
         confirmButtonColor: '#4dce38',
-        cancelButtonColor: '#d33',
-        confirmButtonText: this.$t('confirm_button'),
-        cancelButtonText: this.$t('cancel_button'),
+        confirmButtonText: this.$t('confirmButtonText'),
         customClass: {
           container: 'my-swal-dialog-container'
         }
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          swal.fire({
-            title: this.$t('buy_again'),
-            text: this.$t('confirm_text'),
-            icon: 'success',
-            showCancelButton: true,
-            confirmButtonColor: '#4dce38',
-            cancelButtonColor: '#d33',
-            confirmButtonText: this.$t('Yes'),
-            cancelButtonText: this.$t('No'),
-            customClass: {
-              container: 'my-swal-dialog-container'
-            }
-          }).then((result) => {
-            console.log("yooooo"  + newAmount)
-            const itemRemoveDTO = {
-              "itemName": item.name,
-              "store": item.store,
-              "fridgeId": this.fridge.fridgeId,
-              "quantity": newAmount
-            };
+      })
+      const itemRemoveDTO = {
+        "itemName": item.name,
+        "store": item.store,
+        "fridgeId": this.fridge.fridgeId,
+        "quantity": newAmount
+      };
 
-            this.itemStore.deleteItemByNameIdStoreAmount(itemRemoveDTO).then(() => {
-              router.push('/fridge');
-            });
-
-          });
-        }
+      this.itemStore.deleteItemByNameIdStoreAmount(itemRemoveDTO).then(() => {
+        router.push('/fridge');
       });
     }
   },
