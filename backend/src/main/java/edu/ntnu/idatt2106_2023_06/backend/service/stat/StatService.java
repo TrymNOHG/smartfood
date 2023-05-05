@@ -5,18 +5,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import edu.ntnu.idatt2106_2023_06.backend.dto.stat.StatAddItemToFridgeDTO;
 import edu.ntnu.idatt2106_2023_06.backend.dto.stat.StatDeleteFromFridgeDTO;
-import edu.ntnu.idatt2106_2023_06.backend.exception.illegal.IllegalStatTypeException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.illegal.IllegalStatValueException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.UnauthorizedException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.FridgeNotFoundException;
+import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.ItemNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.StatNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundException;
 import edu.ntnu.idatt2106_2023_06.backend.mapper.StatMapper;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
+import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.stats.StatType;
 import edu.ntnu.idatt2106_2023_06.backend.model.stats.Statistics;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeRepository;
+import edu.ntnu.idatt2106_2023_06.backend.repo.item.ItemRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.stat.StatRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.stat.StatTypeRepository;
 import edu.ntnu.idatt2106_2023_06.backend.repo.users.UserRepository;
@@ -53,6 +55,7 @@ public class StatService implements IStatService {
     private final UserRepository userRepository;
     private final FridgeRepository fridgeRepository;
     private final StatTypeRepository statTypeRepository;
+    private final ItemRepository itemRepository;
 
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
@@ -60,21 +63,10 @@ public class StatService implements IStatService {
      * Checks if a value of a given stat type is valid.
      *
      * @param statValue The value to check
-     * @param statType The stat type to compare the value against
      */
-    private void checkValidStatValue(double statValue, int statType) {
-        switch (statType) {
-            case 1 -> {
-                if (statValue < 0 || statValue > 100) {
-                    throw new IllegalStatValueException(0, 100);
-                }
-            }
-            case 2, 3 -> {
-                if (statValue < 0) {
-                    throw new IllegalStatValueException();
-                }
-            }
-            default -> throw new IllegalStatTypeException(statType);
+    private void checkValidStatValue(double statValue) {
+        if (statValue < 0) {
+            throw new IllegalStatValueException();
         }
     }
 
@@ -111,8 +103,7 @@ public class StatService implements IStatService {
     public void statDeleteItemFromFridge(StatDeleteFromFridgeDTO statDeleteFromFridgeDTO) {
         Long userId = checkUserIsAuthenticated();
 
-        checkValidStatValue(statDeleteFromFridgeDTO.price(), 2);
-        checkValidStatValue(statDeleteFromFridgeDTO.percentageThrown(), 1);
+        checkValidStatValue(statDeleteFromFridgeDTO.amountDeleted());
 
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException(userId)
@@ -123,11 +114,8 @@ public class StatService implements IStatService {
         StatType statType1 = statTypeRepository.findById(1L).orElseThrow(
                 () -> new StatNotFoundException(1L)
         );
-        StatType statType2 = statTypeRepository.findById(2L).orElseThrow(
-                () -> new StatNotFoundException(2L)
-        );
 
-        statRepository.saveAll(StatMapper.toStatistics(statDeleteFromFridgeDTO, user, fridge, statType1, statType2));
+        statRepository.saveAll(StatMapper.toStatistics(statDeleteFromFridgeDTO, user, fridge, statType1));
     }
 
     /**
@@ -139,7 +127,7 @@ public class StatService implements IStatService {
     public void statAddItemToFridge(StatAddItemToFridgeDTO statAddItemToFridgeDTO) {
         Long userId = checkUserIsAuthenticated();
 
-        checkValidStatValue(statAddItemToFridgeDTO.price(), 3);
+        checkValidStatValue(statAddItemToFridgeDTO.price());
 
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException(userId)
@@ -208,17 +196,16 @@ public class StatService implements IStatService {
 
         List<Statistics> stats = statProvider.apply(userId);
 
-        return statisticsToJsonThrowRate(stats);
+        return statisticsToJsonThrowAmount(stats);
     }
 
     /**
      * Gets the total average thrown by the user as JSON. User has to be authenticated.
      *
      * @return A JSON string of the statistics
-     * @throws JsonProcessingException If the statistics could not be parsed to JSON
      */
     @Override
-    public Double getAverageThrownTotalUser() throws JsonProcessingException {
+    public Double getAverageThrownTotalUser() {
         Long userId = checkUserIsAuthenticated();
         List<Statistics> stats = statRepository.findAllByUserAndStatType(userId, 1L);
         return statisticsToJsonTotalThrowRate(stats);
@@ -230,10 +217,9 @@ public class StatService implements IStatService {
      *
      * @param fridgeId ID of the fridge
      * @return A JSON string of the statistics
-     * @throws JsonProcessingException If the statistics could not be parsed to JSON
      */
     @Override
-    public Double getAverageThrownTotalFridge(long fridgeId) throws JsonProcessingException {
+    public Double getAverageThrownTotalFridge(long fridgeId) {
         checkValidUserInFridge(fridgeId);
         List<Statistics> stats = statRepository.findAllByFridgeAndStatType(fridgeId, 1L);
         return statisticsToJsonTotalThrowRate(stats);
@@ -268,8 +254,7 @@ public class StatService implements IStatService {
         Long userId = checkUserIsAuthenticated();
 
         List<Statistics> stats1 = statRepository.findAllByUserAndStatType(userId, 1L);
-        List<Statistics> stats2 = statRepository.findAllByUserAndStatType(userId, 2L);
-        return statisticsToJsonMoneyWasted(stats1, stats2);
+        return statisticsToJsonMoneyWasted(stats1);
     }
 
     /**
@@ -290,8 +275,7 @@ public class StatService implements IStatService {
         }
 
         List<Statistics> stats1 = statRepository.findAllByFridgeAndStatType(fridgeId, 1L);
-        List<Statistics> stats2 = statRepository.findAllByFridgeAndStatType(fridgeId, 2L);
-        return statisticsToJsonMoneyWasted(stats1, stats2);
+        return statisticsToJsonMoneyWasted(stats1);
     }
 
     /**
@@ -349,50 +333,55 @@ public class StatService implements IStatService {
      * @return A JSON string of the statistics
      * @throws JsonProcessingException If the statistics could not be parsed to JSON
      */
-    private String statisticsToJsonThrowRate(List<Statistics> stats) throws JsonProcessingException {
-        HashMap<String, Pair<Double, Integer>> averageThrownPerDayPair = new HashMap<>();
+    private String statisticsToJsonThrowAmount(List<Statistics> stats) throws JsonProcessingException {
+        logger.info("Statistics: " + stats);
+        HashMap<String, Double> averageThrownPerDayAmount = new HashMap<>();
         for(Statistics stat : stats) {
             String date = stat.getTimestamp().toString().substring(0, 10);
-            logger.info("Date: " + date);
-            if(!averageThrownPerDayPair.containsKey(date)) {
-                averageThrownPerDayPair.put(date, new Pair<>(stat.getStatValue()*stat.getQuantity(), stat.getQuantity()));
+            if(!averageThrownPerDayAmount.containsKey(date)) {
+                averageThrownPerDayAmount.put(date, (stat.getStatValue()));
             } else {
-                Pair<Double, Integer> pair = averageThrownPerDayPair.get(date);
-                averageThrownPerDayPair.put(date, new Pair<>(pair.getFirst() + stat.getStatValue()*stat.getQuantity(), (int) pair.getSecond() + stat.getQuantity()));
+                averageThrownPerDayAmount.put(date, stat.getStatValue()+ averageThrownPerDayAmount.get(date));
             }
         }
-        HashMap<String, Double> averageThrownPerDay = new HashMap<>();
-        averageThrownPerDayPair.forEach((key, pair) -> averageThrownPerDay.put(key, pair.getFirst() / pair.getSecond()));
-
-        return objectMapper.writeValueAsString(sortHashMap(averageThrownPerDay));
+        logger.info("Average thrown per day: " + averageThrownPerDayAmount);
+        return objectMapper.writeValueAsString(sortHashMap(averageThrownPerDayAmount));
     }
 
     /**
      * Converts a list of statistics to a JSON string of the average money spent per day.
      *
-     * @param stats1 List of statistics
+     * @param stats List of statistics
      * @return A JSON string of the statistics
      * @throws JsonProcessingException If the statistics could not be parsed to JSON
      */
-    private String statisticsToJsonMoneyWasted(List<Statistics> stats1, List<Statistics> stats2) throws JsonProcessingException {
-        if(stats1.size() != stats2.size()) {
-            // TODO: create custom exception for this?
-            // If this happens, something is seriously wrong with the date in the database.
-            throw new RuntimeException("Stats1 and stats2 are not the same size");
-        }
+    private String statisticsToJsonMoneyWasted(List<Statistics> stats) throws JsonProcessingException {
         HashMap<String, Double> moneyWasted = new HashMap<>();
-        int i = 0;
-        for(Statistics stat : stats1) {
+        for(Statistics stat : stats) {
             String date = stat.getTimestamp().toString().substring(0, 10);
-            if (!moneyWasted.containsKey(date)) {
-                moneyWasted.put(date, stat.getStatValue() * (stats2.get(i).getStatValue() / 100) * stat.getQuantity());
+            Item item = itemRepository.findItemByProductNameAndStore_StoreName(stat.getItemName(), stat.getStoreName()).orElseThrow(
+                    () -> new ItemNotFoundException(stat.getItemName())
+            );
+            double fullAmount;
+            double price = item.getPrice();
+            if(item.getUnit().equals("pieces")) {
+                fullAmount = item.getAmount()*250;
             } else {
-                Double statValue = moneyWasted.get(date);
-                moneyWasted.put(date, stat.getStatValue() * (stats2.get(i).getStatValue() / 100) * stat.getQuantity() + statValue);
+                fullAmount = item.getAmount();
             }
-            i++;
+            double thrownAmount = stat.getStatValue();
+            double percentage = (thrownAmount/fullAmount);
+            if (!moneyWasted.containsKey(date)) {
+                logger.info("price: " + price + " percentage: " + percentage + " date: " + date);
+                logger.info("Money wasted does not contain: " + moneyWasted);
+                moneyWasted.put(date, price * percentage);
+            } else {
+                logger.info("Money wasted does contain: " + moneyWasted);
+                Double statValue = moneyWasted.get(date);
+                moneyWasted.put(date, statValue + price * percentage);
+            }
         }
-
+        logger.info("Money wasted: " + moneyWasted);
         return objectMapper.writeValueAsString(sortHashMap(moneyWasted));
     }
 
@@ -429,28 +418,13 @@ public class StatService implements IStatService {
         for(Statistics stat : stats) {
             String date = stat.getTimestamp().toString().substring(0, 10);
             if(!moneySaved.containsKey(date)) {
-                moneySaved.put(date, stat.getStatValue() * stat.getQuantity());
+                moneySaved.put(date, stat.getStatValue());
             } else {
                 Double statValue = moneySaved.get(date);
-                moneySaved.put(date, stat.getStatValue() * stat.getQuantity() + statValue);
+                moneySaved.put(date, stat.getStatValue() + statValue);
             }
         }
-
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        Map<String, Double> sortedByDate = moneySaved.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey((dateStr1, dateStr2) -> {
-                    LocalDate date1 = LocalDate.parse(dateStr1, dateFormatter);
-                    LocalDate date2 = LocalDate.parse(dateStr2, dateFormatter);
-                    return date1.compareTo(date2);
-                }))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1, LinkedHashMap::new));
-
-        return objectMapper.writeValueAsString(sortedByDate);
+        return objectMapper.writeValueAsString(sortHashMap(moneySaved));
     }
 
     /**
@@ -462,8 +436,8 @@ public class StatService implements IStatService {
     private double statisticsToJsonTotalThrowRate(List<Statistics> stats) {
         Pair<Double, Integer> pair = new Pair<>(0.0, 0);
         for(Statistics stat : stats) {
-            pair.setFirst(pair.getFirst() + stat.getStatValue()*stat.getQuantity());
-            pair.setSecond(pair.getSecond() + stat.getQuantity());
+            pair.setFirst(pair.getFirst() + stat.getStatValue());
+            pair.setSecond(pair.getSecond());
         }
 
         return pair.getFirst() / pair.getSecond();

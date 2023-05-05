@@ -37,7 +37,7 @@
       </div>
         <div class="pagination-buttons" v-if="!isMobile">
           <BasicButton @click="loadPreviousPage" :button-text="$t('previous_page')" :disabled="pageIndex.value <= 0"/>
-          <div class="page-index">{{ pageIndex + 1 }}</div>
+          <div class="page-index">{{ pageIndex + 1}}</div>
           <BasicButton @click="loadNextPage" :button-text="$t('next_page')"/>
         </div>
         <div id="bottom"></div>
@@ -228,10 +228,11 @@
             },
           });
           try {
+            pageIndex.value++;
             const response = await loadRecipeByFridgeItems(fridgeId, pageIndex.value, 8);
             meals.value = response.content;
-            pageIndex.value++;
           } catch (error) {
+            pageIndex.value--
             console.error("Failed to load next page:", error);
           } finally {
             swal.close();
