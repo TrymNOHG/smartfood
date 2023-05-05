@@ -8,7 +8,6 @@ import edu.ntnu.idatt2106_2023_06.backend.exception.not_found.UserNotFoundExcept
 import edu.ntnu.idatt2106_2023_06.backend.mapper.recipe.RecipeMapper;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
-import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.*;
 import edu.ntnu.idatt2106_2023_06.backend.model.users.User;
 import edu.ntnu.idatt2106_2023_06.backend.repo.fridge.FridgeItemsRepository;
@@ -156,18 +155,25 @@ public class RecipeService {
     //TODO: authenticate
 
     private int countMatchingItems(RecipeLoadDTO recipeDTO, Long fridgeId) {
-        Set<Long> fridgeItemIds = fridgeItemsRepository.findAllByFridge_FridgeId(fridgeId)
-                .orElseThrow(() -> new FridgeNotFoundException(fridgeId))
-                .stream()
-                .map(FridgeItems::getItem)
-                .map(Item::getItemId)
-                .collect(Collectors.toSet());
+        Set<FridgeItems> fridgeItemIds = new HashSet<>(fridgeItemsRepository.findAllByFridge_FridgeId(fridgeId)
+                .orElseThrow(() -> new FridgeNotFoundException(fridgeId)));
+
+
+
+        //TODO: use fridgeItemId to get the item ids? Or maybe make a list of
 
         return ((Long) recipeDTO.getRecipeParts().stream()
                 .map(RecipePartDTO::ingredients)
                 .flatMap(Collection::stream)
-                .filter(recipeItemDTO -> fridgeItemIds.contains(recipeItemDTO.getItemId()))
-                .peek(recipeItemDTO -> recipeItemDTO.setHasItem(true))
+                .filter(recipeItemDTO -> {
+                    for(FridgeItems fridgeItems : fridgeItemIds) {
+                        if(Objects.equals(fridgeItems.getItem().getItemId(), recipeItemDTO.getItemId())) {
+                            recipeItemDTO.setFridgeAmount(fridgeItems.getAmount());
+                            return true;
+                        }
+                    }
+                    return false;
+                })
                 .count())
                 .intValue();
     }

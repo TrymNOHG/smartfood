@@ -31,7 +31,6 @@ export default {
 
 
   setup() {
-
       const fridgeStore = useFridgeStore();
       const hasCurrentFridge = computed(() => fridgeStore.hasCurrentFridge);
       const installElement = ref(null);

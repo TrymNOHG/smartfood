@@ -139,6 +139,7 @@
   "loading" : "Loading",
   "Added_to_fridge" : "Added to fridge",
   "default_part_name" : "",
+  "you_have" : "You have",
 
 
 
@@ -201,4 +202,5 @@
       "tour: view:fridgeView method:fridgeStepsTour id: usage:text":"",
       "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:title": "This is a title",
       "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:text": "This is text"
+
 }

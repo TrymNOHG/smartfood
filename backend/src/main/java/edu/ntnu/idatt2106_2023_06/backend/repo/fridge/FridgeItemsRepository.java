@@ -4,6 +4,7 @@ import edu.ntnu.idatt2106_2023_06.backend.model.fridge.Fridge;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItems;
 import edu.ntnu.idatt2106_2023_06.backend.model.fridge.FridgeItemsId;
 import edu.ntnu.idatt2106_2023_06.backend.model.items.Item;
+import edu.ntnu.idatt2106_2023_06.backend.model.items.Store;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -32,6 +33,18 @@ public interface FridgeItemsRepository extends JpaRepository<FridgeItems, Fridge
      * @return An Optional containing the FridgeItem, or an empty Optional if not found
      */
     Optional<FridgeItems> findByItem_ProductName(String productName);
+
+    /**
+     * Find a fridgeItem with the given name
+     *
+     * @param productName The name of the product
+     * @param storeName   The name of the store the product comes from
+     * @param fridgeId    The ID of the fridge
+     * @return An Optional containing the FridgeItem, or an empty Optional if not found
+     */
+    Optional<FridgeItems> findByItem_ProductNameAndItem_Store_StoreNameAndFridge_FridgeId(String productName,
+                                                                                           String storeName,
+                                                                                           Long fridgeId);
 
     /**
      * Find a FridgeItem by items and fridge

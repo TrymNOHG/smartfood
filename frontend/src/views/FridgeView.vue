@@ -2,18 +2,18 @@
   <div class="grey-bar">
     <div class="members-fridge">
       <div
-        id="toggle-button"
-        class="link toggle-members"
-        @click="selectedTab = 'members'"
-        :class="{ active: selectedTab === 'members' }"
+          id="toggle-button"
+          class="link toggle-members"
+          @click="selectedTab = 'members'"
+          :class="{ active: selectedTab === 'members' }"
       >
         {{ $t("members") }}
       </div>
       <div
-        id="toggle-button"
-        class="link"
-        @click="selectedTab = 'fridge'"
-        :class="{ active: selectedTab === 'fridge' }"
+          id="toggle-button"
+          class="link"
+          @click="selectedTab = 'fridge'"
+          :class="{ active: selectedTab === 'fridge' }"
       >
         {{ $t("fridge") }}
       </div>
@@ -42,10 +42,10 @@
         </div>
         <div id="searchbar">
           <SearchInput
-            v-model="searchQuery"
-            @input="handleSearch"
-            :label="$t('add_item')"
-            @receipt-upload="toggleCamera"
+              v-model="searchQuery"
+              @input="handleSearch"
+              :label="$t('add_item')"
+              @receipt-upload="toggleCamera"
           ></SearchInput>
           <button id="searchbtn" @click="handleSearch">
             {{ $t("search") }}
@@ -92,10 +92,10 @@
       </div>
 
       <div
-        v-if="click"
-        id="filter-component"
-        class="slide-in"
-        :class="active ? 'slide-in' : 'slide-out'"
+          v-if="click"
+          id="filter-component"
+          class="slide-in"
+          :class="active ? 'slide-in' : 'slide-out'"
       >
         <filter-bar @listing="changeListing" />
       </div>
@@ -125,17 +125,17 @@
       </div>
     <transition name="fade">
       <div
-        v-if="!listView"
-        class="wrapper"
+          v-if="!listView"
+          class="wrapper"
       >
         <basic-fridge-item
-          :isSuperUser="isCurrentUserSuperUser"
-          v-for="(item, index) in fridgeItems"
-          :key="index"
-          :item="item"
-          :currenFridge="fridge"
-          @delete-item="deleteItem"
-          @add-shopping="addShopping"
+            :isSuperUser="isCurrentUserSuperUser"
+            v-for="(item, index) in fridgeItems"
+            :key="index"
+            :item="item"
+            :currenFridge="fridge"
+            @delete-item="deleteItem"
+            @add-shopping="addShopping"
         />
       </div>
       <div v-else class="list-wrapper">
@@ -257,20 +257,20 @@ export default {
     handleSearch() {
       this.search = this.searchQuery.length >= 2;
       getItems(this.searchQuery)
-        .then((response) => {
-          this.searchItems = response;
-          this.isExpanded = true;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+          .then((response) => {
+            this.searchItems = response;
+            this.isExpanded = true;
+          })
+          .catch((error) => {
+            console.error(error);
+          });
     },
 
     async deleteItem(itemToDelete, deletePercentage) {
       const statDeleteFromFridgeDTO = {
         percentageThrown: parseFloat(deletePercentage),
         price: itemToDelete.price,
-        quantity: parseFloat(itemToDelete.quantity),
+        quantity: parseFloat(deletePercentage),
         itemName: itemToDelete.name,
         storeName: itemToDelete.store,
         fridgeId: this.fridge.fridgeId,
@@ -280,24 +280,26 @@ export default {
         itemName: itemToDelete.name,
         store: itemToDelete.store,
         fridgeId: this.fridge.fridgeId,
-        quantity: itemToDelete.quantity,
+        quantity: 0,
       };
 
+      console.log(itemRemoveDTO)
+
       await this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO);
-      await this.itemStore.deleteItemByNameIdStoreQuantity(itemRemoveDTO);
+      await this.itemStore.deleteItemByNameIdStoreAmount  (itemRemoveDTO);
       await this.itemStore
-        .fetchItemsFromFridgeById(this.fridge.fridgeId)
-        .then((items) => {
-          this.fridgeItems = items;
-        });
+          .fetchItemsFromFridgeById(this.fridge.fridgeId)
+          .then((items) => {
+            this.fridgeItems = items;
+          });
     },
 
     async addItemToFridge(fridgeId, item) {
       this.search = false;
       const { value: confirmed } = await Swal.fire({
         title: this.isCurrentUserSuperUser
-          ? this.$t("add_to_fridge")
-          : this.$t("add_to_shopping_list"),
+            ? this.$t("add_to_fridge")
+            : this.$t("add_to_shopping_list"),
         icon: "question",
         showCancelButton: true,
         confirmButtonText: "Yes",
@@ -348,10 +350,10 @@ export default {
         await this.itemStore.statAddItemToFridge(statAddItemToFridgeDTO);
         await this.itemStore.addItemToFridgeById(this.fridge.fridgeId, itemDTO);
         await this.itemStore
-          .fetchItemsFromFridgeById(this.fridge.fridgeId)
-          .then((items) => {
-            this.fridgeItems = items;
-          });
+            .fetchItemsFromFridgeById(this.fridge.fridgeId)
+            .then((items) => {
+              this.fridgeItems = items;
+            });
       }
     },
 
@@ -365,31 +367,31 @@ export default {
 
     initScanner() {
       Quagga.init(
-        {
-          inputStream: {
-            name: "Live",
-            type: "LiveStream",
-            target: document.querySelector("#interactive.viewport"),
-          },
-          decoder: {
-            readers: ["ean_reader", "code_128_reader", "code_39_reader"],
-            debug: {
-              drawBoundingBox: true,
-              showFrequency: true,
-              drawScanline: true,
-              showPattern: true,
+          {
+            inputStream: {
+              name: "Live",
+              type: "LiveStream",
+              target: document.querySelector("#interactive.viewport"),
             },
-            multiple: false,
-            frequency: 5,
+            decoder: {
+              readers: ["ean_reader", "code_128_reader", "code_39_reader"],
+              debug: {
+                drawBoundingBox: true,
+                showFrequency: true,
+                drawScanline: true,
+                showPattern: true,
+              },
+              multiple: false,
+              frequency: 5,
+            },
           },
-        },
-        (err) => {
-          if (err) {
-            return;
+          (err) => {
+            if (err) {
+              return;
+            }
+            this.scannerActive = true;
+            Quagga.start();
           }
-          this.scannerActive = true;
-          Quagga.start();
-        }
       );
 
       Quagga.onDetected(this.onDetected);
@@ -404,19 +406,19 @@ export default {
       const code = result.codeResult.code;
 
       await getItemByBarcode(code)
-        .then((response) => {
-          if (response !== undefined) {
-            this.searchItems = response.products;
-            this.search = true;
-            this.stopScanner();
-          } else {
-            this.submitMessage =
-              "Something went wrong. Please try again later.";
-          }
-        })
-        .catch((error) => {
-          console.warn("error1", error); //TODO: add exception handling
-        });
+          .then((response) => {
+            if (response !== undefined) {
+              this.searchItems = response.products;
+              this.search = true;
+              this.stopScanner();
+            } else {
+              this.submitMessage =
+                  "Something went wrong. Please try again later.";
+            }
+          })
+          .catch((error) => {
+            console.warn("error1", error); //TODO: add exception handling
+          });
     },
     toggleCamera() {
       if (this.scannerActive == true) {
@@ -569,7 +571,7 @@ export default {
     const fridgeStore = useFridgeStore();
     const itemStore = useItemStore();
     const selectedTab = ref(
-      router.currentRoute.value.query.selectedTab || "fridge"
+        router.currentRoute.value.query.selectedTab || "fridge"
     );
 
     history.replaceState(history.state, '', "/fridge");
@@ -648,14 +650,14 @@ export default {
     const observeBottom = () => {
       const bottomElement = document.querySelector("#bottom-element");
       const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              loadMore();
-            }
-          });
-        },
-        { threshold: 1 }
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                loadMore();
+              }
+            });
+          },
+          { threshold: 1 }
       );
       if (bottomElement) {
         observer.observe(bottomElement);
