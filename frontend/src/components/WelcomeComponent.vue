@@ -1,9 +1,10 @@
 <template>
   <div class="welcome-view">
-    <img class="logo" src="@/assets/images/smartmat_logo_text.png" alt="Logo">
+    <img class="logo" src="@/assets/images/smartmat_logo_text.png" :alt="$t('smartmat_logo_text')">
     <div class="buttons">
-      <router-link to="/register" class="btn register-btn">{{ $t('register') }}</router-link>
-      <router-link to="/login" class="btn login-btn">{{ $t('login') }}</router-link>
+        <router-link to="/register" class="btn register-btn" aria-label="{{ $t('register') }} button">{{ $t('register') }}</router-link>
+        <router-link to="/login" class="btn login-btn" aria-label="{{ $t('login') }} button">{{ $t('login') }}</router-link>
+
     </div>
   </div>
 </template>

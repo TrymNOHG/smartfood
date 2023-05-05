@@ -7,8 +7,16 @@
           <span class="icon"
             ><font-awesome-icon icon="fa-solid fa-envelope"
           /></span>
-          <input type="text" required v-model.trim="email" name="email" id="email-input" />
-          <label>{{ $t("email") }}</label>
+          <input
+            type="text"
+            required
+            v-model.trim="email"
+            name="email"
+            id="email-input"
+            aria-required="true"
+            aria-labelledby="email-input"
+          />
+          <label for="email-input">{{ $t("email") }}</label>
           <div v-if="errors && errors['email']" class="error">
             {{ $t(errors["email"]) }}
           </div>
@@ -23,26 +31,32 @@
             v-model.trim="password"
             name="password"
             id="password-input"
+            aria-required="true"
+            aria-labelledby="password-input"
           />
-          <label>{{ $t("password") }}</label>
+          <label for="password-input">{{ $t("password") }}</label>
           <div v-if="errors && errors['password']" class="error">
             {{ $t(errors["password"]) }}
           </div>
         </div>
 
         <h5 v-if="submitMessage" class="submit-message">
-          {{ $t( submitMessage ) }}
+          {{ $t(submitMessage) }}
         </h5>
 
         <div class="remember-forgot">
           <a href="#">{{ $t("forgot_password") }}</a>
         </div>
 
-        <button type="submit" @click="submit" id="login-btn">{{ $t("login") }}</button>
+        <button type="submit" @click="submit" id="login-btn">
+          {{ $t("login") }}
+        </button>
         <div class="login-register">
           <p>
             {{ $t("dont_have_account") }}
-            <router-link to="/register" class="register-link">{{ $t("register") }}</router-link>
+            <router-link to="/register" class="register-link">{{
+              $t("register")
+            }}</router-link>
           </p>
         </div>
       </form>
@@ -57,13 +71,12 @@ import { ref } from "vue";
 import router from "@/router/router";
 import { loginUser } from "@/services/UserService";
 import { useStorage } from "vue3-storage";
-import { RouterLink } from 'vue-router'
-
+import { RouterLink } from "vue-router";
 
 export default {
   name: "LoginComponent",
   components: {
-    RouterLink
+    RouterLink,
   },
   setup() {
     const submitMessage = ref("");
@@ -99,7 +112,7 @@ export default {
           }
         })
         .catch((error) => {
-          submitMessage.value = 'login_error';
+          submitMessage.value = "login_error";
           setTimeout(() => {
             submitMessage.value = "";
           }, 2000);
@@ -146,9 +159,11 @@ export default {
   width: 90%;
   padding: 40px;
 }
-h5{
+
+h5 {
   margin-top: -40px;
 }
+
 .form-box {
   font-size: 1rem;
   text-align: center;

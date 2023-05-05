@@ -1,4 +1,13 @@
 {
+  "fridge_icon_alt": "Kjøleskap ikon",
+  "go_to_fridge": "Go to fridges",
+  "select_fridge": "Select fridge",
+  "click_to_select": "Click to select",
+  "exit_change_fridge_button": "Exit fridge button",
+  "enter_choose_fridge_button": "Enter fridge button",
+  "smartmat_logo_text": "Smartmat logo with text",
+  "smartmat_logo_text_fridge": "Smartmat logo with text, click to choose fridge",
+  "password-input": "Password input field",
   "first_name_error": "First name is required",
   "last_name_error": "Last name is required",
   "passwords_do_not_match": "Passwords do not match",
