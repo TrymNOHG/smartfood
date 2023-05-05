@@ -49,14 +49,23 @@ export default {
 
   computed: {
     difficultyEmojis() {
-      const emojis = ['😇', '😏', '😐', '😓', '💀'];
-      const index = this.meal.difficulty - 1;
+      const maxStars = 5; // Maximum number of stars
+      const filledStar = '★';
+      const emptyStar = '☆';
 
-      if (index >= 0 && index < emojis.length) {
-        return emojis[index];
-      } else {
-        return ''; // Return an empty string if the difficulty level is out of range
+      // Calculate the number of filled stars based on the meal's difficulty value
+      const filledStars = Math.round(this.meal.difficulty * maxStars / 5);
+
+      // Construct the string of stars
+      let stars = '';
+      for (let i = 0; i < filledStars; i++) {
+        stars += filledStar;
       }
+      for (let i = filledStars; i < maxStars; i++) {
+        stars += emptyStar;
+      }
+
+      return stars;
     },
     cookingTimeRange() {
       const timeRanges = {

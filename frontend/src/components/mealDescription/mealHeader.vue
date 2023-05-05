@@ -5,7 +5,9 @@
     </div>
 
     <div class="meal-info">
-      <h1 class="meal-name">{{ meal.recipeName }}</h1>
+      <div class="meal-name-wrapper">
+        <h1 class="meal-name">{{ meal.recipeName }}</h1>
+      </div>
       <hr>
       <p id="description" v-html="formattedDescription"></p>
     </div>
@@ -73,31 +75,33 @@ hr {
   font-size: 18px;
 }
 
-  @media only screen and (max-width: 768px) {
-    .meal-header {
-      flex-direction: column;
-      align-items: center;
-    }
 
-    .meal-image {
-      margin-right: 0;
-      margin-bottom: 10px;
-      width: 100%;
-      max-width: 400px;
-    }
 
-    .meal-name {
-      font-size: 20px;
-      text-align: center;
-    }
 
-    #description {
-      font-size: 16px;
-      text-align: center;
-    }
+@media only screen and (max-width: 768px) {
+  .meal-header {
+    flex-direction: column;
+    align-items: center;
   }
 
-@media only screen and (min-width: 350px) and (max-width: 480px) {
+  .meal-image {
+    margin-right: 0;
+    margin-bottom: 10px;
+    width: 100%;
+    max-width: 400px;
+  }
 
+  .meal-name {
+    font-size: 20px;
+  }
+
+  #description {
+    font-size: 16px;
+    text-align: center;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
 }
+
+
 </style>
