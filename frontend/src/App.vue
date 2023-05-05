@@ -10,7 +10,7 @@
     <h1 class="matprat-title" :class="{ centered: isOnAuthPage }">
       {{ $t("matsmart") }}
     </h1>
-    <nav :class="{ 'center-profile': !hasCurrentFridge }">
+    <nav :class="{ 'center-profile': !hasCurrentFridge }" id="app-nav">
       <ul v-if="!isOnAuthPage">
         <li v-if="hasCurrentFridge">
           <RouterLink
@@ -141,6 +141,7 @@ export default {
       return route.path.startsWith("/dinner");
     });
 
+
     const isOnRootPage = computed(() => {
       return route.path === "/";
     });
@@ -168,6 +169,7 @@ export default {
       }
     };
 
+
     return {
       isFridgeRouteActive,
       isDinnerRouteActive,
@@ -184,14 +186,14 @@ export default {
 
 <style scoped>
 .sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }
 
 .break-line {
@@ -217,6 +219,7 @@ export default {
 #logo {
   padding: 5px;
 }
+
 
 .fridge-name {
   display: flex;
@@ -282,6 +285,7 @@ header img {
 
 .language:hover {
   scale: 1.2;
+
 }
 
 h1 {
@@ -409,6 +413,7 @@ nav ul li a .text {
   z-index: 0;
 }
 
+
 @media only screen and (max-width: 1000px) {
   .matprat-title {
     display: none;
@@ -434,6 +439,12 @@ nav ul li a .text {
     display: flex;
     justify-content: space-evenly;
   }
+
+
+
+
+
+
 
   .change-button {
     text-align: center;
@@ -574,10 +585,14 @@ nav ul li a .text {
     height: 80px;
   }
 
+
+
   .change-button {
     top: 10%;
     font-size: 0.7rem;
   }
+
+
 
   header img {
     display: none;
@@ -652,7 +667,6 @@ nav ul li a .text {
   nav ul li.active a .icon {
     color: #fcfbfb;
   }
-
   header img {
     height: 40px;
   }
@@ -674,7 +688,6 @@ nav ul li a .text {
   nav ul li a .text {
     font-size: 0.6em;
   }
-
   .matprat-title {
     display: none;
   }
@@ -683,7 +696,6 @@ nav ul li a .text {
     display: flex;
     width: 15px;
   }
-
   nav ul li {
     width: 60px;
     height: 60px;
@@ -693,22 +705,20 @@ nav ul li a .text {
   .icon {
     scale: 2 !important;
   }
-
   nav ul li a {
     padding: 5px 0px 0px 0px !important;
     height: 40px;
   }
-
   header {
     height: 0;
   }
-
   .link-name {
     font-family: "Roboto", sans-serif;
     text-decoration: none;
     color: white;
     font-weight: bold;
     text-shadow: 0 0 black;
+
   }
 
   .fridge-name {
@@ -731,6 +741,7 @@ nav ul li a .text {
     background-color: white;
     border-radius: 0;
     margin-bottom: 5px;
+
   }
 
   .name-display {
