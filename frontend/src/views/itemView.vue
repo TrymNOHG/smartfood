@@ -9,7 +9,7 @@
         <img
             src="@/assets/images/info.svg"
             id="info-picture"
-            @click="resetSteps(); informationButton()"
+            @click=" resetSteps() ;itemStepsTour()"
             :alt="$t('alt_info_button')"
         />
       </div>
@@ -96,11 +96,7 @@ export default {
   methods: {
 
       resetSteps(){
-          if(this.itemTour.steps.length !== 0) {
-              while (this.itemTour.steps.length !== 0) {
-                  this.itemTour.steps.pop()
-              }
-          }
+
           if(this.information.steps.length !== 0) {
               while (this.information.steps.length !== 0) {
                   this.information.steps.pop()
