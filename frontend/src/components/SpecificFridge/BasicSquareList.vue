@@ -336,13 +336,12 @@ img {
   }
 }
 
-@media only screen and (min-width: 350px) and (max-width: 480px) {
+@media only screen and (min-width: 10px) and (max-width: 650px) {
   body{
     height: 100%;
   }
 
   .cards-container{
-
     height: 100px;
     margin: 10px;
     padding-top: 10px;
