@@ -89,10 +89,10 @@
   "choose_statistics": "Velg statistikk",
   "personal_statistics": "Personlig statistikk",
   "fridge_statistics": "Statistikk kjøleskap",
-  "percentage_thrown_last_day": "Prosent kastet siste dag",
+  "percentage_thrown_last_day": "Mat kastet siste dag",
   "money_wasted_last_day": "Penger kastet siste dag",
-  "percentage_thrown": "Prosent kastet siste dag",
-  "money_wasted": "Penger brukt siste dag",
+  "percentage_thrown": "Mat kastet i gram",
+  "money_wasted": "Penger brukt",
   "errorTitle": "Feil",
   "errorText": "Du har ikke superbruker-tilgang til dette kjøleskapet",
   "updateTitle": "Oppdatering",
@@ -153,6 +153,17 @@
   "pieces" : "stk",
   "amount": "Mengde igjen",
   "update_title": "Varen din ble oppdatert",
+  "this_fridge": "I dette kjølskapet",
+  "you": "Du",
+
+  "daily_stat": "Dagens statistikk",
+
+  "card": {
+    "name": "Matavfall",
+    "dailyWaste": "Ifølge Matvett kastes det i gjennomsnitt {amount} mat per person daglig, og et gjennomsnit på {cost} per dag.",
+    "todayWaste": "I dag ble det kastet {user} {amount} mat, og {cost} totalt."
+  },
+
 
   "__Tour__":"Under er all oversetting for alle gjennomganger/tours av appen",
 

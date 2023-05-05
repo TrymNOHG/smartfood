@@ -28,14 +28,6 @@ export default {
       type: Object,
       required: true,
     },
-    ymin: {
-      type: Number,
-      required: true,
-    },
-    ymax: {
-      type: Number,
-      required: true,
-    },
     chartId: {
       type: String,
       default: 'my-chart-id',
@@ -97,24 +89,6 @@ export default {
         legend: {
           display: this.legendPosition !== 'none',
           position: this.legendPosition,
-        },
-        plugins: {
-          annotation: {
-            annotations: {
-              line1: {
-                type: 'line',
-                yMin: this.ymin,
-                yMax: this.ymax,
-                borderColor: '#444444',
-                borderWidth: 2,
-                label: {
-                  content: this.showLabel ? this.labelContent : '',
-                  enabled: this.showLabel,
-                  position: 'center',
-                },
-              },
-            },
-          },
         },
       };
     },

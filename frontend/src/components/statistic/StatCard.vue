@@ -3,11 +3,16 @@
     <div class="icon-wrapper">
       <font-awesome-icon :icon="`fa-solid ${iconName}`" class="icon" />
     </div>
-    <h4 class="description">{{ name }}</h4>
+    <h4 class="description">{{ $t('daily_stat') }}</h4>
     <transition name="fade">
-      <h2 class="stats">
-        {{ value }}
-      </h2>
+      <transition name="fade">
+        <h2 class="stats">
+          {{ $t('card.dailyWaste', { amount: "115g", cost: "40kr" }) }}
+          <br>
+          <br>
+          {{ $t('card.todayWaste', { amount: food, cost: money }) }}
+        </h2>
+      </transition>
     </transition>
   </div>
 </template>
@@ -16,12 +21,11 @@ export default {
   name: "StatCard",
 
   props: {
-    value: {
-      type: Object
+    food: {
+      type: String
     },
-    name: {
-      type: String,
-      required: true,
+    money: {
+      type: String
     },
     iconName: {
       type: String,
@@ -40,6 +44,14 @@ export default {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+.description {
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+  margin-top: 5px;
+  color: #3bd290;
 }
 
 .icon {
@@ -70,6 +82,7 @@ h4 {
 .card {
   display: flex;
   flex-direction: column;
+  height: 100%;
   align-content: center;
   background-color: white;
   border-radius: 10px;
@@ -85,14 +98,10 @@ h4 {
 .stats {
   border-radius: 10px;
   height: 100%;
-  width: 100%;
+  max-width: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  text-align: center;
-  margin: 1rem 0 0.5rem;
-  color: #3bd290;
-  font-size: 2rem;
+  margin: 1rem 5% 2% .5rem;
+  font-size: 1.5rem;
+  text-align: start;
 }
 </style>
