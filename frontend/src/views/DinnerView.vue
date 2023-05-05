@@ -11,7 +11,7 @@
       </div>
       <div
         id="toggle-button"
-        class="link"
+        class="link weekMenu"
         @click="selectedTab = 'weekMenu'"
         :class="{ active: selectedTab === 'weekMenu' }"
       >
@@ -201,6 +201,12 @@ template {
     padding-top: 8px;
     padding-right: 5px;
     padding-left: 5px;
+  }
+
+  .weekMenu.active {
+    border-bottom-left-radius: 20px ;
+    border-bottom-right-radius: 20px ;
+    z-index: 4 ;
   }
 
   .link {

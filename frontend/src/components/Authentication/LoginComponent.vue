@@ -48,9 +48,7 @@
           <a href="#">{{ $t("forgot_password") }}</a>
         </div>
 
-        <button type="submit" @click="submit" id="login-btn">
-          {{ $t("login") }}
-        </button>
+        <BasicButton type="submit" @click="submit" id="login-btn" :button-text="$t('login')" />
         <div class="login-register">
           <p>
             {{ $t("dont_have_account") }}
@@ -71,12 +69,15 @@ import { ref } from "vue";
 import router from "@/router/router";
 import { loginUser } from "@/services/UserService";
 import { useStorage } from "vue3-storage";
-import { RouterLink } from "vue-router";
+import { RouterLink } from 'vue-router'
+import BasicButton from "@/components/basic-components/BasicButton.vue";
+
 
 export default {
   name: "LoginComponent",
   components: {
-    RouterLink,
+    BasicButton,
+    RouterLink
   },
   setup() {
     const submitMessage = ref("");
@@ -112,7 +113,7 @@ export default {
           }
         })
         .catch((error) => {
-          submitMessage.value = "login_error";
+          submitMessage.value = 'login_error';
           setTimeout(() => {
             submitMessage.value = "";
           }, 2000);
@@ -159,11 +160,9 @@ export default {
   width: 90%;
   padding: 40px;
 }
-
-h5 {
+h5{
   margin-top: -40px;
 }
-
 .form-box {
   font-size: 1rem;
   text-align: center;

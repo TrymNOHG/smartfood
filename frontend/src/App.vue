@@ -126,7 +126,7 @@
       </router-link>
     </div>
   </div>
-  <div class="router-view-container">
+  <div class="router-view-container" :class="{ 'router-view-container-bottom-padding': isOnRootPage }">
     <RouterView />
   </div>
 </template>
@@ -424,6 +424,7 @@ nav ul li a .text {
   z-index: 0;
 }
 
+
 @media only screen and (max-width: 1000px) {
   .matprat-title {
     display: none;
@@ -594,9 +595,7 @@ nav ul li a .text {
     font-size: 0.7rem;
   }
 
-  .router-view-container {
-    padding-bottom: 70px;
-  }
+
 
   header img {
     display: none;
@@ -758,7 +757,12 @@ nav ul li a .text {
   }
 
   .router-view-container {
+    margin-bottom: 70px;
     z-index: 0;
+  }
+
+  .router-view-container-bottom-padding {
+    margin-bottom: 0 !important; /* or any value you prefer */
   }
 }
 </style>

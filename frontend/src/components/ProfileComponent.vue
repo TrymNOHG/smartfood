@@ -20,9 +20,9 @@
         <p id="username"><strong>{{ $t("username") }}:</strong> {{ profileData.username }}</p>
         <p id="email"><strong>{{ $t("email") }}:</strong> {{ profileData.email }}</p>
         <language-component/>
-        <button class="basic-button edit-btn" @click="isEditing = true">{{ $t('edit') }}</button>
-        <button class="basic-button change-password-btn" @click="isChangingPassword = true">{{ $t('changePassword') }}</button>
-        <button class="basic-button logout-btn" @click="logout">{{ $t('logout') }}</button>
+        <BasicButton class="basic-button edit-btn" @click="isEditing = true" :button-text="$t('edit')"/>
+        <BasicButton class="basic-button change-password-btn" @click="isChangingPassword = true" :button-text="$t('changePassword')"/>
+        <BasicButton class="basic-button logout-btn" @click="logout" :button-text="$t('logout')"/>
       </div>
       <form v-else-if="isEditing" @submit.prevent="updateUserProfile" :class="{ 'has-errors': hasErrors }">        <div class="input-box">
           <label for="firstName">{{ $t("first_name") }}</label>
@@ -74,8 +74,8 @@
           /></span>
         </div>
         <div class="button-container">
-          <button class="basic-button" type="submit">{{ $t('save_changes') }}</button>
-          <button class="basic-button" type="button" @click="isEditing = false">{{ $t('cancel') }}</button>
+          <BasicButton class="basic-button" type="submit" :button-text="$t('save_changes')"/>
+          <BasicButton class="basic-button" type="button" @click="isEditing = false" :button-text="$t('cancel')"/>
         </div>
       </form>
       <form v-else-if="isChangingPassword" @submit.prevent="updatePassword" :class="{ 'has-errors': hasErrors }">
@@ -96,8 +96,8 @@
           <span class="icon"><font-awesome-icon icon="fa-solid fa-lock"/></span>
         </div>
         <div class="button-container">
-          <button class="basic-button" type="submit" @click="updatePassword">{{ $t('save_changes') }}</button>
-          <button class="basic-button" type="button" @click="isChangingPassword = false">{{ $t('cancel') }}</button>
+          <BasicButton class="basic-button" type="submit" @click="updatePassword" :button-text="$t('save_changes')"/>
+          <BasicButton class="basic-button" type="button" @click="isChangingPassword = false" :button-text="$t('cancel')"/>
         </div>
       </form>
     </div>

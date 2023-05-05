@@ -36,7 +36,7 @@ describe('MealInfo.vue', () => {
     });
 
     test('displays difficulty level as emojis', () => {
-        expect(wrapper.find('.difficulty-stars').text()).toBe('😐');
+        expect(wrapper.find('.difficulty-stars').text()).toBe('★★★☆☆');
     });
 
     test('displays author name', () => {
