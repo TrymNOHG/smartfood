@@ -168,9 +168,11 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "User profile picture retrieved successfully.", content = @Content(
             mediaType = "image/jpeg",
             schema = @Schema(implementation = byte[].class)))
-    public ResponseEntity<Object> getPicture(Authentication authentication) {
+    public ResponseEntity<Object> getPicture(Authentication authentication) throws IOException {
         logger.info(String.format("User %s wants to get their profile picture!", authentication.getName()));
         byte[] file = fileStorageService.getProfilePicture(jwtService.getAuthenticatedUserId());
+        if(file == null)
+            return ResponseEntity.ok("No profile picture found!");
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+jwtService.getAuthenticatedUserId()+"\"")
                 .contentType(MediaType.IMAGE_JPEG)
@@ -187,7 +189,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "User profile picture retrieved successfully.", content = @Content(
             mediaType = "image/jpeg",
             schema = @Schema(implementation = byte[].class)))
-    public ResponseEntity<Object> getPictureFromId(@PathVariable Long id) {
+    public ResponseEntity<Object> getPictureFromId(@PathVariable Long id) throws IOException {
         logger.info(String.format("Getting the profile picture of user with ID %d!", id));
         byte[] file = fileStorageService.getProfilePicture(id);
         return ResponseEntity.ok()
