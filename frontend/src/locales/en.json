@@ -106,10 +106,10 @@
   "choose_statistics": "Choose Statistics",
   "personal_statistics": "Personal Statistics",
   "fridge_statistics": "Fridge Statistics",
-  "percentage_thrown_last_day": "Percentage thrown last day",
+  "percentage_thrown_last_day": "Food thrown last day in gram",
   "money_wasted_last_day": "Money wasted last day",
-  "percentage_thrown": "Percentage thrown last day",
-  "money_wasted": "Money wasted last day",
+  "percentage_thrown": "Food thrown in gram",
+  "money_wasted": "Money wasted",
   "errorTitle": "Error",
   "errorText": "You are not a super-user of this fridge",
   "updateTitle": "Update",
@@ -172,6 +172,16 @@
   "pieces" : "pieces",
   "amount": "Amount left",
   "update_title": "Your Item has been updated",
+  "this_fridge": "In this fridge",
+  "you": "You",
+
+  "daily_stat": "Todays statistics",
+
+  "card": {
+    "name": "Food Waste",
+    "dailyWaste": "According to Matvett, an average of {amount} of food per person is wasted daily, and an average cost of {cost} per day.",
+    "todayWaste": "Today's waste was {amount} of food, and {cost}."
+  },
 
   "__Tour__":"Underneath this is all the translation for the tours",
 
