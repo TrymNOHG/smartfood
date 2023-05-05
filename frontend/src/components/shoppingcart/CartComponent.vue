@@ -7,7 +7,7 @@
         <img
             src="@/assets/images/info.svg"
             id="info-picture"
-            @click="showInformation"
+            @click="resetSteps(); informationButton()"
             :alt="$t('alt_info_button')"
         />
       </div>
@@ -142,6 +142,11 @@ import swal from "sweetalert2";
 import Quagga from "quagga";
 import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
 import {useI18n} from "vue-i18n/dist/vue-i18n";
+import { offset } from "@floating-ui/vue";
+import Shepherd from 'shepherd.js';
+import '@/assets/tourStyle.css';
+import router from "@/router/router";
+
 
 export default {
   name: "Cart",
@@ -674,6 +679,34 @@ export default {
         });
     }
 
+      const cartTour = new Shepherd.Tour({
+          useModalOverlay: true,
+          defaultStepOptions: {
+              classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
+              arrow: true,
+              floatingUIOptions: {
+                  middleware: [offset(30)]
+              },
+              cancelIcon: {
+                  enabled: true
+              },
+          }
+      });
+
+      const information = new Shepherd.Tour({
+          useModalOverlay: true,
+          defaultStepOptions: {
+              classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
+              arrow: true,
+              floatingUIOptions: {
+                  middleware: [offset(30)]
+              },
+              cancelIcon: {
+                  enabled: true
+              },
+          }
+      });
+
     return {
       loadMore,
       itemAmount,
@@ -707,8 +740,100 @@ export default {
       initScanner,
       stopScanner,
       scrollTarget,
+      cartTour,
+      information,
     };
   },
+  methods: {
+
+      resetSteps(){
+          if(this.cartTour.steps.length !== 0) {
+              while (this.cartTour.steps.length !== 0) {
+                  this.cartTour.steps.pop()
+              }
+          }
+          if(this.information.steps.length !== 0) {
+              while (this.information.steps.length !== 0) {
+                  this.information.steps.pop()
+              }
+          }
+      },
+
+      informationButton(){
+          this.information.addSteps([
+              {
+                  id: 'information-pressed',
+                  title:`<div class="info-box"><img src="../src/assets/images/info.svg" alt="Pressed" id="tour-info-picture"/></div>`,
+                  text: this.$t('tour: view:fridgesView method:informationButton id:information-pressed usage:text'),
+                  attachTo: {
+                      element: '#info-picture',
+                      on: 'bottom',
+                  },
+                  buttons: [
+                      {
+                          action: () => {
+                              router.push('/fridges?appTour=true');
+                              this.information.cancel();
+                          },
+                          secondary: true,
+                          class: " shepherd-button ",
+                          text: this.$t('tour: button whole site'),
+                      },
+                      {
+                          action: () => {
+                              this.cartStepsTour();
+                              this.information.cancel();
+
+                          },
+                          class: " shepherd-button ",
+                          text: this.$t('tour: button this site'),
+                      },
+                  ]
+              }])
+          this.information.start()
+      },
+
+
+      cartStepsTour() {
+          if (window.matchMedia("(min-width: 860px)").matches) {
+              this.cartTour.addSteps([
+                  {
+                      id: 'cart-window',
+                      title: this.$t('tour: view:cartView method:cartStepTour id:cart-window usage:title'),
+                      text: this.$t('tour: view:cartView method:cartStepTour id:cart-window usage:text'),
+                      attachTo: {
+                          element: '.router-view-container',
+
+                      },
+                      classes: 'shepherd-theme-arrows',
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.back();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button back'),
+                          },
+                          {
+                              action: function () {
+                                  return this.next();
+                              },
+                              class: " shepherd-button ",
+                              text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+
+              ])
+              this.cartTour.start()
+          } else if (window.matchMedia("(max-width: 860px)").matches) {
+              this.cartTour.addSteps([
+
+              ])
+              this.cartTour.start()
+          }
+      },
+  }
 };
 </script>
 

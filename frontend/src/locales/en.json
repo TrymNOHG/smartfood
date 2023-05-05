@@ -263,6 +263,9 @@
 
   "One Item__": "This is the tour for a Item",
       "tour: view:itemView method:itemStepTour id:itemWindow usage:title": "Product",
-      "tour: view:itemView method:itemStepTour id:itemWindow usage:text": "Now you see the product page.<br><br> Here you can: <ul><li>See information about the product</li><li>Update the item if it is used</li><li>Delete the item from fridge</li></ul>"
+      "tour: view:itemView method:itemStepTour id:itemWindow usage:text": "Now you see the product page.<br><br> Here you can: <ul><li>See information about the product</li><li>Update the item if it is used</li><li>Delete the item from fridge</li></ul>",
 
+  "Cart__": "This is the Tour for the cartView",
+      "tour: view:cartView method:cartStepTour id:cart-window usage:title":"The cart",
+      "tour: view:cartView method:cartStepTour id:cart-window usage:text":"Now you see the cart to the fridge.<br><br> The main functions to this page is to make a grocery list for your next visit to the grocery-store. <br><br> Ass a super user you can: <ul><li>Add products to your cart/grocery-list by search or scanning the barcode</li>Delete groceries from the cart<li></li>Accept suggestions from a normal user<li>Delete the item from fridge</li></ul> <br>Ass a normal user, you can: <ul><li>Make suggestion to the cart by search or scanning barcode</li>Delete own suggestion<li></li></ul>"
 }
