@@ -267,7 +267,15 @@
 
   "Cart__": "This is the Tour for the cartView",
     "tour: view:cartView method:cartStepTour id:cart-window usage:title":"Handlekurven",
-    "tour: view:cartView method:cartStepTour id:cart-window usage:text":"Nå ser du handlekurven til kjøleskapet.<br><br> Hovedfunksjonene på denne siden er å lage en handleliste for ditt neste besøk til matbutikken. <br><br> Som en superbruker kan du: <ul><li>Legge til produkter i handlekurv/handleliste ved å søke eller skanne strekkoden</li>Slette matvarer fra handlekurven<li></li>Akseptere forslag fra en vanlig bruker<li>Slette varen fra kjøleskapet</li></ul> <br>Som en vanlig bruker kan du: <ul><li>Gjøre forslag til handlekurven ved å søke eller skanne strekkoden</li>Slette egne forslag<li></li></ul>"
+    "tour: view:cartView method:cartStepTour id:cart-window usage:text":"Nå ser du handlekurven til kjøleskapet.<br><br> Hovedfunksjonene på denne siden er å lage en handleliste for ditt neste besøk til matbutikken. <br><br> Som en superbruker kan du: <ul><li>Legge til produkter i handlekurv/handleliste ved å søke eller skanne strekkoden</li>Slette matvarer fra handlekurven<li></li>Akseptere forslag fra en vanlig bruker<li>Slette varen fra kjøleskapet</li></ul> <br>Som en vanlig bruker kan du: <ul><li>Gjøre forslag til handlekurven ved å søke eller skanne strekkoden</li>Slette egne forslag<li></li></ul>",
+
+  "Dinner__": "This is the tour for dinner page",
+      "tour: view:dinnerView method:tour id:tipsWindow usage:title": "Middag",
+      "tour: view:dinnerView method:tour id:tipsWindow usage:text":"Nå ser du middagssiden.<br><br> Her kan du: <ul>Akseptere eller avslå middagsforslag fra andre kjøleskapsmedlemmer<li>Bla gjennom middager som kan være av interesse</li><li>Finne din ukentlige middagsplan</li></ul>",
+      "tour: view:dinnerView method:weeklyStepTour id:tipsWindow usage:title": "Ukentlig middagsplan",
+      "tour: view:dinnerView method:weeklyStepTour id:tipsWindow usage:text":"Dette er hvor du finner din ukentlige middagsplan som automatisk genereres basert på hva du har i kjøleskapet.",
+      "tour: view:dinnerView method:tipsViewStepTour id:tipsWindow usage:title": "Tips",
+      "tour: view:dinnerView method:tipsViewStepTour id:tipsWindow usage:text":"På denne siden kan du finne både middagstips og middagsforslag fra andre medlemmer. Du kan bla gjennom mange middagsforslag ved å klikke på neste side-knappen til du finner måltidet du ønsker."
 
 
 }
