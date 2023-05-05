@@ -1214,6 +1214,7 @@ input[type="text"]:focus {
     display: flex;
     width: 100%;
     z-index: 0;
+    padding-bottom: 90px;
   }
 
   .vcpg{
