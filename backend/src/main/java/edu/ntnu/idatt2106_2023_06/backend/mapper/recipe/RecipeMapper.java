@@ -6,12 +6,26 @@ import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Recipe;
 
 import java.util.stream.Collectors;
 
+/**
+ Mapper class for the {@link Recipe} entity and its DTOs.
+ */
 public class RecipeMapper {
 
+    /**
+     * Maps a Recipe object to a RecipeLoadDTO object.
+     * @param recipe The Recipe object to be mapped.
+     * @return A RecipeLoadDTO object.
+     */
     public static RecipeLoadDTO toRecipeLoadDTO(Recipe recipe) {
         return toRecipeLoadDTO(recipe, 0);
     }
 
+    /**
+     * Maps a Recipe object to a RecipeLoadDTO object.
+     * @param recipe The Recipe object to be mapped.
+     * @param numMatchingItems The number of matching items the user has for this recipe.
+     * @return A RecipeLoadDTO object.
+     */
     public static RecipeLoadDTO toRecipeLoadDTO(Recipe recipe, int numMatchingItems) {
         return RecipeLoadDTO
                 .builder()
@@ -39,6 +53,12 @@ public class RecipeMapper {
                 .build();
     }
 
+    /**
+     * Maps a Recipe object to a RecipeSuggestionLoad object.
+     * @param recipe The Recipe object to be mapped.
+     * @param userId The ID of the user the recipe is suggested to.
+     * @return A RecipeSuggestionLoad object.
+     */
     public static RecipeSuggestionLoad toRecipeSuggestionLoadDTO(Recipe recipe, Long userId){
         return RecipeSuggestionLoad.builder()
                 .recipeLoadDTO(toRecipeLoadDTO(recipe))
