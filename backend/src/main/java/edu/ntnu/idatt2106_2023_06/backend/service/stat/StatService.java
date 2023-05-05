@@ -114,11 +114,8 @@ public class StatService implements IStatService {
         StatType statType1 = statTypeRepository.findById(1L).orElseThrow(
                 () -> new StatNotFoundException(1L)
         );
-        StatType statType2 = statTypeRepository.findById(2L).orElseThrow(
-                () -> new StatNotFoundException(2L)
-        );
 
-        statRepository.saveAll(StatMapper.toStatistics(statDeleteFromFridgeDTO, user, fridge, statType1, statType2));
+        statRepository.saveAll(StatMapper.toStatistics(statDeleteFromFridgeDTO, user, fridge, statType1));
     }
 
     /**

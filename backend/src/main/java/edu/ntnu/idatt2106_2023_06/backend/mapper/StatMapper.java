@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StatMapper {
 
-    public static List<Statistics> toStatistics(StatDeleteFromFridgeDTO statDeleteFromFridgeDTO, User user, Fridge fridge, StatType statType1, StatType statType2) {
+    public static List<Statistics> toStatistics(StatDeleteFromFridgeDTO statDeleteFromFridgeDTO, User user, Fridge fridge, StatType statType1) {
 
         List<Statistics> statistics = new ArrayList<>();
 
@@ -29,18 +29,6 @@ public class StatMapper {
                 .storeName(statDeleteFromFridgeDTO.storeName())
                 .itemName(statDeleteFromFridgeDTO.itemName())
                 .build());
-
-
-        // Add statistics for item price
-        statistics.add(Statistics.builder()
-                .user(user)
-                .fridge(fridge)
-                .timestamp(LocalDateTime.now())
-                .statType(statType2)
-                .storeName(statDeleteFromFridgeDTO.storeName())
-                .itemName(statDeleteFromFridgeDTO.itemName())
-                .build());
-
 
         return statistics;
     }
