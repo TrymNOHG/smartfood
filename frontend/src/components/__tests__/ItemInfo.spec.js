@@ -7,7 +7,7 @@ describe('ItemInfo', () => {
         purchaseDate: '2022-04-26',
         expirationDate: '2022-05-26',
         price: '50',
-        amount: 1
+        amount: 250
     };
 
     test('renders purchase date', () => {
@@ -55,6 +55,6 @@ describe('ItemInfo', () => {
                 }
             }
         });
-        expect(wrapper.find('.text h3:last-of-type').text()).toMatch('Amount: 1.0');
+        expect(wrapper.find('.text h3:last-of-type').text()).toMatch('Amount: 250.0');
     });
 });

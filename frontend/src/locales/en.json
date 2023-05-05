@@ -1,4 +1,5 @@
 {
+  "passwords_do_not_match": "Passwords do not match",
   "matsmart": "SmartMat",
   "dinner": "Dinner",
   "fridge": "Fridge",
@@ -149,5 +150,8 @@
   "update_item" : "Update item",
   "ml" : "ml",
   "g" : "g",
-  "pieces" : "pieces"
+  "pieces" : "pieces",
+  "update_item": "Update amount",
+  "amount": "Amount left",
+  "update_title": "Your Item has been updated"
 }

@@ -25,6 +25,10 @@ export default {
 <style scoped>
 
 .info-window {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -37,12 +41,16 @@ export default {
   margin-top: 0;
 }
 
+h3 {
+  margin: 1%;
+}
+
 .text {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-evenly;
   margin: 2.5%;
 }
 
-.info-window .dates {
-  display: flex;
-  justify-content: space-between;
-}
 </style>

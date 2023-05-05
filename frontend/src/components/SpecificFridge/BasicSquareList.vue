@@ -69,7 +69,7 @@ export default {
     },
 
     deleteCard(item) {
-      let deletePercentage = null;
+      let amountDeleted = null;
       Swal.fire({
         html: `
          <div class="swal2-content">
@@ -86,16 +86,16 @@ export default {
           step: 1
         },
         didOpen: () => {
-          deletePercentage = Swal.getInput()
+          amountDeleted = Swal.getInput()
           const inputNumber = Swal.getHtmlContainer().querySelector('#range-value')
           const rangeValueText = Swal.getHtmlContainer().querySelector('#range-value')
 
-          deletePercentage.nextElementSibling.style.display = 'none'
-          deletePercentage.style.width = '100%'
+          amountDeleted.nextElementSibling.style.display = 'none'
+          amountDeleted.style.width = '100%'
 
-          deletePercentage.addEventListener('input', () => {
-            inputNumber.value = deletePercentage.value
-            rangeValueText.innerText = `${deletePercentage.value} ${ item.unit }`
+          amountDeleted.addEventListener('input', () => {
+            inputNumber.value = amountDeleted.value
+            rangeValueText.innerText = `${amountDeleted.value} ${ item.unit }`
           })
         },
         showCancelButton: true,
@@ -121,7 +121,7 @@ export default {
             if (result.isConfirmed) {
               this.$emit('add-shopping', item)
             }
-            this.$emit('delete-item', item, deletePercentage.value);
+            this.$emit('delete-item', item, amountDeleted.value);
           })
         }
       })

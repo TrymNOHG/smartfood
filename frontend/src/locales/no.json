@@ -1,4 +1,5 @@
 {
+  "passwords_do_not_match": "Passordene stemmer ikke overens",
   "matsmart": "SmartMat",
   "dinner": "Middag",
   "fridge": "Kjøleskap",
@@ -149,5 +150,8 @@
   "update_item" : "Oppdater vare",
   "ml" : "ml",
   "g" : "g",
-  "pieces" : "stk"
+  "pieces" : "stk",
+  "update_item": "Updater mengden",
+  "amount": "Mengde igjen",
+  "update_title": "Varen din ble oppdatert"
 }
