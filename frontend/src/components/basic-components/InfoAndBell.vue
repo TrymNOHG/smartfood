@@ -64,6 +64,7 @@ export default {
       if (this.showNotifications === false){
         this.showNotifications = true;
       } else {
+        await this.fridgeStore.removeBorderForNotification();
         this.showNotifications = false;
         await this.getNotifications();
       }
