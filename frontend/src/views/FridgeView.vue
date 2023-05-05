@@ -25,7 +25,7 @@
         <img
             src="@/assets/images/info.svg"
             id="info-picture"
-            @click="resetSteps(); informationButton()"
+            @click="resetSteps(); fridgeStepsTour()"
             :alt="$t('alt_info_button')"
         />
       </div>
@@ -443,42 +443,6 @@ export default {
                   this.information.steps.pop()
               }
           }
-      },
-
-      //Eirik
-
-      informationButton(){
-          this.information.addSteps([
-              {
-                  id: 'information-pressed',
-                  title:`<div class="info-box"><img src="../src/assets/images/info.svg" alt="Pressed" id="tour-info-picture"/></div>`,
-                  text: this.$t('tour: view:fridgesView method:informationButton id:information-pressed usage:text'),
-                  attachTo: {
-                      element: '#info-picture',
-                      on: 'bottom',
-                  },
-                  buttons: [
-                      {
-                          action: () => {
-                              router.push('/fridges?appTour=true');
-                              this.information.cancel();
-                          },
-                          secondary: true,
-                          class: " shepherd-button ",
-                          text: this.$t('tour: button whole site'),
-                      },
-                      {
-                          action: () => {
-                              this.fridgeViewStepsTour();
-                              this.information.cancel();
-
-                          },
-                          class: " shepherd-button ",
-                          text: this.$t('tour: button this site'),
-                      },
-                  ]
-              }])
-          this.information.start()
       },
 
       fridgeViewStepsTour() {
@@ -1139,19 +1103,6 @@ export default {
           }
       });
 
-      const information = new Shepherd.Tour({
-          useModalOverlay: true,
-          defaultStepOptions: {
-              classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
-              arrow: true,
-              floatingUIOptions: {
-                  middleware: [offset(30)]
-              },
-              cancelIcon: {
-                  enabled: true
-              },
-          }
-      });
 
       const fridgeViewTour = new Shepherd.Tour({
           useModalOverlay: true,
@@ -1205,7 +1156,6 @@ export default {
       selectedSearchParam,
       searchParamOptions,
       fridgeTour,
-      information,
       fridgeViewTour,
       memberTour,
     }
