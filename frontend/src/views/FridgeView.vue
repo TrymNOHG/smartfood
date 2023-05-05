@@ -260,11 +260,18 @@ export default {
           });
     },
 
-    async deleteItem(itemToDelete, deletePercentage) {
+    async deleteItem(itemToDelete, amountToBeDeleted) {
+      let amountDeleted = null;
+      const stkStandard = 250;
+
+      if (itemToDelete.unit === "g" || itemToDelete.unit === "ml") {
+        amountDeleted = amountToBeDeleted;
+      } else {
+        amountDeleted = Math.floor(amountToBeDeleted * stkStandard);
+      }
+
       const statDeleteFromFridgeDTO = {
-        percentageThrown: parseFloat(deletePercentage),
-        price: itemToDelete.price,
-        quantity: parseFloat(deletePercentage),
+        amountDeleted: amountDeleted,
         itemName: itemToDelete.name,
         storeName: itemToDelete.store,
         fridgeId: this.fridge.fridgeId,
@@ -277,10 +284,10 @@ export default {
         quantity: 0,
       };
 
-      console.log(itemRemoveDTO)
+      console.log("Statistics: ", statDeleteFromFridgeDTO)
 
       await this.itemStore.deleteItemByStats(statDeleteFromFridgeDTO);
-      await this.itemStore.deleteItemByNameIdStoreAmount  (itemRemoveDTO);
+      await this.itemStore.deleteItemByNameIdStoreAmount(itemRemoveDTO);
       await this.itemStore
           .fetchItemsFromFridgeById(this.fridge.fridgeId)
           .then((items) => {
@@ -396,6 +403,7 @@ export default {
       Quagga.stop();
       this.scannerActive = false;
     },
+
     async onDetected(result) {
       const code = result.codeResult.code;
 
@@ -414,6 +422,7 @@ export default {
             console.warn("error1", error); //TODO: add exception handling
           });
     },
+
     toggleCamera() {
       if (this.scannerActive == true) {
         this.stopScanner();
