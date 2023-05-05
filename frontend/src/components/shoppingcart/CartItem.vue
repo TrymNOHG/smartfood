@@ -32,9 +32,9 @@
         @blur="$emit('quantity-updated', $event.target.value, item)"
       />
 
-      <div id="quantity-instructions" class="sr-only">
-        {{ $t("quantityInstructions") }}
-      </div>
+      <div id="quantity-instructions" class="sr-only" :alt="$t('quantityInstructions')"/>
+
+
 
       <button
         v-if="isSuperUser"
