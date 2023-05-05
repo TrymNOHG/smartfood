@@ -18,10 +18,11 @@
 import NotificationList from "@/components/basic-components/NotificationList.vue";
 import {ref} from "vue";
 import {useFridgeStore} from "@/store/store";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 export default {
   name: "InfoAndBell",
-  components: {NotificationList},
+  components: {FontAwesomeIcon, NotificationList},
 
   setup() {
     let unread = ref(0);
@@ -59,13 +60,12 @@ export default {
   },
 
   methods: {
-
     async changeNotifications() {
       if (this.showNotifications === false){
         this.showNotifications = true;
       } else {
-        this.showNotifications = false;
         await this.fridgeStore.removeBorderForNotification();
+        this.showNotifications = false;
         await this.getNotifications();
       }
     },
