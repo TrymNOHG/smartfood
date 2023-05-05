@@ -195,8 +195,12 @@
       const fetchProfilePicture = async () => {
         try {
           const response = await getProfilePicture();
-          const imageUrl = URL.createObjectURL(new Blob([response.data], { type: 'image/jpeg' }));
-          profileData.value.picture = imageUrl;
+          if(response.data.byteLength === 0){
+            profileData.value.picture = defaultPicture;
+          } else {
+            const imageUrl = URL.createObjectURL(new Blob([response.data], { type: 'image/jpeg' }));
+            profileData.value.picture = imageUrl;
+          }
         } catch (error) {
           console.error('Error fetching profile picture:', error);
           // Handle the error (e.g., display an error message)

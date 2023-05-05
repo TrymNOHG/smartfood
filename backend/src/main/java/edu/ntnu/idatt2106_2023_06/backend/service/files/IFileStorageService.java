@@ -11,6 +11,6 @@ public interface IFileStorageService {
 
     void deleteProfilePicture() throws IOException;
 
-    byte[] getProfilePicture(long userId);
+    byte[] getProfilePicture(long userId) throws IOException;
 
 }

@@ -83,12 +83,12 @@ public class FileStorageService implements IFileStorageService {
         Path filePath = this.fileStorageLocation.resolve(Long.toString(imageId)).normalize();
         File file = filePath.toFile();
         if (!file.exists()) {
-            throw new ImageNotFoundException(imageId);
+            return null;
         }
         try {
             return Files.readAllBytes(file.toPath());
         } catch (IOException e) {
-            throw new ImageNotFoundException(imageId);
+            throw new ImageNotFoundException("Could not find image with ID " + imageId);
         }
     }
 }
