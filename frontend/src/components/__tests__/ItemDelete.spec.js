@@ -48,7 +48,12 @@ describe('ItemDelete', () => {
             }
         });
 
-        wrapper.find('.basic-button').trigger('click');
+        // Find the specific button with the text '$t('delete_item')'
+        const deleteButton = wrapper.findAll('.basic-button').filter((button) => {
+            return button.text() === wrapper.vm.$t('delete_item');
+        })[0];
+
+        deleteButton.trigger('click');
 
         expect(wrapper.emitted('delete-item')).toBeTruthy();
         expect(wrapper.emitted('delete-item')[0][0]).toEqual(item);

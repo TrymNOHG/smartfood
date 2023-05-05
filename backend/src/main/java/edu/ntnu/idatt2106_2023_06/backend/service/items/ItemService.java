@@ -270,16 +270,19 @@ public class ItemService implements IItemService {
      */
     @Override
     public void removeItemFromFridge(ItemRemoveDTO itemRemoveDTO) {
-        if (itemRemoveDTO.quantity() <= 0) throw new IllegalArgumentException("Cannot have zero or negative quantity");
+        if (itemRemoveDTO.quantity() < 0) throw new IllegalArgumentException("Cannot have negative amount");
         Store store = storeRepository.findByStoreName(itemRemoveDTO.store()).orElseThrow(() -> new StoreNotFoundException(itemRemoveDTO.store()));
         Item item = itemRepository.findByProductNameAndStore(itemRemoveDTO.itemName(), store).orElseThrow(() -> new ItemNotFoundException(itemRemoveDTO.itemName()));
         Fridge fridge = fridgeRepository.findByFridgeId(itemRemoveDTO.fridgeId()).orElseThrow(() -> new FridgeNotFoundException(itemRemoveDTO.fridgeId()));
         FridgeItems fridgeItem = fridgeItemsRepository.findByItemAndFridge(item, fridge).orElseThrow(() -> new FridgeItemsNotFoundException(""));
+
         notificationService.deleteNotificationForEveryUserInFridge(itemRemoveDTO);
-        if (fridgeItem.getAmount() <= itemRemoveDTO.quantity() * fridgeItem.getItem().getAmount()) {
+
+        if (itemRemoveDTO.quantity() == 0) {
             fridgeItemsRepository.delete(fridgeItem);
         } else {
-            fridgeItem.setAmount(fridgeItem.getAmount() - itemRemoveDTO.quantity() * fridgeItem.getItem().getAmount());
+            System.out.println(itemRemoveDTO.quantity());
+            fridgeItem.setAmount(itemRemoveDTO.quantity());
             fridgeItemsRepository.save(fridgeItem);
         }
     }

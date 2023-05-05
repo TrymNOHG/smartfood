@@ -7,6 +7,7 @@
         <div class="slider-bar"></div>
         <div class="slider-value" id="rangeValue">{{sliderValue}} {{this.item.unit}}</div>
       </div>
+      <basic-button :button-text="$t('update_item')" class="basic-button" @click="updateItem(item)"/>
       <basic-button :button-text="$t('delete_item')" class="basic-button" @click="deleteItem(item)"/>
     </div>
   </div>
@@ -30,9 +31,13 @@ export default {
   methods: {
     deleteItem(item) {
       let deletePercentage = this.sliderValue
-      console.log(deletePercentage)
       this.$emit('delete-item', item, deletePercentage);
     },
+    updateItem(item) {
+      let newAmount = this.sliderValue
+      console.log(newAmount)
+      this.$emit('update-item', item, newAmount);
+    }
   },
 
   data() {

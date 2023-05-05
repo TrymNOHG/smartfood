@@ -258,6 +258,28 @@ describe("Adding and deleting item from cart", () => {
       }
     ).as("getSearchFromKasal");
 
+    cy.intercept('GET', 'http://localhost:8089/api/notification/update', {
+      statusCode: 200,
+      body: {}
+    }).as('updatedNotifications')
+
+    cy.intercept('GET', 'http://localhost:8089/api/notification/get',
+        (req) => {
+          req.reply({
+            statusCode: 200,
+            body: [
+              {
+                notificationId: 1,
+                itemName: "test1",
+                expirationDate: "20.20.2020",
+                isRead: false,
+                fridgeId: 1
+              },
+            ]
+          });
+        }
+    ).as("getNotifications");
+
     cy.visit(`${base_url}`);
 
     cy.contains("a", "Logg inn").click();
@@ -266,13 +288,15 @@ describe("Adding and deleting item from cart", () => {
     cy.get('input[name="password"]').type("12345678");
 
     cy.get('button[type="submit"]').click();
-
-    cy.contains("Home Fridge").click();
-
     cy.wait("@loginRequest");
     cy.wait("@fetchUser");
     cy.wait("@loadAllFridges");
+
+    cy.contains("Home Fridge").click();
+
     cy.wait("@isSuperUser");
+    cy.wait('@updatedNotifications')
+
   });
 
   it("should add item to cart from cart-search", () => {

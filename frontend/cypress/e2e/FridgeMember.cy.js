@@ -1,4 +1,4 @@
-describe("Testing frdige member management", () => {
+describe("Testing fridge member management", () => {
     const base_url = "http://localhost:5173";
     const base_url_site = "http://localhost:5173";
     const base_url_endpoint = "http://localhost:8089/api";
@@ -83,7 +83,6 @@ describe("Testing frdige member management", () => {
                 const requestBody = req.body;
                 cartAddedItem = requestBody;
                 // Do something with the requestBody, like logging it to the console
-                console.log("Request body:", requestBody);
             }
         ).as("addItemRequest");
 
@@ -285,6 +284,28 @@ describe("Testing frdige member management", () => {
             }
         ).as("getSearchFromKasal");
 
+        cy.intercept('GET', 'http://localhost:8089/api/notification/update', {
+            statusCode: 200,
+            body: {}
+        }).as('updatedNotifications')
+
+        cy.intercept('GET', 'http://localhost:8089/api/notification/get',
+            (req) => {
+                req.reply({
+                    statusCode: 200,
+                    body: [
+                        {
+                            notificationId: 1,
+                            itemName: "test1",
+                            expirationDate: "20.20.2020",
+                            isRead: false,
+                            fridgeId: 1
+                        },
+                    ]
+                });
+            }
+        ).as("getNotifications");
+
         cy.visit(`${base_url}`);
 
         cy.contains("a", "Logg inn").click();
@@ -299,6 +320,7 @@ describe("Testing frdige member management", () => {
         cy.wait("@loginRequest");
         cy.wait("@fetchUser");
         cy.wait("@loadAllFridges");
+        cy.wait('@updatedNotifications')
         cy.wait("@isSuperUser");
 
         cy.contains('#toggle-button', 'Medlemmer').click();

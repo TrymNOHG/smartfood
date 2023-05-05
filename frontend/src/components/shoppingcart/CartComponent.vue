@@ -58,7 +58,6 @@
                 "
                 style="text-align: center"
                 @click="addItemToList(item)"
-                @item-checked="handleItemChecked"
               />
             </template>
           </vue-collapsible-panel>
@@ -121,7 +120,7 @@ import { getItemsFromShoppingList } from "@/services/ItemService";
 import { buyItemsFromShoppingList } from "@/services/ItemService";
 import { deleteItemsFromShoppingList } from "@/services/ItemService";
 import { getItems } from "@/services/ApiService";
-import { getItemByBarcode } from "@/services/ApiService";
+import { getItemByBarcode, getItemsByPage } from "@/services/ApiService";
 import SearchItem from "@/components/searchFromApi/SearchItem.vue";
 import BasicButton from "@/components/basic-components/BasicButton.vue";
 import SearchInput from "@/components/searchFromApi/SearchInput.vue";
@@ -130,11 +129,19 @@ import CartSuggestion from "@/components/shoppingcart/CartSuggestion.vue";
 import CartControl from "@/components/shoppingcart/CartControl.vue";
 import BasicCheckBox from "@/components/basic-components/BasicCheckbox.vue";
 import { useLoggedInStore, useFridgeStore, useItemStore } from "@/store/store";
-import { ref, onMounted, computed, watch, onBeforeUnmount } from "vue";
+import {
+  ref,
+  onMounted,
+  computed,
+  watch,
+  onBeforeUnmount,
+  onUnmounted,
+} from "vue";
 import "sweetalert2/dist/sweetalert2.min.css";
 import swal from "sweetalert2";
 import Quagga from "quagga";
 import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
+import {useI18n} from "vue-i18n/dist/vue-i18n";
 
 export default {
   name: "Cart",
@@ -157,7 +164,7 @@ export default {
     },
   },
   setup() {
-    console.log(useFridgeStore().getCurrentFridge);
+    const { t } = useI18n();
     var itemAmount = ref(1);
     var submitMessage = ref("norvegia");
     const items = ref([]); // list of items in the cart
@@ -170,6 +177,9 @@ export default {
     const suggestedItems = ref([]);
     const itemStore = useItemStore();
     let scannerActive = ref(false);
+    const scrollTarget = ref(null);
+    const isLoading = ref(false);
+    let nextPage = 1;
 
     function initScanner() {
       Quagga.init(
@@ -185,7 +195,8 @@ export default {
         },
         (err) => {
           if (err) {
-            console.log(err);
+            swal.fire(t("scanner_error"), "", "error");
+
             return;
           }
           scannerActive.value = true;
@@ -204,29 +215,26 @@ export default {
 
     async function onDetected(result) {
       const code = result.codeResult.code;
-      console.log("Detected barcode:", code);
 
       await getItemByBarcode(code)
         .then((response) => {
           if (response !== undefined) {
             searchItems.value = response.products;
 
-            console.log(response.products);
             search.value = true;
             stopScanner();
           } else {
-            console.log("Something went wrong");
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
+              swal.fire(t('scanner_error'), "", "error");
+
           }
         })
         .catch((error) => {
-          console.warn("error1", error); //TODO: add exception handling
+            swal.fire(t('scanner_error'), "", "error");
         });
     }
 
     function toggleCamera() {
-      console.log("toggling", scannerActive.value, scannerActive);
+
       if (scannerActive.value == true) {
         stopScanner();
       } else {
@@ -245,7 +253,11 @@ export default {
         await acceptSuggestion(ItemRemoveDTO);
         await loadItemsFromCart();
       } catch (error) {
-        console.error(error);
+        Swal.fire({
+          title: t("Error"),
+          text: t("couldnt_accept_suggestion"),
+          icon: "error",
+        });
       }
     }
 
@@ -257,12 +269,14 @@ export default {
         quantity: item.quantity,
       };
       try {
-        console.log(ItemRemoveDTO);
         await deleteItemFromShoppingList(ItemRemoveDTO, true);
         await loadItemsFromCart();
       } catch (error) {
-        console.error(error);
-        console.log(error.response.data["Message: "]);
+        Swal.fire({
+          title: t("Error"),
+          text: t(error.response.data["Message: "]),
+          icon: "error",
+        });
       }
     }
 
@@ -275,7 +289,7 @@ export default {
 
     async function handleCheckedItem(item, isChecked) {
       item.isChecked = isChecked;
-      // console.log(item.isChecked)
+
     }
 
     async function handleDelete() {
@@ -300,7 +314,7 @@ export default {
         itemRemoveDTOList.shift();
         await deleteItemsFromShoppingList(itemRemoveDTOList);
         await loadItemsFromCart();
-        await swal.fire("Deleted items", "", "success");
+        await swal.fire(t("deleted_items"), "", "success");
       } catch (error) {
         console.error(error);
         await swal.fire(error.response.data["Message:"], "", "error");
@@ -314,7 +328,7 @@ export default {
       const itemStatDTOList = [{}];
 
       selectedItems.forEach((item) => {
-        console.log(item);
+
 
         const statAddItemToFridgeDTO = {
           price: item.price,
@@ -380,14 +394,52 @@ export default {
         await itemStore.statAddItemListToFridge(itemStatDTOList);
         await buyItemsFromShoppingList(itemRemoveDTOList);
         await loadItemsFromCart();
-        await swal.fire("Added to fridge", "", "success");
+        await swal.fire(t("Added_to_fridge"), "", "success");
       } catch (error) {
         await swal.fire(error.response.data["Message:"], "", "error");
       }
     }
 
-    onMounted(async () => {
-      await loadItemsFromCart();
+    async function loadMore() {
+      if (isLoading.value) return;
+      isLoading.value = true;
+      try {
+        let response = await getItemsByPage(searchQuery.value, nextPage);
+        nextPage++;
+        if (response) {
+          searchItems.value = [...searchItems.value, ...response];
+        }
+      } catch (error) {
+        Swal.fire({
+          title: t("Error"),
+          text: t("too_many_requests"),
+          icon: "error",
+        }); //TODO: add swal.fire ....
+      }
+
+      isLoading.value = false;
+    }
+
+    const handleScroll = async () => {
+        if(scrollTarget.value){
+            const bottomOfWindow =
+                Math.ceil(scrollTarget.value.getBoundingClientRect().bottom) <=
+                (window.innerHeight || document.documentElement.clientHeight);
+            if (bottomOfWindow) {
+                await loadMore();
+            }
+        }
+
+    };
+
+    onMounted(() => {
+      window.addEventListener("scroll", handleScroll);
+      loadMore(); // Load initial data
+        loadItemsFromCart();
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener("scroll", handleScroll);
     });
 
     onBeforeUnmount(() => {
@@ -397,7 +449,7 @@ export default {
     });
     // Watch the searchItems array for changes and update the isExpanded ref accordingly
     watch(searchItems, () => {
-      console.log("searchQuery: " + !searchQuery.value.length);
+
       isExpanded.value = !searchQuery.value.length;
     });
 
@@ -415,14 +467,18 @@ export default {
           }
           items.value.push(item);
         });
-        console.log(response.data);
+
       } catch (error) {
-        console.error(error);
+        Swal.fire({
+          title: t("Error"),
+          text: t("couldnt_accept_suggestion"),
+          icon: "error",
+        });
       }
     };
 
     async function inc_CartItemAmount(item) {
-      console.log(item);
+
       const itemDTO = {
         name: item.name,
         description: item.description,
@@ -440,13 +496,11 @@ export default {
           if (response !== undefined) {
             await loadItemsFromCart();
           } else {
-            console.log("Something went wrong");
-            submitMessage.value =
-              "Something went wrong. Please try again later.";
+            await swal.fire(error.response.data["Message:"], "", "error");
           }
         })
         .catch((error) => {
-          console.warn("error1", error); //TODO: add exception handling
+            swal.fire(error.response.data["Message:"], "", "error");
         });
 
       await loadItemsFromCart();
@@ -542,9 +596,7 @@ export default {
           }
         })
         .catch((error) => {
-          //submitMessage.value = error.response.data["Message:"];
-          //console.log(error.response.data);
-          console.warn("error1", error); //TODO: add exception handling
+          swal.fire(error.response.data["Message:"], "", "error");
         });
     };
 
@@ -565,11 +617,9 @@ export default {
       };
       if (typeof item.current_price.price === "number") {
         itemDTO.price = item.current_price.price;
-        console.log(itemDTO.price);
       }
       const fridgeId = currentFridge.fridgeId;
 
-      console.log(itemDTO);
 
       addItemToShoppingList(itemDTO, fridgeId, !useFridgeStore().isSuperUser)
         .then(async (response) => {
@@ -587,7 +637,6 @@ export default {
     }
 
     function handleSearch() {
-      console.log("clicked search");
       search.value = true;
       // filter the list of items based on the search query
       var items = async () => {
@@ -599,11 +648,12 @@ export default {
           searchItems.value = response;
         })
         .catch((error) => {
-          console.error(error);
+          swal.fire(t("couldnt_load_results"), "", "error");
         });
     }
 
     return {
+      loadMore,
       itemAmount,
       handleSubtract,
       handleDeleteItem,
@@ -634,13 +684,13 @@ export default {
       onDetected,
       initScanner,
       stopScanner,
+      scrollTarget,
     };
   },
 };
 </script>
 
 <style scoped>
-
 #info-and-bell {
   display: flex;
   flex-direction: row;
@@ -656,6 +706,7 @@ export default {
   overflow-x: hidden;
   overflow-y: hidden;
 }
+
 #interactive {
   text-align: center;
   width: 95vw;
@@ -1003,6 +1054,7 @@ button:focus,
 input:focus {
   outline: 0;
 }
+
 @media (max-width: 1350px) {
   #interactive {
     transform: none;
@@ -1010,6 +1062,7 @@ input:focus {
     overflow: hidden;
   }
 }
+
 @media only screen and (min-width: 50px) and (max-width: 650px) {
   .buttons {
     position: relative;
@@ -1153,8 +1206,7 @@ input:focus {
     display: flex;
     width: 100vw;
     justify-content: space-evenly;
-    position: fixed;
-    top: 160px;
+    position: relative;
     overflow-y: scroll;
     margin-bottom: 20px;
     margin: auto;
@@ -1174,7 +1226,6 @@ input:focus {
     border: transparent;
     width: 100%;
     overflow-y: scroll;
-    max-height: 150vw;
     color: black;
     background-color: white;
   }

@@ -1,10 +1,9 @@
 import {defineStore} from 'pinia'
 import {checkSuperUserStatus, getUser} from "@/services/UserService"
 import {
-    addNewFridge, deleteNotification,
+    addNewFridge,
     deleteUserFromFridge,
     getAllFridges,
-    getNotifications, removeBorder,
     updateFridge
 } from "@/services/FridgeServices";
 import UniqueId from '../features/UniqueId';
@@ -16,7 +15,7 @@ import {
     getUserMoneyStats,
     getUserPercentageStats
 } from "@/services/StatsService";
-import {keys} from "@dafcoe/vue-collapsible-panel";
+import {getNotifications, removeBorder, setNotifications} from "@/services/NotificationService";
 
 
 const storeUUID = UniqueId();
@@ -109,20 +108,20 @@ export const useFridgeStore = defineStore('fridgeStore', {
        async fetchNotifications (fridgeId) {
            let notifications = []
            await getNotifications(fridgeId).then((response) => {
+               console.log("response data: ", response.data)
                for (const notification in response.data) {
-                   const {name, expirationDate} = notification
-                   notifications.push({name, expirationDate})
+                   notifications[notification] = response.data[notification]
                }
            })
            return notifications;
         },
 
-        async deleteNotificationUsingId (notification, fridgeId) {
-           await deleteNotification(notification, fridgeId)
+        async updateNotifications() {
+           await setNotifications()
         },
 
-        async removeBorderForNotification(notification, fridgeId){
-           await removeBorder(notification, fridgeId)
+        async removeBorderForNotification(){
+           await removeBorder()
         },
 
         async addNewFridgeByFridgeNameAndUsername(fridgeName) {
@@ -149,7 +148,6 @@ export const useFridgeStore = defineStore('fridgeStore', {
                 if(fridge.fridgeId === fridgeId) {
                     this.currentFridge = fridge;
                     this.isSuperUser = await this.checkSuperUserStatus(fridgeId)
-                    console.log(this.isSuperUser)
                     return;
                 }
             }
@@ -188,7 +186,6 @@ export const useItemStore = defineStore('itemStore', {
 
     getters: {
         getCurrentItem(){
-            console.log(this.currentItem)
             return this.currentItem;
         }
     },
@@ -204,7 +201,6 @@ export const useItemStore = defineStore('itemStore', {
 
         async statAddItemListToFridge(statItemListDTO) {
             for (const statItemListDTOElement of statItemListDTO) {
-                console.log(statItemListDTOElement)
                 await addItemStats(statItemListDTOElement)
             }
         },
@@ -218,7 +214,7 @@ export const useItemStore = defineStore('itemStore', {
             await deleteItemStats(statDeleteFromFridgeDTO)
         },
 
-        async deleteItemByNameIdStoreQuantity(itemRemoveDTO){
+        async deleteItemByNameIdStoreAmount(itemRemoveDTO){
             await deleteItemFromFridge(itemRemoveDTO);
         },
 
@@ -264,8 +260,7 @@ export const useStatStore = defineStore('statStore', {
             const labels = Object.keys(this.moneyChart);
             const values = Object.values(this.moneyChart);
 
-            console.log(labels)
-            console.log(values)
+
 
             return {
                 labels,

@@ -65,6 +65,7 @@ public class NotificationService implements INotificationService {
                         .isRead(false)
                         .createdDate(LocalDateTime.now())
                         .build();
+                System.out.println(notification.getUser());
                 notificationRepository.save(notification);
             }
         }
@@ -124,7 +125,11 @@ public class NotificationService implements INotificationService {
      */
     public void deleteNotificationForEveryUserInFridge(ItemRemoveDTO itemRemoveDTO) {
         checkNotification(itemRemoveDTO.fridgeId());
-        FridgeItems fridgeItem = fridgeItemsRepository.findByItem_ProductName(itemRemoveDTO.itemName()).orElseThrow(
+        FridgeItems fridgeItem = fridgeItemsRepository
+                .findByItem_ProductNameAndItem_Store_StoreNameAndFridge_FridgeId(
+                        itemRemoveDTO.itemName(),
+                        itemRemoveDTO.store(),
+                        itemRemoveDTO.fridgeId()).orElseThrow(
                 () -> new FridgeItemsNotFoundException(itemRemoveDTO.itemName())
         );
         if (itemRemoveDTO.quantity() != fridgeItem.getAmount())

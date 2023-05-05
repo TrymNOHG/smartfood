@@ -308,7 +308,7 @@ public class ItemServiceTest {
                     .purchaseDate(LocalDateTime.now())
                     .build();
             fridgeItemsRepository.save(fridgeItems);
-            ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
+            ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 0);
             itemService.removeItemFromFridge(itemRemoveDTO);
 
             assertTrue(fridgeItemsRepository.findByItemAndFridge(item,fridge).isEmpty());
@@ -335,10 +335,10 @@ public class ItemServiceTest {
                     .purchaseDate(LocalDateTime.now())
                     .build();
             fridgeItemsRepository.save(fridgeItems);
-            ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 1);
+            ItemRemoveDTO itemRemoveDTO = new ItemRemoveDTO("Tine Melk", "Dairy", 1L, 500);
             itemService.removeItemFromFridge(itemRemoveDTO);
             FridgeItems fridgeItems1 = fridgeItemsRepository.findByItemAndFridge(item,fridge).orElseThrow();
-            assertEquals(2000.0, fridgeItems1.getAmount());
+            assertEquals(500.0, fridgeItems1.getAmount());
         }
 
         @Test

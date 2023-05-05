@@ -13,6 +13,11 @@ describe('MySelect', () => {
                 options,
                 label,
             },
+            global: {
+                mocks: {
+                    $t: (msg) => msg, // Add this line to mock the $t function
+                },
+            },
         });
     });
 

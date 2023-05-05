@@ -20,6 +20,8 @@
             }}
           </h4>
           <h4 class="price-text">{{ $t("price") }} {{ item.price }}</h4>
+          <h4 class="price-text">{{ $t("Amount") }}: {{ item.amount }} {{ item.unit }}</h4>
+
         </div>
         <font-awesome-icon
             v-if="isSuperUser"
@@ -138,7 +140,6 @@ export default {
       props.item.purchaseDate,
       props.item.expirationDate
     );
-    console.log(props.item);
     function calculateExpirationDate(purchaseDate, expirationDate) {
       const currentDate = new Date();
       const purchase = new Date(purchaseDate);
