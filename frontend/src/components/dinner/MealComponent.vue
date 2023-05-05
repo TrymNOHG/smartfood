@@ -100,11 +100,6 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           this.$emit('delete-item', item);
-          swal.fire(
-              this.$t('success_message'),
-              '',
-              'success'
-          )
         }
       })
     },
@@ -125,11 +120,6 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           this.$emit('accept-item', this.missingItemIds);
-          swal.fire(
-              'Accepted',
-              'The missing item IDs have been accepted.',
-              'success'
-          );
         }
       });
     },

@@ -139,5 +139,9 @@
   "deleted_items" : "Deleted items",
   "Added_to_fridge" : "Added to fridge",
   "default_part_name" : "",
-  "you_have" : "You have"
+  "you_have" : "You have",
+  "success" : "Success",
+  "success_add_recipe" : "Recipe added to cart",
+  "delete_error" : "could not delete",
+  "error_add_missing_items" : "Could not add missing items"
 }

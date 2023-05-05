@@ -154,10 +154,20 @@
           try {
 
             await acceptRecipeSuggestion(recipeShoppingDTO, recipeId, userId);
-            // Remove the suggestion from the list
-            suggestions.value = suggestions.value.filter(s => s.id !== suggestion.id);
+            // Remove the suggestion from the
+            loadSuggestions();
+            swal.fire(
+                'Accepted',
+                'The missing item IDs have been accepted.',
+                'success'
+            );
           } catch (error) {
-            console.error("Failed to accept suggestion:", error);
+            swal.fire({
+              title: this.$t('error'),
+              text: this.$t('error_add_missing_items'),
+              icon: 'error',
+              confirmButtonText: this.$t('ok')
+            });
           }
         };
 
@@ -167,9 +177,19 @@
             const userId = suggestion.UserId
             await denyRecipeSuggestion(fridgeId, recipeId, userId);
             // Remove the suggestion from the list
-            suggestions.value = suggestions.value.filter(s => s.id !== suggestion.id);
+            loadSuggestions();
+            swal.fire(
+                this.$t('success_message'),
+                '',
+                'success'
+            )
           } catch (error) {
-            console.error("Failed to deny suggestion:", error);
+            swal.fire({
+              title: this.$t('error'),
+              text: this.$t('delete_error'),
+              icon: 'error',
+              confirmButtonText: this.$t('ok')
+            });
           }
         };
 

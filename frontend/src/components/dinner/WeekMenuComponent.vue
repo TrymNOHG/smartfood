@@ -146,6 +146,7 @@ h1 {
     align-items: center;
   }
 
+
   h1 {
     font-size: 2.5rem;
   }
@@ -154,6 +155,8 @@ h1 {
     flex: 1;
     max-width: 100%;
     padding: 1.5rem;
+    border-top: 1px solid #31C48D;
+    border-bottom: 1px solid #31C48D;
   }
 
   .day h2 {
