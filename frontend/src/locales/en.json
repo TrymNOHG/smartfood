@@ -1,4 +1,8 @@
 {
+  "profile_link_label": "Go to profile page",
+  "statistics_link_label": "Go to statistics page",
+  "go_to_dinner_page": "Go to dinner page",
+  "go_to_shopping_cart": "Go to shopping cart",
   "fridge_icon_alt": "Kjøleskap ikon",
   "go_to_fridge": "Go to fridges",
   "select_fridge": "Select fridge",

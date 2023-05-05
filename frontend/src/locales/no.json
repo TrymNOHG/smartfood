@@ -1,4 +1,8 @@
 {
+  "profile_link_label": "Gå til statistikkside",
+  "statistics_link_label": "Gå til statistikkside",
+  "go_to_dinner_page": "Gå til middagside",
+  "go_to_shopping_cart": "Gå til handlekurv",
   "fridge_icon_alt": "Fridge icon",
   "go_to_fridge": "Gå til kjøleskap",
   "click_to_select": "Klikk for å velge",

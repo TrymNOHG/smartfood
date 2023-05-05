@@ -27,58 +27,40 @@
           </RouterLink>
         </li>
         <li v-if="hasCurrentFridge">
-          <RouterLink
-            to="/cart"
-            v-if="hasCurrentFridge"
-            :aria-label="$t('go_to_cart')"
-          >
+          <RouterLink to="/cart" :aria-label="$t('go_to_shopping_cart')">
             <span class="icon">
               <font-awesome-icon icon="fa-solid fa-cart-shopping" />
             </span>
           </RouterLink>
         </li>
+
         <li v-if="hasCurrentFridge">
           <RouterLink
-            to="/cart"
+            to="/dinner"
+            :class="{ 'router-link-active': isDinnerRouteActive }"
+            :aria-label="$t('go_to_dinner_page')"
+          >
+            <span class="icon" role="presentation" aria-hidden="true">
+              <font-awesome-icon icon="fa-solid fa-utensils" />
+            </span>
+          </RouterLink>
+        </li>
+
+        <li v-if="hasCurrentFridge">
+          <RouterLink
+            :to="{ name: 'statistics' }"
             v-if="hasCurrentFridge"
-            :aria-label="$t('go_to_cart')"
+            aria-label="{{$t('statistics_link_label')}}"
           >
-            <span class="icon">
-              <font-awesome-icon icon="fa-solid fa-cart-shopping" />
-            </span>
-          </RouterLink>
-        </li>
-        <li v-if="hasCurrentFridge">
-          <RouterLink
-            to="/dinner"
-            :class="{ 'router-link-active': isDinnerRouteActive }"
-            :aria-label="$t('go_to_dinner_planner')"
-          >
-            <span class="icon">
-              <font-awesome-icon icon="fa-solid fa-utensils" />
-            </span>
-          </RouterLink>
-        </li>
-        <li v-if="hasCurrentFridge">
-          <RouterLink
-            to="/dinner"
-            :class="{ 'router-link-active': isDinnerRouteActive }"
-          >
-            <span class="icon">
-              <font-awesome-icon icon="fa-solid fa-utensils" />
-            </span>
-          </RouterLink>
-        </li>
-        <li v-if="hasCurrentFridge">
-          <RouterLink to="/statistics" v-if="hasCurrentFridge">
-            <span class="icon">
+            <span class="icon" role="presentation" aria-hidden="true">
               <font-awesome-icon icon="fa-solid fa-chart-pie" />
             </span>
           </RouterLink>
         </li>
+
         <li id="profile">
-          <RouterLink to="/profile" aria-label="Go to user profile">
-            <span class="icon">
+          <RouterLink to="/profile" aria-label="{{$t('profil_link_label')}}">
+            <span class="icon" role="presentation" aria-hidden="true">
               <font-awesome-icon icon="fa-solid fa-circle-user" />
             </span>
           </RouterLink>
@@ -126,7 +108,10 @@
       </router-link>
     </div>
   </div>
-  <div class="router-view-container" :class="{ 'router-view-container-bottom-padding': isOnRootPage }">
+  <div
+    class="router-view-container"
+    :class="{ 'router-view-container-bottom-padding': isOnRootPage }"
+  >
     <RouterView />
   </div>
 </template>
@@ -424,7 +409,6 @@ nav ul li a .text {
   z-index: 0;
 }
 
-
 @media only screen and (max-width: 1000px) {
   .matprat-title {
     display: none;
@@ -594,8 +578,6 @@ nav ul li a .text {
     top: 10%;
     font-size: 0.7rem;
   }
-
-
 
   header img {
     display: none;
