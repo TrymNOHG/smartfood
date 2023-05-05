@@ -10,8 +10,8 @@
       >
         <span class="item-status">{{ item.fridgeAmount >= item.quantity ? '✓' : '✗' }}</span>
         <h4>{{ item.name }}</h4>
-        <p>{{ item.quantity }} {{ item.unitOfMeasurement }}</p>
-        <p>{{ $t('you_have') }}: {{ getItemQuantity(item) }} {{ item.unitOfMeasurement }}</p>
+        <p>{{ item.quantity }} {{ $t(item.unitOfMeasurement) }}</p>
+        <p>{{ $t('you_have') }}: {{ getItemQuantity(item) }} {{ $t(item.unitOfMeasurement) }}</p>
       </div>
     </div>
   </div>

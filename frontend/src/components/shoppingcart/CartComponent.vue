@@ -294,6 +294,15 @@ export default {
 
     async function handleDelete() {
       const selectedItems = [];
+      swal.fire({
+        title: t("loading") + " ...",
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          swal.showLoading();
+        },
+      });
       items.value.forEach((item) => {
         if (item.isChecked) {
           selectedItems.push(item);
@@ -318,6 +327,8 @@ export default {
       } catch (error) {
         console.error(error);
         await swal.fire(error.response.data["Message:"], "", "error");
+      }finally {
+        swal.close();
       }
     }
 
@@ -361,6 +372,15 @@ export default {
 
     async function handleBuy() {
       const selectedItems = [];
+      swal.fire({
+        title: t("loading") + " ...",
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          swal.showLoading();
+        },
+      });
       items.value.forEach((item) => {
         if (item.isChecked) {
           selectedItems.push(item);
@@ -397,6 +417,8 @@ export default {
         await swal.fire(t("Added_to_fridge"), "", "success");
       } catch (error) {
         await swal.fire(error.response.data["Message:"], "", "error");
+      } finally {
+        swal.close();
       }
     }
 

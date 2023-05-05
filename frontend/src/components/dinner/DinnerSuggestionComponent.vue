@@ -36,7 +36,8 @@
         />
       </div>
         <div class="pagination-buttons" v-if="!isMobile">
-          <BasicButton @click="loadPreviousPage" :button-text="$t('previous_page')"/>
+          <BasicButton @click="loadPreviousPage" :button-text="$t('previous_page')" :disabled="pageIndex.value <= 0"/>
+          <div class="page-index">{{ pageIndex + 1}}</div>
           <BasicButton @click="loadNextPage" :button-text="$t('next_page')"/>
         </div>
         <div id="bottom"></div>
@@ -103,7 +104,7 @@
         const fridgeId = fridgeStore.getCurrentFridge.fridgeId;
         const meals = ref([]);
         const suggestions = ref([]);
-        let pageIndex = ref(0);
+        let pageIndex = ref(-1);
         const profilePictures = ref({});
         const memberList = ref([]);
 
@@ -227,10 +228,11 @@
             },
           });
           try {
+            pageIndex.value++;
             const response = await loadRecipeByFridgeItems(fridgeId, pageIndex.value, 8);
             meals.value = response.content;
-            pageIndex.value++;
           } catch (error) {
+            pageIndex.value--
             console.error("Failed to load next page:", error);
           } finally {
             swal.close();
@@ -317,6 +319,27 @@
       margin: 2% auto;
       gap: 25%;
     }
+
+    .pagination-buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      gap: 15px;
+      margin: 2% auto;
+    }
+
+    .page-index {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      padding: 5px 10px;
+      border: 2px solid #31c48d;
+      border-radius: 4px;
+      margin: 0 1rem;
+    }
+
 
     #sugTitle {
       margin-top: 10px;

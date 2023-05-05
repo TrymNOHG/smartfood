@@ -31,6 +31,7 @@ public class ItemMapper {
                 .ean(itemDTO.EAN())
                 .amount((Double) parsedUnit[0])
                 .unit((String) parsedUnit[1])
+                .expiresIn(14)
                 .build();
     }
 

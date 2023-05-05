@@ -1,4 +1,4 @@
-const { defineConfig } = require('cypress')
+const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
   // setupNodeEvents can be defined in either
@@ -13,4 +13,4 @@ module.exports = defineConfig({
       return config
     },
   },
-})
+});

@@ -119,5 +119,13 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
      */
     Optional<Item> findItemByEanAndStore_StoreName(String ean, String storeName);
 
+    /**
+     * This method finds items with a given store name and product name.
+     * @param productName   Name of the product, given as a String.
+     * @param storeName     Name of the store, given as a String.
+     * @return              An optional list of items containing the ean provided.
+     */
+    Optional<Item> findItemByProductNameAndStore_StoreName(String productName, String storeName);
+
 }
 
