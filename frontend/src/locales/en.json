@@ -264,7 +264,6 @@
   "One Item__": "This is the tour for an item",
       "tour: view:itemView method:itemStepTour id:itemWindow usage:title": "Product",
       "tour: view:itemView method:itemStepTour id:itemWindow usage:text": "Now you see the product page.<br><br> Here you can: <ul><li>See information about the product</li><li>Update the item if it is used</li><li>Delete the item from fridge</li></ul>",
-
   "BEKA DINNER": "This is the tour for dinner page",
   "tour: view:dinnerView method:dinnerStepTour id:dinnerWindow usage:title": "Dinner",
   "tour: view:dinnerView method:dinnerStepTour id:tipsWindow usage:text":"Now you see the dinner page.<br><br> Here you can: <ul>Accept or deny dinner suggestions from other fridge members<li></li><li>Browse through dinners that could be of interest</li><li>Find your weekly dinner plan</li></ul>",
@@ -276,7 +275,9 @@
   "tour: view:dinnerView method:dinnerStepTour id:tipsWindow usage:text":"This is where you will find your weekly meal plan that is automatically generated based on what you have in your fridge.",
 
   "tour: view:dinnerView method:dinnerStepTour id:dinnerWindow usage:title": "Dinner browsing",
-  "tour: view:dinnerView method:dinnerStepTour id:tipsWindow usage:text":"You can browse through numerous dinner suggestions by clicking on the next page button until you find the meal you desire."
-}
+  "tour: view:dinnerView method:dinnerStepTour id:tipsWindow usage:text":"You can browse through numerous dinner suggestions by clicking on the next page button until you find the meal you desire.",
+
+
+
 
 }
