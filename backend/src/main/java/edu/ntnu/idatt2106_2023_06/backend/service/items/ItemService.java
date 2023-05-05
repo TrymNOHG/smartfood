@@ -240,7 +240,7 @@ public class ItemService implements IItemService {
     public void updateShoppingItem(ShoppingItemUpdateDTO shoppingItemUpdateDTO, String username){
         logger.info("Searching for the shopping item to change");
         ShoppingItems shoppingItem = shoppingItemsRepository.findByItem_ItemIdAndFridge_FridgeId(shoppingItemUpdateDTO.itemId(), shoppingItemUpdateDTO.fridgeId())
-                .orElseThrow(() -> new FridgeItemsNotFoundException(shoppingItemUpdateDTO.itemId()));
+                .orElseThrow(() -> new ShoppingItemsNotFoundException(shoppingItemUpdateDTO.itemId()));
         logger.info("Shopping item was found");
 
         User user = userRepository.findByUsername(username)
@@ -352,51 +352,6 @@ public class ItemService implements IItemService {
         return new PageImpl<>(paginatedList, pageRequest, totalElements);
     }
 
-
-    /**
-     * This method searches for items in the database based on the search request. DOES NOT WORK.
-     *
-     * @param request The search request containing the search parameters.
-     * @param fridgeId The ID of the fridge to search in.
-     * @return A page of fridge items matching the search request.
-     */
-    @Deprecated
-    @Override
-    public Page<FridgeItems> searchFridgeItems(SearchRequest request, Long fridgeId) {
-        SearchSpecification<Item> specification1 = new SearchSpecification<>(request);
-        logger.info("1");
-        Pageable pageable = SearchSpecification.getPageable(request.getPage(), request.getSize());
-        logger.info("2");
-        List<Item> items = itemRepository.findAll(specification1, pageable).getContent();
-        logger.info("Number of items found: " + items.size());
-        logger.info(items.stream().map(Item::getItemId).toList().toString());
-
-        ArrayList<FilterRequest> filters = new ArrayList<>();
-        filters.add(FilterRequest.builder()
-                .key("item")
-                .operator(Operator.IN)
-                .fieldType(FieldType.LONG)
-                .values(Collections.singletonList(items))
-                .build());
-        filters.add(FilterRequest.builder()
-                .key("fridge")
-                .operator(Operator.EQUAL)
-                .fieldType(FieldType.LONG)
-                .value(fridgeId)
-                .build());
-        logger.info("hello");
-        SearchRequest request2 = SearchRequest.builder()
-                .page(request.getPage())
-                .filters(filters)
-                .sorts(request.getSorts())
-                .size(request.getSize())
-                .build();
-        logger.info("hello2");
-        SearchSpecification<FridgeItems> specification2 = new SearchSpecification<>(request2);
-        logger.info("hello3");
-        Pageable pageable2 = SearchSpecification.getPageable(request2.getPage(), request2.getSize());
-        return fridgeItemsRepository.findAll(specification2, pageable2);
-    }
 
     /**
      * Removes the specified quantity of an item from the shopping list for the specified fridge.

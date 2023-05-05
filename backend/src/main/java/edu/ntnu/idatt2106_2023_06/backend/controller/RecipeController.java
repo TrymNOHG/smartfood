@@ -33,6 +33,12 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The RecipeController class is responsible for handling requests related to recipes. This includes loading recipes,
+ * scraping recipes from external sources, and more.
+ *
+ * @author Leon Egeberg Hesthaug, Trym Hamer Gudvangen
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/recipe")
@@ -45,6 +51,13 @@ public class RecipeController {
     private final RecipeScraper recipeScraper;
     private final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
+    /**
+     * This endpoint scrapes recipes from Meny.no's website, iteratively searching through their recipes. Recipes are scraped using
+     * the {@link RecipeScraper} class.
+     *
+     * @return              ResponseEntity with status code 200 (OK) if the scraping process completed without error.
+     * @throws IOException  if an error occurs during the scraping process.
+     */
     @GetMapping(value="/download")
     @Operation(summary = "Get recipe from Meny")
     @ApiResponses(value = {
@@ -75,6 +88,13 @@ public class RecipeController {
 
     }
 
+
+    /**
+     * This endpoint retrieves a single recipe with the given name from Meny.
+     *
+     * @param recipeName    The name of the recipe to retrieve.
+     * @return              ResponseEntity containing a RecipeLoadDTO object representing the requested recipe.
+     */
     @GetMapping(value="/get")
     @Operation(summary = "Get recipe from Meny")
     @ApiResponses(value = {
@@ -89,6 +109,14 @@ public class RecipeController {
         return ResponseEntity.ok(recipeLoadDTO);
     }
 
+    /**
+     * This endpoint retrieves a page of recipes with a given name from Meny, allowing for pagination.
+     *
+     * @param recipeName The name of the recipes to retrieve.
+     * @param page       The page number to retrieve.
+     * @param size       The number of items to retrieve per page.
+     * @return           ResponseEntity containing a Page of RecipeLoadDTO objects representing the requested recipes.
+     */
     @GetMapping(value="/load")
     @Operation(summary = "Get recipe from Meny")
     @ApiResponses(value = {
@@ -106,6 +134,14 @@ public class RecipeController {
         return ResponseEntity.ok(recipeLoadDTOs);
     }
 
+    /**
+     * This endpoint retrieves a page of recipes from Meny that use ingredients in the given fridge, allowing for pagination.
+     *
+     * @param fridgeId The ID of the fridge containing the ingredients to search for.
+     * @param page      The page number to retrieve.
+     * @param size      The number of items to retrieve per page.
+     * @return          ResponseEntity containing a Page of RecipeLoadDTO objects representing the requested recipes.
+     */
     @GetMapping(value="/loadByFridge")
     @Operation(summary = "Get recipe from Meny")
     @ApiResponses(value = {
@@ -123,6 +159,16 @@ public class RecipeController {
         return ResponseEntity.ok(recipeLoadDTOs);
     }
 
+    /**
+     * This endpoint retrieves a page of recipes from Meny that use ingredients in the given fridge on the given day,
+     * allowing for pagination.
+     *
+     * @param fridgeId  The ID of the fridge containing the ingredients to search for.
+     * @param day       The day of the week to search for recipes on.
+     * @param page      The page number to retrieve.
+     * @param size      The number of items to retrieve per page.
+     * @return          ResponseEntity containing a Page of RecipeLoadDTO objects representing the requested recipes.
+     */
     @GetMapping(value="/loadByDay")
     @Operation(summary = "Get recipe from Meny")
     @ApiResponses(value = {
@@ -137,11 +183,15 @@ public class RecipeController {
             @RequestParam(name = "size", defaultValue = "10") int size) {
         logger.info("Trying to load recipes for fridge with ID: " + fridgeId);
         Page<RecipeLoadDTO> recipeLoadDTOs = recipeService.getRecipesByFridgeIdAndDay(fridgeId, page, size, day);
-        //TODO: free the shopping items from WeekRecipeItems table.
         logger.info("Recipe DTOs successfully made!");
         return ResponseEntity.ok(recipeLoadDTOs);
     }
 
+    /**
+     * This endpoint generates item recipe scores between all items and recipes.
+     *
+     * @return ResponseEntity with status 200 if the request is successful.
+     */
     @PostMapping(value="/generateScores")
     @Operation(summary = "Generate item recipe scores")
     @ApiResponses(value = {
@@ -154,8 +204,14 @@ public class RecipeController {
         return ResponseEntity.ok().build();
     }
 
-
-    //TODO: use test to see how effective the algorithm is. Does it need fine tuning.
+    /**
+     * This endpoint generates item recipe scores for a specific item and recipe.
+     *
+     * @param itemId    ID of the item to generate scores for.
+     * @param recipeId  ID of the recipe to generate scores for.
+     *
+     * @return          ResponseEntity with status 200 if the request is successful.
+     */
     @PostMapping(value="/generateScoresTest")
     @Operation(summary = "Generate item recipe scores")
     @ApiResponses(value = {
@@ -165,13 +221,18 @@ public class RecipeController {
     )
     public ResponseEntity<Object> generateItemRecipeScoresTest(@ParameterObject @RequestParam(name="item") Long itemId,
                                                            @ParameterObject @RequestParam(name="recipe") Long recipeId) {
-
         itemRecipeScoreService.generateScoreForItem(itemId).join();
         return ResponseEntity.ok().build();
     }
 
-    //TODO: add more recipe load things, including pagination of random recipes.
-
+    /**
+     * This endpoint adds ingredients to the user's shopping list.
+     *
+     * @param recipeShoppingDTO         DTO containing information about the recipe and the user's fridge.
+     * @param authentication            Authentication object containing the user's credentials.
+     * @return                          ResponseEntity with status 200 if the request is successful.
+     * @throws UnauthorizedException    if the user is not authenticated.
+     */
     @PostMapping(value="/addIngredients")
     @Operation(summary = "Add ingredients to shopping list")
     @ApiResponses(value = {
@@ -189,6 +250,16 @@ public class RecipeController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * This endpoint accepts a dinner suggestion and adds the recipe's ingredients to the user's shopping list.
+     *
+     * @param recipeShoppingDTO         DTO containing information about the recipe and the user's fridge.
+     * @param recipeId                  ID of the recipe being accepted.
+     * @param userId                    ID of the user accepting the suggestion.
+     * @param authentication            Authentication object containing the user's credentials.
+     * @return                          ResponseEntity with status 200 if the request is successful.
+     * @throws UnauthorizedException    if the user is not authenticated.
+     */
     @PostMapping(value="/suggestion/accept")
     @Operation(summary = "Accept dinner suggestion")
     @ApiResponses(value = {
@@ -209,6 +280,17 @@ public class RecipeController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * This endpoint denies a dinner suggestion.
+     *
+     * @param fridgeId                  The ID of the fridge where the recipe suggestion was made.
+     * @param recipeId                  The ID of the recipe that was suggested.
+     * @param userId                    The ID of the user who made the suggestion.
+     * @param authentication            The authentication object for the current user.
+     * @return                          ResponseEntity object with HTTP status 200 if the suggestion was successfully denied.
+     * @throws UnauthorizedException    if the user is not authenticated.
+     */
+
     @PostMapping(value="/suggestion/deny")
     @Operation(summary = "Deny dinner suggestion")
     @ApiResponses(value = {
@@ -228,8 +310,14 @@ public class RecipeController {
         return ResponseEntity.ok().build();
     }
 
-    //TODO: add more recipe load things, including pagination of random recipes.
-
+    /**
+     * This endpoint adds a dinner suggestion.
+     *
+     * @param recipeSuggestionAddDTO a DTO object representing the details of the recipe suggestion to be added.
+     * @param authentication the authentication object for the current user.
+     * @return a ResponseEntity object with HTTP status 200 if the suggestion was successfully added.
+     * @throws UnauthorizedException if the user is not authenticated.
+     */
     @PostMapping(value="/suggestion/add")
     @Operation(summary = "Add dinner suggestion")
     @ApiResponses(value = {
@@ -247,6 +335,13 @@ public class RecipeController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     *  This endpoint loads the dinner suggestions for a given fridge.
+     *
+     *  @param fridgeId The ID of the fridge for which to load the suggestions.
+     *  @return         ResponseEntity object with HTTP status 200 and a list of RecipeSuggestionLoad objects if
+     *                  the suggestions were loaded successfully.
+     */
     @GetMapping(value="/suggestion/load")
     @Operation(summary = "Add dinner suggestion")
     @ApiResponses(value = {
@@ -261,7 +356,5 @@ public class RecipeController {
         logger.info("Suggestions has been loaded.");
         return ResponseEntity.ok(recipeSuggestionLoadList);
     }
-
-
 
 }

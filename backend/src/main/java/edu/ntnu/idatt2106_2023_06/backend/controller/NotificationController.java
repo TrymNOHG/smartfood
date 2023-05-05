@@ -5,14 +5,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.LoggerFactory;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.logging.Logger;
 
+/**
+ *  This class represents the REST controller for managing notifications for a user.
+ *  It handles requests related to retrieving, updating, and deleting notifications for a user.
+ *
+ * @author Brage Halvorsen Kvamme, Trym Hamer Gudvangen
+ */
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/notification")
@@ -20,10 +22,10 @@ import java.util.logging.Logger;
 public class NotificationController {
 
     private final NotificationService notificationService;
-    private final org.slf4j.Logger logger = LoggerFactory.getLogger(FridgeController.class);
 
     /**
      * This method returns all notifications for a given user.
+     * @return ResponseEntity containing a list of NotificationDTOs representing all notifications for a given user
      */
     @GetMapping("/get")
     @Operation(summary = "Get all notifications for a given user")
@@ -34,6 +36,7 @@ public class NotificationController {
 
     /**
      * This method updates notifications for a given user.
+     * @return ResponseEntity indicating that the notifications have been updated
      */
     @GetMapping("/update")
     @Operation(summary = "Update notifications for a given user")
@@ -47,6 +50,7 @@ public class NotificationController {
      * This method deletes all notifications of a user.
      *
      * @param fridgeId The ID of the fridge the notifications belong to
+     * @return         ResponseEntity indicating that all notifications have been deleted
      */
     @DeleteMapping("/delete/all/{fridgeId}")
     @Operation(summary = "Delete all notifications of a user")
@@ -61,6 +65,7 @@ public class NotificationController {
      * This method deletes a single notification of a user.
      *
      * @param notificationId The ID of the notification to delete
+     * @return               ResponseEntity indicating that the notification has been deleted
      */
     @DeleteMapping("/delete/{notificationId}")
     @Operation(summary = "Delete a single notification of a user")
@@ -72,6 +77,7 @@ public class NotificationController {
 
     /**
      * Set all notifications as read.
+     * @return ResponseEntity indicating that all notifications have been set as read
      */
     @PutMapping("/read/all")
     @Operation(summary = "Set all notifications as read")

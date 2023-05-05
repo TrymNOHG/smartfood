@@ -55,7 +55,7 @@ public class Statistics {
     /**
      * The type of statistical entry.
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "stat_type_id", nullable = false)
     @NonNull
     @ToString.Exclude
