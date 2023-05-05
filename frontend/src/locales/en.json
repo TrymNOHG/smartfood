@@ -282,5 +282,3 @@
   "tour: view:dinnerView method:dinnerStepTour id:dinnerWindow usage:title": "Dinner browsing",
   "tour: view:dinnerView method:dinnerStepTour id:tipsWindow usage:text":"You can browse through numerous dinner suggestions by clicking on the next page button until you find the meal you desire."
 }
-
-}
