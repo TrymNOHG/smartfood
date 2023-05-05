@@ -41,7 +41,7 @@ cd backend
 2. Install maven dependencies 
 
 ```
-./mvnw spring-boot:run
+./mvnw clean install
 ```
 
 3. Run the application
