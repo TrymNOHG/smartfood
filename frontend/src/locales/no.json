@@ -203,7 +203,7 @@
       "tour: view:fridgeView method:fridgeStepsTour id: usage:title":"",
       "tour: view:fridgeView method:fridgeStepsTour id: usage:text":"",
       "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:title": "Dette er en tittel",
-      "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:text": "Dette er tekst"
+      "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:text": "Dette er tekst",
   "success" : "Suksess",
   "success_add_recipe" : "Oppskriften ble lagt til i handlekurven",
   "success_add_missing_items" : "Manglende varer ble lagt til i handlekurven",

@@ -82,6 +82,7 @@ export default {
         }
       });
 
+      fridgeStore.updateNotifications();
 
       return {
         appTour,

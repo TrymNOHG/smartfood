@@ -151,9 +151,7 @@
   "g" : "g",
   "pieces" : "pieces",
   "amount": "Amount left",
-  "update_title": "Your Item has been updated"
-
-
+  "update_title": "Your Item has been updated",
 
   "__Tour__":"Underneath this is all the translation for the tours",
 
