@@ -1,10 +1,11 @@
 <template>
   <div class="recipe-parts">
-    <div v-for="part in recipeParts" :key="part.partName">
+    <div v-for="part in recipeParts" :key="part.partName" class="recipe-parts">
       <h3>{{ part.partName || $t('default_part_name') }}</h3>
       <div
           v-for="item in part.ingredients"
           :key="item.itemId"
+          class="item-info"
           :class="{ 'has-item': item.fridgeAmount >= item.quantity, 'no-item': item.fridgeAmount < item.quantity }"
       >
         <span class="item-status">{{ item.fridgeAmount >= item.quantity ? '✓' : '✗' }}</span>
@@ -50,8 +51,9 @@ export default {
 .item-info {
   margin: 1em 0;
   padding: 1em;
-  display: flex;
-  align-items: center;
+  border-radius: 8px;
+  border: 2px solid #ccc;
+  background-color: #fff;
 }
 
 .item-status {

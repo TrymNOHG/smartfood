@@ -548,9 +548,7 @@ nav ul li a .text {
     font-size: 0.7rem;
   }
 
-  .router-view-container {
-    padding-bottom: 70px;
-  }
+
 
   header img {
     display: none;
