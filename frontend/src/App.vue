@@ -1,12 +1,12 @@
 <template>
-  <header v-if="!isOnRootPage">
+  <header class="app-header" v-if="!isOnRootPage">
     <router-link to="/fridges">
       <img id="logo" src="@/assets/images/smartmat_logo.png" alt="Logo" />
     </router-link>
     <h1 class="matprat-title" :class="{ centered: isOnAuthPage }">
       {{ $t("matsmart") }}
     </h1>
-    <nav :class="{ 'center-profile': !hasCurrentFridge }">
+    <nav :class="{ 'center-profile': !hasCurrentFridge }" id="app-nav">
       <ul v-if="!isOnAuthPage">
         <li v-if="hasCurrentFridge">
           <RouterLink to="/fridge" :class="{ 'router-link-active': isFridgeRouteActive }">
@@ -138,7 +138,6 @@ export default {
         language.value = "NO";
       }
     };
-
 
     return {
       isFridgeRouteActive,

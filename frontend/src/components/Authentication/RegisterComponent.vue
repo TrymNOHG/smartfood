@@ -195,7 +195,7 @@ export default {
           if (response !== undefined) {
             store.setSessionToken(response.data.token);
             await store.fetchUser();
-            await router.push("/fridges");
+            await router.push("/fridges?appTour=true");
           }
         })
         .catch((error) => {

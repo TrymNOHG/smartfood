@@ -151,7 +151,90 @@
   "ml" : "ml",
   "g" : "g",
   "pieces" : "stk",
-  "update_item": "Updater mengden",
   "amount": "Mengde igjen",
-  "update_title": "Varen din ble oppdatert"
+  "update_title": "Varen din ble oppdatert",
+
+  "__Tour__":"Under er all oversetting for alle gjennomganger/tours av appen",
+
+    "Buttons__":"Knapper",
+      "tour: button next": "Neste",
+      "tour: button exit": "Avslutt",
+      "tour: button back": "Forrige",
+      "tour: button cancel": "Tilbake",
+      "tour: button take-tour": "Få gjennomgang",
+      "tour: button whole site": "Hele appen",
+      "tour: button this site": "Denne siden",
+
+    "Presse information":"Dette er for pop-upsom kommer når du trykker på informasjon ",
+      "tour: view:fridgesView method:informationButton id:information-pressed usage:title":"",
+      "tour: view:fridgesView method:informationButton id:information-pressed usage:text":"Du trykket på informasjonsknappen. <br><br> Hva ønsker du informasjon om?",
+
+
+
+    "Whole App__":"Dette er gjennomgangen for hele appen",
+      "tour: view:fridgesView method:firstLogginTour id: usage:title":"",
+      "tour: view:fridgesView method:firstLogginTour id: usage:text":"",
+      "tour: view:fridgesView method:firstLogginTour id:welcome usage:title":"Velkommen til SmartMat",
+      "tour: view:fridgesView method:firstLogginTour id:welcome usage:text": "Her kommer det til å stå veldig mye informasjon om nettsiden, og formålet, og kanskje hovedfunksjonalitet <br><br> Ønsker du en gjennomgang av appen eller ønsker du å gå tilbake til appen?",
+      "tour: view:fridgesView method:firstLogginTour id:header usage:title": "Topp-feltet",
+      "tour: view:fridgesView method:firstLogginTour id:header usage:text": "Det grønne feltet i toppen vil følge deg konstant gjennom appen. <br>Den har flere funksjoer og navigasjonsknapper men siden du ikke har valgt kjøleskap så vil ikke hele navigasjonen være til stede",
+      "tour: view:fridgesView method:firstLogginTour id:fridgesWindow usage:title": "Dine kjøleskap",
+      "tour: view:fridgesView method:firstLogginTour id:fridgesWindow usage:text": "Nå er du inne på Dine kjøleskap som viser deg listen over alle dine kjøleskap <br><br> Hovedfunksjonaliteten i vinduet er: <ul><li>Gå inn i et kjøleskap</li><li>Legge til kjøleskap</li><li>Endre navn på kjøleskap du har laget</li><li>Slette kjøleskap fra din liste</li></ul>",
+      "tour: view:fridgesView method:firstLogginTour id:firstLogginTour-9 usage:title": "Fortsett brukerveiledningen",
+      "tour: view:fridgesView method:firstLogginTour id:firstLogginTour-9 usage:text": "For å fortsette brukerveiledningen, vennligst velg dette kjøleskapet",
+
+  "List of Fridges__":"dette er gjennomgangen for siden med alle kjøleskapene",
+
+      "tour: view:fridgesView method:fridgesStepTour id:profile-tour usage:title":"Profil",
+      "tour: view:fridgesView method:fridgesStepTour id:profile-tour usage:text": "Dette er profilknappen, og vil ta deg til din profil",
+      "tour: view:fridgesView method:fridgesStepTour id:language-tour usage:title":"Endre språk",
+      "tour: view:fridgesView method:fridgesStepTour id:language-tour usage:text":"Her kan du endre språket på siden. <br> Klikk på den for å velge mellom engelsk og norsk",
+      "tour: view:fridgesView method:fridgesStepTour id:fridge-name-info usage:title":"Kjøleskapsnavn",
+      "tour: view:fridgesView method:fridgesStepTour id:fridge-name-info usage:text-picked fridge":"Dette er navnet på kjøleskapet du er i. <br> Trykk på navnet, og du vil navigere til kjøleskapet ditt",
+      "tour: view:fridgesView method:fridgesStepTour id:fridge-name-info usage:text-not picked fridge":"Her vises navnet på kjøleskapet du velger. <br> Trykk på navnet, og du vil navigere til kjøleskapet ditt",
+      "tour: view:fridgesView method:fridgesStepTour id:exit-fridge-button-info usage:title":"Forlat kjøleskap",
+      "tour: view:fridgesView method:fridgesStepTour id:exit-fridge-button-info usage:text-picked fridge":"Du kan trykke på denne knappen for å forlate eller \"komme deg ut av\" kjøleskapet og se listen over alle dine kjøleskap",
+      "tour: view:fridgesView method:fridgesStepTour id:exit-fridge-button-info usage:text-not picked fridge":"Du kan trykke på denne knappen for å forlate eller \"komme deg ut av\" kjøleskapet og se listen over alle dine kjøleskap. <br><br> Men som du ser nå, vil strekfiguren inn i et kjøleskap, så vennligst velg et kjøleskap for å fortsette",
+      "tour: view:fridgesView method:fridgesStepTour id:grey-field-header usage:title":"Intern navigasjon og navn",
+      "tour: view:fridgesView method:fridgesStepTour id:grey-field-header usage:text":"Dette området viser deg navnet på siden du er på, som \"Dine kjøleskap\", <br> også viser det den interne navigasjonslinjen innenfor en hovedside",
+
+      "tour: view:fridgesView method:fridgesStepTour id:list-of-fridges usage:title":"Liste over dine kjøleskap",
+      "tour: view:fridgesView method:fridgesStepTour id:list-of-fridges usage:text":"Her kan du se listen over alle dine kjøleskap",
+      "tour: view:fridgesView method:fridgesStepTour id:single-fridge usage:title":"Liste over dine kjøleskap",
+      "tour: view:fridgesView method:fridgesStepTour id:single-fridge usage:text":"Dette er ditt første kjøleskap i listen. Du går inn i kjøleskapet ved å klikke på dette kjøleskapet",
+      "tour: view:fridgesView method:fridgesStepTour id:fridge-change-information usage:title": "Liste over dine kjøleskap",
+      "tour: view:fridgesView method:fridgesStepTour id:fridge-change-information usage:text": "For å endre navnet på kjøleskapet, kan du trykke på \"endre-knappen\", eller du kan slette kjøleskapet ved å klikke på søppelbøtta.",
+      "tour: view:fridgesView method:fridgesStepTour id:add-fridge usage:title": "Lag et nytt kjøleskap",
+      "tour: view:fridgesView method:fridgesStepTour id:add-fridge usage:text": "Du kan lage et nytt kjøleskap ved å klikke på denne plusstegnet, og skrive inn navnet på kjøleskapet.",
+      "tour: view:fridgesView method:fridgesStepTour id:information-button usage:title": "Hjelp / Informasjon",
+      "tour: view:fridgesView method:fridgesStepTour id:information-button usage:text": "Du kan klikke på informasjonsknappen når som helst for å få en omvisning på gjeldende side eller hele appen.",
+
+  "One Fridge__":"This is tour for the list of all the fridges",
+
+      "tour: view:fridgeView method:fridgeViewStepTour id:grey-field-header usage:title": "Faner",
+      "tour: view:fridgeView method:fridgeViewStepTour id:grey-field-header usage:text": "Dette grå feltet viser fanene i et kjøleskap, og den lysegrå markeringen viser hvilken fane du er på",
+      "tour: view:fridgeView method:fridgeStepsTour id: usage:title":"",
+      "tour: view:fridgeView method:fridgeStepsTour id: usage:text":"",
+      "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:title": "Dette er en tittel",
+      "tour: view:fridgeView method:fridgeStepsTour id:fridgesWindow usage:text": "Dette er tekst",
+      "tour: view:fridgeView method:fridgeStepsTour id:grey-field-header-fridge usage:title": "Kjøleskap-fanen",
+      "tour: view:fridgeView method:fridgeStepsTour id:grey-field-header-fridge usage:text": "Nå ser du kjøleskapssiden, som viser deg elementene i kjøleskapet ditt",
+      "tour: view:fridgeView method:fridgeStepsTour id:items usage:title": "Matvarer",
+      "tour: view:fridgeView method:fridgeStepsTour id:items usage:text": "Matvarene vises i dette vinduet. Hold musepekeren over og se informasjon om varen, og slett matvaren",
+      "tour: view:fridgeView method:fridgeStepsTour id:search usage:title": "Søk etter vare",
+      "tour: view:fridgeView method:fridgeStepsTour id:search usage:text": "Her kan du søke etter matvarer og legge dem til i kjøleskapet. <br> <br> For vanlige brukere blir matvaren lagt til på handlelisten",
+      "tour: view:fridgeView method:fridgeStepsTour id:filter usage:title": "Filter",
+      "tour: view:fridgeView method:fridgeStepsTour id:filter usage:text": "Ved å klikke på \"Filter\", kan du endre visningen av matvarer og sortere etter forskjellige variabler",
+
+
+      "tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:title": "Medlemsfanen",
+      "tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:text": "Nå ser du medlemssiden. <br><br> Som en superbruker kan du: <ul><li>Se alle medlemmer i kjøleskapet</li><li>Legge til medlemmer</li><li>Endre tittel på medlemmer</li><li>Fjerne medlemmer</li><li>Fjerne deg selv fra kjøleskapet</li></ul> <br> Som en vanlig bruker kan du: <ul><li>Se alle medlemmer i kjøleskapet</li><li>Fjerne deg selv fra kjøleskapet</li></ul>",
+      "tour: view:fridgeView method:memberStepTour id:single-member usage:title": "Medlem-fane",
+      "tour: view:fridgeView method:memberStepTour id:single-member usage:text":"Her ser du en enkel representasjon av et medlem i kjøleskapet",
+      "tour: view:fridgeView method:memberStepTour id:edit-user usage:title":"Endre tittel",
+      "tour: view:fridgeView method:memberStepTour id:edit-user usage:text":"For å endre tittelen på medlemmet, trykk på rediger-knappen eller slett medlemmet ved å klikke på søppelbøtten",
+      "tour: view:fridgeView method:memberStepTour id:add-user usage:title": "Legg til medlem",
+      "tour: view:fridgeView method:memberStepTour id:add-user usage:text": "For å legge til et nytt medlem i dette kjøleskapet, kan du trykke på denne knappen"
+
+
 }
