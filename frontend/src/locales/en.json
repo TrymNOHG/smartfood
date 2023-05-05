@@ -1,4 +1,5 @@
 {
+  "quantityInstructions": "Enter the desired quantity in this field.\n  If you are not a super user, the field will be disabled.",
   "search_input": "Search input",
   "upload_receipt" : "Scan barcode",
   "profile_link_label": "Go to profile page",

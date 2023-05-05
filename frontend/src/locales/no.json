@@ -1,4 +1,5 @@
 {
+  "quantityInstructions": "Legg til mengden på antall varer her.\n  Hvis du ikke er Super bruker, kan du ikke bruke feltet.",
   "search_input": "Søke felt",
   "upload_receipt" : "Skann barkode",
   "profile_link_label": "Gå til statistikkside",

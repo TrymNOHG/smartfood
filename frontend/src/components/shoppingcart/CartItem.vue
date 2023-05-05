@@ -21,14 +21,20 @@
       </button>
 
       <input
-        :disabled="!isSuperUser"
+        id="quantity-input"
         class="number-input"
         type="number"
-        name="name"
+        name="quantity"
         :value="quantity"
+        :disabled="!isSuperUser"
+        aria-describedby="quantity-instructions"
         @input="$emit('update:quantity', $event.target.value)"
         @blur="$emit('quantity-updated', $event.target.value, item)"
       />
+
+      <div id="quantity-instructions" class="sr-only">
+        {{ $t("quantityInstructions") }}
+      </div>
 
       <button
         v-if="isSuperUser"
@@ -491,6 +497,7 @@ input[type="number"] {
     position: relative;
     transform: translateX(50px);
   }
+
   .description {
     word-break: break-all;
   }
