@@ -27,6 +27,40 @@ describe('ItemDelete', () => {
         expect(wrapper.find('.basic-button').exists()).toBe(true);
     });
 
+    test('emits an "update-item" event when the button is clicked', () => {
+        const item = {
+            expirationDate: '2023-05-01',
+            image: 'test',
+            name: 'test',
+            price: '10',
+            purchaseDate: '2023-04-27',
+            quantity: 2,
+            store: 'test',
+            amount: 10,
+            unit: '%'
+        };
+        const wrapper = mount(ItemDelete, {
+            props: {
+                item: item
+            },
+            global: {
+                mocks: {
+                    $t: (msg) => msg
+                }
+            }
+        });
+
+        const updateButton = wrapper.findAll('.basic-button').filter((button) => {
+            return button.text() === wrapper.vm.$t('update_item');
+        })[0];
+
+        updateButton.trigger('click');
+
+        expect(wrapper.emitted('update-item')).toBeTruthy();
+        expect(wrapper.emitted('update-item')[0][0]).toEqual(item);
+        expect(wrapper.emitted('update-item')[0][1]).toBe(wrapper.vm.sliderValue);
+    });
+
     test('emits a "delete-item" event when the button is clicked', () => {
         const item = {
             expirationDate: '2023-05-01',
@@ -48,7 +82,6 @@ describe('ItemDelete', () => {
             }
         });
 
-        // Find the specific button with the text '$t('delete_item')'
         const deleteButton = wrapper.findAll('.basic-button').filter((button) => {
             return button.text() === wrapper.vm.$t('delete_item');
         })[0];
@@ -71,8 +104,8 @@ describe('ItemDelete', () => {
                     purchaseDate: '2023-04-27',
                     quantity: 2,
                     store: 'test',
-                    amount: 10, // Make sure to add amount prop to the test object
-                    unit: '%' // Add unit prop to the test object
+                    amount: 10,
+                    unit: '%'
                 }
             },
             global: {
@@ -82,15 +115,13 @@ describe('ItemDelete', () => {
             }
         });
 
-        expect(wrapper.vm.sliderValue).toBe(5); // Check if the initial slider value is half of the item amount
-        expect(wrapper.find('#rangeValue').text()).toBe('5 %'); // Check if the initial slider text is correct
+        expect(wrapper.vm.sliderValue).toBe(5);
+        expect(wrapper.find('#rangeValue').text()).toBe('5 %');
 
-        // Update the slider value
         const input = wrapper.find('input[type="range"]');
-        input.setValue(7); // Set the slider value to 7
-        await wrapper.vm.$nextTick(); // Wait for the DOM update
+        input.setValue(7);
+        await wrapper.vm.$nextTick();
 
-        // Check if the slider value and text are updated
         expect(wrapper.vm.sliderValue).toBe('7');
         expect(wrapper.find('#rangeValue').text()).toBe('7 %');
     });
@@ -120,5 +151,38 @@ describe('ItemDelete', () => {
         expect(text.exists()).toBe(true)
         expect(text.text()).toBe('how_much_left')
 
+    });
+
+    test('updates the slider value when the user interacts with it', async () => {
+        const wrapper = mount(ItemDelete, {
+            props: {
+                item: {
+                    expirationDate: '2023-05-01',
+                    image: 'test',
+                    name: 'test',
+                    price: '10',
+                    purchaseDate: '2023-04-27',
+                    quantity: 2,
+                    store: 'test',
+                    amount: 10,
+                    unit: '%'
+                }
+            },
+            global: {
+                mocks: {
+                    $t: (msg) => msg
+                }
+            }
+        });
+
+        expect(wrapper.vm.sliderValue).toBe(5);
+        expect(wrapper.find('#rangeValue').text()).toBe('5 %');
+
+        const input = wrapper.find('input[type="range"]');
+        input.setValue(7);
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.vm.sliderValue).toBe('7');
+        expect(wrapper.find('#rangeValue').text()).toBe('7 %');
     });
 });

@@ -154,8 +154,6 @@ export default {
       });
     },
 
-    //TODO: add amount to info on thing where amount is chosen and remember to read other todos
-
     async updateItem(item, newAmount) {
 
       if(newAmount === 0){
