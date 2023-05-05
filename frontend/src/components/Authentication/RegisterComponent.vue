@@ -138,7 +138,7 @@ export default {
           if (response !== undefined) {
             store.setSessionToken(response.data.token);
             await store.fetchUser();
-            await router.push("/fridges?init=true");
+            await router.push("/fridges?appTour=true");
           }
         }).catch((error) => {
             submitMessage.value = 'register_error';
