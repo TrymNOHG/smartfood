@@ -43,7 +43,7 @@ describe('ItemInfo', () => {
                 }
             }
         });
-        expect(wrapper.find('.text h3:nth-of-type(3)').text()).toMatch('price: 50kr');
+        expect(wrapper.find('.text h3:nth-of-type(3)').text()).toMatch('price 50kr');
     });
 
     test('amount price', () => {
