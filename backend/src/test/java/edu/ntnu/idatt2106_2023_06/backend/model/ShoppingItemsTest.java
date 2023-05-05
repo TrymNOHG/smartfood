@@ -32,7 +32,7 @@ class ShoppingItemsTest {
             try {
                 Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, " +
                         "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                         null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                         null, "12345678", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
                 ShoppingItems shoppingItems = new ShoppingItems(null, item,
                         new Fridge(1L, "Fridge", new HashSet<>(),
                                 new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new ArrayList<>()), new User(), true, 1);
@@ -46,7 +46,7 @@ class ShoppingItemsTest {
             try {
                 Item item = new Item(1L, "Tine Melk", "Tine melk kommer fra fri gående, " +
                         "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()), 200000,
-                         null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                         null, "12345678", 100.0, "ml",4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
                 ShoppingItems shoppingItem = ShoppingItems
                         .builder()
                         .item(item)
@@ -110,7 +110,7 @@ class ShoppingItemsTest {
                     new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
-                    200000, null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, null, "12345678", 100.0, "ml",4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             ShoppingItems shoppingItems = new ShoppingItems(null, item, fridge, new User(), true, 1);
             assertEquals(item, shoppingItems.getItem());
         }
@@ -121,7 +121,7 @@ class ShoppingItemsTest {
                     new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
-                    200000, null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, null, "12345678", 100.0, "ml", 4,new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             ShoppingItems shoppingItems = new ShoppingItems(null, item, fridge, new User(), true, 1);
             assertEquals(fridge, shoppingItems.getFridge());
         }
@@ -132,7 +132,7 @@ class ShoppingItemsTest {
                     new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
-                    200000, null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, null, "12345678", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             User user = new User();
             ShoppingItems shoppingItems = new ShoppingItems(null, item, fridge, user, true, 1);
             assertEquals(user, shoppingItems.getUser());
@@ -145,7 +145,7 @@ class ShoppingItemsTest {
                     new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
-                    200000, null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, null, "12345678", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             ShoppingItems shoppingItems = new ShoppingItems(null, item, fridge, new User(), true,1 );
             assertEquals(true, shoppingItems.isSuggestion());
         }
@@ -159,7 +159,7 @@ class ShoppingItemsTest {
                     new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
-                    200000, null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, null, "12345678", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             ShoppingItems shoppingItems = new ShoppingItems(null, new Item(), fridge, new User(),true, 1);
 
             shoppingItems.setItem(item);
@@ -172,7 +172,7 @@ class ShoppingItemsTest {
                     new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
-                    200000, null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, null, "12345678", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             ShoppingItems shoppingItems = new ShoppingItems(null, item, new Fridge(), new User(), true, 1);
 
             shoppingItems.setFridge(fridge);
@@ -185,7 +185,7 @@ class ShoppingItemsTest {
                     new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
-                    200000, null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, null, "12345678", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             User user = new User();
             ShoppingItems shoppingItems = new ShoppingItems(null, item, new Fridge(), new User(), true, 1);
 
@@ -199,7 +199,7 @@ class ShoppingItemsTest {
                     new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new ArrayList<>());
             Item item = new Item(1L, "Tine melk", "Tine melk kommer fra fri gående, " +
                     "grass matet kuer.", new Store(1L, "Dairy", new ArrayList<>()),
-                    200000, null, "12345678", 100.0, "ml", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+                    200000, null, "12345678", 100.0, "ml", 4, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             ShoppingItems shoppingItems = new ShoppingItems(null, item, fridge, new User(), true, 1);
 
             shoppingItems.setSuggestion(true);

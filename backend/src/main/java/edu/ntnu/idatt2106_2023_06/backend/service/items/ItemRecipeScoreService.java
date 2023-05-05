@@ -97,7 +97,6 @@ public class ItemRecipeScoreService {
     @Transactional
     public CompletableFuture<ItemRecipeScore> generateSingleScore(Item item, Recipe recipe) {
         if(itemRecipeScoreRepository.existsItemRecipeScoreByItem_ItemIdAndRecipe_RecipeId(item.getItemId(), recipe.getRecipeId())) return CompletableFuture.completedFuture(null);
-
         double score = recipe.getRecipeParts()
                 .stream()
                 .flatMap(part -> part.getItemsInRecipe().stream())
@@ -112,7 +111,7 @@ public class ItemRecipeScoreService {
     private double getScore(Item item, RecipeItems ingredient) {
         if(item.getEan() != null && item.getEan().equals(ingredient.getItem().getEan())) return 1.0;
         else {
-            String regex = "\\b\\d+\\s*g\\b|\\b\\d+%\\b|\\b[A-Za-z]{2,}\\b";
+            String regex = "\\b\\d+\\s*(g|%|ml|L)?\\b";
             String coreProductName = item.getProductName().replaceAll(regex, "").trim();
             String coreIngredientName = ingredient.getItem().getProductName().replaceAll(regex, "").trim();
 

@@ -133,7 +133,7 @@ export default {
               storeName: item.store,
               fridgeId: this.fridge.fridgeId,
             };
-
+            console.log("yooooo"  + deletePercentage)
             const itemRemoveDTO = {
               itemName: item.name,
               store: item.store,
@@ -153,6 +153,8 @@ export default {
         }
       });
     },
+
+    //TODO: add amount to info on thing where amount is chosen and remember to read other todos
 
     async updateItem(item, newAmount) {
 

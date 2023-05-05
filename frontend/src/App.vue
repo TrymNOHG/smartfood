@@ -81,7 +81,7 @@
       </router-link>
     </div>
   </div>
-  <div class="router-view-container">
+  <div class="router-view-container" :class="{ 'router-view-container-bottom-padding': isOnRootPage }">
     <RouterView />
   </div>
 </template>
@@ -155,6 +155,18 @@ export default {
 </script>
 
 <style scoped>
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
 .break-line {
   height: 6px;
   background-color: white;
@@ -371,6 +383,7 @@ nav ul li a .text {
   z-index: 0;
 }
 
+
 @media only screen and (max-width: 1000px) {
   .matprat-title {
     display: none;
@@ -548,9 +561,7 @@ nav ul li a .text {
     font-size: 0.7rem;
   }
 
-  .router-view-container {
-    padding-bottom: 70px;
-  }
+
 
   header img {
     display: none;
@@ -708,7 +719,12 @@ nav ul li a .text {
   }
 
   .router-view-container {
+    margin-bottom: 70px;
     z-index: 0;
+  }
+
+  .router-view-container-bottom-padding {
+    margin-bottom: 0 !important; /* or any value you prefer */
   }
 }
 </style>

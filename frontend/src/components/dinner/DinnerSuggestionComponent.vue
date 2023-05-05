@@ -36,7 +36,8 @@
         />
       </div>
         <div class="pagination-buttons" v-if="!isMobile">
-          <BasicButton @click="loadPreviousPage" :button-text="$t('previous_page')"/>
+          <BasicButton @click="loadPreviousPage" :button-text="$t('previous_page')" :disabled="pageIndex.value <= 0"/>
+          <div class="page-index">{{ pageIndex + 1 }}</div>
           <BasicButton @click="loadNextPage" :button-text="$t('next_page')"/>
         </div>
         <div id="bottom"></div>
@@ -103,7 +104,7 @@
         const fridgeId = fridgeStore.getCurrentFridge.fridgeId;
         const meals = ref([]);
         const suggestions = ref([]);
-        let pageIndex = ref(0);
+        let pageIndex = ref(-1);
         const profilePictures = ref({});
         const memberList = ref([]);
 
@@ -154,10 +155,20 @@
           try {
 
             await acceptRecipeSuggestion(recipeShoppingDTO, recipeId, userId);
-            // Remove the suggestion from the list
-            suggestions.value = suggestions.value.filter(s => s.id !== suggestion.id);
+            // Remove the suggestion from the
+            loadSuggestions();
+            swal.fire(
+                'Accepted',
+                'The missing item IDs have been accepted.',
+                'success'
+            );
           } catch (error) {
-            console.error("Failed to accept suggestion:", error);
+            swal.fire({
+              title: this.$t('error'),
+              text: this.$t('error_add_missing_items'),
+              icon: 'error',
+              confirmButtonText: this.$t('ok')
+            });
           }
         };
 
@@ -167,9 +178,19 @@
             const userId = suggestion.UserId
             await denyRecipeSuggestion(fridgeId, recipeId, userId);
             // Remove the suggestion from the list
-            suggestions.value = suggestions.value.filter(s => s.id !== suggestion.id);
+            loadSuggestions();
+            swal.fire(
+                this.$t('success_message'),
+                '',
+                'success'
+            )
           } catch (error) {
-            console.error("Failed to deny suggestion:", error);
+            swal.fire({
+              title: this.$t('error'),
+              text: this.$t('delete_error'),
+              icon: 'error',
+              confirmButtonText: this.$t('ok')
+            });
           }
         };
 
@@ -297,6 +318,27 @@
       margin: 2% auto;
       gap: 25%;
     }
+
+    .pagination-buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      gap: 15px;
+      margin: 2% auto;
+    }
+
+    .page-index {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      padding: 5px 10px;
+      border: 2px solid #31c48d;
+      border-radius: 4px;
+      margin: 0 1rem;
+    }
+
 
     #sugTitle {
       margin-top: 10px;
