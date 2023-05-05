@@ -263,5 +263,11 @@
 
   "One Item__": "This is the tour for a Item",
       "tour: view:itemView method:itemStepTour id:itemWindow usage:title": "Produkt siden",
-      "tour: view:itemView method:itemStepTour id:itemWindow usage:text": "Nå ser du produktsiden.<br><br> Her kan du: <ul><li>Se informasjon om produktet</li><li>Oppdatere varen hvis den brukes</li><li>Slette varen fra kjøleskapet</li></ul>"
+      "tour: view:itemView method:itemStepTour id:itemWindow usage:text": "Nå ser du produktsiden.<br><br> Her kan du: <ul><li>Se informasjon om produktet</li><li>Oppdatere varen hvis den brukes</li><li>Slette varen fra kjøleskapet</li></ul>",
+
+  "Cart__": "This is the Tour for the cartView",
+    "tour: view:cartView method:cartStepTour id:cart-window usage:title":"Handlekurven",
+    "tour: view:cartView method:cartStepTour id:cart-window usage:text":"Nå ser du handlekurven til kjøleskapet.<br><br> Hovedfunksjonene på denne siden er å lage en handleliste for ditt neste besøk til matbutikken. <br><br> Som en superbruker kan du: <ul><li>Legge til produkter i handlekurv/handleliste ved å søke eller skanne strekkoden</li>Slette matvarer fra handlekurven<li></li>Akseptere forslag fra en vanlig bruker<li>Slette varen fra kjøleskapet</li></ul> <br>Som en vanlig bruker kan du: <ul><li>Gjøre forslag til handlekurven ved å søke eller skanne strekkoden</li>Slette egne forslag<li></li></ul>"
+
+
 }
