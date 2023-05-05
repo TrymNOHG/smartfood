@@ -9,7 +9,7 @@
         <img
             src="@/assets/images/info.svg"
             id="info-picture"
-            @click="showInformation"
+            @click=" resetSteps() ;itemStepsTour()"
             :alt="$t('alt_info_button')"
         />
       </div>
@@ -43,6 +43,8 @@ import router from "@/router/router";
 import {addItemToShoppingList} from "@/services/ItemService";
 import swal from "sweetalert2";
 import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
+import Shepherd from "shepherd.js";
+import {offset} from "@floating-ui/vue";
 
 export default {
   name: "itemView",
@@ -54,17 +56,113 @@ export default {
     const fridge = fridgeStore.currentFridge;
     const item = itemStore.getCurrentItem;
 
+      const itemTour = new Shepherd.Tour({
+          useModalOverlay: true,
+          defaultStepOptions: {
+              classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
+              arrow: true,
+              floatingUIOptions: {
+                  middleware: [offset(30)]
+              },
+              cancelIcon: {
+                  enabled: true
+              },
+          }
+      });
+
+      const information = new Shepherd.Tour({
+          useModalOverlay: true,
+          defaultStepOptions: {
+              classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
+              arrow: true,
+              floatingUIOptions: {
+                  middleware: [offset(30)]
+              },
+              cancelIcon: {
+                  enabled: true
+              },
+          }
+      });
+
+
     return {
       item,
       fridge,
-      itemStore
+      itemStore,
+      itemTour,
+      information,
     };
   },
   methods: {
 
-    showInformation(){
-      //TODO: INFORMATION PROFILE put information API in here
-    },
+      resetSteps(){
+
+          if(this.information.steps.length !== 0) {
+              while (this.information.steps.length !== 0) {
+                  this.information.steps.pop()
+              }
+          }
+      },
+
+      informationButton(){
+          this.information.addSteps([
+              {
+                  id: 'information-pressed',
+                  title:`<div class="info-box"><img src="../src/assets/images/info.svg" alt="Pressed" id="tour-info-picture"/></div>`,
+                  text: this.$t('tour: view:fridgesView method:informationButton id:information-pressed usage:text'),
+                  attachTo: {
+                      element: '#info-picture',
+                      on: 'bottom',
+                  },
+                  buttons: [
+                      {
+                          action: () => {
+                              router.push('/fridges?appTour=true');
+                              this.information.cancel();
+                          },
+                          secondary: true,
+                          class: " shepherd-button ",
+                          text: this.$t('tour: button whole site'),
+                      },
+                      {
+                          action: () => {
+                              this.itemStepsTour();
+                              this.information.cancel();
+
+                          },
+                          class: " shepherd-button ",
+                          text: this.$t('tour: button this site'),
+                      },
+                  ]
+              }])
+          this.information.start()
+      },
+      itemStepsTour() {
+          this.itemTour.addSteps([
+              {
+                  id: 'itemWindow',
+                  title: this.$t('tour: view:itemView method:itemStepTour id:itemWindow usage:title'),
+                  text: this.$t('tour: view:itemView method:itemStepTour id:itemWindow usage:text'),
+                  attachTo: {
+                      element: '.item-wrapper',
+
+                  },
+                  classes: 'shepherd-theme-arrows',
+                  buttons: [
+                      {
+                          action: function () {
+                              return this.cancel();
+                          },
+                          class: " shepherd-button ",
+                          text: this.$t('tour: button exit'),
+                      },
+                  ]
+              },
+          ])
+          this.itemTour.start()
+
+      },
+
 
     async addShopping(item) {
       const date = new Date();

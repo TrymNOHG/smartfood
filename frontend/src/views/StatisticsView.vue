@@ -8,6 +8,7 @@
             src="@/assets/images/info.svg"
             id="info-picture"
             :alt="$t('alt_info_button')"
+            @click="resetSteps();statStepsTour()"
         />
       </div>
     </div>
@@ -69,6 +70,8 @@ import BasicSelect from "@/components/basic-components/BasicSelect.vue";
 import {ref} from "vue";
 import {useFridgeStore, useLoggedInStore, useStatStore} from "@/store/store";
 import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
+import Shepherd from "shepherd.js";
+import {offset} from "@floating-ui/vue";
 
 export default {
   name: "StatisticsView",
@@ -83,6 +86,40 @@ export default {
         this.fetchUserStats();
       }
     },
+
+      resetSteps(){
+          if(this.statsTour.steps.length !== 0) {
+              while (this.statsTour.steps.length !== 0) {
+                  this.statsTour.steps.pop()
+              }
+          }
+      },
+
+      statStepsTour() {
+          this.statsTour.addSteps([
+              {
+                  id: 'itemWindow',
+                  title: this.$t('tour: view:StatisticsView method:StatisticsStepTour id:StatisticsWindow usage:title'),
+                  text: this.$t('tour: view:StatisticsView method:StatisticsStepTour id:StatisticsWindow usage:text'),
+                  attachTo: {
+                      element: '.router-view-container',
+
+                  },
+                  classes: 'shepherd-theme-arrows',
+                  buttons: [
+                      {
+                          action: function () {
+                              return this.cancel();
+                          },
+                          class: " shepherd-button ",
+                          text: this.$t('tour: button exit'),
+                      },
+                  ]
+              },
+          ])
+          this.statsTour.start()
+
+      },
   },
 
 
@@ -152,6 +189,20 @@ export default {
     
     fetchUserStats();
 
+      const statsTour = new Shepherd.Tour({
+          useModalOverlay: true,
+          defaultStepOptions: {
+              classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
+              arrow: true,
+              floatingUIOptions: {
+                  middleware: [offset(30)]
+              },
+              cancelIcon: {
+                  enabled: true
+              },
+          }
+      });
+
     return {
       chartDataFood: chartDataFood,
       foodThrown: foodThrown,
@@ -161,7 +212,8 @@ export default {
       chartDataMoney,
       currenUser,
       userStore,
-      fridgeStore
+      fridgeStore,
+        statsTour
     };
   },
 

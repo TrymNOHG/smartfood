@@ -25,7 +25,7 @@
         <img
             src="@/assets/images/info.svg"
             id="info-picture"
-            @click="showInformation"
+            @click="resetSteps(); runTour()"
             :alt="$t('alt_info_button')"
         />
       </div>
@@ -46,29 +46,180 @@ import WeekMenu from "../components/dinner/WeekMenuComponent.vue";
 import { ref } from "vue";
 import router from "../router/router";
 import InfoAndBell from "@/components/basic-components/InfoAndBell.vue";
+import { offset } from "@floating-ui/vue";
+import Shepherd from 'shepherd.js';
+import '@/assets/tourStyle.css';
+
 export default {
-  name: "DinnerView",
-  components: {
-    InfoAndBell,
-    DinnerSuggestion,
-    WeekMenu,
-  },
-  setup() {
-    const selectedTab = ref(router.currentRoute.value.query.selectedTab || 'tips');
-
-    const url = '/dinner';
-    history.replaceState(history.state, null, url);
-
-    return {
-      selectedTab,
-    };
-  },
-  methods: {
-    showInformation() {
-      //TODO: INFORMATION DINNER put information API in here
+    name: "DinnerView",
+    components: {
+        InfoAndBell,
+        DinnerSuggestion,
+        WeekMenu,
     },
-  },
-};
+    setup() {
+        const selectedTab = ref(router.currentRoute.value.query.selectedTab || 'tips');
+
+        const url = '/dinner';
+        history.replaceState(history.state, null, url);
+
+        const tipsTour = new Shepherd.Tour({
+            useModalOverlay: true,
+            defaultStepOptions: {
+                classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
+                arrow: true,
+                floatingUIOptions: {
+                    middleware: [offset(30)]
+                },
+                cancelIcon: {
+                    enabled: true
+                },
+            }
+        });
+        const weeklyTour = new Shepherd.Tour({
+            useModalOverlay: true,
+            defaultStepOptions: {
+                classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
+                arrow: true,
+                floatingUIOptions: {
+                    middleware: [offset(30)]
+                },
+                cancelIcon: {
+                    enabled: true
+                },
+            }
+        });
+        const tour = new Shepherd.Tour({
+            useModalOverlay: true,
+            defaultStepOptions: {
+                classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
+                arrow: true,
+                floatingUIOptions: {
+                    middleware: [offset(30)]
+                },
+                cancelIcon: {
+                    enabled: true
+                },
+            }
+        });
+
+        return {
+            selectedTab,
+            tipsTour,
+            weeklyTour,
+            tour
+        };
+    },
+    methods: {
+        resetSteps() {
+            if (this.tipsTour.steps.length !== 0) {
+                while (this.tipsTour.steps.length !== 0) {
+                    this.tipsTour.steps.pop()
+                }
+            }
+            if (this.weeklyTour.steps.length !== 0) {
+                while (this.weeklyTour.steps.length !== 0) {
+                    this.weeklyTour.steps.pop()
+                }
+            }
+            if (this.tour.steps.length !== 0) {
+                while (this.tour.steps.length !== 0) {
+                    this.tour.steps.pop()
+                }
+            }
+        },
+
+        runTour() {
+            this.tour.addSteps([
+                {
+                    id: 'grey-field-header',
+                    title: this.$t('tour: view:dinnerView method:tour id:tipsWindow usage:title'),
+                    text: this.$t('tour: view:dinnerView method:tour id:tipsWindow usage:text'),
+                    attachTo: {
+                        element: '.grey-bar',
+                        on: 'bottom',
+                    },
+                    classes: 'shepherd-theme-arrows',
+                    buttons: [
+                        {
+                            action: function () {
+                                return this.back();
+                            },
+                            secondary: true,
+                            text: this.$t('tour: button back'),
+                        },
+                        {
+                            action: () => {
+                                if (this.selectedTab === "weekMenu") {
+                                    this.weeklyViewStepsTour();
+                                    this.tour.cancel();
+
+                                } else {
+                                    this.tipsViewStepsTour();
+                                    this.tour.cancel();
+                                }
+
+
+                            },
+                            class: " shepherd-button ",
+                            text: this.$t('tour: button next'),
+                        },
+                    ]
+                },
+            ])
+            this.tour.start()
+        },
+
+        tipsViewStepsTour() {
+            this.tipsTour.addSteps([
+                {
+
+                    id: 'grey-field-header',
+                    title: this.$t('tour: view:dinnerView method:tipsViewStepTour id:tipsWindow usage:title'),
+                    text: this.$t('tour: view:dinnerView method:tipsViewStepTour id:tipsWindow usage:text'),
+                    attachTo: {
+                        element: '.grey-bar',
+                        on: 'bottom',
+                    },
+                    classes: 'shepherd-theme-arrows',
+                    buttons: [
+                        {
+                            action: function () {
+                                return this.cancel();
+                            },
+                            text: this.$t('tour: button exit'),
+                        },
+                    ]
+                },
+            ])
+            this.tipsTour.start()
+        },
+        weeklyViewStepsTour() {
+            this.weeklyTour.addSteps([
+                {
+                    id: 'grey-field-header',
+                    title: this.$t('tour: view:dinnerView method:weeklyStepTour id:tipsWindow usage:title'),
+                    text: this.$t('tour: view:dinnerView method:weeklyStepTour id:tipsWindow usage:text'),
+                    attachTo: {
+                        element: '.grey-bar',
+                        on: 'bottom',
+                    },
+                    classes: 'shepherd-theme-arrows',
+                    buttons: [
+                        {
+                            action: function () {
+                                return this.cancel();
+                            },
+                            text: this.$t('tour: button exit'),
+                        },
+                    ]
+                },
+            ])
+            this.weeklyTour.start()
+        },
+
+    },
+}
 </script>
 
 <style scoped>

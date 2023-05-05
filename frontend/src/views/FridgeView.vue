@@ -25,7 +25,7 @@
         <img
             src="@/assets/images/info.svg"
             id="info-picture"
-            @click="resetSteps(); informationButton()"
+            @click="resetSteps(); fridgeStepsTour()"
             :alt="$t('alt_info_button')"
         />
       </div>
@@ -445,43 +445,6 @@ export default {
           }
       },
 
-      //Eirik
-
-      informationButton(){
-          this.information.addSteps([
-              {
-                  id: 'information-pressed',
-                  title:`<div class="info-box"><img src="../src/assets/images/info.svg" alt="Pressed" id="tour-info-picture"/></div>`,
-                  text: this.$t('tour: view:fridgesView method:informationButton id:information-pressed usage:text'),
-                  attachTo: {
-                      element: '#info-picture',
-                      on: 'bottom',
-                  },
-                  buttons: [
-                      {
-                          action: function() {
-                              //router.push('/fridges');
-                              //this.$emit.firstLogginTour();
-                              //this.information.cancel();
-                          },
-                          secondary: true,
-                          class: " shepherd-button ",
-                          text: this.$t('tour: button whole site'),
-                      },
-                      {
-                          action: () => {
-                              this.fridgeViewStepsTour();
-                              this.information.cancel();
-
-                          },
-                          class: " shepherd-button ",
-                          text: this.$t('tour: button this site'),
-                      },
-                  ]
-              }])
-          this.information.start()
-      },
-
       fridgeViewStepsTour() {
           this.fridgeViewTour.addSteps([
           {
@@ -867,10 +830,8 @@ export default {
                       title: this.$t('tour: view:fridgeView method:fridgeStepsTour id:grey-field-header-fridge usage:title'),
                       text: this.$t('tour: view:fridgeView method:fridgeStepsTour id:grey-field-header-fridge usage:text'),
                       attachTo: {
-                          element: '.grey-bar',
-                          on: 'bottom',
+                          element: '.router-view-container ',
                       },
-                      arrow:'true ',
 
                       buttons: [
                           {
@@ -878,7 +839,7 @@ export default {
                                   return this.cancel();
                               },
                               secondary: true,
-                              text: this.$t('tour: button exit'),
+                              text: this.$t('tour: button cancel'),
                           },
                           {
                               action: function () {
@@ -889,40 +850,14 @@ export default {
                       ]
                   },
                   {
-                      id: 'fridgesWindow',
-                      title: this.$t('tour: view:fridgesView method:firstLogginTour id:fridgesWindow usage:title'),
-                      text: this.$t('tour: view:fridgesView method:firstLogginTour id:fridgesWindow usage:text'),
+                      id: 'items',
+                      title: this.$t('tour: view:fridgeView method:fridgeStepsTour id:items usage:title'),
+                      text: this.$t('tour: view:fridgeView method:fridgeStepsTour id:items usage:text'),
                       attachTo: {
-                          element: 'div.router-view-container',
-                          on: 'bottom',
+                          element: '.wrapper',
+                          on: 'top',
                       },
 
-                      buttons: [
-                          {
-                              action: function () {
-                                  return this.cancel();
-                              },
-                              secondary: true,
-                              text: this.$t('tour: button exit'),
-                          },
-                          {
-                              action: function () {
-                                  return this.next();
-                              },
-                              text: this.$t('tour: button next'),
-                          },
-                      ]
-                  },
-                  {
-                      id: 'grey-field-kjøleskap',
-                      title: this.$t('tour: view:fridgesView method:firstLogginTour id:grey-field-kjøleskap usage:title'),
-                      text: this.$t('tour: view:fridgesView method:firstLogginTour id:grey-field-kjøleskap usage:text'),
-                      attachTo: {
-                          element: '#grey-header',
-                          on: 'bottom',
-                          offset: {x: 0, y: 20},
-                      },
-                      classes: 'shepherd-theme-arrows',
                       buttons: [
                           {
                               action: function () {
@@ -936,6 +871,63 @@ export default {
                                   return this.next();
                               },
                               text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+                  {
+                      id: 'search',
+                      title: this.$t('tour: view:fridgeView method:fridgeStepsTour id:search usage:title'),
+                      text: this.$t('tour: view:fridgeView method:fridgeStepsTour id:search usage:text'),
+                      attachTo: {
+                          element: '#searchbar',
+                          on: 'top',
+                      },
+
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.back();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button back'),
+                          },
+                          {
+                              action: function ()  {
+                                  return this.next();
+
+                              },
+                              text: this.$t('tour: button next'),
+                          },
+                      ]
+                  },
+                  {
+                      id: 'filterstep',
+                      title: this.$t('tour: view:fridgeView method:fridgeStepsTour id:filter usage:title'),
+                      text: this.$t('tour: view:fridgeView method:fridgeStepsTour id:filter usage:text'),
+                      attachTo: {
+                          element: '.searchbar-wrapper',
+                      },
+                      beforeShowPromise: function() {
+                          return new Promise(function(resolve, reject) {
+                              const button = document.querySelector('#toggle');
+                              button.click();
+                              resolve();
+                          });
+                      },
+
+                      buttons: [
+                          {
+                              action: function () {
+                                  return this.back();
+                              },
+                              secondary: true,
+                              text: this.$t('tour: button back'),
+                          },
+                          {
+                              action: function () {
+                                  return this.cancel();
+                              },
+                              text: this.$t('tour: button exit'),
                           },
                       ]
                   },
@@ -1111,19 +1103,6 @@ export default {
           }
       });
 
-      const information = new Shepherd.Tour({
-          useModalOverlay: true,
-          defaultStepOptions: {
-              classes: 'shepherd-has-cancel-icon shepherd-element class-1 class-2 shepherd-enabled shepherd-theme-arrows',
-              arrow: true,
-              floatingUIOptions: {
-                  middleware: [offset(30)]
-              },
-              cancelIcon: {
-                  enabled: true
-              },
-          }
-      });
 
       const fridgeViewTour = new Shepherd.Tour({
           useModalOverlay: true,
@@ -1177,7 +1156,6 @@ export default {
       selectedSearchParam,
       searchParamOptions,
       fridgeTour,
-      information,
       fridgeViewTour,
       memberTour,
     }

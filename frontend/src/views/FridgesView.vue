@@ -2,7 +2,7 @@
   <div class="grey-bar" ref="installElement">
     <h2 id="grey-header" >{{ $t('fridges') }}</h2>
     <div class="information-button">
-      <img src="@/assets/images/info.svg" id="info-picture" @click="resetSteps(); informationButton()" :alt=" $t('alt_info_button') ">
+      <img src="@/assets/images/info.svg" id="info-picture" @click="resetSteps(); fridgesStepTour()" :alt=" $t('alt_info_button') ">
     </div>
   </div>
 
@@ -391,42 +391,6 @@ export default {
 
         ])
           this.applicationTour.start()
-      },
-
-
-      informationButton(){
-        this.information.addStep(
-          {
-              id: 'information-pressed',
-              title:`<div class="info-box"><img src="../src/assets/images/info.svg" alt="Pressed" id="tour-info-picture"/></div>`,
-              text: this.$t('tour: view:fridgesView method:informationButton id:information-pressed usage:text'),
-              attachTo: {
-                element: '#info-picture',
-                    on: 'bottom',
-                },
-              buttons: [
-                  {
-                      action: () => {
-                          //router.push('/fridges');
-                          this.$emit.firstLogginTour();
-                          this.information.cancel();
-                      },
-                      secondary: true,
-                      class: " shepherd-button ",
-                      text: this.$t('tour: button whole site'),
-                  },
-                  {
-                      action: () => {
-                          this.fridgesStepTour();
-                          this.information.cancel();
-
-                      },
-                      class: " shepherd-button ",
-                      text: this.$t('tour: button this site'),
-                  },
-              ]
-          })
-        this.information.start()
       },
 
       /*

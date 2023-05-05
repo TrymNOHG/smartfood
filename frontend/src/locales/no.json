@@ -252,8 +252,6 @@
       "tour: view:fridgeView method:fridgeStepsTour id:search usage:text": "Her kan du søke etter matvarer og legge dem til i kjøleskapet. <br> <br> For vanlige brukere blir matvaren lagt til på handlelisten",
       "tour: view:fridgeView method:fridgeStepsTour id:filter usage:title": "Filter",
       "tour: view:fridgeView method:fridgeStepsTour id:filter usage:text": "Ved å klikke på \"Filter\", kan du endre visningen av matvarer og sortere etter forskjellige variabler",
-
-
       "tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:title": "Medlemsfanen",
       "tour: view:fridgeView method:memberStepTour id:grey-field-header-member usage:text": "Nå ser du medlemssiden. <br><br> Som en superbruker kan du: <ul><li>Se alle medlemmer i kjøleskapet</li><li>Legge til medlemmer</li><li>Endre tittel på medlemmer</li><li>Fjerne medlemmer</li><li>Fjerne deg selv fra kjøleskapet</li></ul> <br> Som en vanlig bruker kan du: <ul><li>Se alle medlemmer i kjøleskapet</li><li>Fjerne deg selv fra kjøleskapet</li></ul>",
       "tour: view:fridgeView method:memberStepTour id:single-member usage:title": "Medlem-fane",
@@ -261,7 +259,31 @@
       "tour: view:fridgeView method:memberStepTour id:edit-user usage:title":"Endre tittel",
       "tour: view:fridgeView method:memberStepTour id:edit-user usage:text":"For å endre tittelen på medlemmet, trykk på rediger-knappen eller slett medlemmet ved å klikke på søppelbøtten",
       "tour: view:fridgeView method:memberStepTour id:add-user usage:title": "Legg til medlem",
-      "tour: view:fridgeView method:memberStepTour id:add-user usage:text": "For å legge til et nytt medlem i dette kjøleskapet, kan du trykke på denne knappen"
+      "tour: view:fridgeView method:memberStepTour id:add-user usage:text": "For å legge til et nytt medlem i dette kjøleskapet, kan du trykke på denne knappen",
 
+  "One Item__": "This is the tour for a Item",
+      "tour: view:itemView method:itemStepTour id:itemWindow usage:title": "Produkt siden",
+      "tour: view:itemView method:itemStepTour id:itemWindow usage:text": "Nå ser du produktsiden.<br><br> Her kan du: <ul><li>Se informasjon om produktet</li><li>Oppdatere varen hvis den brukes</li><li>Slette varen fra kjøleskapet</li></ul>",
+
+  "Cart__": "This is the Tour for the cartView",
+    "tour: view:cartView method:cartStepTour id:cart-window usage:title":"Handlekurven",
+    "tour: view:cartView method:cartStepTour id:cart-window usage:text":"Nå ser du handlekurven til kjøleskapet.<br><br> Hovedfunksjonene på denne siden er å lage en handleliste for ditt neste besøk til matbutikken. <br><br> Som en superbruker kan du: <ul><li>Legge til produkter i handlekurv/handleliste ved å søke eller skanne strekkoden</li>Slette matvarer fra handlekurven<li></li>Akseptere forslag fra en vanlig bruker<li>Slette varen fra kjøleskapet</li></ul> <br>Som en vanlig bruker kan du: <ul><li>Gjøre forslag til handlekurven ved å søke eller skanne strekkoden</li>Slette egne forslag<li></li></ul>",
+
+  "Dinner__": "This is the tour for dinner page",
+      "tour: view:dinnerView method:tour id:tipsWindow usage:title": "Middag",
+      "tour: view:dinnerView method:tour id:tipsWindow usage:text":"Nå ser du middagssiden.<br><br> Her kan du: <ul>Akseptere eller avslå middagsforslag fra andre kjøleskapsmedlemmer<li>Bla gjennom middager som kan være av interesse</li><li>Finne din ukentlige middagsplan</li></ul>",
+      "tour: view:dinnerView method:weeklyStepTour id:tipsWindow usage:title": "Ukentlig middagsplan",
+      "tour: view:dinnerView method:weeklyStepTour id:tipsWindow usage:text":"Dette er hvor du finner din ukentlige middagsplan som automatisk genereres basert på hva du har i kjøleskapet.",
+      "tour: view:dinnerView method:tipsViewStepTour id:tipsWindow usage:title": "Tips",
+      "tour: view:dinnerView method:tipsViewStepTour id:tipsWindow usage:text":"På denne siden kan du finne både middagstips og middagsforslag fra andre medlemmer. Du kan bla gjennom mange middagsforslag ved å klikke på neste side-knappen til du finner måltidet du ønsker.",
+
+  "Stats__": "Dette er turen for din statistikkside",
+  "tour: view:StatisticsView method:StatisticsStepTour id:StatisticsWindow usage:title": "Statistikk",
+  "tour: view:StatisticsView method:StatisticsStepTour id:StatisticsWindow usage:text":"Statistikksiden viser forbrukshistorikken din visualisert i diagrammer.<br><br> Her kan du: <ul><li>Se statistikk for kjøleskapet ditt (mat kastet i gram / penger brukt)</li><li>Personlig statistikk (mat kastet i gram / penger brukt)</li></ul>",
+
+  "Profile__": "Dette er turen for din profilside",
+  "tour: view:ProfileView method:StatisticsStepTour id:StatisticsWindow usage:title": "Profil",
+  "tour: view:ProfileView method:StatisticsStepTour id:StatisticsWindow usage:text":"Dette er stedet hvor du kan se og endre personlig informasjon.<br><br> Her kan du: <ul><li>Redigere profilen din</li><li>Endre passord</li><li>Logg ut</li><li>Bytt språk</li></ul>"
 
 }
+
