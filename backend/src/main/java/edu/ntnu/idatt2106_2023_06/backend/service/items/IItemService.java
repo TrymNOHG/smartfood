@@ -26,5 +26,4 @@ public interface IItemService {
     void acceptSuggestion(ItemRemoveDTO itemDTO);
     void removeItemFromFridge(ItemRemoveDTO itemRemoveDTO);
     Page<FridgeItemLoadDTO> searchFridgeItems(FridgeItemSearchDTO fridgeItemSearchDTO);
-    Page<FridgeItems> searchFridgeItems(SearchRequest request, Long fridgeId);
 }

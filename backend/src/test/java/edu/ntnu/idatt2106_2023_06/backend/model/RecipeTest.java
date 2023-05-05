@@ -3,6 +3,8 @@ package edu.ntnu.idatt2106_2023_06.backend.model;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Instructions;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.Recipe;
 import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipePart;
+import edu.ntnu.idatt2106_2023_06.backend.model.recipe.RecipeSuggestion;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -159,6 +161,16 @@ class RecipeTest {
             assertEquals(expectedInstructions, actualInstructions);
         }
 
+        @Test
+        void Suggestions() {
+            Recipe recipe = getRecipe();
+            List<RecipeSuggestion> expectedSug = new ArrayList<>();
+
+            List<RecipeSuggestion> actualSug = recipe.getRecipeSuggestion();
+
+            assertEquals(expectedSug, actualSug);
+        }
+
 
     }
 
@@ -250,6 +262,31 @@ class RecipeTest {
             assertEquals(expectedInstructions, actualInstructions);
         }
 
+    }
+
+    @Test
+    public void testHashCode() {
+        Recipe recipe1 = Recipe.builder()
+                .recipeName("Spaghetti Bolognese")
+                .description("A classic Italian dish")
+                .author("Jamie Oliver")
+                .servingSize(4)
+                .difficulty(2)
+                .thumbnailLink("https://www.example.com/spaghetti-bolognese.jpg")
+                .cookTime(30.0)
+                .build();
+
+        Recipe recipe2 = Recipe.builder()
+                .recipeName("Spaghetti Bolognese")
+                .description("A classic Italian dish")
+                .author("Jamie Oliver")
+                .servingSize(4)
+                .difficulty(2)
+                .thumbnailLink("https://www.example.com/spaghetti-bolognese.jpg")
+                .cookTime(30.0)
+                .build();
+
+        Assertions.assertEquals(recipe1.hashCode(), recipe2.hashCode());
     }
 
 }
